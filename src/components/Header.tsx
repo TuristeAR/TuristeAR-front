@@ -1,5 +1,5 @@
-import logo from '/logo.svg';
-
+import logo from '/assets/logo.svg';
+import arrowRight from '/assets/header/arrow-right.svg';
 export const Header = () => {
   return (
     <>
@@ -14,24 +14,17 @@ export const Header = () => {
                     TURISTEAR
                   </span>
                 </a>
-                <nav className="hidden my-auto text-white  md:block md:ml-auto md:mr-auto flex-wrap items-center text-base justify-center">
-                  <a className="mr-5 hover:text-gray-900">Destinos</a>
-                  <a className="mr-5 hover:text-gray-900">Comunidad</a>
-                  <a className="mr-5 hover:text-gray-900">Armá tu viaje</a>
+                {/* Links */}
+                <nav className="hidden my-auto text-white  md:block md:ml-auto md:mr-auto flex-wrap items-center text-base justify-center font-semibold">
+                  <a className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer">Destinos</a>
+                  <a className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer">Comunidad</a>
+                  <a className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer">Armá tu viaje</a>
                 </nav>
-                <button className="text-white inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 ">
-                  Login
-                  <svg
-                    className="w-4 h-4 mx-auto ml-1"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                  </svg>
+                <button className="text-white flex justify-center items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 gap-x-2 hover:text-hover font-semibold">
+                  <p>Login</p>
+                  <div className="border border-1 rounded-full w-6 h-6 flex items-center justify-center">
+                    <img src={arrowRight} alt="Arrow Right" className="w-6 h-6 " />
+                  </div>
                 </button>
               </div>
             </header>
