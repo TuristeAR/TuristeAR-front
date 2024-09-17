@@ -1,7 +1,13 @@
+import { Header } from '../components/Header';
+import { LandingHero } from '../components/LandingHero';
+import { LandingFeatures } from '../components/LandingFeatures';
+
 export const Home = () => {
   return (
     <>
-      <h1 className="text-[#129DD6]">TuristeAR</h1>
+      <Header></Header>
+      <LandingHero></LandingHero>
+      <LandingFeatures></LandingFeatures>
     </>
   );
 };
