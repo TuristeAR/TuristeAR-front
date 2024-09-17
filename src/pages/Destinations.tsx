@@ -25,7 +25,7 @@ const Destinations = () => {
         </div>
 
         <div className="flex  ">
-          <div className='flex-1 hidden md:block'>
+          <div className="flex-1 hidden md:block">
             <svg width="500" height="500" viewBox="305 275 463 696">
               <g>
                 <path
@@ -344,47 +344,52 @@ const Destinations = () => {
             </svg>
           </div>
 
-          <div className="flex-1 flex  flex-col gap-y-6 border-l-[1px]  border-gray-50  p-4">
+          <div className="flex-1 flex  flex-col gap-y-6 border-l-[1px]  border-gray-50  px-4">
             {/* Info */}
-            <div className=" max-w-[560px]  p-4">
-              <h1 className="font-semibold text-[46px] xl:text-[80px] leadind-[1.1]">
+            <div className="flex flex-col gap-y-4 m-4">
+              <h1>
                 Buenos Aires
               </h1>
-              <p className="lead font-light px-8 xl:px-0 ">
+              <p className="font-light text-gray-500  ">
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum
                 possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.
               </p>
-              <p className="lead font-light px-8 xl:px-0">
+              <p className="font-light text-gray-500  ">
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum
                 possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.
               </p>
               <div className="flex my-6 gap-2 ">
                 <div className="w-[200px] h-[200px] bg-gray"></div>
-
               </div>
-              <button className="btn-blue">Ver más</button>
+              <div>
+                <button className="btn-blue">Ver más</button>
+              </div>
             </div>
             {/* Publicaciones */}
-            <div className="bg-gray-50/50 rounded-lg max-w-[560px] p-8 ">
-              <div className="flex justify-between  ">
-                <div className="flex justify-center gap-4 text-gray">
-                  <div>Foto</div>
-                  <p>usuario</p>
+            <div className="bg-gray-50/50 rounded-lg flex flex-col mb-4 gap-y-4">
+              <div className="m-4 ">
+                <div className="flex justify-between">
+                  <div className="flex justify-center  gap-4 text-gray">
+                    <div>Foto</div>
+                    <p>usuario</p>
+                  </div>
+                  <p className="text-gray">26 Sep 2024</p>
                 </div>
-                <p className="text-gray">26 Sep 2024</p>
+                <p className="font-light text-gray-500  ">
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum
+                  possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.
+                </p>
+                <p className="font-light text-gray-500  ">
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum
+                  possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.
+                </p>
+                <div className="flex  my-6 gap-2">
+                  <div className="w-[200px] h-[200px] bg-gray"></div>
+                </div>
+                <div>
+                  <button className="btn-blue">Ver más publicaciones</button>
+                </div>
               </div>
-              <p className="lead font-light">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum
-                possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.
-              </p>
-              <p className="lead font-light">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum
-                possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.
-              </p>
-              <div className="flex  my-6 gap-2">
-                <div className="w-[200px] h-[200px] bg-gray"></div>
-              </div>
-              <button className="btn-blue">Ver más publicaciones</button>
             </div>
           </div>
         </div>
