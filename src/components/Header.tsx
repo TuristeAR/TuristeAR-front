@@ -1,6 +1,6 @@
 import logo from '/assets/logo.svg';
 import arrowRight from '/assets/arrow-right.svg';
-export const Header = ({ containerStyles }: { containerStyles: string }) => {
+export const Header = ({ containerStyles }: { containerStyles: any }) => {
   return (
     <>
       <header className={`relative ${containerStyles}`}>
