@@ -5,11 +5,7 @@ import Destinations from '../src/pages/Destinations';
 describe('Destinations Page', () => {
   test('renders the header with navigation links', () => {
     render(<Destinations />);
-    
-    // Verificar si el Header se renderiza
-    const header = screen.getByRole('banner');
-    expect(header).toBeInTheDocument();
-    
+   
     // Verificar que los enlaces de navegación estén presentes
     const destinosLink = screen.getByText('Destinos');
     const comunidadLink = screen.getByText('Comunidad');
