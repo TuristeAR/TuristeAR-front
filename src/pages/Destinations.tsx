@@ -3,7 +3,7 @@ import { Header } from '../components/Header';
 const Destinations = () => {
   return (
     <div>
-      <Header containerStyles="bg-[#E88E20]" />
+      <Header containerStyles="bg-primary" />
       <section>
         <div className="bg-[#E6E6E6] w-full h-[120px]">
           <div className="container mx-auto h-full flex flex-col items-center justify-center gap-y-4 ">
