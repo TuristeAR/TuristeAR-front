@@ -1,4 +1,4 @@
-import { Header } from '../components/Header';
+import { Header } from '../components/Nav';
 import { LandingHero } from '../components/LandingHero';
 import { LandingFeatures } from '../components/LandingFeatures';
 

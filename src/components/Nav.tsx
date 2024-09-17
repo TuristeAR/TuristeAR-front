@@ -1,5 +1,5 @@
 import logo from '/assets/logo.svg';
-import arrowRight from '/assets/header/arrow-right.svg';
+import arrowRight from '/assets/arrow-right.svg';
 export const Header = () => {
   return (
     <>
