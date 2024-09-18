@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { LandingHero } from '../src/components/LandingHero';
+import React from 'react';
 
 describe('LandingHero', () => {
   test('renders the video element', () => {

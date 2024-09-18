@@ -3,10 +3,10 @@ import arrowRight from '/assets/arrow-right.svg';
 export const Header = ({ containerStyles }: { containerStyles: any }) => {
   return (
     <>
-      <header className={`relative ${containerStyles}`}>
+      <header className={`absolute ${containerStyles}`}>
         <nav>
           <ul>
-            <header className="text-gray-600 body-font">
+            <header className="w-screen text-gray-600 body-font">
               <div className="container mx-auto flex flex-wrap p-5  md:flex-row items-center justify-between">
                 <a href='/' className="flex title-font font-medium items-center md:mb-0">
                   <img src={logo} alt="Logo" className="logo w-12" />
