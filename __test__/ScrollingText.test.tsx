@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ScrollingText } from '../src/components/ScrollingText';
+import React from 'react';
 
 describe('ScrollingText', () => {
   test('renders the scrolling text component', () => {

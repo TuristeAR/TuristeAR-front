@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Header } from '../src/components/Header';
+import React from 'react';
 
 describe('Header', () => {
   test('renders the logo', () => {
