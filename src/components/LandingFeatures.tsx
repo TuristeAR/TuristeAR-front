@@ -52,7 +52,7 @@ export const LandingFeatures = () => {
           <div className="absolute z-0 left-0">
               <img className="hidden w-screen xl:block " src={calendarBackground3} alt="Calendar background" /> 
               <img className="hidden sm:block w-screen xl:hidden" src={calendarBackground2} alt="" />
-              <img className="w-screen relative -top-9 h-[900px] sm:hidden " src={calendarBackgroundSm} alt="Calendar background" />
+              <img className="w-screen relative -top-9 h-[900px] sm:hidden " src={calendarBackgroundSm} alt="Calendar background2" />
 
           </div>
         </div>

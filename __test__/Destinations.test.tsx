@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Destinations from '../src/pages/Destinations';
+import React from 'react';
 
 describe('Destinations Page', () => {
   test('renders the header with navigation links', () => {

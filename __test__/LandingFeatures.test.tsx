@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { LandingFeatures } from '../src/components/LandingFeatures';
+import React from 'react';
 
 describe('LandingFeatures', () => {
   test('renders the user posts image', () => {
