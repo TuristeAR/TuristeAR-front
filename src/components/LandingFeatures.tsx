@@ -1,7 +1,9 @@
 import { ScrollingText } from './ScrollingText';
 import posts from '../assets/landing_posts.png';
 import calendar from '../assets/landing_calendar.png';
-import calendarBackground from '../assets/landing_calendar_background.svg';
+import calendarBackgroundSm from '../assets/landing_calendar_background_sm.svg';
+import calendarBackground2 from '../assets/landing_calendar_background_lg.svg';
+import calendarBackground3 from '../assets/landing_calendar_backgound_xl.svg';
 import arrowRight from '/assets/arrow-right.svg';
 import arrowRightBlue from '/assets/arrow-right-blue.svg';
 
@@ -30,7 +32,7 @@ export const LandingFeatures = () => {
             </a>
           </div>
         </div>
-        <div className="mt-4 static text-white gap-8 items-center  px-4 mx-auto max-w-screen-xl xl:gap-16 grid grid-cols-2 py-20 lg:px-6">
+        <div className="mt-4 static text-white gap-8 items-center  px-4 mx-auto max-w-screen-xl xl:gap-16 grid sm:grid-cols-2 py-20 lg:px-6">
           <div className="mt-4 z-10 md:mt-0">
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold">
               Creá tu itinerario y compartilo con otros viajeros.
@@ -46,9 +48,12 @@ export const LandingFeatures = () => {
               <img src={arrowRightBlue} alt="Arrow Right Blue" className="w-6 h-6" />
             </a>
           </div>
-          <img className="h-full mt-4 z-10" src={calendar} alt="Calendar" />
+          <img className="h-full w-full mt-4 z-10" src={calendar} alt="Calendar" />
           <div className="absolute z-0 left-0">
-            <img className="w-screen" src={calendarBackground} alt="Calendar background" />
+              <img className="hidden w-screen xl:block " src={calendarBackground3} alt="Calendar background" /> 
+              <img className="hidden sm:block w-screen xl:hidden" src={calendarBackground2} alt="" />
+              <img className="w-screen relative -top-9 h-[900px] sm:hidden " src={calendarBackgroundSm} alt="Calendar background" />
+
           </div>
         </div>
       </section>

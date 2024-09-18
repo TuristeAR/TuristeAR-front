@@ -13,7 +13,11 @@ module.exports = {
       gray: '#6b7280',
       black: '#000',
     },
-    extend: {},
+    extend: {
+      screens: {
+        'xs': '600px',
+      },
+    },
   },
   plugins: [],
 };
