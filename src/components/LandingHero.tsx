@@ -22,7 +22,7 @@ export const LandingHero = () => {
             comunidad.
           </p>
           <div>
-            <button className="w-60 my-auto flex text-white inline-flexbg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded-lg text-lg bg-primary">
+            <button className="w-60 my-auto flex text-white inline-flex bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded-lg text-lg bg-primary">
               <span className="my-auto">Planificá tu viaje</span>
               <img src={pathMap} className="ml-4 my-auto" alt="Path Map" />
             </button>
