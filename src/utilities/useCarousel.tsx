@@ -1,7 +1,5 @@
-// useCarousel.ts
 import { useState, useEffect } from 'react';
 
-// Definimos el tipo de retorno del hook
 interface CarouselHook {
   currentSlide: number;
   goToNextSlide: () => void;

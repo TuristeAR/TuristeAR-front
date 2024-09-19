@@ -230,18 +230,18 @@ const Destinations = () => {
             {/* Info */}
             {info.map((item, index) => {
               return (
-                <div className="flex flex-col gap-y-4 text-center  ">
-                  <h1>{item.place}</h1>
-                  <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-center">
+                <div key={index} className="flex flex-col gap-y-4">
+                  <h1 className='text-center'>{item.place}</h1>
+                  <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
                     {item.descripcion}
                   </p>
 
-                  <div className="flex justify-center flex-wrap mx-4 gap-2">
+                  <div className="flex justify-center gap-2">
                     {item.img.map((image) => (
                       <img
                         key={image.id}
                         src={image.src}
-                        className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-cover"
+                        className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-contain"
                       />
                     ))}
                   </div>
@@ -251,42 +251,40 @@ const Destinations = () => {
                 </div>
               );
             })}
-
+            <div className='border-b border-gray my-4 '></div>
             {/* Publicaciones */}
-            <div className="">
-              <Carousel>
-                {usuariosReview.map((item, index) => {
-                  return (
-                    <div className="flex flex-col gap-y-4" key={index}>
-                      <div className="flex justify-between items-center px-2 text-gray">
-                        <div className="flex items-center gap-4  ">
-                          <div className="rounded-full p-2 border border-1 border-black">
-                            <img className="w-8 h-8" src={item.imgPerson} alt="person" />
-                          </div>
-                          <p>{item.usuario}</p>
+            <Carousel>
+              {usuariosReview.map((item, index) => {
+                return (
+                  <div className="flex flex-col gap-y-4" key={index}>
+                    <div className="flex justify-between items-center px-2 text-gray">
+                      <div className="flex items-center gap-4  ">
+                        <div className="rounded-full p-2 border border-1 border-black">
+                          <img className="w-8 h-8" src={item.imgPerson} alt="person" />
                         </div>
-                        <p>{item.fecha}</p>
+                        <p>{item.usuario}</p>
                       </div>
-                      <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-center">
-                        {item.descripcion}
-                      </p>
-                      <div className="flex justify-center flex-wrap mx-4 gap-2">
-                        {item.img.map((image) => (
-                          <img
-                            key={image.id}
-                            src={image.src}
-                            className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-cover"
-                          />
-                        ))}
-                      </div>
-                      <div className=" text-center">
-                        <button className="btn-blue">Ver más publicaciones</button>
-                      </div>
+                      <p>{item.fecha}</p>
                     </div>
-                  );
-                })}
-              </Carousel>
-            </div>
+                    <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
+                      {item.descripcion}
+                    </p>
+                    <div className="flex justify-center gap-2">
+                      {item.img.map((image) => (
+                        <img
+                          key={image.id}
+                          src={image.src}
+                          className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-contain"
+                        />
+                      ))}
+                    </div>
+                    <div>
+                      <button className="btn-blue">Ver más publicaciones</button>
+                    </div>
+                  </div>
+                );
+              })}
+            </Carousel>
           </div>
         </div>
       </section>
