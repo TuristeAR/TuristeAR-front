@@ -23,7 +23,12 @@ export const Header = ({ containerStyles }: { containerStyles: any }) => {
             >
               Destinos
             </a>
-            <a className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer">Comunidad</a>
+            <a
+              href="/formQuestions"
+              className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer"
+            >
+              Comunidad
+            </a>
             <a className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer">
               Armá tu viaje
             </a>
