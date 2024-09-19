@@ -14,10 +14,10 @@ export const LandingHero = () => {
       ></video>
       <div className="container h-full mx-auto flex px-5 py-24 md:flex-row flex-col items-center justify-center">
         <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
-          <h1 className="title-font sm:text-7xl text-3xl mb-4 font-bold  text-white">
+          <h1 className="title-font sm:text-7xl text-3xl mb-4 font-bold  text-white max-w-[750px]">
             Descubrí la <span className="text-primary">Argentina</span> a tu medida
           </h1>
-          <p className="mb-8 leading-relaxed text-white">
+          <p className="mb-8 leading-relaxed text-xl text-white">
             Creá tu viaje perfecto y explorá los destinos más fascinantes del país junto a nuestra
             comunidad.
           </p>
