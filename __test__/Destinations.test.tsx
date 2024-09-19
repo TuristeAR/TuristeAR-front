@@ -35,14 +35,53 @@ describe('Destinations Page', () => {
     expect(searchInput).toBeInTheDocument();
   });
 
-  test('renders the Buenos Aires section', () => {
+  test('renders Buenos Aires section with description and images', () => {
     render(
       <BrowserRouter>
         <Destinations />
-      </BrowserRouter>,
+      </BrowserRouter>
     );
 
-    const buenosAiresTitle = screen.getByText('Buenos Aires');
+    const buenosAiresTitle = screen.getByText('Buenos Aires - San Nicolas');
     expect(buenosAiresTitle).toBeInTheDocument();
+
+    const description = screen.getByText(/Conocido a menudo como el Microcentro/i);
+    expect(description).toBeInTheDocument();
+
+    // Verificar que las imágenes están presentes
+    const images = screen.getAllByRole('img');
+    expect(images.length).toBeGreaterThan(0);
+  });
+
+  test('renders the user reviews in the carousel', () => {
+    render(
+      <BrowserRouter>
+        <Destinations />
+      </BrowserRouter>
+    );
+
+    // Verificar que los nombres de usuarios están presentes
+    const pabloReview = screen.getByText('Pablo Ramirez');
+    const victorReview = screen.getByText('Victor Gonzalez');
+    const malenaReview = screen.getByText('Malena Yannone');
+    const belenReview = screen.getByText('Belen Peña');
+    const gabrielReview = screen.getByText('Gabriel Fuentes');
+
+    expect(pabloReview).toBeInTheDocument();
+    expect(victorReview).toBeInTheDocument();
+    expect(malenaReview).toBeInTheDocument();
+    expect(belenReview).toBeInTheDocument();
+    expect(gabrielReview).toBeInTheDocument();
+  });
+
+  test('renders the "Ver más" button in Buenos Aires section', () => {
+    render(
+      <BrowserRouter>
+        <Destinations />
+      </BrowserRouter>
+    );
+
+    const verMasButton = screen.getByText('Ver más');
+    expect(verMasButton).toBeInTheDocument();
   });
 });
