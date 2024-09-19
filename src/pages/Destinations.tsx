@@ -7,18 +7,18 @@ const Destinations = () => {
       <section className="">
         <div className="bg-[#E6E6E6] w-full h-[120px]">
           <div className="container mx-auto h-full flex flex-col items-center justify-center gap-y-4 ">
-            <p className="px-8 lg:px-0 max-w-[400px] text-center font-semibold tracking-tight">
+            <p className="px-8 lg:px-0 max-w-[600px] text-center font-semibold tracking-tight   ">
               Si ya sabes cual es tu destino seleccionalo para descubrir los mejores lugares y
               actividades
             </p>
             <div>
               <form action="" className="flex items-center relative ">
                 <input
-                  className=" w-[250px] md:w-[400px]  rounded outline-none p-1"
+                  className=" w-[250px] md:w-[400px]  rounded outline-none text-sm p-1  pr-10"
                   type="text"
                   placeholder="Buscar por provincia, localidad o tipo de lugar..."
                 />
-                <img src="/assets/search.svg" className="absolute right-0" alt="" />
+                <img src="/assets/search.svg" className="absolute right-2" alt="" />
               </form>
             </div>
           </div>
