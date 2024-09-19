@@ -5,7 +5,7 @@ import { LandingFeatures } from '../components/LandingFeatures';
 export const Home = () => {
   return (
     <>
-      <Header containerStyles={''}></Header>
+      <Header containerStyles={'absolute'}></Header>
       <LandingHero></LandingHero>
       <LandingFeatures></LandingFeatures>
     </>
