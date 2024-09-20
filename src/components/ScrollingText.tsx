@@ -1,33 +1,24 @@
-import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
 export const ScrollingText = () => {
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const translateX = scrollY % window.innerWidth;
-
   return (
-    <div className=" md:block w-full text-center py-5 text-[80px] whitespace-nowrap overflow-hidden bg-primary text-white">
-      <p
-        className="inline-block whitespace-nowrap transition-transform duration-900 ease-out"
-        style={{ transform: `translateX(-${translateX}px)` }}
+    <div className="flex w-full  text-center overflow-hidden  py-5  text-[40px] md:text-[80px] bg-primary text-white">
+      <motion.div
+        initial={{ x: 0 }}
+        animate={{ x: '-100%' }}
+        transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+        className="whitespace-nowrap mr-12"
       >
-        VIAJÁ INTELIGENTE
-        <span className="font-bold"> VIVÍ LA ARGENTINA </span>
-        VIAJÁ INTELIGENTE
-        <span className="font-bold"> VIVÍ LA ARGENTINA </span>
-      </p>
+        <p>VIAJÁ INTELIGENTE VIVÍ LA ARGENTINA</p>
+      </motion.div>
+      <motion.div
+        initial={{ x: 0 }}
+        animate={{ x: '-100%' }}
+        transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+        className="whitespace-nowrap"
+      >
+        <p>VIAJÁ INTELIGENTE VIVÍ LA ARGENTINA</p>
+      </motion.div>
     </div>
   );
 };
