@@ -33,7 +33,7 @@ const FormQuestions = () => {
     <>
       <Header containerStyles={'bg-primary relative top-0 z-[60] '} />
       <section className="h-auto my-5   text-black">
-        <div className="container mx-auto  flex  items-center justify-center z-30 relative">
+        <div className="container mx-auto shadow-2xl flex  items-center justify-center z-30 relative">
           {/* Form */}
           <form
             onSubmit={() => onsubmit}

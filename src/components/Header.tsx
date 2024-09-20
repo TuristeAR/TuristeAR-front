@@ -17,21 +17,21 @@ export const Header = ({ containerStyles }: { containerStyles: any }) => {
           </Link>
           {/* Links */}
           <nav className="hidden my-auto text-white  md:block md:ml-auto md:mr-auto flex-wrap items-center text-base justify-center font-semibold">
-            <a
-              href="/destinations"
+            <Link
+              to={'/destinations'}
               className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer"
             >
               Destinos
-            </a>
-            <a
-              href="/formQuestions"
+            </Link>
+            <Link to={'/'} className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer">
+              Comunidad
+            </Link>
+            <Link
+              to={'/formQuestions'}
               className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer"
             >
-              Comunidad
-            </a>
-            <a className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer">
               Armá tu viaje
-            </a>
+            </Link>
             <div></div>
           </nav>
           {/* Nav  trigger btn */}
