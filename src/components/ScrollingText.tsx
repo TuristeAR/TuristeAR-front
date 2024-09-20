@@ -9,15 +9,15 @@ export const ScrollingText = () => {
         transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
         className="whitespace-nowrap mr-12"
       >
-        <p className="">VIAJÁ INTELIGENTE VIVÍ LA ARGENTINA</p>
+        <p>VIAJÁ INTELIGENTE VIVÍ LA ARGENTINA</p>
       </motion.div>
       <motion.div
         initial={{ x: 0 }}
         animate={{ x: '-100%' }}
         transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-        className="whitespace-nowrap  "
+        className="whitespace-nowrap"
       >
-        <p className="">VIAJÁ INTELIGENTE VIVÍ LA ARGENTINA</p>
+        <p>VIAJÁ INTELIGENTE VIVÍ LA ARGENTINA</p>
       </motion.div>
     </div>
   );
