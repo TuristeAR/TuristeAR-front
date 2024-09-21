@@ -11,6 +11,7 @@ module.exports = {
       'pink-50': '#fdf2f8',
       'gray-50': '#d1d5db',
       gray: '#6b7280',
+      'gray-2': "rgb(250 250 250)",
       black: '#000',
     },
     extend: {
