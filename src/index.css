@@ -11,7 +11,19 @@
     }
 }
 
-.custom-pagination {
-    text-align: center;
-    margin-top: 5px;
-  }
+.swiper-button-next,
+.swiper-button-prev {
+    background-color: rgba(31, 113, 214, 0.7); /* Fondo semi-transparente */
+    border-radius: 50% !important; /* Esquinas redondeadas */
+    width: 40px !important; /* Ancho de la flecha */
+    height: 40px !important; /* Alto de la flecha */
+    display: flex !important;
+    align-items: center  !important;
+    justify-content: center !important;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+    color: white !important; /* Color de las flechas */
+    font-size: 40px !important; /* Tamaño de las flechas */
+}
