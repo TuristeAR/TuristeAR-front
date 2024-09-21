@@ -134,11 +134,11 @@ const ExpectedPlace = () => {
             <Header containerStyles="bg-primary" />
 
             <section className="w-full mb-5">
-                <div className="w-10/12 m-auto">
+                <div className="sm:w-10/12 m-auto">
                     <ImageGallery images={info[0].img}></ImageGallery>
                     {info.map((item, index) => {
                         return (
-                            <div key={index} className="flex flex-col gap-y-4">
+                            <div key={index} className="px-2 sm:px-0 flex flex-col gap-y-4">
                                 <h1 className="text-center">{item.place}</h1>
                                 <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-center">
                                     {item.descripcion}
@@ -208,7 +208,7 @@ const ExpectedPlace = () => {
 
             {/* Posts usuarios */}
             < section >
-                <div className="w-10/12 m-auto mt-20">
+                <div className="sm:w-10/12 m-auto mt-20">
                     <h3 className="text-4xl font-bold">Descubre lo que cuentan nuestros usuarios</h3>
                     <hr />
                     <div className="flex gap-2 mt-5 justify-around flex-wrap">
@@ -231,10 +231,10 @@ const ExpectedPlace = () => {
 
             {/* Puntos de interes */}
             < section >
-                <div className="w-10/12 m-auto mt-20">
+                <div className="sm:w-10/12 m-auto mt-20">
                     <h3 className="text-4xl font-bold">Puntos de interes</h3>
                     <hr />
-                    <div className="relative flex gap-2 mt-5 justify-around flex-wrap">
+                    <div className="relative px-1 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
                         <Swiper
                             modules={[Navigation, Pagination, Scrollbar, A11y]}
                             spaceBetween={5}
@@ -243,10 +243,7 @@ const ExpectedPlace = () => {
                                 nextEl: '.swiper-button-next',
                                 prevEl: '.swiper-button-prev',
                             }}
-                            pagination={{
-                                clickable: true, // Para que los puntos sean clicables
-                                el: '.custom-pagination', // Apuntar a tu clase personalizada
-                            }}
+                       
                             onSwiper={(swiper) => console.log(swiper)}
                             onSlideChange={() => console.log('slide change')}
                             breakpoints={{
@@ -284,9 +281,8 @@ const ExpectedPlace = () => {
                                 </SwiperSlide>
                             ))}
                         </Swiper>
-                        <div className="custom-pagination"></div>
-                        <div className="swiper-button-prev hidden sm:block"></div>
-                        <div className="hidden swiper-button-next  sm:block"></div>
+                        <div className="swiper-button-prev hidden"></div>
+                        <div className="hidden swiper-button-next"></div>
                     </div>
                     <div className="text-center mt-10">
                         <button className="btn-blue">Ver Puntos de interes</button>
@@ -296,7 +292,7 @@ const ExpectedPlace = () => {
 
             {/* Cultura y tradiciones*/}
             <section>
-                <div className="w-10/12 m-auto mt-20">
+                <div className="sm:w-10/12 m-auto mt-20">
                     <h3 className="text-4xl font-bold">Cultura y tradiciones</h3>
                     <hr />
                     <div className="flex gap-2 mt-5 justify-around flex-wrap">
@@ -337,18 +333,17 @@ const ExpectedPlace = () => {
 
             {/* Gastronomía */}
             < section >
-                <div className="w-10/12 m-auto mt-20">
+                <div className="sm:w-10/12 m-auto mt-20">
                     <h3 className="text-4xl font-bold">Gastronomía</h3>
                     <hr />
-                    <div className="relative flex gap-2 mt-5 justify-around flex-wrap">
+                    <div className="relative px-2 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
                         <Swiper
                             modules={[Navigation, Pagination, Scrollbar, A11y]}
                             spaceBetween={5}
                             slidesPerView={4}
-                            navigation
-                            pagination={{
-                                clickable: true, // Para que los puntos sean clicables
-                                el: '.custom-pagination', // Apuntar a tu clase personalizada
+                            navigation={{
+                                nextEl: '.swiper-button-next',
+                                prevEl: '.swiper-button-prev',
                             }}
                             onSwiper={(swiper) => console.log(swiper)}
                             onSlideChange={() => console.log('slide change')}
@@ -387,7 +382,8 @@ const ExpectedPlace = () => {
                                 </SwiperSlide>
                             ))}
                         </Swiper>
-                        <div className="custom-pagination"></div>
+                        <div className="swiper-button-next"></div>
+                        <div className="swiper-button-prev"></div>
 
                     </div>
                     <div className="text-center mt-10">
@@ -395,7 +391,7 @@ const ExpectedPlace = () => {
                     </div>
                 </div>
             </section >
-            <div className='h-[50px]'></div>
+            
 
 
 
