@@ -15,8 +15,3 @@
     text-align: center;
     margin-top: 5px;
   }
-.swiper-button-next,
-.swiper-button-prev {
-    margin-inline: -0px;
-    transform: translateY(550%);
-}

@@ -345,10 +345,7 @@ const ExpectedPlace = () => {
                             modules={[Navigation, Pagination, Scrollbar, A11y]}
                             spaceBetween={5}
                             slidesPerView={4}
-                            navigation={{
-                                nextEl: '.swiper-button-next',
-                                prevEl: '.swiper-button-prev',
-                            }}
+                            navigation
                             pagination={{
                                 clickable: true, // Para que los puntos sean clicables
                                 el: '.custom-pagination', // Apuntar a tu clase personalizada
@@ -391,8 +388,7 @@ const ExpectedPlace = () => {
                             ))}
                         </Swiper>
                         <div className="custom-pagination"></div>
-                        <div className="swiper-button-prev hidden sm:block"></div>
-                        <div className="hidden swiper-button-next  sm:block"></div>
+
                     </div>
                     <div className="text-center mt-10">
                         <button className="btn-blue">Ver Puntos de interes</button>
