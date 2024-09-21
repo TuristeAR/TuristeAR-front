@@ -19,60 +19,60 @@ const info = [
 ];
 
 const puntosDeInteres = [
-        {
-            title: 'Buenos Aires',
-            description:
-                'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
-            img: [
-                { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-            ],
-            link:""
-        },
-        {
-            title: 'Buenos Aires',
-            description:
-                'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
-            img: [
-                { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-            ],
-            link:""
-        },
-        {
-            title: 'Buenos Aires',
-            description:
-                'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
-            img: [
-                { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-            ],
-            link:""
-        },
-        {
-            title: 'Buenos Aires',
-            description:
-                'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
-            img: [
-                { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-                { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-            ],
-            link:""
-        },
+    {
+        title: 'Buenos Aires',
+        description:
+            'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
+        img: [
+            { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+        ],
+        link: ""
+    },
+    {
+        title: 'Buenos Aires',
+        description:
+            'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
+        img: [
+            { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+        ],
+        link: ""
+    },
+    {
+        title: 'Buenos Aires',
+        description:
+            'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
+        img: [
+            { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+        ],
+        link: ""
+    },
+    {
+        title: 'Buenos Aires',
+        description:
+            'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
+        img: [
+            { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+            { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+        ],
+        link: ""
+    },
 
-    
+
 ]
 
 const usuariosReview = [
@@ -139,7 +139,9 @@ const ExpectedPlace = () => {
                     </div>
                 </div>
             </section>
-          
+            
+            {/* Posts usuarios */}
+
             <section>
                 <div className="w-10/12 m-auto mt-20">
                     <h3 className="text-4xl font-bold">Descubre lo que cuentan nuestros usuarios</h3>
@@ -161,21 +163,23 @@ const ExpectedPlace = () => {
                 </div>
 
             </section>
-            
+
+            {/* Puntos de interes */}
+
             <section>
                 <div className="w-10/12 m-auto mt-20">
                     <h3 className="text-4xl font-bold">Puntos de interes</h3>
                     <hr />
                     <div className="flex gap-2 mt-5 justify-around flex-wrap">
-                    {puntosDeInteres.map((article, index) => (
-                <ArticleCard
-                    key={index} 
-                    title={article.title}
-                    images={article.img}
-                    description={article.description}
-                    link={article.link}
-                />
-            ))}
+                        {puntosDeInteres.map((article, index) => (
+                            <ArticleCard
+                                key={index}
+                                title={article.title}
+                                images={article.img}
+                                description={article.description}
+                                link={article.link}
+                            />
+                        ))}
                     </div>
                     <div className="text-center mt-10">
                         <button className="btn-blue">Ver Puntos de interes</button>
@@ -183,18 +187,20 @@ const ExpectedPlace = () => {
                 </div>
 
             </section>
+
+            {/* Cultura y tradiciones*/}
+
             <section>
                 <div className="w-10/12 m-auto mt-20">
                     <h3 className="text-4xl font-bold">Cultura y tradiciones</h3>
                     <hr />
                     <div className="flex gap-2 mt-5 justify-around flex-wrap">
-                        
+
                     </div>
                     <div className="text-center mt-10">
                         <button className="btn-blue">Ver Puntos de interes</button>
                     </div>
                 </div>
-
             </section>
 
         </>
