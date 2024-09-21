@@ -10,7 +10,7 @@ function PostCard(props: {
 
     return (
         <>
-            <div className="flex flex-col gap-y-4 md:w-2/5 border-gray-200 dark:border-gray-800 p-4 rounded-xl border max-w-xl">
+            <div className="flex flex-col gap-y-4 md:w-2/5 border-primary-3  p-4 rounded-xl border max-w-xl">
                 <div className="flex justify-between items-center px-2 text-gray">
                     <div className="flex items-center gap-4">
                         <div className="rounded-full  border border-1 border-black">
