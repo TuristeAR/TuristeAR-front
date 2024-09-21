@@ -7,6 +7,21 @@ module.exports = {
     '\\.(png|jpg|jpeg|gif|webp)$': '<rootDir>/__mocks__/fileMock.js',
   },
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        diagnostics: {
+          ignoreCodes: [1343],
+        },
+        astTransformers: {
+          before: [
+            {
+              path: 'node_modules/ts-jest-mock-import-meta',
+              options: { metaObjectReplacement: { url: 'https://www.url.com' } },
+            },
+          ],
+        },
+      },
+    ],
   },
 };
