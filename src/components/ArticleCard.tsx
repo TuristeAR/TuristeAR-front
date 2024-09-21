@@ -13,7 +13,7 @@ interface ArticleCardProps {
 
 const ArticleCard: React.FC<ArticleCardProps> = ({ title, images, description, link }) => {
     return (
-        <div className="max-w-xs bg-white border  border-primary-3 rounded-lg shadow">
+        <div className="max-w-xs m-auto bg-white border  border-primary-3 rounded-lg shadow">
             <Carousel>
                 {
                     images.map((item, index) => {
