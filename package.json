@@ -9,13 +9,17 @@
     "test": "jest"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
     "@vitejs/plugin-react-swc": "^3.7.0",
     "framer-motion": "^11.5.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",
     "swiper": "^11.1.14",
-    "ts-jest": "^29.2.5"
+    "ts-jest": "^29.2.5",
+    "turistear-front": "file:"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.5.0",
