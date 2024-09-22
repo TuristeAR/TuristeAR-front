@@ -6,7 +6,6 @@ import Destinations from './pages/Destinations';
 import FormQuestions from './pages/FormQuestions';
 import ExpectedPlace from './pages/ExpectedPlace';
 import Publications from './pages/Publications';
-import Profile from './pages/Profile';
 import Forum from './pages/Forum';
 import Jobs from './pages/Jobs';
 import ExpectedDestination from './pages/ExpectedDestination';

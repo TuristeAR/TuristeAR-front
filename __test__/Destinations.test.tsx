@@ -4,6 +4,7 @@ import Destinations from '../src/pages/Destinations';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
+
 describe('Destinations Page', () => {
   test('renders the header with navigation links', () => {
     render(

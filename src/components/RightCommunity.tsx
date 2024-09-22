@@ -1,4 +1,3 @@
-import MenuCommunity from './MenuCommunity';
 import CommunityFilters from './CommunityFilters';
 import React from 'react';
 const infoTrips=[
