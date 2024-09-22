@@ -23,7 +23,7 @@ export const Header = ({ containerStyles }: { containerStyles: any }) => {
             >
               Destinos
             </Link>
-            <Link to={'/'} className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer">
+            <Link to={'/community'} className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer">
               Comunidad
             </Link>
             <Link

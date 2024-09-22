@@ -12,10 +12,10 @@ export const NavMobile = () => {
           <Link to={'/destinations'} className="  text-white hover:text-gray  transition-all ">
             Destinos
           </Link>
-          <Link to={'/'} className=" text-white hover:text-gray transition-all">
+          <Link to={'/community'} className=" text-white hover:text-gray transition-all">
             Comunidad
           </Link>
-          <Link to={'/'} className=" text-white hover:text-gray transition-all">
+          <Link to={'/formQuestions'} className=" text-white hover:text-gray transition-all">
             Armá tu viaje
           </Link>
         </ul>
