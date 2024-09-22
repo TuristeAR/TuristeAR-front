@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ContinueWithGoogle } from '../src/components/ContinueWithGoogle';
+import React from 'react';
 
 describe('ContinueWithGoogle component', () => {
   it('renders the button with correct text', () => {

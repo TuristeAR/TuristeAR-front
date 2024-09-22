@@ -9,6 +9,10 @@ import Publications from './pages/Publications';
 import Profile from './pages/Profile';
 import Forum from './pages/Forum';
 import Jobs from './pages/Jobs';
+import ExpectedDestination from './pages/ExpectedDestination';
+import { Login } from './pages/Login';
+import Profile from './pages/Profile';
+
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -20,6 +24,9 @@ root.render(
       <Route path="/destinations" element={<Destinations />} />
       <Route path="/formQuestions" element={<FormQuestions />} />
       <Route path="/expectedPlace" element={<ExpectedPlace />} />
+      <Route path="/expectedDestination" element={<ExpectedDestination />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/profile" element={<Profile />} />
       <Route path="/community" element={<Profile />}/>
       <Route path="/publications" element={<Publications />}/>
       <Route path="/profile" element={<Profile />}/>
