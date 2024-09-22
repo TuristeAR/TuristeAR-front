@@ -294,7 +294,7 @@ const Destinations = () => {
             {/* Info */}
           
                 <div  className="flex flex-col gap-y-4">
-                  <h1 className="text-center">{selectedProvince?.nombre}</h1>
+                  <h1 className="text-center">{selectedProvince?.nombre} </h1>
                   <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
                     {selectedProvince?.descripcion}
                   </p>
