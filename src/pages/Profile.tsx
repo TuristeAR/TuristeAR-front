@@ -30,6 +30,7 @@ const itineraries = [
     ],
   }
 ];
+const options=[ "Imagen", "Itinerario", "Categoría", "Ubicación" ]
 
 const Profile = () => {
   return (
@@ -72,7 +73,7 @@ const Profile = () => {
             <h2 className="text-2xl font-semibold">Mis publicaciones</h2>
           </div>
           <div className="border border-black rounded-xl">
-            <CreatePost />
+            <CreatePost options={options} />
           </div>
           {/* Posts */}
           <div className="flex flex-col gap-6">

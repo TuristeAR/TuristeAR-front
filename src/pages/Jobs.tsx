@@ -31,6 +31,7 @@ const itineraries = [
   }
 ];
 
+const options=[ "Seleccionar imagen", "Agregar ubicación", "Seleccionar tipo de trabajo" ]
 
 const Jobs = () => {
   return (
@@ -40,7 +41,7 @@ const Jobs = () => {
         <LeftCommunity />
         <div className="w-[64%] p-10 overflow-scroll scrollbar-hidden ">
           <div className="rounded-xl mb-10 shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
-            <CreatePost />
+            <CreatePost options={options} />
           </div>
           <div className="flex flex-col gap-6" >
             {itineraries.map((userPost, index) => (

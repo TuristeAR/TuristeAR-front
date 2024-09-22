@@ -38,6 +38,7 @@ const infoComments=[
     ]
   }
 ]
+const options=[ "Seleccionar imagen", "Seleccionar archivo", "Importar itinerario" ]
 
 const Forum = () => {
   return (
@@ -71,7 +72,7 @@ const Forum = () => {
 
           </div>
           <div className="border border-black rounded-b-3xl bg-[#009fe3] bg-opacity-10">
-            <CreatePost />
+            <CreatePost options={options} />
           </div>
         </div>
         <RightCommunity />

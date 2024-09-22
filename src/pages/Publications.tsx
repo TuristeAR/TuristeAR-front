@@ -54,6 +54,8 @@ const itineraries = [
     ],
   }
 ];
+const options=[ "Imagen", "Itinerario", "Categoría", "Ubicación" ]
+
 
 const Publications = () => {
     return (
@@ -85,7 +87,7 @@ const Publications = () => {
             </div>
             {/* Create posts */}
             <div className="rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
-              <CreatePost />
+              <CreatePost options={options} />
             </div>
 
             {/* Posts */}
