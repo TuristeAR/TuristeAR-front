@@ -42,10 +42,10 @@ describe('Destinations Page', () => {
       </BrowserRouter>
     );
 
-    const buenosAiresTitle = screen.getByText('Buenos Aires - San Nicolas');
+    const buenosAiresTitle = screen.getByText('Catamarca');
     expect(buenosAiresTitle).toBeInTheDocument();
 
-    const description = screen.getByText(/Conocido a menudo como el Microcentro/i);
+    const description = screen.getByText(/Situada en el noroeste, destaca por sus montañas/i);
     expect(description).toBeInTheDocument();
 
     // Verificar que las imágenes están presentes
