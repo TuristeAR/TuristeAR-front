@@ -6,7 +6,7 @@ import Destinations from './pages/Destinations';
 import FormQuestions from './pages/FormQuestions';
 import ExpectedPlace from './pages/ExpectedPlace';
 import Publications from './pages/Publications';
-import Community from './pages/Community';
+import Profile from './pages/Profile';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -18,8 +18,9 @@ root.render(
       <Route path="/destinations" element={<Destinations />} />
       <Route path="/formQuestions" element={<FormQuestions />} />
       <Route path="/expectedPlace" element={<ExpectedPlace />} />
-      <Route path="/community" element={<Community />}/>
+      <Route path="/community" element={<Profile />}/>
       <Route path="/publications" element={<Publications />}/>
+      <Route path="/profile" element={<Profile />}/>
     </Routes>
   </BrowserRouter>,
 );

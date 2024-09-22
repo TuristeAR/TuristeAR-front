@@ -21,7 +21,7 @@ function ItinerayCard(props: {
           </div>
           <p>{fecha}</p>
         </div>
-        <p className="font-light px-2 text-gray-500 text-sm md:text-base lg:text-lg text-start">
+        <p className="font-light p-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
           {descripcion}
         </p>
         <ImageGallery images={img}>

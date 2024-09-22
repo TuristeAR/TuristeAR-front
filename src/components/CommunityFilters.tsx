@@ -14,16 +14,16 @@ function CommunityFilters(props: {
       <div className="space-y-4">
         {users.map((friend, index) => (
           <div key={index} className="flex justify-between items-center">
-            <div className="flex gap-2 items-center">
+            <button className="flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%]">
               <img className="w-[35px]" src={friend.imgPerson} alt={`Imagen de ${friend.user}`} />
-              <p className="font-light text-gray-500 text-sm md:text-base text-start">
+              <p className="font-light text-gray-500 text-sm md:text-base text-start ">
                 {friend.user}
               </p>
-            </div>
+            </button>
           </div>
         ))}
       </div>
-      <div className="border-b border-[#999999] pb-2 pt-2">
+      <div className="border-b border-[#999999] p-2 pr-0 hover:bg-[#d9d9d9] rounded-t-xl">
         <a href={link}>Descubrir más</a>
       </div>
     </>
