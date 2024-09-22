@@ -1,6 +1,7 @@
 import Carousel from '../components/Carousel';
 import { Header } from '../components/Header';
-
+import MapaArg from '../components/MapaArg';
+import { useState, useEffect } from 'react';
 const info = [
   {
     place: 'Buenos Aires - San Nicolas',
@@ -13,6 +14,11 @@ const info = [
     ],
   },
 ];
+type Province = {
+  id: string;
+  nombre: string;
+  descripcion: string;
+};
 
 const usuariosReview = [
   {
@@ -77,7 +83,171 @@ const usuariosReview = [
   },
 ];
 
+const provincias = [
+  {
+    id: 'buenos-aires',
+    nombre: 'Buenos Aires',
+    descripcion:
+      'La provincia más poblada de Argentina, famosa por su rica cultura y su vibrante vida nocturna. Es hogar de la ciudad de Buenos Aires, conocida por el tango, la arquitectura y la gastronomía. Su diversidad geográfica incluye llanuras, lagunas y una extensa costa atlántica.',
+  },
+  {
+    id: 'catamarca',
+    nombre: 'Catamarca',
+    descripcion:
+      'Situada en el noroeste, destaca por sus montañas y valles fértiles. Su economía se basa en la agricultura, especialmente en la producción de frutas y hortalizas. Además, tiene un rico patrimonio cultural con influencias indígenas.',
+  },
+  {
+    id: 'chaco',
+    nombre: 'Chaco',
+    descripcion:
+      'Conocida por su biodiversidad y vastas extensiones de tierras fértiles. La economía se centra en la agricultura y la ganadería, además de ser un importante productor de algodón. Su cultura refleja una mezcla de tradiciones indígenas y coloniales.',
+  },
+  {
+    id: 'chubut',
+    nombre: 'Chubut',
+    descripcion:
+      'Famosa por sus impresionantes paisajes patagónicos, incluyendo la Península Valdés, hogar de diversas especies marinas. La economía se basa en la pesca, el turismo y la producción de petróleo. También destaca su historia galesa y cultural.',
+  },
+  {
+    id: 'cordoba',
+    nombre: 'Córdoba',
+    descripcion:
+      'Un importante centro educativo y cultural, conocido por su arquitectura colonial y su vibrante vida estudiantil. La provincia alberga numerosas universidades y una rica historia. Su economía se basa en la agricultura, la industria y el turismo.',
+  },
+  {
+    id: 'corrientes',
+    nombre: 'Corrientes',
+    descripcion:
+      'Famosa por su carnaval y su rica tradición cultural, esta provincia es conocida por sus festivales y danzas. Su economía está centrada en la agricultura y la ganadería, con producción de arroz y yerba mate. También destaca por sus paisajes naturales.',
+  },
+  {
+    id: 'entre-rios',
+    nombre: 'Entre Ríos',
+    descripcion:
+      'Conocida por sus termas y paisajes naturales, es un destino popular para el turismo. Su economía se basa en la agricultura, especialmente en la producción de frutas y verduras. También es famosa por su rica historia y tradiciones.',
+  },
+  {
+    id: 'formosa',
+    nombre: 'Formosa',
+    descripcion:
+      'Región de selvas y humedales, ideal para la biodiversidad y la pesca. Su economía se centra en la agricultura y la ganadería, así como en el ecoturismo. Formosa también es rica en cultura indígena y tradiciones locales.',
+  },
+  {
+    id: 'jujuy',
+    nombre: 'Jujuy',
+    descripcion:
+      'Famosa por sus montañas de colores, como el Cerro de los Siete Colores. La cultura indígena es fuerte en esta región, con numerosas tradiciones y festivales. Su economía se basa en la agricultura y el turismo.',
+  },
+  {
+    id: 'la-pampa',
+    nombre: 'La Pampa',
+    descripcion:
+      'Conocida por sus vastas llanuras, es un importante centro de producción agrícola y ganadera. Su paisaje está dominado por campos de cultivo y cría de ganado. También cuenta con una rica cultura gauchesca.',
+  },
+  {
+    id: 'la-rioja',
+    nombre: 'La Rioja',
+    descripcion:
+      'Famosa por su producción de vino y paisajes montañosos. La provincia tiene un rico patrimonio histórico y cultural, con influencias indígenas y coloniales. Su economía se centra en la viticultura y el turismo.',
+  },
+  {
+    id: 'mendoza',
+    nombre: 'Mendoza',
+    descripcion:
+      'Reconocida mundialmente por sus vinos, especialmente el Malbec, y sus impresionantes paisajes montañosos. Mendoza es un importante destino turístico, con muchas bodegas y actividades al aire libre. Su economía se basa en la viticultura y el turismo.',
+  },
+  {
+    id: 'misiones',
+
+    nombre: 'Misiones',
+    descripcion:
+      'Hogar de las majestuosas Cataratas del Iguazú, es conocida por su biodiversidad y rica cultura guaraní. La economía se centra en el turismo y la producción de yerba mate. Misiones es un destino único con paisajes naturales excepcionales.',
+  },
+  {
+    id: 'neuquen',
+
+    nombre: 'Neuquén',
+    descripcion:
+      'Famosa por sus paisajes patagónicos, montañas y lagos. La economía se basa en la producción de petróleo y gas, además del turismo. También es conocida por sus actividades al aire libre y deportes extremos.',
+  },
+  {
+    id: 'rio-negro',
+
+    nombre: 'Río Negro',
+    descripcion:
+      'Conocida por sus frutales y producción de vino en la región de la Patagonia. La economía se basa en la agricultura, la ganadería y el turismo. También ofrece paisajes variados, desde montañas hasta costas.',
+  },
+  {
+    id: 'salta',
+
+    nombre: 'Salta',
+    descripcion:
+      'Famosa por sus montañas y tradiciones indígenas, es un destino turístico atractivo. La provincia es conocida por su producción de vino y paisajes naturales impresionantes. Su cultura se refleja en su arquitectura y festividades.',
+  },
+  {
+    id: 'san-juan',
+
+    nombre: 'San Juan',
+    descripcion:
+      'Conocida por su producción vitivinícola y paisajes áridos, especialmente el Malbec. La economía se centra en la viticultura y la minería. San Juan también alberga el Parque Nacional Ischigualasto, famoso por sus formaciones geológicas.',
+  },
+  {
+    id: 'san-luis',
+
+    nombre: 'San Luis',
+    descripcion:
+      'Famosa por sus paisajes montañosos y su producción agrícola, incluyendo frutas y verduras. La provincia ofrece diversas actividades al aire libre y tiene un rico patrimonio cultural. Su economía está en crecimiento y diversificación.',
+  },
+  {
+    id: 'santa-cruz',
+
+    nombre: 'Santa Cruz',
+    descripcion:
+      'La provincia más grande de Argentina, conocida por sus paisajes impresionantes y la cordillera de los Andes. La economía se basa en la minería y el turismo, especialmente en lugares como El Calafate. También destaca por su fauna y flora.',
+  },
+  {
+    id: 'santa-fe',
+
+    nombre: 'Santa Fe',
+    descripcion:
+      'Conocida por su producción agrícola y ganadera, especialmente en la región pampeana. Su economía es una de las más fuertes del país. Santa Fe también es rica en historia, cultura y tradiciones.',
+  },
+  {
+    id: 'santiago-del-estero',
+
+    nombre: 'Santiago del Estero',
+    descripcion:
+      'Región con una rica herencia cultural y famosa por su folclore. Su economía se basa en la agricultura y la ganadería. La provincia también es conocida por sus festivales y tradiciones populares.',
+  },
+  {
+    id: 'tierra-del-fuego',
+
+    nombre: 'Tierra del Fuego, Antártida e Islas del Atlántico Sur',
+    descripcion:
+      'La provincia más austral de Argentina, famosa por sus paisajes naturales y la ciudad de Ushuaia. Su economía se basa en el turismo y la pesca. También es conocida por su rica fauna y flora en un entorno único.',
+  },
+  {
+    id: 'tucuman',
+
+    nombre: 'Tucumán',
+    descripcion:
+      "Conocida como el 'Jardín de la República', destaca por su producción de azúcar y cítricos. La provincia tiene un rico patrimonio histórico y cultural. Su clima y paisajes son ideales para la agricultura.",
+  },
+];
+
 const Destinations = () => {
+  const [linePosition, setLinePosition] = useState(null);
+
+  const [selectedProvince, setSelectedProvince] = useState<Province>();
+   useEffect(() => {
+    setSelectedProvince(provincias[0]);
+  }, []);
+  const handleProvinceClick = (nombre: string) => {
+    const province = provincias.find((p) => p.id === nombre);
+    setSelectedProvince(province);
+    
+  };
+
   return (
     <>
       <Header containerStyles="bg-primary" />
@@ -101,143 +271,25 @@ const Destinations = () => {
           </div>
         </div>
 
-        <div className="flex my-6 container mx-auto">
+        <div className="flex my-6 container mx-auto gap-1">
           <div className="flex-1 hidden md:block ">
             {/* Mapa svg */}
-            <div className="flex justify-center items-center h-full ">
-              <svg width="100%" height="100%">
-                <g fill="#18a0fb" stroke="#555">
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m498 662-2 2 2-1zm-44 9v20l11 3 4-2 3 1 1-3-7-2-12-12 2-3zm53-6 3 1 1-2h-2l6-2-2-2h2l-3-1v2-2l-3-1-1 5-1-1-2 2 2 4v-3zm-5-6 1 1-3-1v2l2 1-1-1-1 1h2-2v2l-3 1 2 2 3-3h2l3-5h-4zm-24 32h-2l3 1 2-2-2 1zm26-33 2 1-2-1zm0 8zm0 1v1zM589 0z"
-                    aria-describedby="leaflet-tooltip-835"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="M456 556v-8l-8-3-5-7-4 4v8l2 7-3 1-2 6 1 1-2 2v6l3 1 2-1-1-1 2-2 4-1 1-4h2l7-7h2l-1-2z"
-                    aria-describedby="leaflet-tooltip-997"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="M465 509h-4l1 11 3 3v13l9 1-1-20 2-5h-2v-2l-2-1h-6z"
-                    aria-describedby="leaflet-tooltip-793"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="M509 483h-16l-2 16 1 2-2 7 2 9-6 9h7l5-6 3-1-3-6 1-5 6-7v-8l4-9z"
-                    aria-describedby="leaflet-tooltip-816"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m472 497-4-8h-2l1-1-2-3-3 1-6-2-3-3-5 4 4 4-1 5h4l6 6 2 7 2 2h4l2-10z"
-                    aria-describedby="leaflet-tooltip-844"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m468 472-1-1-1 2-2-2 2-4-2-2h-10v7l2 4-2 2-1-1-2 4 10 5 4-1 1 3 4 3 2 6 3-2v-7h-2l1-4-5-3-1-9z"
-                    aria-describedby="leaflet-tooltip-845"
-                  />
-                  <path d="M477 472h-9v6l3 5 3-1 3-9z" aria-describedby="leaflet-tooltip-815" />
-                  className='hover:fill-[#E88E20] transition-all duration-300'{' '}
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m512 476-16-14h-2v-2l-5-2v2l-6 8h10v15h16l2-5-1-1 2-1z"
-                    aria-describedby="leaflet-tooltip-842"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m512 476 1-5 4-4-3-3-5-1-3-3-9-4-7-6v-2l-1 10 5 2v2h2l16 14z"
-                    aria-describedby="leaflet-tooltip-841"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="M459 612h-22l-2 2v9l-1-1v2h-2l1 1-2 4 2 2-1 3-1-1v4h-2l-1 3-2-1-1 8 3 7 2-2 3 1-1 8 3 2v2h11l9 3-3-7h-4l4-1-1-5-2 1 2-2v-3l4-3-2-2 1-2v2l3 1 3-9 4-5h2l4-4-2-2-1 1 3-3v-2l-7-3-3-3v-4z"
-                    aria-describedby="leaflet-tooltip-843"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m474 581-41 1v4l4 8-2 4 5 3-2 2h-4l4 3-1 3-1-1v4h23l4-6 4-2 4 1-1-3 3-3-1-4 2-5 4-2-4-2 3-1 2 1v2l3-1-1-6-3 2h2l-1 1h-2l-3-3z"
-                    aria-describedby="leaflet-tooltip-790"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m461 512-4-2-4 2-2-3-3 1-3 4v4h2v6l-2 2-1 5-2 1 2 2-1 3 5 8 4 2 1-1 2 2v-11h10l1-3v-5l-2-2 1-5-3-3-1-7z"
-                    aria-describedby="leaflet-tooltip-783"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m491 499-3-1-1-3-13-2 1 2-3 2-2 6v6l5 2-1 19h9v-4h3l6-9 1-2-3-5 2-9z"
-                    aria-describedby="leaflet-tooltip-788"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m512 523-1-3 3-4-1-7 2-8-4-4h-2l-5 3 1 1-6 7-1 5 5 7 9 3z"
-                    aria-describedby="leaflet-tooltip-839"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m448 486-2 4 1 7-3 3v4l-1-1 2 11 3-2v-2l3-1 1 3 4-2 5 2 1-4 3 1-6-11-8-5 1-3-4-4z"
-                    aria-describedby="leaflet-tooltip-836"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m473 446-5-2-6 6v6l3 3 3-5v3l4 4h4l3-2v-4h-4v-2l-3-3 1-4z"
-                    aria-describedby="leaflet-tooltip-936"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="M493 483v-15h-15l-5 19 2 2v4l12 2 1 3 3 1z"
-                    aria-describedby="leaflet-tooltip-837"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="M458 548h-2l1 9-9 8h-2v2l-3 3h-2l-2 4-4-1 1 7 38 1-1-8 2-2 5 3 7-1-4-2v-10l-3-3-12-2-1 1-7-4-2-2v-3z"
-                    aria-describedby="leaflet-tooltip-791"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m525 479-4 2-9-3-3 2v4l-4 8v6l6-1 4 4v-2l13-15-3-5zm-5 0 1 1-1-1zm-3 0zm4 1zm-1 0z"
-                    aria-describedby="leaflet-tooltip-838"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="M527 484h2l10-8-1-8h-5l-1 6-5 5h-2l2 4z"
-                    aria-describedby="leaflet-tooltip-840"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m489 448-2-2-5-1h-2l-2 6-2-5-4 2 3 7h4v4l-3 3-4-2-1 1-1-3-2-1v-3l-3 5-3-3-1 2-7 4 1 3h9l2 2-2 4 2 2 2-2 2 2v-2h8v-3h4l7-8z"
-                    aria-describedby="leaflet-tooltip-814"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="M483 530h-9v7h-19l1 11 3 1-1 2 2 2 7 4 1-1 12 2 3 3z"
-                    aria-describedby="leaflet-tooltip-792"
-                  />
-                  <path
-                    className="hover:fill-[#E88E20] transition-all duration-300"
-                    d="m512 523-5-1-6-4-4 2-4 6h-10v45l4 2 3-1-1-7 2-2v-3h-2v-4l2 2 17-2 7-3 7-10-1-3-3-2v-7l-6-4-1 1 1-5zm-21 36h1zm0-1zm-1 10 1 1zm1-9zm-1 10v1zm22-45z"
-                    aria-describedby="leaflet-tooltip-789"
-                  />
-                  <path d="m512 527-1 1 1-1z" aria-describedby="leaflet-tooltip-846" />
-                  className='hover:fill-[#E88E20] transition-all duration-300'{' '}
-                </g>
-              </svg>
+            <div className="flex justify-center items-center">
+              <MapaArg onProvinceClick={handleProvinceClick}></MapaArg>
             </div>
           </div>
-
+         
           <div className="flex-1 max-w-[600px] w-full flex flex-col gap-y-6 px-4 md:px-0">
             {/* Info */}
-            {info.map((item, index) => {
-              return (
-                <div key={index} className="flex flex-col gap-y-4">
-                  <h1 className='text-center'>{item.place}</h1>
+          
+                <div  className="flex flex-col gap-y-4">
+                  <h1 className="text-center">{selectedProvince?.nombre}</h1>
                   <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
-                    {item.descripcion}
+                    {selectedProvince?.descripcion}
                   </p>
 
                   <div className="flex justify-center gap-2">
-                    {item.img.map((image) => (
+                    {info[0].img.map((image) => (
                       <img
                         key={image.id}
                         src={image.src}
@@ -249,9 +301,8 @@ const Destinations = () => {
                     <button className="btn-blue">Ver más</button>
                   </div>
                 </div>
-              );
-            })}
-            <div className='border-b border-gray my-4 '></div>
+          
+            <div className="border-b border-gray my-4 "></div>
             {/* Publicaciones */}
             <Carousel>
               {usuariosReview.map((item, index) => {
