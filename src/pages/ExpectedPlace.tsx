@@ -57,9 +57,9 @@ const puntosDeInteres = [
     img: [
       { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
       { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
+      { id: 4, src: '/assets/san-nicolas-buenos-aires.webp' },
+      { id: 5, src: '/assets/san-nicolas-buenos-aires.webp' },
     ],
     link: '',
   },
@@ -70,9 +70,9 @@ const puntosDeInteres = [
     img: [
       { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
       { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
+      { id: 4, src: '/assets/san-nicolas-buenos-aires.webp' },
+      { id: 5, src: '/assets/san-nicolas-buenos-aires.webp' },
     ],
     link: '',
   },
@@ -152,17 +152,18 @@ const ExpectedPlace = () => {
             return (
               <div key={index} className="px-2 sm:px-0 flex flex-col gap-y-4">
                 <h1 className="text-center">{item.place}</h1>
-                <div className="flex">
+                <div className="flex gap-2">
                   <p className="w-11/12 font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
                     {item.descripcion}
                   </p>
 
                   <div className="flex">
-                    <div className="flex flex-col ml-6 items-center max-lg:justify-center w-full h-full">
+                    <div className="flex flex-col items-center max-lg:justify-center w-full h-full">
                       <div className="flex flex-row items-center  ">
                         <div className="flex items-center justify-start gap-3 mb-4">
                           {[...Array(4)].map((_, index) => (
                             <svg
+                            key={index}
                               className="items-end ml-auto"
                               xmlns="http://www.w3.org/2000/svg"
                               height="30px"
@@ -241,7 +242,7 @@ const ExpectedPlace = () => {
         <div className="sm:w-10/12 m-auto mt-20">
           <h3 className="text-4xl pl-1 sm:pl-0 font-bold">Puntos de interes</h3>
           <hr />
-          <iframe
+        <iframe
             src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13140.305655721764!2d-58.4122997!3d-34.576933!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb579fa2cfa59%3A0x296b8c9a44cd6331!2sAwwa%20Suites%20%26%20Spa!5e0!3m2!1ses-419!2sar!4v1727029785630!5m2!1ses-419!2sar"
             className="w-full"
             height="450"
@@ -249,7 +250,7 @@ const ExpectedPlace = () => {
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-          ></iframe>
+          ></iframe> 
         </div>
       </section>
 

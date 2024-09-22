@@ -138,7 +138,7 @@ const ExpectedDestination = () => {
                     <ImageGallery images={info[0].img}></ImageGallery>
                     {info.map((item, index) => {
                         return (
-                            <div key={index} className="px-2 sm:px-0 flex flex-col gap-y-4">
+                            <div  className="px-2 sm:px-0 flex flex-col gap-y-4">
                                 <h1 className="text-center">{item.place}</h1>
                                 <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-center">
                                     {item.descripcion}
@@ -211,7 +211,6 @@ const ExpectedDestination = () => {
                     <div className="flex gap-2 mt-5 justify-around flex-wrap">
                         {usuariosReview.map((userPost, index) => (
                             <PostCard
-                                key={index}
                                 imgPerson={userPost.imgPerson}
                                 usuario={userPost.usuario}
                                 fecha={userPost.fecha}
@@ -269,7 +268,6 @@ const ExpectedDestination = () => {
                             {puntosDeInteres.map((article, index) => (
                                 <SwiperSlide>
                                     <ArticleCard
-                                        key={index}
                                         title={article.title}
                                         images={article.img}
                                         description={article.description}
@@ -370,7 +368,6 @@ const ExpectedDestination = () => {
                             {puntosDeInteres.map((article, index) => (
                                 <SwiperSlide>
                                     <ArticleCard
-                                        key={index}
                                         title={article.title}
                                         images={article.img}
                                         description={article.description}
