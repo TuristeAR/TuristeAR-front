@@ -7,6 +7,7 @@ import FormQuestions from './pages/FormQuestions';
 
 import ExpectedPlace from './pages/ExpectedPlace';
 import Profile from './pages/Profile';
+import Calendar from './pages/Calendar';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -19,6 +20,8 @@ root.render(
       <Route path="/formQuestions" element={<FormQuestions />} />
       <Route path="/expectedPlace" element={<ExpectedPlace />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/calendar" element={<Calendar />} />
+
     </Routes>
   </BrowserRouter>,
 );
