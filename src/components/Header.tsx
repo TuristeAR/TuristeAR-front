@@ -13,7 +13,7 @@ export const Header = ({ containerStyles }: { containerStyles: any }) => {
         <div className="container mx-auto flex flex-wrap p-5  md:flex-row items-center justify-between">
           <Link to={'/'} className="flex title-font font-medium items-center md:mb-0">
             <img src={logo} alt="Logo" className="logo w-12" />
-            <span className="ml-3 text-xl text-white font-bold hidden md:block">TURISTEAR</span>
+            <span className="ml-3 text-l text-white font-bold hidden md:block">TURISTEAR</span>
           </Link>
           {/* Links */}
           <nav className="hidden my-auto text-white  md:block md:ml-auto md:mr-auto flex-wrap items-center text-base justify-center font-semibold">
