@@ -85,6 +85,18 @@ const usuariosReview = [
 
 const provincias = [
   {
+    id: 'caba',
+    nombre: 'Ciudad Autónoma de Buenos Aires',
+    descripcion:
+      'La provincia más poblada de Argentina, famosa por su rica cultura y su vibrante vida nocturna. Es hogar de la ciudad de Buenos Aires, conocida por el tango, la arquitectura y la gastronomía. Su diversidad geográfica incluye llanuras, lagunas y una extensa costa atlántica.',
+  },
+  {
+    id: 'caba-z',
+    nombre: 'Ciudad Autónoma de Buenos Aires',
+    descripcion:
+      'La provincia más poblada de Argentina, famosa por su rica cultura y su vibrante vida nocturna. Es hogar de la ciudad de Buenos Aires, conocida por el tango, la arquitectura y la gastronomía. Su diversidad geográfica incluye llanuras, lagunas y una extensa costa atlántica.',
+  },
+  {
     id: 'buenos-aires',
     nombre: 'Buenos Aires',
     descripcion:
@@ -236,11 +248,10 @@ const provincias = [
 ];
 
 const Destinations = () => {
-  const [linePosition, setLinePosition] = useState(null);
 
   const [selectedProvince, setSelectedProvince] = useState<Province>();
    useEffect(() => {
-    setSelectedProvince(provincias[0]);
+    setSelectedProvince(provincias[3]);
   }, []);
   const handleProvinceClick = (nombre: string) => {
     const province = provincias.find((p) => p.id === nombre);
@@ -275,7 +286,7 @@ const Destinations = () => {
           <div className="flex-1 hidden md:block ">
             {/* Mapa svg */}
             <div className="flex justify-center items-center">
-              <MapaArg onProvinceClick={handleProvinceClick}></MapaArg>
+              <MapaArg onProvinceClick={handleProvinceClick} defaultProvinceId={selectedProvince?.id}></MapaArg>
             </div>
           </div>
          
