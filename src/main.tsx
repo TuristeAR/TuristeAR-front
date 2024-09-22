@@ -11,6 +11,7 @@ import Jobs from './pages/Jobs';
 import ExpectedDestination from './pages/ExpectedDestination';
 import { Login } from './pages/Login';
 import Profile from './pages/Profile';
+import Calendar from './pages/Calendar';
 
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
