@@ -17,7 +17,7 @@ export const LandingHero = () => {
           <h1 className="title-font sm:text-7xl text-3xl mb-4 font-bold  text-white max-w-[750px]">
             Descubrí la <span className="text-primary">Argentina</span> a tu medida
           </h1>
-          <p className="mb-8 leading-relaxed text-xl text-white">
+          <p className="mb-8 leading-relaxed text-l text-white">
             Creá tu viaje perfecto y explorá los destinos más fascinantes del país junto a nuestra
             comunidad.
           </p>

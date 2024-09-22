@@ -17,7 +17,6 @@ const info = [
     },
 ];
 
-
 const usuariosReview = [
     {
         imgPerson: '/assets/person.svg',
@@ -65,19 +64,19 @@ const ExpectedPlace = () => {
                     <div className="flex justify-center gap-6">
                         <div >
                             <svg xmlns="http://www.w3.org/2000/svg" height="100px" viewBox="0 -960 960 960" width="100px" fill="#000000"><path d="M280-240h40v-60h320v60h40v-160q0-33-23.5-56.5T600-480H460v140H320v-180h-40v280Zm110-120q21 0 35.5-14.5T440-410q0-21-14.5-35.5T390-460q-21 0-35.5 14.5T340-410q0 21 14.5 35.5T390-360ZM160-120v-480l320-240 320 240v480H160Zm60-60h520v-394L480-763 220-574v394Zm260-292Z" /></svg>
-                            <h3 className="text-xl font-medium text-center mx-auto">Alojamiento</h3>
+                            <h3 className="text-l font-medium text-center mx-auto">Alojamiento</h3>
                         </div>
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" height="100px" viewBox="0 -960 960 960" width="100px" fill="#000"><path d="M480-283q12 0 21-9t9-21q0-12-9-21t-21-9q-12 0-21 9t-9 21q0 12 9 21t21 9Zm0-167q12 0 21-9t9-21q0-12-9-21t-21-9q-12 0-21 9t-9 21q0 12 9 21t21 9Zm0-167q12 0 21-9t9-21q0-12-9-21t-21-9q-12 0-21 9t-9 21q0 12 9 21t21 9Zm340 457H140q-24.75 0-42.37-17.63Q80-195.25 80-220v-153q37-8 61.5-37.5T166-480q0-40-24.5-70T80-587v-153q0-24.75 17.63-42.38Q115.25-800 140-800h680q24.75 0 42.38 17.62Q880-764.75 880-740v153q-37 7-61.5 37T794-480q0 40 24.5 69.5T880-373v153q0 24.75-17.62 42.37Q844.75-160 820-160Zm0-60v-109q-38-26-62-65t-24-86q0-47 24-86t62-65v-109H140v109q39 26 62.5 65t23.5 86q0 47-23.5 86T140-329v109h680ZM480-480Z" /></svg>
-                            <h3 className="text-xl font-medium text-center">Atracciones</h3>
+                            <h3 className="text-l font-medium text-center">Atracciones</h3>
                         </div>
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" height="100px" viewBox="0 -960 960 960" width="100px" fill="#000000"><path d="M120-120v-558h247v-92l113-110 113 110v258h247v392H120Zm60-60h106v-106H180v106Zm0-166h106v-106H180v106Zm0-166h106v-106H180v106Zm247 332h106v-106H427v106Zm0-166h106v-106H427v106Zm0-166h106v-106H427v106Zm0-166h106v-106H427v106Zm247 498h106v-106H674v106Zm0-166h106v-106H674v106Z" /></svg>
-                            <h3 className="text-xl font-medium text-center">Ciudad</h3>
+                            <h3 className="text-l font-medium text-center">Ciudad</h3>
                         </div>
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" height="100px" viewBox="0 -960 960 960" width="100px" fill="#000000"><path d="M285-80v-368q-52-11-88.5-52.5T160-600v-280h60v280h65v-280h60v280h65v-280h60v280q0 58-36.5 99.5T345-448v368h-60Zm415 0v-320H585v-305q0-79 48-127t127-48v800h-60Z" /></svg>
-                            <h3 className="text-xl font-medium text-center">Restaurant</h3>
+                            <h3 className="text-l font-medium text-center">Restaurant</h3>
                         </div>
                     </div>
                 </div>
@@ -108,4 +107,5 @@ const ExpectedPlace = () => {
     )
 
 }
+
 export default ExpectedPlace;
