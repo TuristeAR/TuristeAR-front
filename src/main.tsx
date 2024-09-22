@@ -4,6 +4,7 @@ import './index.css';
 import { Home } from './pages/Home';
 import Destinations from './pages/Destinations';
 import FormQuestions from './pages/FormQuestions';
+import Profile from './pages/Profile';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -14,6 +15,7 @@ root.render(
       <Route path="*" element={<Home />} />
       <Route path="/destinations" element={<Destinations />} />
       <Route path="/formQuestions" element={<FormQuestions />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   </BrowserRouter>,
 );
