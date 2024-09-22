@@ -18,7 +18,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ title, images, description, l
                 {
                     images.map((item, index) => {
                         return (
-                            <a href={link} >
+                            <a href={link} key={index}>
                                 <img className="rounded-t-lg" src={item.src} alt={title} />
                             </a>
                         )

@@ -299,13 +299,14 @@ const Destinations = () => {
                     {selectedProvince?.descripcion}
                   </p>
 
-                  <div className="flex justify-center gap-2">
+                  <div className="flex justify-center">
                     {info[0].img.map((image) => (
-                      <img
-                        key={image.id}
-                        src={image.src}
-                        className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-contain"
-                      />
+                       <img
+                       key={image.id}
+                       src={image.src}
+                       className="w-full h-auto md:w-[200px] object-contain"
+                       alt={selectedProvince?.nombre} // Agregar un atributo alt es recomendable
+                     />
                     ))}
                   </div>
                   <div>
