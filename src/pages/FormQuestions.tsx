@@ -1,5 +1,6 @@
 import { Header } from '../components/Header';
 import Question from '../components/Questions';
+import { useNavigate } from 'react-router-dom';
 
 const questions = [
   {
@@ -24,11 +25,14 @@ const questions = [
   },
 ];
 
-onsubmit = (e) => {
-  e.preventDefault();
-};
-
 const FormQuestions = () => {
+  const navigate = useNavigate();
+
+  const onsubmit = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    navigate('/calendar');
+  };
+
   return (
     <>
       <Header containerStyles={'bg-primary relative top-0 z-[60] '} />
@@ -36,14 +40,14 @@ const FormQuestions = () => {
         <div className="container mx-auto shadow-2xl flex  items-center justify-center z-30 relative">
           {/* Form */}
           <form
-            onSubmit={() => onsubmit}
+            onSubmit={onsubmit}
             action=""
             className="flex flex-col w-full justify-center items-center bg-white overflow-y-hidden p-4  shadow-2xl rounded-lg md:rounded"
           >
             {questions.map((q, index) => (
               <Question key={index} question={q} />
             ))}
-            <button className='btn-blue'>Continuar</button>
+            <button className="btn-blue">Continuar</button>
           </form>
         </div>
       </section>

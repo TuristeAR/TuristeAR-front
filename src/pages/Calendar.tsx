@@ -3,20 +3,17 @@ import FullCalendar from '@fullcalendar/react';
 
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { useState } from 'react';
+import { JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useState } from 'react';
 
 const Calendar = () => {
   const [events, setEvents] = useState([
     { id: '1', title: 'Evento 1', date: '2024-09-01' },
     { id: '2', title: 'Evento 2', date: '2024-09-05' },
   ]);
-
+  /* 
   const handleEventClick = (info: { event: { title: any; id: string } }) => {
-    const confirmed = window.confirm(`¿Quieres borrar el evento: ${info.event.title}?`);
-    if (confirmed) {
-      setEvents(events.filter((event) => event.id !== info.event.id));
-    }
-  };
+    
+  }; */
 
   const handleDateClick = (arg: { dateStr: any }) => {
     const title = prompt('Introduce el título del nuevo evento:');
@@ -28,6 +25,16 @@ const Calendar = () => {
   const deleteEvent = (id: string) => {
     setEvents(events.filter((event) => event.id !== id));
   };
+
+  const modificarEvento = (id: string) => {
+    const eventoSelect = events.find((event) => event.id === id);
+    const title = prompt('Modificar evento:', eventoSelect?.title);
+    if (title) {
+      const updatedEvents = events.map((event) => (event.id === id ? { ...event, title } : event));
+      setEvents(updatedEvents);
+    }
+  };
+
   return (
     <section className="h-screen xl:h-auto overflow-x-clip relative">
       <Header containerStyles="bg-primary fixed top-0 left-0 right-0 z-[60]" />
@@ -97,7 +104,7 @@ const Calendar = () => {
               plugins={[dayGridPlugin, interactionPlugin]}
               initialView="dayGridMonth"
               events={events}
-              eventClick={handleEventClick}
+              /* eventClick={handleEventClick} */
               dateClick={handleDateClick}
               editable={true} // Permite mover eventos
               eventDrop={(info) => {
@@ -107,6 +114,25 @@ const Calendar = () => {
                 );
                 setEvents(updatedEvents);
               }}
+              eventContent={(eventInfo) => (
+                <div className="flex justify-between items-center">
+                  <span>{eventInfo.event.title}</span>
+                  <div className="flex">
+                    <button
+                      onClick={() => deleteEvent(eventInfo.event.id)}
+                      className="ml-2 text-blue-500"
+                    >
+                      ❌
+                    </button>
+                    <button
+                      onClick={() => modificarEvento(eventInfo.event.id)}
+                      className=" text-blue-500"
+                    >
+                      ✏️
+                    </button>
+                  </div>
+                </div>
+              )}
               headerToolbar={{
                 left: 'prev,next today',
                 center: 'title',
