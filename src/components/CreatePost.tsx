@@ -20,17 +20,17 @@ function CreatePost() {
           placeholder="Escribe tu experiencia"
         />
         <div className="w-[20%]">
-          <img src={logo} alt="logo" className="h-8 w-8 object-cover mx-auto" />
+          <img src="/assets/send.svg" alt="logo" className="w-[50px] mx-auto" />
         </div>
       </div>
       <div className="grid grid-cols-4 p-4 border-t border-black">
-        {options.map((item,index) =>{
+        {options.map((item, index) => {
           return (
             <div key={index} className="flex gap-2 items-center mx-auto">
-              <img src={logo} alt="logo" className="h-8 w-8 object-cover" />
+              <img src="/assets/add.svg" alt="Agregar" className="h-8 w-8 object-cover" />
               <p className="">{item.option}</p>
             </div>
-          )
+          );
         })}
       </div>
     </>

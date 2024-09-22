@@ -62,14 +62,16 @@ const Publications = () => {
     return (
       <>
         <Header containerStyles={'bg-primary relative top-0 z-[60]'} />
-        <div className="flex justify-between h-[140vh] ">
+        <div className="flex justify-between h-[160vh] ">
           <LeftCommunity />
-          <div className="w-[64%] p-10 flex flex-col gap-10 overflow-scroll ">
+          <div className="w-[64%] p-10 flex flex-col gap-10 overflow-scroll scrollbar-hidden ">
             {/* Stories */}
             <div className="flex gap-2">
               <div
-                className={`bg-cover bg-center h-[230px] w-full border border-black rounded-2xl flex flex-col justify-between p-2`}
-              ></div>
+                className={`bg-black bg-cover bg-center h-[230px] w-full border border-black rounded-2xl flex items-center justify-between p-2`}
+              >
+                <img src="/assets/addWhite.svg" alt="Add White" />
+              </div>
               {userStories.map((item, index) => {
                 return (
                   <div
@@ -85,7 +87,7 @@ const Publications = () => {
               })}
             </div>
             {/* Create posts */}
-            <div className="border border-black rounded-xl">
+            <div className="rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
               <CreatePost />
             </div>
 

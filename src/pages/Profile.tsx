@@ -2,7 +2,6 @@ import { Header } from '../components/Header';
 import LeftCommunity from '../components/LeftCommunity';
 import RightCommunity from '../components/RightCommunity';
 import CreatePost from '../components/CreatePost';
-import React from 'react';
 import ItineraryCard from '../components/ItineraryCard';
 
 const itineraries = [

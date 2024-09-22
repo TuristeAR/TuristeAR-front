@@ -9,7 +9,15 @@
     .btn-blue{
         @apply min-w-[156px] h-[54px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all;
     }
+    .scrollbar-hidden::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hidden {
+        scrollbar-width: none;
+    }
 }
+
+
 
 .swiper-button-next,
 .swiper-button-prev {

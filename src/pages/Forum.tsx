@@ -1,7 +1,6 @@
 import { Header } from '../components/Header';
 import LeftCommunity from '../components/LeftCommunity';
 import RightCommunity from '../components/RightCommunity';
-import React from 'react';
 import ImageGallery from '../components/ImageGallery';
 import CreatePost from '../components/CreatePost';
 
@@ -46,8 +45,8 @@ const Forum = () => {
       <Header containerStyles={'bg-primary relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
         <LeftCommunity />
-        <div className="w-[64%] p-10 overflow-scroll ">
-          <div className="border border-[#999999] rounded-3xl flex flex-col gap-y-6">
+        <div className="w-[64%] p-10 overflow-scroll scrollbar-hidden">
+          <div className="border border-[#999999] border-b-0 rounded-t-3xl flex flex-col gap-y-6 overflow-scroll scrollbar-hidden h-[120vh]">
             {infoComments.map((info, index) => {
               return (
                 <>
@@ -56,9 +55,9 @@ const Forum = () => {
                       <img src={info.imgPerson} alt="Person" />
                     </div>
                     <div className="w-[90%] flex flex-col gap-4">
-                      <div className="flex justify-between items-center text-[#999999] text-xl">
-                        <p>{info.user}</p>
-                        <p>{info.day}</p>
+                      <div className="flex justify-between items-center text-[#999999]">
+                        <p className="text-xl">{info.user}</p>
+                        <p className="text-l">{info.day}</p>
                       </div>
                       <p>
                         {info.comment}
@@ -69,10 +68,10 @@ const Forum = () => {
                 </>
               )
             })}
-            <div className="border border-black rounded-b-3xl">
-              <CreatePost />
-            </div>
 
+          </div>
+          <div className="border border-black rounded-b-3xl bg-[#009fe3] bg-opacity-10">
+            <CreatePost />
           </div>
         </div>
         <RightCommunity />
