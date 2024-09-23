@@ -282,7 +282,7 @@ const Destinations = () => {
           </div>
         </div>
 
-        <div className="flex my-6 container mx-auto gap-1">
+        <div className="flex flex-wrap my-6 container mx-auto gap-1">
           <div className="flex-1 hidden md:block md:w-[400px] xl:w-auto">
             {/* Mapa svg */}
             <div className="flex  justify-center items-center">
@@ -299,13 +299,13 @@ const Destinations = () => {
                     {selectedProvince?.descripcion}
                   </p>
 
-                  <div className="flex justify-center">
+                  <div className="flex justify-center gap-2 overflow-hidden">
                     {info[0].img.map((image) => (
                        <img
                        key={image.id}
                        src={image.src}
-                       className="w-full h-auto md:w-[200px] object-contain"
-                       alt={selectedProvince?.nombre} // Agregar un atributo alt es recomendable
+                       className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-contain"
+                       alt={selectedProvince?.nombre} 
                      />
                     ))}
                   </div>
