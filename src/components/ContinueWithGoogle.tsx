@@ -1,18 +1,7 @@
-import { get } from '../utilities/http.util';
-
 export const ContinueWithGoogle = () => {
-  const goToGoogleAuth = async () => {
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-
-    const response = await get(`${import.meta.env.VITE_API_URL}/auth/google`, headers);
-
-    if (response.redirected) {
-      window.location.href = response.url;
-    } else {
-      console.error('Error:', response);
-    }
+  const goToGoogleAuth = () => {
+    console.log(`${import.meta.env.VITE_API_URL}/auth/google`);
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
   };
 
   return (
