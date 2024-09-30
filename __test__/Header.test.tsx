@@ -8,8 +8,8 @@ describe('Header', () => {
   test('renders the logo', () => {
     render(
       <BrowserRouter>
-       <Header containerStyles={''} />
-      </BrowserRouter>
+        <Header containerStyles={''} />
+      </BrowserRouter>,
     );
     const logoElement = screen.getByAltText('Logo');
     expect(logoElement).toBeInTheDocument();
@@ -18,8 +18,8 @@ describe('Header', () => {
   test('renders the navigation links', () => {
     render(
       <BrowserRouter>
-       <Header containerStyles={''} />
-      </BrowserRouter>
+        <Header containerStyles={''} />
+      </BrowserRouter>,
     );
     const destinosLink = screen.getByText('Destinos');
     const comunidadLink = screen.getByText('Comunidad');
@@ -32,10 +32,10 @@ describe('Header', () => {
   test('renders the login button with correct text', () => {
     render(
       <BrowserRouter>
-       <Header containerStyles={''} />
-      </BrowserRouter>
+        <Header containerStyles={''} />
+      </BrowserRouter>,
     );
-    const loginButton = screen.getByRole('button', { name: /Login/i });
+    const loginButton = screen.getByRole('button', { name: /Iniciá sesión/i });
     expect(loginButton).toBeInTheDocument();
   });
 });
