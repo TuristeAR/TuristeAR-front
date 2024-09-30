@@ -1,29 +1,32 @@
-import logo from '/assets/logo.svg';
+import logo from '/src/assets/TuristeAR-logo.png';
 import arrowRight from '/assets/arrow-right.svg';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { NavMobile } from './NavMobile/NavMobile';
+
 export const Header = ({ containerStyles }: { containerStyles: any }) => {
   const [navActive, setNavActive] = useState(false);
 
   return (
     <>
-      <header className={`${containerStyles}  w-full text-gray-600 body-font`}>
+      <header className={`${containerStyles} w-full text-gray-600 body-font`}>
         {' '}
-        <div className="container mx-auto flex flex-wrap p-5  md:flex-row items-center justify-between">
+        <div className="container mx-auto flex flex-wrap p-5 md:flex-row items-center justify-between">
           <Link to={'/'} className="flex title-font font-medium items-center md:mb-0">
-            <img src={logo} alt="Logo" className="logo w-12" />
-            <span className="ml-3 text-l text-white font-bold hidden md:block">TURISTEAR</span>
+            <img src={logo} alt="Logo" className="h-14" />
           </Link>
           {/* Links */}
-          <nav className="hidden my-auto text-white  md:block md:ml-auto md:mr-auto flex-wrap items-center text-base justify-center font-semibold">
+          <nav className="hidden mt-auto mb-0 text-white md:block md:ml-auto md:mr-auto flex-wrap items-center text-lg justify-center font-semibold">
             <Link
               to={'/destinations'}
               className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer"
             >
               Destinos
             </Link>
-            <Link to={'/community'} className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer">
+            <Link
+              to={'/community'}
+              className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer"
+            >
               Comunidad
             </Link>
             <Link
@@ -34,7 +37,7 @@ export const Header = ({ containerStyles }: { containerStyles: any }) => {
             </Link>
             <div></div>
           </nav>
-          {/* Nav  trigger btn */}
+          {/* Nav trigger btn */}
           <button
             onClick={() => setNavActive(!navActive)}
             className="w-8 h-6 md:hidden text-white relative flex items-center justify-center z-[60] outline-none "
@@ -59,10 +62,9 @@ export const Header = ({ containerStyles }: { containerStyles: any }) => {
             ></span>
           </button>
           {navActive && <NavMobile />}
-
           {/* Login */}
-          <button className="hidden md:flex justify-center items-center text-white text-base mt-4 md:mt-0 gap-x-2 hover:text-hover font-semibold">
-            <p>Login</p>
+          <button className="hidden md:flex justify-center items-center text-white text-lg mt-4 md:mt-auto md:mb-0 gap-x-2 hover:text-hover font-semibold">
+            <p>Iniciá sesión</p>
             <img src={arrowRight} alt="Arrow Right" className="hidden md:block w-6 h-6 " />
           </button>
         </div>
