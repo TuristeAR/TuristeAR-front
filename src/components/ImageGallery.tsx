@@ -7,7 +7,7 @@ interface Image {
 
 interface ImageGalleryProps {
   images: Image[];
-  height: number; // Nuevo prop para controlar la altura en 'vh'
+  height?: number; // Nuevo prop para controlar la altura en 'vh'
 }
 
 const ImageGallery: React.FC<ImageGalleryProps> = ({ images, height }) => {
