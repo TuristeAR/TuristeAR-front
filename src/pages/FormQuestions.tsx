@@ -33,7 +33,7 @@ const questions = [
     options: [
       { src: '/assets/playa.jpg', alt: 'Playa' },
       { src: '/assets/escalar.jpg', alt: 'Playa' },
-      { src: '/assets/aire_libre.jpg', alt: 'aire Libre' },
+      { src: '/assets/aire_libre.jpg', alt: 'Aire Libre' },
       { src: '/assets/urbano.jpg', alt: 'Turismo Urbano' },
     ],
     type: 'image',
@@ -41,10 +41,10 @@ const questions = [
   {
     question: '¿Con quién vas a emprender tu nueva aventura?',
     options: [
-      { src: '/assets/solo.jpg', alt: 'solo' },
-      { src: '/assets/en_pareja.jpg', alt: 'en pareja' },
-      { src: '/assets/amigos.jpg', alt: 'amigos' },
-      { src: '/assets/familia.jpg', alt: 'familia' },
+      { src: '/assets/solo.jpg', alt: 'Solo' },
+      { src: '/assets/en_pareja.jpg', alt: 'En pareja' },
+      { src: '/assets/amigos.jpg', alt: 'Amigos' },
+      { src: '/assets/familia.jpg', alt: 'Familia' },
     ],
     type: 'image',
   },
