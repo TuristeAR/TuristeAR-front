@@ -23,7 +23,7 @@ root.render(
       <Route path="/destinations" element={<Destinations />} />
       <Route path="/formQuestions" element={<FormQuestions />} />
       <Route path="/expectedPlace" element={<ExpectedPlace />} />
-      <Route path="/expectedDestination" element={<ExpectedDestination />} />
+      <Route path="/destino-esperado/:nombreDeLaProvincia" element={<ExpectedDestination />} />
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/community" element={<Profile />}/>
