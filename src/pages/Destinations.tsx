@@ -1,7 +1,7 @@
 import Carousel from '../components/Carousel';
 import { Header } from '../components/Header';
 import MapaArg from '../components/MapaArg';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import provinciasData from '../data/provinces-data.json';
 
@@ -82,7 +82,11 @@ const usuariosReview = [
 
 const Destinations = () => {
   const navigate = useNavigate();
+  const sectionRef = useRef(null);
 
+  const scrollToSection = () => {
+    sectionRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
   const handleRedirect = () => {
     navigate(`/destino-esperado/${selectedProvince?.name}`);
   };
@@ -121,7 +125,8 @@ const Destinations = () => {
         <div className="flex flex-wrap my-6 container mx-auto gap-1 p-4">
           <div className="flex-1 md:w-[400px] xl:w-auto">
             {/* Mapa svg */}
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center" 
+              onClick={scrollToSection}>
               <MapaArg
                 onProvinceClick={handleProvinceClick}
                 defaultProvinceId={selectedProvince?.id}
@@ -129,7 +134,9 @@ const Destinations = () => {
             </div>
           </div>
 
-          <div className="flex-1 mx-auto max-w-[600px] w-full flex flex-col gap-y-6 ">
+          <div 
+          ref={sectionRef} 
+          className="flex-1 mx-auto max-w-[600px] w-full flex flex-col gap-y-6 ">
             {/* Info */}
 
             <div className="flex flex-col gap-y-4">
