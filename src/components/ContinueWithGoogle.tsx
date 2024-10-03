@@ -1,12 +1,12 @@
 export const ContinueWithGoogle = () => {
   const goToGoogleAuth = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+    window.location.href = 'https://api-turistear.koyeb.app/auth/google';
   };
 
   return (
     <button
       onClick={goToGoogleAuth}
-      className="px-4 py-2 border flex gap-2 border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
+      className="w-full text-lg px-6 py-4 my-4 flex justify-center items-center gap-4 bg-white rounded-lg text-slate-700 hover:opacity-80 transition duration-150"
     >
       <img
         className="w-6 h-6"
