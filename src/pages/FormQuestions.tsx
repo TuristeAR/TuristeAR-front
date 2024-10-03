@@ -88,35 +88,50 @@ const FormQuestions = () => {
                     </h3>
                   </div>
 
-                  <div className="flex gap-x-5  justify-center">
+                  <div className="flex flex-col md:flex-row gap-x-5  justify-center">
                     {questions[currentQuestion].options?.map((option, index) => (
                       <div key={index} className="flex flex-col justify-center gap-y-2">
-                        <input type="radio" name="question" id={`option-${index}`} />
+                        <input type="radio"  name="question" id={`option-${index}`} />
                         <label className="relative" htmlFor={`option-${index}`}>
                           <img
                             src={option.src}
                             alt={option.alt}
                             className="w-[250px] h-[100px] md:w-[450px] md:h-[250px] object-cover cursor-pointer"
                           />
-                          <p className="absolute bottom-0 bg-black/60 w-full text-white text-center">
+                          <p className="absolute bottom-0 text-sm py-2 bg-black/60 w-full text-white text-center">
                             {option.alt}
                           </p>
                         </label>
                       </div>
                     ))}
                   </div>
+
+                  {/* Botón para avanzar o finalizar */}
+                  <div className="flex gap-x-4">
+                    {currentQuestion < questions.length - 1 ? (
+                      <button type="button" className="btn-question" onClick={handleNextQuestion}>
+                        Siguiente pregunta
+                      </button>
+                    ) : (
+                      <button type="button" className="btn-question" onClick={handleNextQuestion}>
+                        Finalizar
+                      </button>
+                    )}
+                  </div>
                 </div>
               ) : questions[currentQuestion].type === 'calendar' ? (
                 <>
                   <div className="flex flex-col md:flex-row w-full">
                     <div className="flex flex-col items-center relative">
-                      <div className="absolute top-16">
+                      <div className="absolute top-16 block text-sm font-medium leading-6 text-gray-900">
                         <h2>Seleccioná una provincia</h2>
                       </div>
                       <MapaArg />
                     </div>
-                    <div className="flex flex-col justify-center items-center w-full">
-                      <h2 className="text-[25px] font-semibold">Armemos tu próxima aventura</h2>
+                    <div className="flex flex-col gap-y-4 justify-center items-center w-full">
+                      <h2 className="text-[25px] font-semibold text-primary-4">
+                        Armemos tu próxima aventura
+                      </h2>
 
                       {/* Pregunta: ¿Qué nivel de comodidad buscas? */}
                       <div>
@@ -141,7 +156,7 @@ const FormQuestions = () => {
                           htmlFor="days"
                           className="block text-sm font-medium leading-6 text-gray-900"
                         >
-                          ¿Cuántos días durará tu viaje?
+                          Cantidad de días <span className='text-[#ff0000]'>*</span>
                         </label>
                         <input
                           type="number"
@@ -152,6 +167,18 @@ const FormQuestions = () => {
                           className="mt-1 block w-[300px] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                         />
                       </div>
+
+                      <div className="flex gap-x-4">
+                        <button type="button" className="btn-question" onClick={handleNextQuestion}>
+                          Saltar pregunta
+                        </button>
+                        <button type="button" className="btn-question" onClick={handleNextQuestion}>
+                          Siguiente pregunta
+                        </button>
+                      </div>
+                      <p className="text-primary">
+                        Crearemos el itinerario en base a tus respuestas
+                      </p>
                     </div>
                   </div>
                 </>
@@ -161,15 +188,6 @@ const FormQuestions = () => {
                     <h1>Ahora crearemos tu itinerario</h1>
                   </div>
                 </>
-              )}
-            </div>
-
-            {/* Botón para avanzar o finalizar */}
-            <div className="flex gap-x-4">
-              {currentQuestion < questions.length && (
-                <button type="button" className="btn-blue" onClick={handleNextQuestion}>
-                  Siguiente
-                </button>
               )}
             </div>
           </form>
