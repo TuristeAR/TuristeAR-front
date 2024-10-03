@@ -248,15 +248,13 @@ const provincias = [
 ];
 
 const Destinations = () => {
-
   const [selectedProvince, setSelectedProvince] = useState<Province>();
-   useEffect(() => {
+  useEffect(() => {
     setSelectedProvince(provincias[3]);
   }, []);
   const handleProvinceClick = (nombre: string) => {
     const province = provincias.find((p) => p.id === nombre);
     setSelectedProvince(province);
-    
   };
 
   return (
@@ -286,34 +284,37 @@ const Destinations = () => {
           <div className="flex-1 hidden md:block md:w-[400px] xl:w-auto">
             {/* Mapa svg */}
             <div className="flex  justify-center items-center">
-              <MapaArg onProvinceClick={handleProvinceClick} defaultProvinceId={selectedProvince?.id}></MapaArg>
+              <MapaArg
+                onProvinceClick={handleProvinceClick}
+                defaultProvinceId={selectedProvince?.id}
+              ></MapaArg>
             </div>
           </div>
-         
+
           <div className="flex-1 max-w-[600px] w-full flex flex-col gap-y-6 px-4 md:px-0">
             {/* Info */}
-          
-                <div  className="flex flex-col gap-y-4">
-                  <h1 className="text-center">{selectedProvince?.nombre} </h1>
-                  <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
-                    {selectedProvince?.descripcion}
-                  </p>
 
-                  <div className="flex justify-center">
-                    {info[0].img.map((image) => (
-                       <img
-                       key={image.id}
-                       src={image.src}
-                       className="w-full h-auto md:w-[200px] object-contain"
-                       alt={selectedProvince?.nombre} // Agregar un atributo alt es recomendable
-                     />
-                    ))}
-                  </div>
-                  <div>
-                    <button className="btn-blue">Ver más</button>
-                  </div>
-                </div>
-          
+            <div className="flex flex-col gap-y-4">
+              <h1 className="text-center">{selectedProvince?.nombre} </h1>
+              <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
+                {selectedProvince?.descripcion}
+              </p>
+
+              <div className="flex justify-center">
+                {info[0].img.map((image) => (
+                  <img
+                    key={image.id}
+                    src={image.src}
+                    className="w-full h-auto md:w-[200px] object-contain"
+                    alt={selectedProvince?.nombre} // Agregar un atributo alt es recomendable
+                  />
+                ))}
+              </div>
+              <div>
+                <button className="btn-blue">Ver más</button>
+              </div>
+            </div>
+
             <div className="border-b border-gray my-4 "></div>
             {/* Publicaciones */}
             <Carousel>
