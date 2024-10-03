@@ -4,6 +4,7 @@ import Destinations from '../src/pages/Destinations';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
+
 describe('Destinations Page', () => {
   test('renders the header with navigation links', () => {
     render(
@@ -74,14 +75,17 @@ describe('Destinations Page', () => {
     expect(gabrielReview).toBeInTheDocument();
   });
 
-  test('renders the "Ver más" button in Buenos Aires section', () => {
+  test('renders the "Descrubí más " button in Catamarca section', () => {
     render(
       <BrowserRouter>
         <Destinations />
       </BrowserRouter>
     );
 
-    const verMasButton = screen.getByText('Ver más');
+    const verMasButton = screen.getByText('Descrubí más de Catamarca');
     expect(verMasButton).toBeInTheDocument();
   });
+
+
+  
 });
