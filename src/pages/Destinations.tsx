@@ -82,10 +82,12 @@ const usuariosReview = [
 
 const Destinations = () => {
   const navigate = useNavigate();
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   const scrollToSection = () => {
-    sectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (sectionRef.current) {
+      sectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
   const handleRedirect = () => {
     navigate(`/destino-esperado/${selectedProvince?.name}`);
