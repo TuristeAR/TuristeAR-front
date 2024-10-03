@@ -159,7 +159,7 @@ const provincias = [
   {
     id: 'tierra-del-fuego',
 
-    nombre: 'Tierra del Fuego, Antártida e Islas del Atlántico Sur',
+    nombre: 'Tierra del Fuego',
   },
   {
     id: 'tucuman',
@@ -245,7 +245,7 @@ const FormQuestions = () => {
                 <>
                   <div className="flex flex-col md:flex-row w-full">
                     <div className="flex flex-col items-center relative">
-                      <div className="absolute top-16 block text-sm font-medium leading-6 text-gray-900">
+                      <div className="absolute top-16 left-4 block text-md font-medium leading-6 text-gray-900">
                         <h2>Seleccioná una provincia</h2>
                       </div>
                       <MapaArg
@@ -268,7 +268,7 @@ const FormQuestions = () => {
                       )}
                     </div>
                     <div className="flex flex-col gap-y-4 justify-center items-center w-full">
-                      <h2 className="text-[25px] font-semibold text-primary-4">
+                      <h2 className="text-[25px] font-bold text-primary-3 text-center">
                         Armemos tu próxima aventura
                       </h2>
 
