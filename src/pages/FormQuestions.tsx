@@ -3,7 +3,6 @@ import { Header } from '../components/Header';
 import MapaArg from '../components/MapaArg';
 import { useNavigate } from 'react-router-dom';
 
-// Preguntas y entradas del formulario, con texto, imágenes y inputs
 const questions = [
   {
     question: 'Fecha del viaje y Duración del viaje ',
@@ -33,7 +32,7 @@ const questions = [
     options: [
       { src: '/assets/playa.jpg', alt: 'Playa' },
       { src: '/assets/escalar.jpg', alt: 'Playa' },
-      { src: '/assets/aire_libre.jpg', alt: 'aire Libre' },
+      { src: '/assets/aire_libre.jpg', alt: 'Aire Libre' },
       { src: '/assets/urbano.jpg', alt: 'Turismo Urbano' },
     ],
     type: 'image',
@@ -41,19 +40,144 @@ const questions = [
   {
     question: '¿Con quién vas a emprender tu nueva aventura?',
     options: [
-      { src: '/assets/solo.jpg', alt: 'solo' },
-      { src: '/assets/en_pareja.jpg', alt: 'en pareja' },
-      { src: '/assets/amigos.jpg', alt: 'amigos' },
-      { src: '/assets/familia.jpg', alt: 'familia' },
+      { src: '/assets/solo.jpg', alt: 'Solo' },
+      { src: '/assets/en_pareja.jpg', alt: 'En pareja' },
+      { src: '/assets/amigos.jpg', alt: 'Amigos' },
+      { src: '/assets/familia.jpg', alt: 'Familia' },
     ],
     type: 'image',
   },
 ];
 
+type Province = {
+  id: string;
+  nombre: string;
+};
+
+const provincias = [
+  {
+    id: 'caba',
+    nombre: 'Ciudad Autónoma de Buenos Aires',
+  },
+  {
+    id: 'caba-z',
+    nombre: 'Ciudad Autónoma de Buenos Aires',
+  },
+  {
+    id: 'buenos-aires',
+    nombre: 'Buenos Aires',
+  },
+  {
+    id: 'catamarca',
+    nombre: 'Catamarca',
+  },
+  {
+    id: 'chaco',
+    nombre: 'Chaco',
+  },
+  {
+    id: 'chubut',
+    nombre: 'Chubut',
+  },
+  {
+    id: 'cordoba',
+    nombre: 'Córdoba',
+  },
+  {
+    id: 'corrientes',
+    nombre: 'Corrientes',
+  },
+  {
+    id: 'entre-rios',
+    nombre: 'Entre Ríos',
+  },
+  {
+    id: 'formosa',
+    nombre: 'Formosa',
+  },
+  {
+    id: 'jujuy',
+    nombre: 'Jujuy',
+  },
+  {
+    id: 'la-pampa',
+    nombre: 'La Pampa',
+  },
+  {
+    id: 'la-rioja',
+    nombre: 'La Rioja',
+  },
+  {
+    id: 'mendoza',
+    nombre: 'Mendoza',
+  },
+  {
+    id: 'misiones',
+
+    nombre: 'Misiones',
+  },
+  {
+    id: 'neuquen',
+
+    nombre: 'Neuquén',
+  },
+  {
+    id: 'rio-negro',
+
+    nombre: 'Río Negro',
+  },
+  {
+    id: 'salta',
+
+    nombre: 'Salta',
+  },
+  {
+    id: 'san-juan',
+
+    nombre: 'San Juan',
+  },
+  {
+    id: 'san-luis',
+
+    nombre: 'San Luis',
+  },
+  {
+    id: 'santa-cruz',
+
+    nombre: 'Santa Cruz',
+  },
+  {
+    id: 'santa-fe',
+
+    nombre: 'Santa Fe',
+  },
+  {
+    id: 'santiago-del-estero',
+
+    nombre: 'Santiago del Estero',
+  },
+  {
+    id: 'tierra-del-fuego',
+
+    nombre: 'Tierra del Fuego, Antártida e Islas del Atlántico Sur',
+  },
+  {
+    id: 'tucuman',
+
+    nombre: 'Tucumán',
+  },
+];
+
 const FormQuestions = () => {
+  const [selectedProvince, setSelectedProvince] = useState<Province>();
   const [currentQuestion, setCurrentQuestion] = useState(0); // Estado para controlar el índice de la pregunta actual
   const [formData, setFormData] = useState({ date: '', days: '', comfort: '' }); // Estado para guardar las respuestas
-  const navigate = useNavigate(); // Para la navegación después de las preguntas
+  const navigate = useNavigate();
+
+  const handleProvinceClick = (nombre: string) => {
+    const province = provincias.find((p) => p.id === nombre);
+    setSelectedProvince(province);
+  };
 
   // Manejar el cambio de inputs (calendario, días, nivel de comodidad)
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -61,13 +185,11 @@ const FormQuestions = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Función para avanzar a la siguiente pregunta
   const handleNextQuestion = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      console.log(formData); // Aquí podrías enviar la información al servidor o procesarla
-      navigate('/calendar'); // Al finalizar las preguntas, navega a la página de calendario
+      navigate('/calendar');
     }
   };
 
@@ -91,7 +213,7 @@ const FormQuestions = () => {
                   <div className="flex flex-col md:flex-row gap-x-5  justify-center">
                     {questions[currentQuestion].options?.map((option, index) => (
                       <div key={index} className="flex flex-col justify-center gap-y-2">
-                        <input type="radio"  name="question" id={`option-${index}`} />
+                        <input type="radio" name="question" id={`option-${index}`} />
                         <label className="relative" htmlFor={`option-${index}`}>
                           <img
                             src={option.src}
@@ -126,7 +248,24 @@ const FormQuestions = () => {
                       <div className="absolute top-16 block text-sm font-medium leading-6 text-gray-900">
                         <h2>Seleccioná una provincia</h2>
                       </div>
-                      <MapaArg />
+                      <MapaArg
+                        onProvinceClick={handleProvinceClick}
+                        defaultProvinceId={selectedProvince?.id}
+                      />
+                      {/* Si hay una provincia seleccionada, mostrar el popup */}
+                      {selectedProvince && (
+                        <div className="fixed inset-0 flex  items-center justify-center bg-black bg-opacity-50">
+                          <div className="bg-white p-4 rounded-lg flex flex-col items-center shadow-lg">
+                            <h3>Has seleccionado: {selectedProvince.nombre}</h3>
+                            <button
+                              onClick={() => setSelectedProvince(undefined)}
+                              className="btn-blue mt-4"
+                            >
+                              Cerrar
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <div className="flex flex-col gap-y-4 justify-center items-center w-full">
                       <h2 className="text-[25px] font-semibold text-primary-4">
@@ -156,7 +295,7 @@ const FormQuestions = () => {
                           htmlFor="days"
                           className="block text-sm font-medium leading-6 text-gray-900"
                         >
-                          Cantidad de días <span className='text-[#ff0000]'>*</span>
+                          Cantidad de días <span className="text-[#ff0000]">*</span>
                         </label>
                         <input
                           type="number"
@@ -182,13 +321,7 @@ const FormQuestions = () => {
                     </div>
                   </div>
                 </>
-              ) : (
-                <>
-                  <div>
-                    <h1>Ahora crearemos tu itinerario</h1>
-                  </div>
-                </>
-              )}
+              ) : null}
             </div>
           </form>
         </div>

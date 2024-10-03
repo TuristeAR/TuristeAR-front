@@ -7,8 +7,8 @@ import { JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useState }
 
 const Calendar = () => {
   const [events, setEvents] = useState([
-    { id: '1', title: 'Evento 1', date: '2024-09-01' },
-    { id: '2', title: 'Evento 2', date: '2024-09-05' },
+    { id: '1', title: 'Evento 1', date: '2024-10-04' },
+    { id: '2', title: 'Evento 2', date: '2024-10-05' },
   ]);
   /* 
   const handleEventClick = (info: { event: { title: any; id: string } }) => {
@@ -38,16 +38,17 @@ const Calendar = () => {
   return (
     <section className="h-screen xl:h-auto overflow-x-clip relative">
       <Header containerStyles="bg-primary fixed top-0 left-0 right-0 z-[60]" />
-      <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-4 h-full mt-20">
+      <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-4 h-full mt-20 py-4 ">
         {/* Left Column */}
         <aside className="col-span-1 p-4 hidden md:flex">
           <div className="flex flex-col h-full w-full">
             <div className="flex flex-col justify-center border-b border-gray">
-              <h2 className="font-semibold tracking-[-0.5px] leading-none">Categorías seguidas</h2>
+              <h2 className="font-semibold tracking-[-0.5px] leading-none">Buenos Aires - 4 días</h2>
               <div className="flex flex-col p-2 gap-y-2">
-                <p>Perfil</p>
-                <p>Configuración</p>
-                <p>Cerrar sesión</p>
+                <p>Agregar actividad</p>
+                <p>Chat de viaje</p>
+                <p>Galeria compartida</p>
+                <p>Resumen del viaje</p>
               </div>
             </div>
 
@@ -64,7 +65,7 @@ const Calendar = () => {
                 )}
               </div>
               <div className="p-2">
-                <p>Descubrir más</p>
+                <p className='text-gray'>Descubrir más</p>
               </div>
             </div>
 
@@ -83,13 +84,13 @@ const Calendar = () => {
                         <button
                           onClick={() => deleteEvent(activity.id)}
                           className="bg-gray-50 w-8 h-8 rounded-full"
-                        ></button>
+                        >X</button>
                         <p>{activity.title}</p>
                       </div>
                     ))}
                   </div>
                   <div className="p-2">
-                    <p>Descubrir más</p>
+                    <p className='text-gray'>Descubrir más</p>
                   </div>
                 </>
               )}
