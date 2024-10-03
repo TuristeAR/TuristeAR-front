@@ -43,7 +43,7 @@ const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceId }) =>
       <svg
         onClick={handleClick}
         id="mapa"
-        width="439"
+        width="339"
         height="920"
         viewBox="0 0 439 920"
         fill="none"
