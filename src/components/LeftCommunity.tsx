@@ -18,7 +18,7 @@ const infoCategories=[
 function LeftCommunity() {
   return (
     <>
-      <div className="flex flex-col w-[18%] p-6 gap-6">
+      <div className="flex flex-col lg:w-[20%] w-[100%] p-6 gap-6 border-r border-[#999999]">
         <div className="flex flex-col gap-4 text-l font-semibold">
           <div className="flex flex-row items-center gap-2 hover:bg-[#d9d9d9] rounded-xl">
             <img src="/assets/home.svg" alt="Publicaciones" className="w-[25px]" />

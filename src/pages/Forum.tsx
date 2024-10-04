@@ -46,8 +46,8 @@ const Forum = () => {
       <Header containerStyles={'bg-primary relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
         <LeftCommunity />
-        <div className="w-[64%] p-10 overflow-scroll scrollbar-hidden">
-          <div className="border border-[#999999] border-b-0 rounded-t-3xl flex flex-col gap-y-6 overflow-scroll scrollbar-hidden h-[120vh]">
+        <div className="w-[80%] pt-10 overflow-scroll scrollbar-hidden">
+          <div className="flex flex-col gap-y-6 w-[80%] mx-auto  overflow-scroll scrollbar-hidden">
             {infoComments.map((info, index) => {
               return (
                 <>
@@ -69,13 +69,11 @@ const Forum = () => {
                 </>
               )
             })}
-
           </div>
-          <div className="border border-black rounded-b-3xl bg-[#009fe3] bg-opacity-10">
+          <div className="bg-[#009fe3] bg-opacity-10">
             <CreatePost options={options} />
           </div>
         </div>
-        <RightCommunity />
       </div>
     </>
   );

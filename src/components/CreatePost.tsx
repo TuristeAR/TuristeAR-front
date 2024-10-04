@@ -19,11 +19,11 @@ function CreatePost(props : {
           <img src="/assets/send.svg" alt="logo" className="w-[50px] mx-auto" />
         </div>
       </div>
-      <div className="flex justify-around p-4 border-t border-black">
+      <div className="lg:flex lg:justify-around grid grid-cols-2 p-4 border-t border-black">
         {options.map((item, index) => {
           return (
             <div key={index} className="flex gap-2 items-center mx-auto">
-              <img src="/assets/add.svg" alt="Agregar" className="h-8 w-8 object-cover" />
+              <img src="/assets/add.svg" alt="Agregar" className="lg:w-8 w-4 object-cover" />
               <p className="">{item}</p>
             </div>
           );

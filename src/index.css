@@ -21,6 +21,9 @@
     .scrollbar-hidden {
         scrollbar-width: none;
     }
+    .scrollbar-block {
+        scrollbar-width: auto;
+    }
 }
 
 

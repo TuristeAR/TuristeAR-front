@@ -44,8 +44,10 @@ const Profile = () => {
             <div className="h-[200px] bg-black"></div>
             <div className="flex text-l relative">
               <div className="w-[78%] pt-4">
-                <h1 className="text-5xl">Manuel López</h1>
-                <h3 className="text-xl">@Manu10</h3>
+                <div className="flex items-center gap-x-4">
+                  <h1 className="text-3xl tracking-[.1em] text-[#215a9d]">Manuel López</h1>
+                  <h3 className="text-xl text-[#a2c8de]">@Manu10</h3>
+                </div>
                 <p>
                   Explorador apasionado de nuevas culturas y destinos. Compartiendo experiencias
                   únicas de viajes, consejos útiles y las mejores rutas para descubrir Argentina,
@@ -63,7 +65,7 @@ const Profile = () => {
                 </div>
               </div>
               <div className="w-[22%] flex flex-col gap-6 items-center absolute right-0 -top-20 ">
-                <div className="w-[150px] h-[150px] bg-gray"></div>
+                <div className="w-[150px] h-[150px] bg-gray border border-white border-4"></div>
                 <button className="btn-blue rounded-2xl">Editar perfil</button>
               </div>
             </div>
