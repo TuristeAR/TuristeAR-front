@@ -7,7 +7,7 @@ import FormQuestions from './pages/FormQuestions';
 import ExpectedPlace from './pages/ExpectedPlace';
 import Publications from './pages/Publications';
 import Forum from './pages/Forum';
-import Jobs from './pages/Jobs';
+import {Jobs} from './pages/Jobs';
 import ExpectedDestination from './pages/ExpectedDestination';
 import { Login } from './pages/Login';
 import Profile from './pages/Profile';

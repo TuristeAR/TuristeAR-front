@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 interface MapaProps {
-  onProvinceClick: (provinceId: string) => void;
+  onProvinceClick: (provinceId: string ) => void;
   defaultProvinceId?: string;
 }
 
-const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceId }) => {
+export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceId }) => {
   const [previousPath, setPreviousPath] = useState<SVGPathElement | null>(null);
   const [originalColor, setOriginalColor] = useState<string>('');
 
@@ -260,4 +260,3 @@ const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceId }) =>
   );
 };
 
-export default MapaArg;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Header } from '../components/Header/Header';
-import MapaArg from '../components/MapaArg';
+import { MapaArg } from '../components/Destinations/MapaArg';
 import { useNavigate } from 'react-router-dom';
 import { provincias } from '../utilities/provincias';
 

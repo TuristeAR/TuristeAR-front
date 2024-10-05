@@ -1,7 +1,7 @@
-import ArticleCard from '../components/ArticleCard';
+import ArticleCard from '../components/Destinations/ArticleCard';
 import { Header } from '../components/Header/Header';
-import ImageGallery from '../components/ImageGallery';
-import PostCard from '../components/PostCard';
+import { ImageGallery } from '../components/ImageGallery/ImageGallery';
+import { PostCard } from '../components/Destinations/PostCard';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -163,7 +163,7 @@ const ExpectedPlace = () => {
                         <div className="flex items-center justify-start gap-3 mb-4">
                           {[...Array(4)].map((_, index) => (
                             <svg
-                            key={index}
+                              key={index}
                               className="items-end ml-auto"
                               xmlns="http://www.w3.org/2000/svg"
                               height="30px"
@@ -242,7 +242,7 @@ const ExpectedPlace = () => {
         <div className="sm:w-10/12 m-auto mt-20">
           <h3 className="text-4xl pl-1 sm:pl-0 font-bold">Puntos de interes</h3>
           <hr />
-        <iframe
+          <iframe
             src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13140.305655721764!2d-58.4122997!3d-34.576933!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb579fa2cfa59%3A0x296b8c9a44cd6331!2sAwwa%20Suites%20%26%20Spa!5e0!3m2!1ses-419!2sar!4v1727029785630!5m2!1ses-419!2sar"
             className="w-full"
             height="450"
@@ -250,7 +250,7 @@ const ExpectedPlace = () => {
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-          ></iframe> 
+          ></iframe>
         </div>
       </section>
 

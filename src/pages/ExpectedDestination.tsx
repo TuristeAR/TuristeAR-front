@@ -1,7 +1,7 @@
-import ArticleCard from '../components/ArticleCard';
+import { ArticleCard } from '../components/Destinations/ArticleCard';
 import { Header } from '../components/Header/Header';
-import ImageGallery from '../components/ImageGallery';
-import PostCard from '../components/PostCard';
+import { ImageGallery } from '../components/ImageGallery/ImageGallery';
+import { PostCard } from '../components/Destinations/PostCard';
 import provinciasData from '../data/provinces-data.json';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -128,13 +128,13 @@ const ExpectedDestination = () => {
     traditionalFood: string;
     music: string;
     customs: string;
-  };
+  }
   type Province = {
     id: string;
     name: string;
     description: string;
     img: Image[];
-    culture: Culture
+    culture: Culture;
   };
 
   const { nombreDeLaProvincia } = useParams();
@@ -251,11 +251,12 @@ const ExpectedDestination = () => {
       {/* Puntos de interes */}
       <section>
         <div className="sm:w-10/12 m-auto mt-10">
-          <h3 
-                        onClick={() => setShowedLugares(!showedLugares)}
-
-            className="text-4xl pl-1 sm:pl-0 font-bold btn-drop-down-blue flex">Lugares
-          <div className="icons">
+          <h3
+            onClick={() => setShowedLugares(!showedLugares)}
+            className="text-4xl pl-1 sm:pl-0 font-bold btn-drop-down-blue flex"
+          >
+            Lugares
+            <div className="icons">
               <svg
                 className={`${!showedLugares ? 'block' : 'hidden'}`}
                 xmlns="http://www.w3.org/2000/svg"
@@ -279,59 +280,58 @@ const ExpectedDestination = () => {
             </div>
           </h3>
           <div className={`${showedLugares ? 'block' : 'hidden'}`}>
- <div className="relative px-1 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
-            <Swiper
-              modules={[Navigation, Pagination, Scrollbar, A11y]}
-              spaceBetween={5}
-              slidesPerView={4}
-              navigation={{
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-              }}
-              onSwiper={(swiper) => console.log(swiper)}
-              onSlideChange={() => console.log('slide change')}
-              breakpoints={{
-                // cuando el ancho de la ventana es >= 320px
-                320: {
-                  slidesPerView: 1, // Mostrar 1 diapositiva
-                  spaceBetween: 10,
-                },
-                // cuando el ancho de la ventana es >= 480px
-                480: {
-                  slidesPerView: 2, // Mostrar 2 diapositivas
-                  spaceBetween: 10,
-                },
-                // cuando el ancho de la ventana es >= 768px
-                768: {
-                  slidesPerView: 3, // Mostrar 3 diapositivas
-                  spaceBetween: 10,
-                },
-                // cuando el ancho de la ventana es >= 1024px
-                1024: {
-                  slidesPerView: 4, // Mostrar 4 diapositivas
-                  spaceBetween: 10,
-                },
-              }}
-            >
-              {puntosDeInteres.map((article, index) => (
-                <SwiperSlide key={index}>
-                  <ArticleCard
-                    title={article.title}
-                    images={article.img}
-                    description={article.description}
-                    link={article.link}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-            <div className="swiper-button-prev hidden"></div>
-            <div className="hidden swiper-button-next"></div>
+            <div className="relative px-1 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
+              <Swiper
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={5}
+                slidesPerView={4}
+                navigation={{
+                  nextEl: '.swiper-button-next',
+                  prevEl: '.swiper-button-prev',
+                }}
+                onSwiper={(swiper) => console.log(swiper)}
+                onSlideChange={() => console.log('slide change')}
+                breakpoints={{
+                  // cuando el ancho de la ventana es >= 320px
+                  320: {
+                    slidesPerView: 1, // Mostrar 1 diapositiva
+                    spaceBetween: 10,
+                  },
+                  // cuando el ancho de la ventana es >= 480px
+                  480: {
+                    slidesPerView: 2, // Mostrar 2 diapositivas
+                    spaceBetween: 10,
+                  },
+                  // cuando el ancho de la ventana es >= 768px
+                  768: {
+                    slidesPerView: 3, // Mostrar 3 diapositivas
+                    spaceBetween: 10,
+                  },
+                  // cuando el ancho de la ventana es >= 1024px
+                  1024: {
+                    slidesPerView: 4, // Mostrar 4 diapositivas
+                    spaceBetween: 10,
+                  },
+                }}
+              >
+                {puntosDeInteres.map((article, index) => (
+                  <SwiperSlide key={index}>
+                    <ArticleCard
+                      title={article.title}
+                      images={article.img}
+                      description={article.description}
+                      link={article.link}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <div className="swiper-button-prev hidden"></div>
+              <div className="hidden swiper-button-next"></div>
+            </div>
+            <div className="text-center mt-5">
+              <button className="btn-blue">Ver Puntos de interes</button>
+            </div>
           </div>
-          <div className="text-center mt-5">
-            <button className="btn-blue">Ver Puntos de interes</button>
-          </div>
-          </div>
-         
         </div>
       </section>
 
@@ -382,10 +382,7 @@ const ExpectedDestination = () => {
                   <h1 className="mb-3 text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
                     Festival
                   </h1>
-                  <p className="mb-6 text-gray-500">
-                  {provincia.culture.festivals}
-
-                  </p>
+                  <p className="mb-6 text-gray-500">{provincia.culture.festivals}</p>
                 </div>
               </div>
             </div>
@@ -404,10 +401,7 @@ const ExpectedDestination = () => {
                   <h1 className="mb-3 text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
                     Comida tradicional
                   </h1>
-                  <p className="mb-6 text-gray-500">
-                  {provincia.culture.traditionalFood}
-
-                  </p>
+                  <p className="mb-6 text-gray-500">{provincia.culture.traditionalFood}</p>
                 </div>
               </div>
             </div>
@@ -448,58 +442,57 @@ const ExpectedDestination = () => {
           </h3>
           <div className={`${showedGastronomia ? 'block' : 'hidden'}`}>
             <div className={`relative px-2 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap`}>
-            <Swiper
-              modules={[Navigation, Pagination, Scrollbar, A11y]}
-              spaceBetween={5}
-              slidesPerView={4}
-              navigation={{
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-              }}
-              onSwiper={(swiper) => console.log(swiper)}
-              onSlideChange={() => console.log('slide change')}
-              breakpoints={{
-                // cuando el ancho de la ventana es >= 320px
-                320: {
-                  slidesPerView: 1, // Mostrar 1 diapositiva
-                  spaceBetween: 10,
-                },
-                // cuando el ancho de la ventana es >= 480px
-                480: {
-                  slidesPerView: 2, // Mostrar 2 diapositivas
-                  spaceBetween: 10,
-                },
-                // cuando el ancho de la ventana es >= 768px
-                768: {
-                  slidesPerView: 3, // Mostrar 3 diapositivas
-                  spaceBetween: 10,
-                },
-                // cuando el ancho de la ventana es >= 1024px
-                1024: {
-                  slidesPerView: 4, // Mostrar 4 diapositivas
-                  spaceBetween: 10,
-                },
-              }}
-            >
-              {puntosDeInteres.map((article, index) => (
-                <SwiperSlide key={index}>
-                  <ArticleCard
-                    title={article.title}
-                    images={article.img}
-                    description={article.description}
-                    link={article.link}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-            <div className="swiper-button-next"></div>
-            <div className="swiper-button-prev"></div>
+              <Swiper
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={5}
+                slidesPerView={4}
+                navigation={{
+                  nextEl: '.swiper-button-next',
+                  prevEl: '.swiper-button-prev',
+                }}
+                onSwiper={(swiper) => console.log(swiper)}
+                onSlideChange={() => console.log('slide change')}
+                breakpoints={{
+                  // cuando el ancho de la ventana es >= 320px
+                  320: {
+                    slidesPerView: 1, // Mostrar 1 diapositiva
+                    spaceBetween: 10,
+                  },
+                  // cuando el ancho de la ventana es >= 480px
+                  480: {
+                    slidesPerView: 2, // Mostrar 2 diapositivas
+                    spaceBetween: 10,
+                  },
+                  // cuando el ancho de la ventana es >= 768px
+                  768: {
+                    slidesPerView: 3, // Mostrar 3 diapositivas
+                    spaceBetween: 10,
+                  },
+                  // cuando el ancho de la ventana es >= 1024px
+                  1024: {
+                    slidesPerView: 4, // Mostrar 4 diapositivas
+                    spaceBetween: 10,
+                  },
+                }}
+              >
+                {puntosDeInteres.map((article, index) => (
+                  <SwiperSlide key={index}>
+                    <ArticleCard
+                      title={article.title}
+                      images={article.img}
+                      description={article.description}
+                      link={article.link}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <div className="swiper-button-next"></div>
+              <div className="swiper-button-prev"></div>
+            </div>
+            <div className="text-center mt-5">
+              <button className="btn-blue">Ver Puntos de interes</button>
+            </div>
           </div>
-          <div className="text-center mt-5">
-            <button className="btn-blue">Ver Puntos de interes</button>
-          </div>
-          </div>
-          
         </div>
       </section>
     </>

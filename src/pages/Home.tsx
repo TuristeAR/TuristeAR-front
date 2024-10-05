@@ -1,7 +1,7 @@
 import { Header } from '../components/Header/Header';
-import { LandingHero } from '../components/LandingHero';
-import { LandingFeatures } from '../components/LandingFeatures';
-import { LandingTestimonial } from '../components/LandingTestimonial';
+import { LandingHero } from '../components/Landing/LandingHero';
+import { LandingFeatures } from '../components/Landing/LandingFeatures';
+import { LandingTestimonial } from '../components/Landing/LandingTestimonial';
 
 export const Home = () => {
   return (
