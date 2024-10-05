@@ -348,17 +348,6 @@ const FormQuestions = () => {
                   </div>
                 </div>
               ) : questions[currentQuestion].type === 'calendar' ? (
-<<<<<<< HEAD
-                <>
-                  <div className="flex flex-col md:flex-row w-full">
-                    <div className="flex flex-col items-center relative">
-                      <div className="absolute top-16 left-4 block text-md font-medium leading-6 text-gray-900">
-                        <h2>Seleccioná una provincia</h2>
-                      </div>
-                      <MapaArg
-                        onProvinceClick={handleProvinceClick}
-                        defaultProvinceId={selectedProvince?.id}
-=======
                 <div className="flex flex-col md:flex-row w-full">
                   <div className="flex flex-col items-center relative">
                     <MapaArg onProvinceClick={handleProvinceClick} defaultProvinceId={selectedProvince?.id} />
@@ -379,16 +368,8 @@ const FormQuestions = () => {
                         onChange={handleInputChange}
                         className={`mt-1 block w-[300px] px-3 py-2 border  'border-red-500' : 'border-gray-300'
                           } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
->>>>>>> main
                       />
                     </div>
-<<<<<<< HEAD
-                    <div className="flex flex-col gap-y-4 justify-center items-center w-full">
-                      <h2 className="text-[25px] font-bold text-primary-3 text-center">
-                        Armemos tu próxima aventura
-                      </h2>
-=======
->>>>>>> main
 
                     <div>
                       <label htmlFor="days" className="block text-sm font-medium leading-6 text-gray-900">
