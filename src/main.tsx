@@ -29,7 +29,7 @@ root.render(
       <Route path="/community" element={<Profile />}/>
       <Route path="/publications" element={<Publications />}/>
       <Route path="/profile" element={<Profile />}/>
-      <Route path="/calendar" element={<CalendarioItinerario />}/>
+      <Route path="/calendarioItinerario" element={<CalendarioItinerario />}/>
       <Route path="/forum" element={<Forum />}/>
       <Route path="/jobs" element={<Jobs />}/>
     </Routes>

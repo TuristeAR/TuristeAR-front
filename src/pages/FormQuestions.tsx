@@ -26,8 +26,8 @@ const questions = [
       { src: '/assets/canelones.jpg', alt: 'Moderado' },
       { src: '/assets/pollo.jpg', alt: 'Turismo Urbano' },
     ],
-    type: 'image', 
-    multipleSelection: false,  // Selección única
+    type: 'image',
+    multipleSelection: false, // Selección única
   },
   {
     question: '¿Qué tipo de clima preferís?',
@@ -37,8 +37,8 @@ const questions = [
       { src: '/assets/clima_frio.jpg', alt: 'Clima frio' },
       { src: '/assets/clima_arido.jpg', alt: 'Clima Arido' },
     ],
-    type: 'image', 
-    multipleSelection: false,  // Selección única
+    type: 'image',
+    multipleSelection: false, // Selección única
   },
   {
     question: '¿Qué tipo de actividades te gusta hacer?',
@@ -48,8 +48,8 @@ const questions = [
       { src: '/assets/aire_libre.jpg', alt: 'Aire Libre' },
       { src: '/assets/urbano.jpg', alt: 'Turismo Urbano' },
     ],
-    type: 'image', 
-    multipleSelection: true,  // Selección múltiple
+    type: 'image',
+    multipleSelection: true, // Selección múltiple
   },
   {
     question: '¿Con quién vas a emprender tu nueva aventura?',
@@ -60,7 +60,7 @@ const questions = [
       { src: '/assets/familia.jpg', alt: 'Familia' },
     ],
     type: 'image',
-    multipleSelection: false,  // Selección única
+    multipleSelection: false, // Selección única
   },
 ];
 
@@ -184,17 +184,15 @@ const provincias = [
   },
 ];
 
-
-
 const FormQuestions = () => {
-  const [selectedProvince, setSelectedProvince] = useState<Province>();  // Estado para manejar la provincia seleccionada
-  const [currentQuestion, setCurrentQuestion] = useState(0);  // Controla el índice de la pregunta actual
+  const [selectedProvince, setSelectedProvince] = useState<Province>(); // Estado para manejar la provincia seleccionada
+  const [currentQuestion, setCurrentQuestion] = useState(0); // Controla el índice de la pregunta actual
   const [formData, setFormData] = useState<FormData>({
     province: '',
     date: '',
     days: 0,
-    answers: {}
-  });  // Estado para manejar las respuestas del formulario con tipado
+    answers: {},
+  }); // Estado para manejar las respuestas del formulario con tipado
   const [errors, setErrors] = useState({}); // Estado para errores de validación
   const navigate = useNavigate();
 
@@ -223,75 +221,72 @@ const FormQuestions = () => {
     return Object.keys(formErrors).length === 0; // Retorna true si no hay errores
   };
 
+  // Manejar la selección única
+  const handleSingleSelection = (selectedOption: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      answers: { ...prevData.answers, [currentQuestion]: selectedOption }, // Aquí se usa currentQuestion como índice numérico
+    }));
+  };
 
-  
-    // Manejar la selección única
-    const handleSingleSelection = (selectedOption: string) => {
-      setFormData((prevData) => ({
+  // Manejar la selección múltiple
+  const handleMultipleSelection = (selectedOption: string) => {
+    setFormData((prevData) => {
+      const currentSelections = prevData.answers[currentQuestion] || [];
+      let updatedSelections;
+
+      if (Array.isArray(currentSelections) && currentSelections.includes(selectedOption)) {
+        updatedSelections = currentSelections.filter((option) => option !== selectedOption);
+      } else {
+        updatedSelections = [...currentSelections, selectedOption];
+      }
+
+      return {
         ...prevData,
-        answers: { ...prevData.answers, [currentQuestion]: selectedOption }, // Aquí se usa currentQuestion como índice numérico
-      }));
-    };
-  
-    // Manejar la selección múltiple
-    const handleMultipleSelection = (selectedOption: string) => {
-      setFormData((prevData) => {
-        const currentSelections = prevData.answers[currentQuestion] || [];
-        let updatedSelections;
-  
-        if (Array.isArray(currentSelections) && currentSelections.includes(selectedOption)) {
-          updatedSelections = currentSelections.filter((option) => option !== selectedOption);
-        } else {
-          updatedSelections = [...currentSelections, selectedOption];
-        }
-  
-        return {
-          ...prevData,
-          answers: { ...prevData.answers, [currentQuestion]: updatedSelections }, // Aquí también usamos currentQuestion como índice numérico
-        };
-      });
-    };
-  
+        answers: { ...prevData.answers, [currentQuestion]: updatedSelections }, // Aquí también usamos currentQuestion como índice numérico
+      };
+    });
+  };
 
   // Manejar la siguiente pregunta con validación
   const handleNextQuestion = () => {
     if (currentQuestion === 0 && !validate()) {
-      return;  // No avanzar si la validación falla
+      return; // No avanzar si la validación falla
     }
 
-    if (currentQuestion < questions.length - 1) { // se consulta la posicion de la pregunta y si se puede se avanza ala siguiente
+    if (currentQuestion < questions.length - 1) {
+      // se consulta la posicion de la pregunta y si se puede se avanza ala siguiente
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      
-      console.log(formData); // mostar data formulario 
+      console.log(formData); // mostar data formulario
       submitFormData();
-      
     }
   };
 
-
-  const submitFormData = async () =>{
+  const submitFormData = async () => {
     try {
-        const response = await fetch('https://api-turistear.koyeb.app/formQuestion', { 
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
+      const response = await fetch('https://api-turistear.koyeb.app/formQuestion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      console.log('Código de estado:', response.status); 
 
-        if (!response.ok) {
-            throw new Error('Error en la red');
-        }
 
-        const responseData = await response.json();
-        console.log('Datos enviados con éxito:', responseData);
-        navigate('/calendar');  // Cambiar la ruta cuando finalice el formulario y se genere el itinerario 
+      if (!response.ok) {
+        throw new Error(`Error en la red: ${response.statusText} (${response.status})`);
+      }
 
+      const responseData = await response.json();
+      console.log('Datos enviados con éxito:', responseData);
+      console.log('Redirigiendo a /calendarioItinerario');
+      navigate('/calendarioItinerario');
     } catch (error) {
-        console.error('Error al enviar los datos:', error);
+      console.error('Error al enviar los datos:', error);
     }
-};
+  };
 
   return (
     <>
@@ -312,19 +307,20 @@ const FormQuestions = () => {
                       <div key={index} className="flex flex-col justify-center gap-y-2">
                         {questions[currentQuestion].multipleSelection ? (
                           <input
-                          type="checkbox"
-                          id={`option-${index}`}
-                          checked={formData.answers[currentQuestion]?.includes(option.alt) || false}
-                          onChange={() => handleMultipleSelection(option.alt)}
-                        />
-                        
+                            type="checkbox"
+                            id={`option-${index}`}
+                            checked={
+                              formData.answers[currentQuestion]?.includes(option.alt) || false
+                            }
+                            onChange={() => handleMultipleSelection(option.alt)}
+                          />
                         ) : (
                           <input
                             type="radio"
                             name={`question-${currentQuestion}`}
                             id={`option-${index}`}
                             checked={formData.answers[currentQuestion] === option.alt}
-                            onChange={() => handleSingleSelection(option.alt)} 
+                            onChange={() => handleSingleSelection(option.alt)}
                           />
                         )}
                         <label htmlFor={`option-${index}`} className="relative">
@@ -350,7 +346,10 @@ const FormQuestions = () => {
               ) : questions[currentQuestion].type === 'calendar' ? (
                 <div className="flex flex-col md:flex-row w-full">
                   <div className="flex flex-col items-center relative">
-                    <MapaArg onProvinceClick={handleProvinceClick} defaultProvinceId={selectedProvince?.id} />
+                    <MapaArg
+                      onProvinceClick={handleProvinceClick}
+                      defaultProvinceId={selectedProvince?.id}
+                    />
                   </div>
                   <div className="flex flex-col gap-y-4 justify-center items-center w-full">
                     <h2 className="text-[25px] font-semibold text-primary-4">
@@ -358,7 +357,10 @@ const FormQuestions = () => {
                     </h2>
 
                     <div>
-                      <label htmlFor="date" className="block text-sm font-medium leading-6 text-gray-900">
+                      <label
+                        htmlFor="date"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
                         Fecha del viaje
                       </label>
                       <input
@@ -372,7 +374,10 @@ const FormQuestions = () => {
                     </div>
 
                     <div>
-                      <label htmlFor="days" className="block text-sm font-medium leading-6 text-gray-900">
+                      <label
+                        htmlFor="days"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
                         Cantidad de días <span className="text-[#ff0000]">*</span>
                       </label>
                       <input
@@ -384,7 +389,6 @@ const FormQuestions = () => {
                         className={`mt-1 block w-[300px] px-3 py-2 border  'border-red-500' : 'border-gray-300'
                         } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
                       />
-                
                     </div>
 
                     <div className="flex gap-x-4">
