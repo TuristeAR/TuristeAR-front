@@ -1,4 +1,4 @@
-import ArticleCard from '../components/Destinations/ArticleCard';
+import { ArticleCard } from '../components/Destinations/ArticleCard';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import { PostCard } from '../components/Destinations/PostCard';
