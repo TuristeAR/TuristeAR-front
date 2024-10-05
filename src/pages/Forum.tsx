@@ -1,44 +1,47 @@
-import { Header } from '../components/Header';
-import LeftCommunity from '../components/LeftCommunity';
-import RightCommunity from '../components/RightCommunity';
-import ImageGallery from '../components/ImageGallery';
-import CreatePost from '../components/CreatePost';
+import { Header } from '../components/Header/Header';
+import { LeftCommunity } from '../components/Comunity/LeftCommunity';
+import { RightCommunity } from '../components/Comunity/RightCommunity';
+import { ImageGallery } from '../components/ImageGallery/ImageGallery';
+import { CreatePost } from '../components/Comunity/CreatePost';
 
-const infoComments=[
+const infoComments = [
   {
-    user : "Camila Ibarra",
-    day : "25 sep 2024",
-    comment: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus' +
+    user: 'Camila Ibarra',
+    day: '25 sep 2024',
+    comment:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus' +
       ' ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    imgPerson: "/assets/person.svg",
-    imgs:[]
+    imgPerson: '/assets/person.svg',
+    imgs: [],
   },
   {
-    user : "Abigail Suriani",
-    day : "25 sep 2024",
-    comment: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus' +
+    user: 'Abigail Suriani',
+    day: '25 sep 2024',
+    comment:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus' +
       ' ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    imgPerson: "/assets/person.svg",
-    imgs:[
-      {id : 1, src : "/assets/san-nicolas-buenos-aires.webp" },
-      {id : 2, src : "/assets/san-nicolas-buenos-aires.webp" },
-      {id : 3, src : "/assets/san-nicolas-buenos-aires.webp" },
-    ]
+    imgPerson: '/assets/person.svg',
+    imgs: [
+      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
+      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
+    ],
   },
   {
-    user : "Abigail Suriani",
-    day : "25 sep 2024",
-    comment: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus' +
+    user: 'Abigail Suriani',
+    day: '25 sep 2024',
+    comment:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus' +
       ' ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    imgPerson: "/assets/person.svg",
-    imgs:[
-      {id : 1, src : "/assets/san-nicolas-buenos-aires.webp" },
-      {id : 2, src : "/assets/san-nicolas-buenos-aires.webp" },
-      {id : 3, src : "/assets/san-nicolas-buenos-aires.webp" },
-    ]
-  }
-]
-const options=[ "Seleccionar imagen", "Seleccionar archivo", "Importar itinerario" ]
+    imgPerson: '/assets/person.svg',
+    imgs: [
+      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
+      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
+      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
+    ],
+  },
+];
+const options = ['Seleccionar imagen', 'Seleccionar archivo', 'Importar itinerario'];
 
 const Forum = () => {
   return (
@@ -60,16 +63,13 @@ const Forum = () => {
                         <p className="text-xl">{info.user}</p>
                         <p className="text-l">{info.day}</p>
                       </div>
-                      <p>
-                        {info.comment}
-                      </p>
+                      <p>{info.comment}</p>
                       <ImageGallery images={info.imgs} />
                     </div>
                   </div>
                 </>
-              )
+              );
             })}
-
           </div>
           <div className="border border-black rounded-b-3xl bg-[#009fe3] bg-opacity-10">
             <CreatePost options={options} />

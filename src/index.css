@@ -2,22 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
-    h1{
-        @apply  sm:text-7xl text-3xl font-bold  text-black
+@layer base {
+    h1 {
+        @apply sm:text-7xl text-3xl font-bold text-black
     }
-    .btn-blue{
+
+    .btn-blue {
         @apply min-w-[156px] h-[54px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all;
     }
     .btn-drop-down-blue{
         @apply w-full h-[60px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all;
     }
-    .btn-question{
-        @apply min-w-[156px] h-[38px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase rounded-md font-semibold tracking-[.15em] transition-all;
+
+    .btn-question {
+        @apply min-w-[156px] h-[38px] px-6 bg-primary hover:bg-primary-3 text-white text-[10px] md:text-[13px] uppercase rounded-md font-semibold tracking-[.15em] transition-all;
     }
+
     .scrollbar-hidden::-webkit-scrollbar {
         display: none;
     }
+
     .scrollbar-hidden {
         scrollbar-width: none;
     }
@@ -27,17 +31,67 @@
 
 .swiper-button-next,
 .swiper-button-prev {
-    background-color: rgba(31, 113, 214, 0.7); /* Fondo semi-transparente */
-    border-radius: 50% !important; /* Esquinas redondeadas */
-    width: 40px !important; /* Ancho de la flecha */
-    height: 40px !important; /* Alto de la flecha */
+    background-color: rgba(31, 113, 214, 0.7);
+    /* Fondo semi-transparente */
+    border-radius: 50% !important;
+    /* Esquinas redondeadas */
+    width: 40px !important;
+    /* Ancho de la flecha */
+    height: 40px !important;
+    /* Alto de la flecha */
     display: flex !important;
-    align-items: center  !important;
+    align-items: center !important;
     justify-content: center !important;
 }
 
 .swiper-button-next:after,
 .swiper-button-prev:after {
-    color: white !important; /* Color de las flechas */
-    font-size: 40px !important; /* Tamaño de las flechas */
+    color: white !important;
+    /* Color de las flechas */
+    font-size: 40px !important;
+    /* Tamaño de las flechas */
+}
+
+/*  Full calendar */
+.fc-today-button {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: #fff;
+}
+
+.fc-next-button,
+.fc-prev-button {
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+    color: #fff;
+}
+
+.fc-next-button:hover,
+.fc-prev-button:hover {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: #fff;
+}
+
+.fc-toolbar-title {
+    font-size: 1.5rem;
+    color: #0056b3 !important;
+    font-weight: bolder;
+}
+
+.fc-dayGridMonth-button,
+.fc-dayGridWeek-button,
+.fc-dayGridDay-button {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.fc-dayGridMonth-button:hover,
+.fc-dayGridWeek-button:hover,
+.fc-dayGridDay-button:hover {
+    background-color: #0056b3 !important;
+    border-color: #007bff !important;
+    border-radius: 4px;
 }

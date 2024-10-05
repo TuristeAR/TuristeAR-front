@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react';
-import useCarousel from '../utilities/useCarousel';
+import useCarousel from '../../utilities/useCarousel';
 
 interface CarouselProps {
   children: ReactNode; // Ahora aceptamos ReactNode en lugar de ReactNode[]
 }
 
-const Carousel: React.FC<CarouselProps> = ({ children }) => {
+export const Carousel: React.FC<CarouselProps> = ({ children }) => {
   const length = React.Children.count(children);
   const { currentSlide, goToNextSlide, goToPrevSlide } = useCarousel(length, 3000);
 
