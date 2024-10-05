@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Header } from '../components/Header/Header';
 import MapaArg from '../components/MapaArg';
 import { useNavigate } from 'react-router-dom';
+import { provincias } from '../utilities/provincias';
 
-// Definir la estructura de formData con una interfaz
 interface FormData {
   province?: string; // Agregamos la provincia aquí
   date: string;
@@ -14,7 +14,6 @@ interface FormData {
   company: string;
 }
 
-// Preguntas del formulario con selección única y múltiple
 const questions = [
   {
     question: 'Fecha del viaje y Duración del viaje',
@@ -75,120 +74,6 @@ type Province = {
   nombre: string;
 };
 
-const provincias = [
-  {
-    id: 'caba',
-    nombre: 'Ciudad Autónoma de Buenos Aires',
-  },
-  {
-    id: 'caba-z',
-    nombre: 'Ciudad Autónoma de Buenos Aires',
-  },
-  {
-    id: 'buenos-aires',
-    nombre: 'Buenos Aires',
-  },
-  {
-    id: 'catamarca',
-    nombre: 'Catamarca',
-  },
-  {
-    id: 'chaco',
-    nombre: 'Chaco',
-  },
-  {
-    id: 'chubut',
-    nombre: 'Chubut',
-  },
-  {
-    id: 'cordoba',
-    nombre: 'Córdoba',
-  },
-  {
-    id: 'corrientes',
-    nombre: 'Corrientes',
-  },
-  {
-    id: 'entre-rios',
-    nombre: 'Entre Ríos',
-  },
-  {
-    id: 'formosa',
-    nombre: 'Formosa',
-  },
-  {
-    id: 'jujuy',
-    nombre: 'Jujuy',
-  },
-  {
-    id: 'la-pampa',
-    nombre: 'La Pampa',
-  },
-  {
-    id: 'la-rioja',
-    nombre: 'La Rioja',
-  },
-  {
-    id: 'mendoza',
-    nombre: 'Mendoza',
-  },
-  {
-    id: 'misiones',
-
-    nombre: 'Misiones',
-  },
-  {
-    id: 'neuquen',
-
-    nombre: 'Neuquén',
-  },
-  {
-    id: 'rio-negro',
-
-    nombre: 'Río Negro',
-  },
-  {
-    id: 'salta',
-
-    nombre: 'Salta',
-  },
-  {
-    id: 'san-juan',
-
-    nombre: 'San Juan',
-  },
-  {
-    id: 'san-luis',
-
-    nombre: 'San Luis',
-  },
-  {
-    id: 'santa-cruz',
-
-    nombre: 'Santa Cruz',
-  },
-  {
-    id: 'santa-fe',
-
-    nombre: 'Santa Fe',
-  },
-  {
-    id: 'santiago-del-estero',
-
-    nombre: 'Santiago del Estero',
-  },
-  {
-    id: 'tierra-del-fuego',
-
-    nombre: 'Tierra del Fuego',
-  },
-  {
-    id: 'tucuman',
-
-    nombre: 'Tucumán',
-  },
-];
-
 const FormQuestions = () => {
   const [selectedProvince, setSelectedProvince] = useState<Province>(); // Estado para manejar la provincia seleccionada
   const [currentQuestion, setCurrentQuestion] = useState(0); // Controla el índice de la pregunta actual
@@ -200,7 +85,7 @@ const FormQuestions = () => {
     activities: [],
     weather: '',
     company: '',
-  }); // Estado para manejar las respuestas del formulario con tipado
+  });
   const [errors, setErrors] = useState({}); // Estado para errores de validación
   const navigate = useNavigate();
 
