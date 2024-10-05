@@ -75,14 +75,17 @@ describe('Destinations Page', () => {
     expect(gabrielReview).toBeInTheDocument();
   });
 
-  test('renders the "Ver más" button in Buenos Aires section', () => {
+  test('renders the "Descrubí más " button in Catamarca section', () => {
     render(
       <BrowserRouter>
         <Destinations />
       </BrowserRouter>
     );
 
-    const verMasButton = screen.getByText('Ver más');
+    const verMasButton = screen.getByText('Descrubí más de Catamarca');
     expect(verMasButton).toBeInTheDocument();
   });
+
+
+  
 });

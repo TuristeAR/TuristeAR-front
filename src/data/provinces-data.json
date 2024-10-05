@@ -1,0 +1,252 @@
+ [
+    {
+      "id": "caba",
+      "name": "Ciudad Autónoma de Buenos Aires",
+      "description": "La provincia más poblada de Argentina, famosa por su rica cultura y su vibrante vida nocturna. Es hogar de la ciudad de Buenos Aires, conocida por el tango, la arquitectura y la gastronomía. Su diversidad geográfica incluye llanuras, lagunas y una extensa costa atlántica.",
+      "img": [
+        { "id": 1, "src": "https://plus.unsplash.com/premium_photo-1697729901052-fe8900e24993?q=80&w=1933&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"},
+        { "id": 2, "src": "https://images.pexels.com/photos/13284100/pexels-photo-13284100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"},
+        { "id": 3, "src": "https://images.pexels.com/photos/20798699/pexels-photo-20798699/free-photo-of-ciudad-noche-agua-construccion.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+      ]
+    },
+    {
+      "id": "caba-z",
+      "name": "Ciudad Autónoma de Buenos Aires",
+      "description": "La provincia más poblada de Argentina, famosa por su rica cultura y su vibrante vida nocturna. Es hogar de la ciudad de Buenos Aires, conocida por el tango, la arquitectura y la gastronomía. Su diversidad geográfica incluye llanuras, lagunas y una extensa costa atlántica.",
+      "img": [
+        { "id": 1, "src": "https://plus.unsplash.com/premium_photo-1697729901052-fe8900e24993?q=80&w=1933&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"},
+        { "id": 2, "src": "https://images.pexels.com/photos/13284100/pexels-photo-13284100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"},
+        { "id": 3, "src": "https://images.pexels.com/photos/20798699/pexels-photo-20798699/free-photo-of-ciudad-noche-agua-construccion.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+      ]
+    },
+    {
+      "id": "buenos-aires",
+      "name": "Buenos Aires",
+      "description": "La provincia más poblada de Argentina, famosa por su rica cultura y su vibrante vida nocturna. Es hogar de la ciudad de Buenos Aires, conocida por el tango, la arquitectura y la gastronomía. Su diversidad geográfica incluye llanuras, lagunas y una extensa costa atlántica.",
+    "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "catamarca",
+      "name": "Catamarca",
+      "description": "Situada en el noroeste, destaca por sus montañas y valles fértiles. Su economía se basa en la agricultura, especialmente en la producción de frutas y hortalizas. Además, tiene un rico patrimonio cultural con influencias indígenas.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "chaco",
+      "name": "Chaco",
+      "description": "Conocida por su biodiversidad y vastas extensiones de tierras fértiles. La economía se centra en la agricultura y la ganadería, además de ser un importante productor de algodón. Su cultura refleja una mezcla de tradiciones indígenas y coloniales.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "chubut",
+      "name": "Chubut",
+      "description": "Famosa por sus impresionantes paisajes patagónicos, incluyendo la Península Valdés, hogar de diversas especies marinas. La economía se basa en la pesca, el turismo y la producción de petróleo. También destaca su historia galesa y cultural.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "cordoba",
+      "name": "Córdoba",
+      "description": "Un importante centro educativo y cultural, conocido por su arquitectura colonial y su vibrante vida estudiantil. La provincia alberga numerosas universidades y una rica historia. Su economía se basa en la agricultura, la industria y el turismo.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "corrientes",
+      "name": "Corrientes",
+      "description": "Famosa por su carnaval y su rica tradición cultural, esta provincia es conocida por sus festivales y danzas. Su economía está centrada en la agricultura y la ganadería, con producción de arroz y yerba mate. También destaca por sus paisajes naturales.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "entre-rios",
+      "name": "Entre Ríos",
+      "description": "Conocida por sus termas y paisajes naturales, es un destino popular para el turismo. Su economía se basa en la agricultura, especialmente en la producción de frutas y verduras. También es famosa por su rica historia y tradiciones.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "formosa",
+      "name": "Formosa",
+      "description": "Región de selvas y humedales, ideal para la biodiversidad y la pesca. Su economía se centra en la agricultura y la ganadería, así como en el ecoturismo. Formosa también es rica en cultura indígena y tradiciones locales.",
+      "img": [
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "jujuy",
+      "name": "Jujuy",
+      "description": "Famosa por sus montañas de colores, como el Cerro de los Siete Colores. La cultura indígena es fuerte en esta región, con numerosas tradiciones y festivales. Su economía se basa en la agricultura y el turismo.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "la-pampa",
+      "name": "La Pampa",
+      "description": "Conocida por sus vastas llanuras, es un importante centro de producción agrícola y ganadera. Su paisaje está dominado por campos de cultivo y cría de ganado. También cuenta con una rica cultura gauchesca.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "la-rioja",
+      "name": "La Rioja",
+      "description": "Famosa por su producción de vino y paisajes montañosos. La provincia tiene un rico patrimonio histórico y cultural, con influencias indígenas y coloniales. Su economía se centra en la viticultura y el turismo.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "mendoza",
+      "name": "Mendoza",
+      "description": "Reconocida mundialmente por sus vinos, especialmente el Malbec, y sus impresionantes paisajes montañosos. Mendoza es un importante destino turístico, con muchas bodegas y actividades al aire libre. Su economía se basa en la viticultura y el turismo.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "misiones",
+      "name": "Misiones",
+      "description": "Hogar de las majestuosas Cataratas del Iguazú, es conocida por su biodiversidad y rica cultura guaraní. La economía se centra en el turismo y la producción de yerba mate. Misiones es un destino único con paisajes naturales excepcionales.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "neuquen",
+      "name": "Neuquén",
+      "description": "Famosa por sus paisajes patagónicos, montañas y lagos. La economía se basa en la producción de petróleo y gas, además del turismo. También es conocida por sus actividades al aire libre y deportes extremos.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "rio-negro",
+      "name": "Río Negro",
+      "description": "Conocida por sus frutales y producción de vino en la región de la Patagonia. La economía se basa en la agricultura, la ganadería y el turismo. También ofrece paisajes variados, desde montañas hasta costas.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "salta",
+      "name": "Salta",
+      "description": "Famosa por sus montañas y tradiciones indígenas, es un destino turístico atractivo. La provincia es conocida por su producción de vino y paisajes naturales impresionantes. Su cultura se refleja en su arquitectura y festividades.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "san-juan",
+      "name": "San Juan",
+      "description": "Conocida por su producción vitivinícola y paisajes áridos, especialmente el Malbec. La economía se centra en la viticultura y la minería. San Juan también alberga el Parque Nacional Ischigualasto, famoso por sus formaciones geológicas.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "san-luis",
+      "name": "San Luis",
+      "description": "Famosa por sus paisajes montañosos y su producción agrícola, incluyendo frutas y verduras. La provincia ofrece diversas actividades al aire libre y tiene un rico patrimonio cultural. Su economía está en crecimiento y diversificación.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "santa-cruz",
+      "name": "Santa Cruz",
+      "description": "La provincia más grande de Argentina, conocida por sus paisajes impresionantes y la cordillera de los Andes. La economía se basa en la minería y el turismo, especialmente en lugares como El Calafate. También destaca por su fauna y flora.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "santa-fe",
+      "name": "Santa Fe",
+      "description": "Conocida por su producción agrícola y ganadera, especialmente en la región pampeana. Su economía es una de las más fuertes del país. Santa Fe también es rica en historia, cultura y tradiciones.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "santiago-del-estero",
+      "name": "Santiago del Estero",
+      "description": "Región con una rica herencia cultural y famosa por su folclore. Su economía se basa en la agricultura y la ganadería. La provincia también es conocida por sus festivales y tradiciones populares.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "tierra-del-fuego",
+      "name": "Tierra del Fuego, Antártida e Islas del Atlántico Sur",
+      "description": "La provincia más austral de Argentina, famosa por sus paisajes naturales y la ciudad de Ushuaia. Su economía se basa en el turismo y la pesca. También es conocida por su rica fauna y flora en un entorno único.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    },
+    {
+      "id": "tucuman",
+      "name": "Tucumán",
+      "description": "Conocida como el 'Jardín de la República', destaca por su producción de azúcar y cítricos. La provincia tiene un rico patrimonio histórico y cultural. Su clima y paisajes son ideales para la agricultura.",
+      "img": [
+        { "id": 1, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 2, "src": "/assets/san-nicolas-buenos-aires.webp"},
+        { "id": 3, "src": "/assets/san-nicolas-buenos-aires.webp"}
+      ]
+    }
+  ]

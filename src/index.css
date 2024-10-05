@@ -9,6 +9,9 @@
     .btn-blue{
         @apply min-w-[156px] h-[54px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all;
     }
+    .btn-drop-down-blue{
+        @apply w-full h-[54px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all;
+    }
     .btn-question{
         @apply min-w-[156px] h-[38px] px-6 bg-primary hover:bg-primary-3 text-white text-[10px] md:text-[13px] uppercase rounded-md font-semibold tracking-[.15em] transition-all;
     }
