@@ -123,11 +123,18 @@ const ExpectedDestination = () => {
     id: number;
     src: string;
   };
+  interface Culture {
+    festivals: string;
+    traditionalFood: string;
+    music: string;
+    customs: string;
+  };
   type Province = {
     id: string;
     name: string;
     description: string;
     img: Image[];
+    culture: Culture
   };
 
   const { nombreDeLaProvincia } = useParams();
@@ -362,56 +369,47 @@ const ExpectedDestination = () => {
           <div className={`${showedCulturaTradicion ? 'block' : 'hidden'}`}>
             <div className="flex gap-2 mt-5 justify-around flex-wrap">
               <div className="mx-auto grid max-w-screen-xl rounded-lg bg-gray-2 lg:grid-cols-12 lg:gap-8 xl:gap-16">
-                <div className="lg:col-span-5 lg:mt-0">
+                <div className="mx-auto lg:col-span-5 lg:mt-0 h-56 w-56 sm:h-96 sm:w-96 md:h-full md:w-full">
                   <a href="#">
                     <img
-                      className="mb-4 mx-auto h-56 w-56 sm:h-96 sm:w-96 md:h-full md:w-full"
+                      className="mb-4 mx-auto w-full h-full object-cover"
                       src={swipper[0].src}
                       alt="peripherals"
                     />
                   </a>
                 </div>
-                <div className="me-auto place-self-center lg:col-span-7 md:p-8 lg:p-16 p-4">
+                <div className="mx-auto place-self-center lg:col-span-7 md:p-8 lg:p-16 p-4">
                   <h1 className="mb-3 text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
-                    Idioma, religión y población
+                    Festival
                   </h1>
                   <p className="mb-6 text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque, excepturi
-                    architecto? Magnam voluptatem aut aliquid et vitae reprehenderit natus nemo
-                    recusandae deserunt! Maxime molestias atque a ratione exercitationem. Magni,
-                    impedit. Reserve your new Apple iMac 27” today and enjoy exclusive savings with
-                    qualified activation. Pre-order now to secure your discount.
+                  {provincia.culture.festivals}
+
                   </p>
                 </div>
               </div>
             </div>
             <div className="flex gap-2 mt-5 justify-around flex-wrap">
               <div className="mx-auto grid max-w-screen-xl rounded-lg bg-gray-2 lg:grid-cols-12 lg:gap-8 xl:gap-16">
-                <div className="lg:col-span-5 lg:mt-0">
+                <div className="mx-auto lg:col-span-5 lg:mt-0 h-56 w-56 sm:h-96 sm:w-96 md:h-full md:w-full">
                   <a href="#">
                     <img
-                      className="mb-4 mx-auto h-56 w-56 sm:h-96 sm:w-96 md:h-full md:w-full"
+                      className="mb-4 mx-auto h-full w-full object-cover"
                       src={swipper[0].src}
                       alt="peripherals"
                     />
                   </a>
                 </div>
-                <div className="me-auto place-self-center lg:col-span-7 md:p-8 lg:p-16 p-4">
+                <div className="mx-auto place-self-center lg:col-span-7 md:p-8 lg:p-16 p-4">
                   <h1 className="mb-3 text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
-                    Idioma, religión y población
+                    Comida tradicional
                   </h1>
                   <p className="mb-6 text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque, excepturi
-                    architecto? Magnam voluptatem aut aliquid et vitae reprehenderit natus nemo
-                    recusandae deserunt! Maxime molestias atque a ratione exercitationem. Magni,
-                    impedit. Reserve your new Apple iMac 27” today and enjoy exclusive savings with
-                    qualified activation. Pre-order now to secure your discount.
+                  {provincia.culture.traditionalFood}
+
                   </p>
                 </div>
               </div>
-            </div>
-            <div className="text-center mt-5">
-              <button className="btn-blue">Ver más información</button>
             </div>
           </div>
         </div>
