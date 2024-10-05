@@ -2,7 +2,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Carousel from '../src/components/Carousel';
+import { Carousel } from '../src/components/Destinations/Carousel';
 
 describe('Carousel Component', () => {
   it('should render the correct number of slides', () => {
@@ -30,6 +30,5 @@ describe('Carousel Component', () => {
     );
     const slidesContainer = screen.getByText('Slide 1').closest('.flex');
     expect(slidesContainer).toHaveStyle('transform: translateX(-0%)');
-
   });
 });
