@@ -38,7 +38,7 @@ const Profile = () => {
       <Header containerStyles={'bg-primary relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
         <LeftCommunity />
-        <div className="w-[64%] p-10 pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
+        <div className="lg:w-[64%] w-[100%] p-10 pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
           {/* Portada */}
           <div className="">
             <div className="h-[200px] bg-black"></div>
