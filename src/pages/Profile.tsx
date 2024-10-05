@@ -1,7 +1,7 @@
 import { Header } from '../components/Header/Header';
-import { LeftCommunity } from '../components/Comunity/LeftCommunity';
-import { RightCommunity } from '../components/Comunity/RightCommunity';
-import { CreatePost } from '../components/Comunity/CreatePost';
+import { LeftCommunity } from '../components/Community/LeftCommunity';
+import { RightCommunity } from '../components/Community/RightCommunity';
+import { CreatePost } from '../components/Community/CreatePost';
 import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 
 const itineraries = [

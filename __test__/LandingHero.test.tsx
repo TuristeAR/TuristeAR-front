@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { LandingHero } from '../src/components/LandingHero';
+import { LandingHero } from '../src/components/Landing/LandingHero';
 import React from 'react';
 
 describe('LandingHero', () => {

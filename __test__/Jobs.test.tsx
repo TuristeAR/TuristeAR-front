@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import ItineraryCard from '../src/components/ItineraryCard';
+import { ItineraryCard } from '../src/components/ImageGallery/ItineraryCard';
 
 const itineraries = [
   {
@@ -15,7 +15,7 @@ const itineraries = [
       { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
       { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
       { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ]
+    ],
   },
   {
     imgPerson: '/assets/person.svg',
@@ -28,26 +28,32 @@ const itineraries = [
       { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
       { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
     ],
-  }
+  },
 ];
 
 describe('Jobs', () => {
-  test("render itineraries cards correctly", () => {
+  test('render itineraries cards correctly', () => {
     render(
       <BrowserRouter>
-        {itineraries.map((item,index)=>{
+        {itineraries.map((item, index) => {
           return (
-            <ItineraryCard key={index} usuario={item.usuario} fecha={item.fecha} descripcion={item.descripcion}  img={item.img}  imgPerson={item.imgPerson}/>
-          )
+            <ItineraryCard
+              key={index}
+              usuario={item.usuario}
+              fecha={item.fecha}
+              descripcion={item.descripcion}
+              img={item.img}
+              imgPerson={item.imgPerson}
+            />
+          );
         })}
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
-    const firstUser=screen.getByText("Pablo Ramirez")
-    const secondUser=screen.getByText("Victor Gonzalez")
+    const firstUser = screen.getByText('Pablo Ramirez');
+    const secondUser = screen.getByText('Victor Gonzalez');
 
     expect(firstUser).toBeInTheDocument();
     expect(secondUser).toBeInTheDocument();
-
-  })
-})
+  });
+});
