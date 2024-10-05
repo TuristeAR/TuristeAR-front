@@ -1,4 +1,4 @@
-import { Header } from '../components/Header';
+import { Header } from '../components/Header/Header';
 import LeftCommunity from '../components/LeftCommunity';
 import RightCommunity from '../components/RightCommunity';
 import ImageGallery from '../components/ImageGallery';

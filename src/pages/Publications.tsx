@@ -1,4 +1,4 @@
-import { Header } from '../components/Header';
+import { Header } from '../components/Header/Header';
 import ItineraryCard from '../components/ItineraryCard';
 import React from 'react';
 import LeftCommunity from '../components/LeftCommunity';

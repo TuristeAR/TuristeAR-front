@@ -4,7 +4,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es'; 
 
 
-const Calendar = ({ setEvents, events }: { setEvents: any; events: any }) => {
+export const Calendar = ({ setEvents, events }: { setEvents: any; events: any }) => {
   const handleDateClick = (arg: { dateStr: any }) => {
     const title = prompt('Introduce el título del nuevo evento:');
     if (title) {
@@ -63,4 +63,3 @@ const Calendar = ({ setEvents, events }: { setEvents: any; events: any }) => {
   );
 };
 
-export default Calendar;

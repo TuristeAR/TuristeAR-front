@@ -9,8 +9,8 @@ import deleteIcon from '/assets/delete.svg';
 import { useState } from 'react';
 
 /* Components */
-import Calendar from '../components/Calendar';
-import { Header } from '../components/Header';
+import {Calendar} from '../components/Calendar/Calendar';
+import { Header } from '../components/Header/Header';
 
 const CalendarioItinerario = () => {
   const [events, setEvents] = useState([

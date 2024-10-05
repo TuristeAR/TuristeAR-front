@@ -1,5 +1,5 @@
 import Carousel from '../components/Carousel';
-import { Header } from '../components/Header';
+import { Header } from '../components/Header/Header';
 import MapaArg from '../components/MapaArg';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';

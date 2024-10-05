@@ -1,5 +1,5 @@
 import ArticleCard from '../components/ArticleCard';
-import { Header } from '../components/Header';
+import { Header } from '../components/Header/Header';
 import ImageGallery from '../components/ImageGallery';
 import PostCard from '../components/PostCard';
 import provinciasData from '../data/provinces-data.json';
