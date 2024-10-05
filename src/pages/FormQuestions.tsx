@@ -8,9 +8,10 @@ interface FormData {
   province?: string; // Agregamos la provincia aquí
   date: string;
   days: number | string;
-  answers: {
-    [key: number]: string | string[]; // Índices numéricos, respuestas pueden ser string o array de strings (selección múltiple)
-  };
+  economy: string;
+  activities: string[];
+  weather: string;
+  company: string;
 }
 
 // Preguntas del formulario con selección única y múltiple
@@ -27,6 +28,7 @@ const questions = [
       { src: '/assets/pollo.jpg', alt: 'Turismo Urbano' },
     ],
     type: 'image',
+    name: 'economy',
     multipleSelection: false, // Selección única
   },
   {
@@ -38,6 +40,7 @@ const questions = [
       { src: '/assets/clima_arido.jpg', alt: 'Clima Arido' },
     ],
     type: 'image',
+    name: 'weather',
     multipleSelection: false, // Selección única
   },
   {
@@ -49,6 +52,7 @@ const questions = [
       { src: '/assets/urbano.jpg', alt: 'Turismo Urbano' },
     ],
     type: 'image',
+    name: 'activities',
     multipleSelection: true, // Selección múltiple
   },
   {
@@ -60,6 +64,7 @@ const questions = [
       { src: '/assets/familia.jpg', alt: 'Familia' },
     ],
     type: 'image',
+    name: 'company',
     multipleSelection: false, // Selección única
   },
 ];
@@ -191,7 +196,10 @@ const FormQuestions = () => {
     province: '',
     date: '',
     days: 0,
-    answers: {},
+    economy: '',
+    activities: [],
+    weather: '',
+    company: '',
   }); // Estado para manejar las respuestas del formulario con tipado
   const [errors, setErrors] = useState({}); // Estado para errores de validación
   const navigate = useNavigate();
@@ -202,10 +210,13 @@ const FormQuestions = () => {
     formData.province = province?.nombre;
   };
 
-  // Manejo de inputs del formulario
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   // Validación de campos obligatorios
@@ -222,29 +233,24 @@ const FormQuestions = () => {
   };
 
   // Manejar la selección única
-  const handleSingleSelection = (selectedOption: string) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      answers: { ...prevData.answers, [currentQuestion]: selectedOption }, // Aquí se usa currentQuestion como índice numérico
-    }));
+  const handleSingleSelection = (name: keyof FormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Manejar la selección múltiple
-  const handleMultipleSelection = (selectedOption: string) => {
-    setFormData((prevData) => {
-      const currentSelections = prevData.answers[currentQuestion] || [];
-      let updatedSelections;
+  const handleMultipleSelection = (option: string) => {
+    setFormData((prev) => {
+      const alreadySelected = prev.activities.includes(option);
+      let updatedActivities = [];
 
-      if (Array.isArray(currentSelections) && currentSelections.includes(selectedOption)) {
-        updatedSelections = currentSelections.filter((option) => option !== selectedOption);
+      if (alreadySelected) {
+        // Si la opción ya estaba seleccionada, la quitamos
+        updatedActivities = prev.activities.filter((activity) => activity !== option);
       } else {
-        updatedSelections = [...currentSelections, selectedOption];
+        // Si no estaba seleccionada, la agregamos
+        updatedActivities = [...prev.activities, option];
       }
 
-      return {
-        ...prevData,
-        answers: { ...prevData.answers, [currentQuestion]: updatedSelections }, // Aquí también usamos currentQuestion como índice numérico
-      };
+      return { ...prev, activities: updatedActivities };
     });
   };
 
@@ -272,8 +278,7 @@ const FormQuestions = () => {
         },
         body: JSON.stringify(formData),
       });
-      console.log('Código de estado:', response.status); 
-
+      console.log('Código de estado:', response.status);
 
       if (!response.ok) {
         throw new Error(`Error en la red: ${response.statusText} (${response.status})`);
@@ -297,6 +302,7 @@ const FormQuestions = () => {
           <form className="flex flex-col w-full max-w-full items-center justify-center bg-white p-4 gap-y-6 md:gap-y-4 min-h-[500px]">
             <div>
               {questions[currentQuestion].type === 'image' ? (
+                /* PREGUNTAS DE IMAGEN */
                 <div className="flex flex-col items-center gap-4">
                   <h3 className="text-primary-4 font-bold text-xl text-center">
                     {questions[currentQuestion].question}
@@ -309,26 +315,33 @@ const FormQuestions = () => {
                           <input
                             type="checkbox"
                             id={`option-${index}`}
-                            checked={
-                              formData.answers[currentQuestion]?.includes(option.alt) || false
-                            }
+                            checked={formData.activities.includes(option.alt)}
                             onChange={() => handleMultipleSelection(option.alt)}
                           />
                         ) : (
                           <input
                             type="radio"
-                            name={`question-${currentQuestion}`}
                             id={`option-${index}`}
-                            checked={formData.answers[currentQuestion] === option.alt}
-                            onChange={() => handleSingleSelection(option.alt)}
+                            checked={
+                              formData[questions[currentQuestion].name as keyof FormData] ===
+                              option.alt
+                            }
+                            onChange={() =>
+                              handleSingleSelection(
+                                questions[currentQuestion].name as keyof FormData,
+                                option.alt,
+                              )
+                            }
                           />
                         )}
+                        {/* Imagen */}
                         <label htmlFor={`option-${index}`} className="relative">
                           <img
                             src={option.src}
                             alt={option.alt}
                             className="w-[250px] h-[100px] md:w-[450px] md:h-[250px] object-cover cursor-pointer"
                           />
+                          {/* Titulo */}
                           <p className="absolute bottom-0 text-sm py-2 bg-black/60 w-full text-white text-center">
                             {option.alt}
                           </p>
@@ -343,7 +356,8 @@ const FormQuestions = () => {
                     </button>
                   </div>
                 </div>
-              ) : questions[currentQuestion].type === 'calendar' ? (
+              ) : /* PRIMER PREGUNTA */
+              questions[currentQuestion].type === 'calendar' ? (
                 <div className="flex flex-col md:flex-row w-full">
                   <div className="flex flex-col items-center relative">
                     <MapaArg
