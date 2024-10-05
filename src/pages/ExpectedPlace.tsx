@@ -147,7 +147,7 @@ const ExpectedPlace = () => {
 
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
-          <ImageGallery images={infoHotel[0].img}></ImageGallery>
+          <ImageGallery images={infoHotel[0].img} height={70}></ImageGallery>
           {infoHotel.map((item, index) => {
             return (
               <div key={index} className="px-2 sm:px-0 flex flex-col gap-y-4">
