@@ -257,7 +257,7 @@ const ExpectedDestination = () => {
             className="text-4xl pl-1 sm:pl-0 font-bold btn-drop-down-blue flex">Lugares
           <div className="icons">
               <svg
-                className={`${!showedCulturaTradicion ? 'block' : 'hidden'}`}
+                className={`${!showedLugares ? 'block' : 'hidden'}`}
                 xmlns="http://www.w3.org/2000/svg"
                 height="50px"
                 viewBox="0 -960 960 960"
@@ -267,7 +267,7 @@ const ExpectedDestination = () => {
                 <path d="M480-360 280-560h400L480-360Z" />
               </svg>
               <svg
-                className={`${showedCulturaTradicion ? 'block' : 'hidden'}`}
+                className={`${showedLugares ? 'block' : 'hidden'}`}
                 xmlns="http://www.w3.org/2000/svg"
                 height="50px"
                 viewBox="0 -960 960 960"
