@@ -1,4 +1,4 @@
-import { ContinueWithGoogle } from '../components/ContinueWithGoogle';
+import { ContinueWithGoogle } from '../components/Login/ContinueWithGoogle';
 import background from '../assets/login_wallpaper.jpg';
 import logo from '../assets/TuristeAR-logo.png';
 

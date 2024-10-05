@@ -1,9 +1,8 @@
-import { Header } from '../components/Header';
-import LeftCommunity from '../components/LeftCommunity';
-import RightCommunity from '../components/RightCommunity';
-import React from 'react';
-import CreatePost from '../components/CreatePost';
-import ItineraryCard from '../components/ItineraryCard';
+import { Header } from '../components/Header/Header';
+import { LeftCommunity } from '../components/Comunity/LeftCommunity';
+import { RightCommunity } from '../components/Comunity/RightCommunity';
+import { CreatePost } from '../components/Comunity/CreatePost';
+import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 const itineraries = [
   {
     imgPerson: '/assets/person.svg',
@@ -15,7 +14,7 @@ const itineraries = [
       { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
       { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
       { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ]
+    ],
   },
   {
     imgPerson: '/assets/person.svg',
@@ -28,12 +27,12 @@ const itineraries = [
       { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
       { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
     ],
-  }
+  },
 ];
 
-const options=[ "Seleccionar imagen", "Agregar ubicación", "Seleccionar tipo de trabajo" ]
+const options = ['Seleccionar imagen', 'Agregar ubicación', 'Seleccionar tipo de trabajo'];
 
-const Jobs = () => {
+export const Jobs = () => {
   return (
     <>
       <Header containerStyles={'bg-primary relative top-0 z-[60]'} />
@@ -43,7 +42,7 @@ const Jobs = () => {
           <div className="rounded-xl mb-10 shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
             <CreatePost options={options} />
           </div>
-          <div className="flex flex-col gap-6" >
+          <div className="flex flex-col gap-6">
             {itineraries.map((userPost, index) => (
               <ItineraryCard
                 key={index}
@@ -61,5 +60,3 @@ const Jobs = () => {
     </>
   );
 };
-
-export default Jobs;

@@ -1,9 +1,9 @@
 import { ScrollingText } from './ScrollingText';
-import posts from '../assets/landing_posts.png';
-import calendar from '../assets/landing_calendar.png';
-import calendarBackgroundSm from '../assets/landing_calendar_background_sm.svg';
-import calendarBackground2 from '../assets/landing_calendar_background_lg.svg';
-import calendarBackground3 from '../assets/landing_calendar_backgound_xl.svg';
+import posts from '../../assets/landing_posts.png';
+import calendar from '../../assets/landing_calendar.png';
+import calendarBackgroundSm from '../../assets/landing_calendar_background_sm.svg';
+import calendarBackground2 from '../../assets/landing_calendar_background_lg.svg';
+import calendarBackground3 from '../../assets/landing_calendar_backgound_xl.svg';
 import arrowRight from '/assets/arrow-right.svg';
 import arrowRightBlue from '/assets/arrow-right-blue.svg';
 

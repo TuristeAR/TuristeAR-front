@@ -1,9 +1,9 @@
-import { Header } from '../components/Header';
-import ItineraryCard from '../components/ItineraryCard';
+import { Header } from '../components/Header/Header';
+import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 import React from 'react';
-import LeftCommunity from '../components/LeftCommunity';
-import RightCommunity from '../components/RightCommunity';
-import CreatePost from '../components/CreatePost';
+import { LeftCommunity } from '../components/Comunity/LeftCommunity';
+import { RightCommunity } from '../components/Comunity/RightCommunity';
+import { CreatePost } from '../components/Comunity/CreatePost';
 
 const userStories = [
   {

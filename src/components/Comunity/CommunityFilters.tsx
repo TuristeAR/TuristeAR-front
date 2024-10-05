@@ -1,4 +1,4 @@
-function CommunityFilters(props: {
+export function CommunityFilters(props: {
   title: string;
   users: { imgPerson: string; user: string }[]; // Ajuste del tipo de `users`
   link: string;
@@ -30,4 +30,3 @@ function CommunityFilters(props: {
   );
 }
 
-export default CommunityFilters;
