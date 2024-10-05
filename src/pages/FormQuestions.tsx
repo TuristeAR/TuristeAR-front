@@ -3,9 +3,20 @@ import { Header } from '../components/Header';
 import MapaArg from '../components/MapaArg';
 import { useNavigate } from 'react-router-dom';
 
+// Definir la estructura de formData con una interfaz
+interface FormData {
+  province?: string; // Agregamos la provincia aquí
+  date: string;
+  days: number | string;
+  answers: {
+    [key: number]: string | string[]; // Índices numéricos, respuestas pueden ser string o array de strings (selección múltiple)
+  };
+}
+
+// Preguntas del formulario con selección única y múltiple
 const questions = [
   {
-    question: 'Fecha del viaje y Duración del viaje ',
+    question: 'Fecha del viaje y Duración del viaje',
     type: 'calendar',
   },
   {
@@ -15,7 +26,8 @@ const questions = [
       { src: '/assets/canelones.jpg', alt: 'Moderado' },
       { src: '/assets/pollo.jpg', alt: 'Turismo Urbano' },
     ],
-    type: 'image',
+    type: 'image', 
+    multipleSelection: false,  // Selección única
   },
   {
     question: '¿Qué tipo de clima preferís?',
@@ -25,17 +37,19 @@ const questions = [
       { src: '/assets/clima_frio.jpg', alt: 'Clima frio' },
       { src: '/assets/clima_arido.jpg', alt: 'Clima Arido' },
     ],
-    type: 'image',
+    type: 'image', 
+    multipleSelection: false,  // Selección única
   },
   {
     question: '¿Qué tipo de actividades te gusta hacer?',
     options: [
       { src: '/assets/playa.jpg', alt: 'Playa' },
-      { src: '/assets/escalar.jpg', alt: 'Playa' },
+      { src: '/assets/escalar.jpg', alt: 'Escalar' },
       { src: '/assets/aire_libre.jpg', alt: 'Aire Libre' },
       { src: '/assets/urbano.jpg', alt: 'Turismo Urbano' },
     ],
-    type: 'image',
+    type: 'image', 
+    multipleSelection: true,  // Selección múltiple
   },
   {
     question: '¿Con quién vas a emprender tu nueva aventura?',
@@ -46,9 +60,11 @@ const questions = [
       { src: '/assets/familia.jpg', alt: 'Familia' },
     ],
     type: 'image',
+    multipleSelection: false,  // Selección única
   },
 ];
 
+// Provincias de ejemplo para la selección en el mapa
 type Province = {
   id: string;
   nombre: string;
@@ -168,53 +184,150 @@ const provincias = [
   },
 ];
 
+
+
 const FormQuestions = () => {
-  const [selectedProvince, setSelectedProvince] = useState<Province>();
-  const [currentQuestion, setCurrentQuestion] = useState(0); // Estado para controlar el índice de la pregunta actual
-  const [formData, setFormData] = useState({ date: '', days: '', comfort: '' }); // Estado para guardar las respuestas
+  const [selectedProvince, setSelectedProvince] = useState<Province>();  // Estado para manejar la provincia seleccionada
+  const [currentQuestion, setCurrentQuestion] = useState(0);  // Controla el índice de la pregunta actual
+  const [formData, setFormData] = useState<FormData>({
+    province: '',
+    date: '',
+    days: 0,
+    answers: {}
+  });  // Estado para manejar las respuestas del formulario con tipado
+  const [errors, setErrors] = useState({}); // Estado para errores de validación
   const navigate = useNavigate();
 
   const handleProvinceClick = (nombre: string) => {
     const province = provincias.find((p) => p.id === nombre);
     setSelectedProvince(province);
+    formData.province = province?.nombre;
   };
 
-  // Manejar el cambio de inputs (calendario, días, nivel de comodidad)
+  // Manejo de inputs del formulario
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  // Validación de campos obligatorios
+  const validate = () => {
+    let formErrors = {};
+
+    // Validar campo de días
+    if (!formData.days || isNaN(Number(formData.days)) || Number(formData.days) <= 0) {
+      formErrors = { ...formErrors, days: 'Por favor ingrese un número válido de días.' };
+    }
+
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0; // Retorna true si no hay errores
+  };
+
+
+  
+    // Manejar la selección única
+    const handleSingleSelection = (selectedOption: string) => {
+      setFormData((prevData) => ({
+        ...prevData,
+        answers: { ...prevData.answers, [currentQuestion]: selectedOption }, // Aquí se usa currentQuestion como índice numérico
+      }));
+    };
+  
+    // Manejar la selección múltiple
+    const handleMultipleSelection = (selectedOption: string) => {
+      setFormData((prevData) => {
+        const currentSelections = prevData.answers[currentQuestion] || [];
+        let updatedSelections;
+  
+        if (Array.isArray(currentSelections) && currentSelections.includes(selectedOption)) {
+          updatedSelections = currentSelections.filter((option) => option !== selectedOption);
+        } else {
+          updatedSelections = [...currentSelections, selectedOption];
+        }
+  
+        return {
+          ...prevData,
+          answers: { ...prevData.answers, [currentQuestion]: updatedSelections }, // Aquí también usamos currentQuestion como índice numérico
+        };
+      });
+    };
+  
+
+  // Manejar la siguiente pregunta con validación
   const handleNextQuestion = () => {
-    if (currentQuestion < questions.length - 1) {
+    if (currentQuestion === 0 && !validate()) {
+      return;  // No avanzar si la validación falla
+    }
+
+    if (currentQuestion < questions.length - 1) { // se consulta la posicion de la pregunta y si se puede se avanza ala siguiente
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      navigate('/calendar');
+      
+      console.log(formData); // mostar data formulario 
+      submitFormData();
+      
     }
   };
+
+
+  const submitFormData = async () =>{
+    try {
+        const response = await fetch('https://api-turistear.koyeb.app/formQuestion', { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error en la red');
+        }
+
+        const responseData = await response.json();
+        console.log('Datos enviados con éxito:', responseData);
+        navigate('/calendar');  // Cambiar la ruta cuando finalice el formulario y se genere el itinerario 
+
+    } catch (error) {
+        console.error('Error al enviar los datos:', error);
+    }
+};
 
   return (
     <>
       <Header containerStyles={'bg-primary  '} />
 
       <section className="min-h-screen flex items-center justify-center bg-gray-100 text-black py-8">
-        <div className="container mx-auto  flex flex-col md:flex-row justify-center z-30 relative">
-          {/* Formulario */}
+        <div className="container mx-auto flex flex-col md:flex-row justify-center z-30 relative">
           <form className="flex flex-col w-full max-w-full items-center justify-center bg-white p-4 gap-y-6 md:gap-y-4 min-h-[500px]">
             <div>
               {questions[currentQuestion].type === 'image' ? (
                 <div className="flex flex-col items-center gap-4">
-                  <div>
-                    <h3 className="text-primary-4 font-bold text-xl text-center">
-                      {questions[currentQuestion].question}
-                    </h3>
-                  </div>
+                  <h3 className="text-primary-4 font-bold text-xl text-center">
+                    {questions[currentQuestion].question}
+                  </h3>
 
-                  <div className="flex flex-col md:flex-row gap-x-5  justify-center">
+                  <div className="flex flex-col md:flex-row gap-x-5 justify-center">
                     {questions[currentQuestion].options?.map((option, index) => (
                       <div key={index} className="flex flex-col justify-center gap-y-2">
-                        <input type="radio" name="question" id={`option-${index}`} />
-                        <label className="relative" htmlFor={`option-${index}`}>
+                        {questions[currentQuestion].multipleSelection ? (
+                          <input
+                          type="checkbox"
+                          id={`option-${index}`}
+                          checked={formData.answers[currentQuestion]?.includes(option.alt) || false}
+                          onChange={() => handleMultipleSelection(option.alt)}
+                        />
+                        
+                        ) : (
+                          <input
+                            type="radio"
+                            name={`question-${currentQuestion}`}
+                            id={`option-${index}`}
+                            checked={formData.answers[currentQuestion] === option.alt}
+                            onChange={() => handleSingleSelection(option.alt)} 
+                          />
+                        )}
+                        <label htmlFor={`option-${index}`} className="relative">
                           <img
                             src={option.src}
                             alt={option.alt}
@@ -228,99 +341,59 @@ const FormQuestions = () => {
                     ))}
                   </div>
 
-                  {/* Botón para avanzar o finalizar */}
                   <div className="flex gap-x-4">
-                    {currentQuestion < questions.length - 1 ? (
-                      <button type="button" className="btn-question" onClick={handleNextQuestion}>
-                        Siguiente pregunta
-                      </button>
-                    ) : (
-                      <button type="button" className="btn-question" onClick={handleNextQuestion}>
-                        Finalizar
-                      </button>
-                    )}
+                    <button type="button" className="btn-question" onClick={handleNextQuestion}>
+                      {currentQuestion < questions.length - 1 ? 'Siguiente pregunta' : 'Finalizar'}
+                    </button>
                   </div>
                 </div>
               ) : questions[currentQuestion].type === 'calendar' ? (
-                <>
-                  <div className="flex flex-col md:flex-row w-full">
-                    <div className="flex flex-col items-center relative">
-                      <div className="absolute top-16 block text-sm font-medium leading-6 text-gray-900">
-                        <h2>Seleccioná una provincia</h2>
-                      </div>
-                      <MapaArg
-                        onProvinceClick={handleProvinceClick}
-                        defaultProvinceId={selectedProvince?.id}
+                <div className="flex flex-col md:flex-row w-full">
+                  <div className="flex flex-col items-center relative">
+                    <MapaArg onProvinceClick={handleProvinceClick} defaultProvinceId={selectedProvince?.id} />
+                  </div>
+                  <div className="flex flex-col gap-y-4 justify-center items-center w-full">
+                    <h2 className="text-[25px] font-semibold text-primary-4">
+                      Armemos tu próxima aventura
+                    </h2>
+
+                    <div>
+                      <label htmlFor="date" className="block text-sm font-medium leading-6 text-gray-900">
+                        Fecha del viaje
+                      </label>
+                      <input
+                        type="date"
+                        name="date"
+                        value={formData.date}
+                        onChange={handleInputChange}
+                        className={`mt-1 block w-[300px] px-3 py-2 border  'border-red-500' : 'border-gray-300'
+                          } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
                       />
-                      {/* Si hay una provincia seleccionada, mostrar el popup */}
-                      {selectedProvince && (
-                        <div className="fixed inset-0 flex  items-center justify-center bg-black bg-opacity-50">
-                          <div className="bg-white p-4 rounded-lg flex flex-col items-center shadow-lg">
-                            <h3>Has seleccionado: {selectedProvince.nombre}</h3>
-                            <button
-                              onClick={() => setSelectedProvince(undefined)}
-                              className="btn-blue mt-4"
-                            >
-                              Cerrar
-                            </button>
-                          </div>
-                        </div>
-                      )}
                     </div>
-                    <div className="flex flex-col gap-y-4 justify-center items-center w-full">
-                      <h2 className="text-[25px] font-semibold text-primary-4">
-                        Armemos tu próxima aventura
-                      </h2>
 
-                      {/* Pregunta: ¿Qué nivel de comodidad buscas? */}
-                      <div>
-                        <label
-                          htmlFor="date"
-                          className="block text-sm font-medium leading-6 text-gray-900"
-                        >
-                          Fecha del viaje
-                        </label>
-                        <input
-                          type="date"
-                          name="date"
-                          value={formData.date}
-                          onChange={handleInputChange}
-                          className="mt-1 block w-[300px] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                        />
-                      </div>
+                    <div>
+                      <label htmlFor="days" className="block text-sm font-medium leading-6 text-gray-900">
+                        Cantidad de días <span className="text-[#ff0000]">*</span>
+                      </label>
+                      <input
+                        type="number"
+                        name="days"
+                        value={formData.days}
+                        onChange={handleInputChange}
+                        placeholder="Ingresá cantidad de días"
+                        className={`mt-1 block w-[300px] px-3 py-2 border  'border-red-500' : 'border-gray-300'
+                        } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                      />
+                
+                    </div>
 
-                      {/* Pregunta: ¿Cuántos días durará tu viaje? */}
-                      <div>
-                        <label
-                          htmlFor="days"
-                          className="block text-sm font-medium leading-6 text-gray-900"
-                        >
-                          Cantidad de días <span className="text-[#ff0000]">*</span>
-                        </label>
-                        <input
-                          type="number"
-                          name="days"
-                          value={formData.days}
-                          onChange={handleInputChange}
-                          placeholder="Ingresá cantidad de días"
-                          className="mt-1 block w-[300px] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                        />
-                      </div>
-
-                      <div className="flex gap-x-4">
-                        <button type="button" className="btn-question" onClick={handleNextQuestion}>
-                          Saltar pregunta
-                        </button>
-                        <button type="button" className="btn-question" onClick={handleNextQuestion}>
-                          Siguiente pregunta
-                        </button>
-                      </div>
-                      <p className="text-primary">
-                        Crearemos el itinerario en base a tus respuestas
-                      </p>
+                    <div className="flex gap-x-4">
+                      <button type="button" className="btn-question" onClick={handleNextQuestion}>
+                        Siguiente pregunta
+                      </button>
                     </div>
                   </div>
-                </>
+                </div>
               ) : null}
             </div>
           </form>
