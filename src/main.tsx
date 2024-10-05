@@ -11,7 +11,7 @@ import Jobs from './pages/Jobs';
 import ExpectedDestination from './pages/ExpectedDestination';
 import { Login } from './pages/Login';
 import Profile from './pages/Profile';
-import Calendar from './pages/Calendar';
+import CalendarioItinerario from './pages/CalendarioItinerario';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -29,7 +29,7 @@ root.render(
       <Route path="/community" element={<Profile />}/>
       <Route path="/publications" element={<Publications />}/>
       <Route path="/profile" element={<Profile />}/>
-      <Route path="/calendar" element={<Calendar />}/>
+      <Route path="/calendar" element={<CalendarioItinerario />}/>
       <Route path="/forum" element={<Forum />}/>
       <Route path="/jobs" element={<Jobs />}/>
     </Routes>
