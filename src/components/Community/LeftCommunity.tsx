@@ -1,21 +1,20 @@
-import CommunityFilters from './CommunityFilters';
-import React from 'react';
-const infoCategories=[
+import { CommunityFilters } from './CommunityFilters';
+const infoCategories = [
   {
-    title: "Filtrar por categoría",
-    categories : [
-      { imgPerson: '/assets/person.svg', user : 'General' },
-      { imgPerson: '/assets/person.svg', user : 'Buenos Aires' },
-      { imgPerson: '/assets/person.svg', user : 'Salta' },
-      { imgPerson: '/assets/person.svg', user : 'Córdoba' },
-      { imgPerson: '/assets/person.svg', user : 'Santa Fe' },
-      { imgPerson: '/assets/person.svg', user : 'San Luis' },
+    title: 'Filtrar por categoría',
+    categories: [
+      { imgPerson: '/assets/person.svg', user: 'General' },
+      { imgPerson: '/assets/person.svg', user: 'Buenos Aires' },
+      { imgPerson: '/assets/person.svg', user: 'Salta' },
+      { imgPerson: '/assets/person.svg', user: 'Córdoba' },
+      { imgPerson: '/assets/person.svg', user: 'Santa Fe' },
+      { imgPerson: '/assets/person.svg', user: 'San Luis' },
     ],
-    link: "categories"
-  }
-]
+    link: 'categories',
+  },
+];
 
-function LeftCommunity() {
+export const LeftCommunity = () => {
   return (
     <>
       <div className="flex flex-col lg:w-[20%] w-[100%] lg:block hidden p-6 gap-6 border-r border-[#999999]">
@@ -47,6 +46,4 @@ function LeftCommunity() {
       </div>
     </>
   );
-}
-
-export default LeftCommunity;
+};

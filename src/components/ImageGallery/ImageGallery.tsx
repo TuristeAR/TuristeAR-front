@@ -10,7 +10,7 @@ interface ImageGalleryProps {
   height?: number; // Nuevo prop para controlar la altura en 'vh'
 }
 
-const ImageGallery: React.FC<ImageGalleryProps> = ({ images, height }) => {
+export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, height }) => {
   const imageCount = images.length;
 
   const dynamicHeightClass40 = height ? 'h-[40vh]' : '';
@@ -53,9 +53,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, height }) => {
               />
               {imageCount > 3 && (
                 <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30">
-                  <span className="text-gray text-6xl font-bold">
-                    +{imageCount - 3}
-                  </span>
+                  <span className="text-gray text-6xl font-bold">+{imageCount - 3}</span>
                 </div>
               )}
             </div>
@@ -65,5 +63,3 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, height }) => {
     </div>
   );
 };
-
-export default ImageGallery;

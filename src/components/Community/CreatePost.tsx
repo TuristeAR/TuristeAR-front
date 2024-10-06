@@ -1,9 +1,5 @@
-import React from 'react';
-
-function CreatePost(props : {
-  options: string[];
-}) {
-  const {options} = props
+export const CreatePost = (props: { options: string[] }) => {
+  const { options } = props;
   return (
     <>
       <div className="flex justify-around items-center lg:p-2 pt-4 pb-4">
@@ -32,5 +28,3 @@ function CreatePost(props : {
     </>
   );
 }
-
-export default CreatePost;

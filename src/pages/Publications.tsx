@@ -1,8 +1,9 @@
-import { Header } from '../components/Header';
-import ItineraryCard from '../components/ItineraryCard';
+import { Header } from '../components/Header/Header';
+import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 import React from 'react';
-import LeftCommunity from '../components/LeftCommunity';
-import CreatePost from '../components/CreatePost';
+import { LeftCommunity } from '../components/Community/LeftCommunity';
+import { RightCommunity } from '../components/Community/RightCommunity';
+import { CreatePost } from '../components/Community/CreatePost';
 
 const itineraries = [
   {

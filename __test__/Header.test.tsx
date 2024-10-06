@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { Header } from '../src/components/Header';
+import { Header } from '../src/components/Header/Header';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -35,7 +35,7 @@ describe('Header', () => {
         <Header containerStyles={''} />
       </BrowserRouter>,
     );
-    const loginButton = screen.getByRole('button', { name: /Iniciá sesión/i });
-    expect(loginButton).toBeInTheDocument();
+    const loginLink = screen.getByRole('link', { name: /Iniciá sesión/i });
+    expect(loginLink).toBeInTheDocument();
   });
 });

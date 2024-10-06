@@ -13,8 +13,8 @@ describe('NavMobile Component', () => {
       </Router>,
     );
 
-    const loginButton = screen.getByRole('button', { name: /Login/i });
-    expect(loginButton).toBeInTheDocument();
+    const loginLink = screen.getByRole('link', { name: /Login/i });
+    expect(loginLink).toBeInTheDocument();
 
     // Check if the navigation links are rendered
     const destinationsLink = screen.getByText(/Destinos/i);

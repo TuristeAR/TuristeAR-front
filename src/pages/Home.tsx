@@ -1,13 +1,15 @@
-import { Header } from '../components/Header';
-import { LandingHero } from '../components/LandingHero';
-import { LandingFeatures } from '../components/LandingFeatures';
+import { Header } from '../components/Header/Header';
+import { LandingHero } from '../components/Landing/LandingHero';
+import { LandingFeatures } from '../components/Landing/LandingFeatures';
+import { LandingTestimonial } from '../components/Landing/LandingTestimonial';
 
 export const Home = () => {
   return (
     <>
-      <Header containerStyles={'absolute'}></Header>
+      <Header containerStyles={'absolute bg-transparent'}></Header>
       <LandingHero></LandingHero>
       <LandingFeatures></LandingFeatures>
+      <LandingTestimonial></LandingTestimonial>
     </>
   );
 };

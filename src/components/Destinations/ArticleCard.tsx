@@ -11,7 +11,7 @@ interface ArticleCardProps {
     link: string;
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ title, images, description, link }) => {
+export const ArticleCard: React.FC<ArticleCardProps> = ({ title, images, description, link }) => {
     return (
         <div className="max-w-xs m-auto bg-white border  border-primary-3 rounded-lg shadow">
             <Carousel>
@@ -46,4 +46,3 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ title, images, description, l
     );
 };
 
-export default ArticleCard;

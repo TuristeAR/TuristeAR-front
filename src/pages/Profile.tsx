@@ -1,8 +1,8 @@
-import { Header } from '../components/Header';
-import LeftCommunity from '../components/LeftCommunity';
-import RightCommunity from '../components/RightCommunity';
-import CreatePost from '../components/CreatePost';
-import ItineraryCard from '../components/ItineraryCard';
+import { Header } from '../components/Header/Header';
+import { LeftCommunity } from '../components/Community/LeftCommunity';
+import { RightCommunity } from '../components/Community/RightCommunity';
+import { CreatePost } from '../components/Community/CreatePost';
+import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 
 const itineraries = [
   {
@@ -15,7 +15,7 @@ const itineraries = [
       { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
       { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
       { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ]
+    ],
   },
   {
     imgPerson: '/assets/person.svg',
@@ -28,9 +28,9 @@ const itineraries = [
       { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
       { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
     ],
-  }
+  },
 ];
-const options=[ "Imagen", "Itinerario", "Categoría", "Ubicación" ]
+const options = ['Imagen', 'Itinerario', 'Categoría', 'Ubicación'];
 
 const Profile = () => {
   return (
