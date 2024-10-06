@@ -33,7 +33,7 @@ function LeftCommunity() {
             <a href="/jobs">Ofertas de trabajo</a>
           </div>
         </div>
-        <hr className="border border-[#999999]"></hr>
+        <hr className="border border-[#999999] my-4"></hr>
         <div className="flex flex-col gap-y-4">
           {infoCategories.map((category, index) => (
             <CommunityFilters

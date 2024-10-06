@@ -44,10 +44,10 @@ const Forum = () => {
   return (
     <>
       <Header containerStyles={'bg-primary relative top-0 z-[60]'} />
-      <div className="flex justify-between h-[160vh] ">
+      <div className="flex justify-between lg:h-[160vh] ">
         <LeftCommunity />
-        <div className="w-[80%] pt-10 overflow-scroll scrollbar-hidden">
-          <div className="flex flex-col gap-y-6 w-[80%] mx-auto  overflow-scroll scrollbar-hidden">
+        <div className="lg:w-[80%] w-[100%] pt-10 overflow-scroll scrollbar-hidden">
+          <div className="flex flex-col gap-y-6 lg:w-[80%] w-[100%] mx-auto  overflow-scroll scrollbar-hidden">
             {infoComments.map((info, index) => {
               return (
                 <>
