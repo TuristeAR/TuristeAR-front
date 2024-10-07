@@ -12,7 +12,7 @@ import { useState } from 'react';
 import {Calendar} from '../components/Calendar/Calendar';
 import { Header } from '../components/Header/Header';
 
-const CalendarioItinerario = () => {
+export const ItineraryCalendar = () => {
   const [events, setEvents] = useState([
     { id: '1', title: 'Pasear por el Jardin Japones', date: '2024-10-04' },
     { id: '2', title: 'Tomar mates en el Rosedal', date: '2024-10-05' },
@@ -109,4 +109,3 @@ const CalendarioItinerario = () => {
   );
 };
 
-export default CalendarioItinerario;

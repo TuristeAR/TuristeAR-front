@@ -7,11 +7,12 @@ import FormQuestions from './pages/FormQuestions';
 import ExpectedPlace from './pages/ExpectedPlace';
 import Publications from './pages/Publications';
 import Forum from './pages/Forum';
-import {Jobs} from './pages/Jobs';
+import { Jobs } from './pages/Jobs';
 import ExpectedDestination from './pages/ExpectedDestination';
 import { Login } from './pages/Login';
 import Profile from './pages/Profile';
-import CalendarioItinerario from './pages/CalendarioItinerario';
+import { ItineraryCalendar } from './pages/ItineraryCalendar';
+import { ItineraryDetail } from './pages/ItineraryDetail';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -26,12 +27,13 @@ root.render(
       <Route path="/destino-esperado/:nombreDeLaProvincia" element={<ExpectedDestination />} />
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
-      <Route path="/community" element={<Profile />}/>
-      <Route path="/publications" element={<Publications />}/>
-      <Route path="/profile" element={<Profile />}/>
-      <Route path="/calendarioItinerario" element={<CalendarioItinerario />}/>
-      <Route path="/forum" element={<Forum />}/>
-      <Route path="/jobs" element={<Jobs />}/>
+      <Route path="/community" element={<Profile />} />
+      <Route path="/publications" element={<Publications />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/itineraryCalendar" element={<ItineraryCalendar />} />
+      <Route path="/forum" element={<Forum />} />
+      <Route path="/jobs" element={<Jobs />} />
+      <Route path="/itineraryDetail" element={<ItineraryDetail />} />
     </Routes>
   </BrowserRouter>,
 );
