@@ -1,7 +1,7 @@
 import { Header } from '../components/Header/Header';
-import { LeftCommunity } from '../components/Comunity/LeftCommunity';
-import { RightCommunity } from '../components/Comunity/RightCommunity';
-import { CreatePost } from '../components/Comunity/CreatePost';
+import { LeftCommunity } from '../components/Community/LeftCommunity';
+import { RightCommunity } from '../components/Community/RightCommunity';
+import { CreatePost } from '../components/Community/CreatePost';
 import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 const itineraries = [
   {
@@ -30,19 +30,19 @@ const itineraries = [
   },
 ];
 
-const options = ['Seleccionar imagen', 'Agregar ubicación', 'Seleccionar tipo de trabajo'];
+const options=[ "Imagen", "Contacto", "Enlace de postulación", "Ubicación" ]
 
 export const Jobs = () => {
   return (
     <>
-      <Header containerStyles={'bg-primary relative top-0 z-[60]'} />
+      <Header containerStyles={' relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
         <LeftCommunity />
-        <div className="w-[64%] p-10 overflow-scroll scrollbar-hidden ">
-          <div className="rounded-xl mb-10 shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
+        <div className="lg:w-[80%] pt-10 pb-10 overflow-scroll scrollbar-hidden ">
+          <div className="lg:w-[80%] w-[90%] mx-auto rounded-xl mb-10 shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
             <CreatePost options={options} />
           </div>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 lg:w-[80%] w-[90%] mx-auto" >
             {itineraries.map((userPost, index) => (
               <ItineraryCard
                 key={index}
@@ -55,7 +55,6 @@ export const Jobs = () => {
             ))}
           </div>
         </div>
-        <RightCommunity />
       </div>
     </>
   );

@@ -32,7 +32,7 @@ const infoFriends = [
 export function RightCommunity() {
   return (
     <>
-      <div className="w-[18%] p-6 flex flex-col gap-6">
+      <div className="lg:w-[18%] w-[100%] lg:block hidden p-6 flex flex-col gap-6">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-y-4">
             {infoTrips.map((trip, index) => (
@@ -44,16 +44,6 @@ export function RightCommunity() {
               />
             ))}
           </div>
-        </div>
-        <div className="flex flex-col gap-y-4">
-          {infoFriends.map((friend, index) => (
-            <CommunityFilters
-              key={index}
-              title={friend.title}
-              users={friend.users}
-              link={friend.link}
-            />
-          ))}
         </div>
       </div>
     </>

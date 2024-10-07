@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { ContinueWithGoogle } from '../src/components/ContinueWithGoogle';
+import { ContinueWithGoogle } from '../src/components/Login/ContinueWithGoogle';
 import React from 'react';
 
 describe('ContinueWithGoogle component', () => {

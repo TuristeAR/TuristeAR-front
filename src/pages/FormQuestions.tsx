@@ -3,6 +3,7 @@ import { Header } from '../components/Header/Header';
 import { MapaArg } from '../components/Destinations/MapaArg';
 import { useNavigate } from 'react-router-dom';
 import { provincias } from '../utilities/provincias';
+import { ProgressBar } from '../components/Questions/ProgressBar';
 
 interface FormData {
   province?: string; // Agregamos la provincia aquí
@@ -13,7 +14,11 @@ interface FormData {
   weather: string;
   company: string;
 }
-
+// Define el tipo de errores
+interface FormErrors {
+  days?: string;
+  date?: string;
+}
 const questions = [
   {
     question: 'Fecha del viaje y Duración del viaje',
@@ -24,7 +29,7 @@ const questions = [
     options: [
       { src: '/assets/pancho.jpg', alt: 'Económico' },
       { src: '/assets/canelones.jpg', alt: 'Moderado' },
-      { src: '/assets/pollo.jpg', alt: 'Turismo Urbano' },
+      { src: '/assets/pollo.jpg', alt: 'Lujoso' },
     ],
     type: 'image',
     name: 'economy',
@@ -36,7 +41,7 @@ const questions = [
       { src: '/assets/clima_calido.jpg', alt: 'Clima calido' },
       { src: '/assets/clima_templado.jpg', alt: 'Clima templado' },
       { src: '/assets/clima_frio.jpg', alt: 'Clima frio' },
-      { src: '/assets/clima_arido.jpg', alt: 'Clima Arido' },
+      { src: '/assets/clima_arido.jpg', alt: 'Clima arido' },
     ],
     type: 'image',
     name: 'weather',
@@ -45,10 +50,10 @@ const questions = [
   {
     question: '¿Qué tipo de actividades te gusta hacer?',
     options: [
-      { src: '/assets/playa.jpg', alt: 'Playa' },
-      { src: '/assets/escalar.jpg', alt: 'Escalar' },
-      { src: '/assets/aire_libre.jpg', alt: 'Aire Libre' },
-      { src: '/assets/urbano.jpg', alt: 'Turismo Urbano' },
+      { src: '/assets/playa.jpg', alt: 'Relajar' },
+      { src: '/assets/escalar.jpg', alt: 'Deportes de aventura' },
+      { src: '/assets/aire_libre.jpg', alt: 'Naturaleza' },
+      { src: '/assets/urbano.jpg', alt: 'Urbano' },
     ],
     type: 'image',
     name: 'activities',
@@ -86,7 +91,9 @@ const FormQuestions = () => {
     weather: '',
     company: '',
   });
-  const [errors, setErrors] = useState({}); // Estado para errores de validación
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const [errors, setErrors] = useState<FormErrors>({}); // Estado para errores de validación
   const navigate = useNavigate();
 
   const handleProvinceClick = (nombre: string) => {
@@ -102,19 +109,26 @@ const FormQuestions = () => {
       ...prev,
       [name]: value,
     }));
+
+    // Si hay un error en el campo actual, eliminarlo
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: undefined, // Borra el error de este campo
+    }));
   };
 
   // Validación de campos obligatorios
   const validate = () => {
-    let formErrors = {};
+    let formErrors: FormErrors = {};
+    const days = Number(formData.days);
 
     // Validar campo de días
-    if (!formData.days || isNaN(Number(formData.days)) || Number(formData.days) <= 0) {
-      formErrors = { ...formErrors, days: 'Por favor ingrese un número válido de días.' };
+    if (!formData.days || isNaN(days) || days <= 0) {
+      formErrors.days = 'Por favor ingrese un número válido de días.';
     }
 
     setErrors(formErrors);
-    return Object.keys(formErrors).length === 0; // Retorna true si no hay errores
+    return Object.keys(formErrors).length === 0; // Devuelve verdadero si no hay errores
   };
 
   // Manejar la selección única
@@ -141,6 +155,9 @@ const FormQuestions = () => {
 
   // Manejar la siguiente pregunta con validación
   const handleNextQuestion = () => {
+    if (currentStep < 5) {
+      setCurrentStep(currentStep + 1);
+  }
     if (currentQuestion === 0 && !validate()) {
       return; // No avanzar si la validación falla
     }
@@ -180,11 +197,13 @@ const FormQuestions = () => {
 
   return (
     <>
-      <Header containerStyles={'bg-primary  '} />
+      <Header />
 
       <section className="min-h-screen flex items-center justify-center bg-gray-100 text-black py-8">
         <div className="container mx-auto flex flex-col md:flex-row justify-center z-30 relative">
           <form className="flex flex-col w-full max-w-full items-center justify-center bg-white p-4 gap-y-6 md:gap-y-4 min-h-[500px]">
+          <ProgressBar currentStep={currentStep} />
+
             <div>
               {questions[currentQuestion].type === 'image' ? (
                 /* PREGUNTAS DE IMAGEN */
@@ -288,6 +307,9 @@ const FormQuestions = () => {
                         className={`mt-1 block w-[300px] px-3 py-2 border  'border-red-500' : 'border-gray-300'
                         } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
                       />
+                      {errors.days && (
+                        <span className="text-[#ff0000] text-sm font-medium">{errors.days}</span>
+                      )}
                     </div>
 
                     <div className="flex gap-x-4">

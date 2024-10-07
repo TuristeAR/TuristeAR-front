@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import React from 'react';
-import ArticleCard from '../src/components/ArticleCard';
+import { ArticleCard } from '../src/components/Destinations/ArticleCard';
 import { BrowserRouter } from 'react-router-dom';
 
 describe('ArticleCard', () => {
@@ -9,7 +9,7 @@ describe('ArticleCard', () => {
     title: 'Test Title',
     images: [
       { id: 1, src: 'https://example.com/image1.jpg' },
-      { id: 2, src: 'https://example.com/image2.jpg' }
+      { id: 2, src: 'https://example.com/image2.jpg' },
     ],
     description: 'This is a test description.',
     link: 'https://example.com',
@@ -19,7 +19,7 @@ describe('ArticleCard', () => {
     render(
       <BrowserRouter>
         <ArticleCard {...mockProps} />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     expect(screen.getByText(mockProps.title)).toBeInTheDocument();
@@ -35,10 +35,8 @@ describe('ArticleCard', () => {
     });
 
     const links = screen.getAllByRole('link');
-    links.forEach(link => {
+    links.forEach((link) => {
       expect(link).toHaveAttribute('href', mockProps.link);
     });
   });
-
-
 });
