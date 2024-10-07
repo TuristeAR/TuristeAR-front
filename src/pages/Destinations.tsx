@@ -103,7 +103,7 @@ const Destinations = () => {
 
   return (
     <>
-      <Header containerStyles="bg-primary" />
+      <Header/>
       <section>
         <div className="bg-[#E6E6E6] w-full h-[120px]">
           <div className="container mx-auto h-full flex flex-col items-center justify-center gap-y-4 ">
@@ -137,7 +137,7 @@ const Destinations = () => {
 
           <div
             ref={sectionRef}
-            className="flex-1 mx-auto max-w-[600px] w-full flex flex-col gap-y-6 "
+            className="flex-1  max-w-[600px] w-full flex flex-col gap-y-6 "
           >
             {/* Info */}
 

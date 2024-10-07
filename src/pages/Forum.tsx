@@ -46,7 +46,7 @@ const options = ['Seleccionar imagen', 'Seleccionar archivo', 'Importar itinerar
 const Forum = () => {
   return (
     <>
-      <Header containerStyles={'bg-primary relative top-0 z-[60]'} />
+      <Header containerStyles={'relative top-0 z-[60]'} />
       <div className="flex justify-between lg:h-[160vh] ">
         <LeftCommunity />
         <div className="lg:w-[80%] w-[100%] pt-10 overflow-scroll scrollbar-hidden">

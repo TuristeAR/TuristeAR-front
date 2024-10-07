@@ -153,7 +153,7 @@ const ExpectedDestination = () => {
 
   return (
     <>
-      <Header containerStyles="bg-primary" />
+      <Header/>
 
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">

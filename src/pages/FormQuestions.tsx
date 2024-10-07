@@ -191,7 +191,7 @@ const FormQuestions = () => {
 
   return (
     <>
-      <Header containerStyles={'bg-primary  '} />
+      <Header />
 
       <section className="min-h-screen flex items-center justify-center bg-gray-100 text-black py-8">
         <div className="container mx-auto flex flex-col md:flex-row justify-center z-30 relative">

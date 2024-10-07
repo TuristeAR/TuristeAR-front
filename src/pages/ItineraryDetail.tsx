@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import { useState } from 'react';
+import { ItineraryCalendar } from './ItineraryCalendar';
 
 export const ItineraryDetail = () => {
   const [showedInfo, setShowedInfo] = useState(false);
@@ -25,18 +27,18 @@ export const ItineraryDetail = () => {
 
   return (
     <>
-      <Header containerStyles="bg-primary" />
+      <Header />
 
       <section>
-        <div className="container mx-auto max-w-[980px] flex flex-col justify-center z-30 relative">
-          <div className="w-full my-8 ">
+        <div className="container mx-auto max-w-[980px] flex flex-col justify-center z-30 relative p-4">
+          <div className="w-full my-8">
             {imgs.map((img, index) => {
               return <ImageGallery key={index} images={img.img} height={70} />;
             })}
           </div>
 
-          <div className="w-full m-auto my-2">
-            <div className="flex gap-x-12 border-b pb-4 border-gray-50 ">
+          <div className="w-full  my-2">
+            <div className="flex flex-col md:flex-row gap-y-3 md:gap-x-12 border-b pb-4 border-gray-50 ">
               {/* Informacion general */}
               <div className="md:max-w-[650px] flex-1">
                 <div className="border-b pb-2 border-gray-50 ">
@@ -56,7 +58,9 @@ export const ItineraryDetail = () => {
               {/* Calendario, Participantes */}
               <div className="flex flex-col gap-y-4">
                 <div className="bg-primary/40 rounded-sm flex justify-center py-1">
-                  <button className="text-primary-4 text-sm font-semibold">Ir a calendario</button>
+                  <Link to={'/ItineraryCalendar'} className="text-primary-4 text-sm font-semibold">
+                    Ir a calendario
+                  </Link>
                 </div>
                 <div className="flex flex-col gap-y-2">
                   <p className="font-semibold text-md">Participantes</p>
@@ -103,16 +107,20 @@ export const ItineraryDetail = () => {
                   </div>
                 </h3>
               </button>
+              {/* Info */}
               <div className={`${showedInfo ? 'block' : 'hidden'}`}>
-                <div className="relative px-1 sm:px-0 flex gap-2 mt-5  flex-wrap">
+                <div className="relative px-1 sm:px-0 flex flex-col sm:flex-row gap-2 mt-5 flex-wrap">
                   {itinerario.map((item, index) => (
-                    <div key={index} className="flex justify-center items-center px-8">
-                      <div className="bg-gray-50 rounded-lg w-[115px] h-[35px] flex justify-center items-center ">
-                        <span className='text-sm'>{item.date}</span>
+                    <div
+                      key={index}
+                      className="flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 sm:px-8"
+                    >
+                      <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
+                        <span className="text-sm">{item.date}</span>
                       </div>
-                      <div className="flex border-l border-gray-50 ml-4 pl-1">
-                        <p className="font-semibold">
-                          {item.title}: <span className='font-normal'>{item.info}</span>
+                      <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
+                        <p className="font-semibold text-sm sm:text-base">
+                          {item.title}: <span className="font-normal">{item.info}</span>
                         </p>
                       </div>
                     </div>

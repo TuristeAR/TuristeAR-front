@@ -24,7 +24,7 @@ export const ItineraryCalendar = () => {
 
   return (
     <section className="h-screen xl:h-auto overflow-x-clip relative">
-      <Header containerStyles="bg-primary fixed top-0 left-0 right-0 z-[60]" />
+      <Header containerStyles="fixed top-0 left-0 right-0 z-[60]" />
       <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-4 h-full mt-20 py-4 ">
         {/* Left Column */}
         <aside className="col-span-1 p-4 hidden md:flex">

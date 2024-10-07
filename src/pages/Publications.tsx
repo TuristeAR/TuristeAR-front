@@ -36,7 +36,7 @@ const options = ['Imagen', 'Itinerario', 'Categoría', 'Ubicación'];
 const Publications = () => {
     return (
       <>
-        <Header containerStyles={'bg-primary relative top-0 z-[60]'} />
+        <Header containerStyles={'relative top-0 z-[60]'} />
         <div className="flex justify-between h-[160vh] ">
           <LeftCommunity />
           <div className="lg:w-[80%] w-[100%] pt-10 pb-10 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
