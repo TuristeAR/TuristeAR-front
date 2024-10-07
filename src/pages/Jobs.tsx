@@ -35,7 +35,7 @@ const options=[ "Imagen", "Contacto", "Enlace de postulación", "Ubicación" ]
 export const Jobs = () => {
   return (
     <>
-      <Header containerStyles={'bg-primary relative top-0 z-[60]'} />
+      <Header containerStyles={' relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
         <LeftCommunity />
         <div className="lg:w-[80%] pt-10 pb-10 overflow-scroll scrollbar-hidden ">

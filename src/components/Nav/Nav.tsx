@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '/src/assets/TuristeAR-logo.png';
 import arrowRight from '/assets/arrow-right.svg';
 
 export const Nav = () => {
+  const location = useLocation();
+
   return (
     <>
       <Link to={'/'} className="flex title-font font-medium items-center md:mb-0">
@@ -11,19 +13,25 @@ export const Nav = () => {
       <nav className="hidden mt-auto mb-0 text-white md:block md:ml-auto md:mr-auto flex-wrap items-center text-lg justify-center font-semibold">
         <Link
           to={'/destinations'}
-          className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer"
+          className={`mr-5 hover:text-gray-900 hover:text-hover cursor-pointer px-3 pt-1 pb-2.5 rounded-sm ${
+            location.pathname === '/destinations' ? 'bg-white text-black' : ''
+          }`}
         >
           Destinos
         </Link>
         <Link
           to={'/community'}
-          className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer"
+          className={`mr-5 hover:text-gray-900 hover:text-hover cursor-pointer px-3 pt-1 pb-2.5 rounded-sm ${
+            location.pathname === '/community' ? 'bg-white text-black' : ''
+          }`}
         >
           Comunidad
         </Link>
         <Link
           to={'/formQuestions'}
-          className="mr-5 hover:text-gray-900 hover:text-hover cursor-pointer"
+          className={`hover:text-gray-900 hover:text-hover cursor-pointer px-3 pt-1 pb-2.5  rounded-sm ${
+            location.pathname === '/formQuestions' ? 'bg-white text-black ' : ''
+          }`}
         >
           Armá tu viaje
         </Link>

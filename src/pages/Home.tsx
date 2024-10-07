@@ -6,7 +6,7 @@ import { LandingTestimonial } from '../components/Landing/LandingTestimonial';
 export const Home = () => {
   return (
     <>
-      <Header containerStyles={'absolute bg-transparent'}></Header>
+      <Header containerStyles={'absolute'} isHome={true}></Header>
       <LandingHero></LandingHero>
       <LandingFeatures></LandingFeatures>
       <LandingTestimonial></LandingTestimonial>
