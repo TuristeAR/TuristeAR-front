@@ -3,6 +3,7 @@ import { Header } from '../components/Header/Header';
 import { MapaArg } from '../components/Destinations/MapaArg';
 import { useNavigate } from 'react-router-dom';
 import { provincias } from '../utilities/provincias';
+import { ProgressBar } from '../components/Questions/ProgressBar';
 
 interface FormData {
   province?: string; // Agregamos la provincia aquí
@@ -90,6 +91,8 @@ const FormQuestions = () => {
     weather: '',
     company: '',
   });
+  const [currentStep, setCurrentStep] = useState(1);
+
   const [errors, setErrors] = useState<FormErrors>({}); // Estado para errores de validación
   const navigate = useNavigate();
 
@@ -152,6 +155,9 @@ const FormQuestions = () => {
 
   // Manejar la siguiente pregunta con validación
   const handleNextQuestion = () => {
+    if (currentStep < 5) {
+      setCurrentStep(currentStep + 1);
+  }
     if (currentQuestion === 0 && !validate()) {
       return; // No avanzar si la validación falla
     }
@@ -196,6 +202,8 @@ const FormQuestions = () => {
       <section className="min-h-screen flex items-center justify-center bg-gray-100 text-black py-8">
         <div className="container mx-auto flex flex-col md:flex-row justify-center z-30 relative">
           <form className="flex flex-col w-full max-w-full items-center justify-center bg-white p-4 gap-y-6 md:gap-y-4 min-h-[500px]">
+          <ProgressBar currentStep={currentStep} />
+
             <div>
               {questions[currentQuestion].type === 'image' ? (
                 /* PREGUNTAS DE IMAGEN */

@@ -27,7 +27,7 @@ export const ItineraryCalendar = () => {
       <Header containerStyles="fixed top-0 left-0 right-0 z-[60]" />
       <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-4 h-full mt-20 py-4 ">
         {/* Left Column */}
-        <aside className="col-span-1 p-4 hidden md:flex">
+        <aside className="col-span-1 p-4 flex">
           <div className="flex flex-col h-full w-full">
             <div className="flex flex-col justify-center border-b border-gray">
               <h2 className="font-semibold tracking-[-0.5px] leading-none">
@@ -71,7 +71,7 @@ export const ItineraryCalendar = () => {
             </div>
 
             {/* Eliminar actividad */}
-            <div className="flex flex-col gap-4 my-4">
+            <div className="flex flex-col gap-4 md:my-4">
               {events.length === 0 ? (
                 <p>No hay actividades para eliminar</p>
               ) : (
@@ -99,8 +99,8 @@ export const ItineraryCalendar = () => {
         </aside>
 
         {/* Main Column */}
-        <main className="col-span-1 container mx-auto flex justify-center flex-1 my-4">
-          <div className="flex flex-col h-full mx-4 md:mx-0 md:w-[900px]">
+        <main className="col-span-1 container mx-auto flex justify-center flex-1 ">
+          <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-[900px]">
             <Calendar setEvents={setEvents} events={events} />
           </div>
         </main>
