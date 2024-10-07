@@ -13,7 +13,11 @@ interface FormData {
   weather: string;
   company: string;
 }
-
+// Define el tipo de errores
+interface FormErrors {
+  days?: string;
+  date?: string;
+}
 const questions = [
   {
     question: 'Fecha del viaje y Duración del viaje',
@@ -24,7 +28,7 @@ const questions = [
     options: [
       { src: '/assets/pancho.jpg', alt: 'Económico' },
       { src: '/assets/canelones.jpg', alt: 'Moderado' },
-      { src: '/assets/pollo.jpg', alt: 'Turismo Urbano' },
+      { src: '/assets/pollo.jpg', alt: 'Lujoso' },
     ],
     type: 'image',
     name: 'economy',
@@ -36,7 +40,7 @@ const questions = [
       { src: '/assets/clima_calido.jpg', alt: 'Clima calido' },
       { src: '/assets/clima_templado.jpg', alt: 'Clima templado' },
       { src: '/assets/clima_frio.jpg', alt: 'Clima frio' },
-      { src: '/assets/clima_arido.jpg', alt: 'Clima Arido' },
+      { src: '/assets/clima_arido.jpg', alt: 'Clima arido' },
     ],
     type: 'image',
     name: 'weather',
@@ -45,10 +49,10 @@ const questions = [
   {
     question: '¿Qué tipo de actividades te gusta hacer?',
     options: [
-      { src: '/assets/playa.jpg', alt: 'Playa' },
-      { src: '/assets/escalar.jpg', alt: 'Escalar' },
-      { src: '/assets/aire_libre.jpg', alt: 'Aire Libre' },
-      { src: '/assets/urbano.jpg', alt: 'Turismo Urbano' },
+      { src: '/assets/playa.jpg', alt: 'Relajar' },
+      { src: '/assets/escalar.jpg', alt: 'Deportes de aventura' },
+      { src: '/assets/aire_libre.jpg', alt: 'Naturaleza' },
+      { src: '/assets/urbano.jpg', alt: 'Urbano' },
     ],
     type: 'image',
     name: 'activities',
@@ -86,7 +90,7 @@ const FormQuestions = () => {
     weather: '',
     company: '',
   });
-  const [errors, setErrors] = useState({}); // Estado para errores de validación
+  const [errors, setErrors] = useState<FormErrors>({}); // Estado para errores de validación
   const navigate = useNavigate();
 
   const handleProvinceClick = (nombre: string) => {
@@ -102,19 +106,26 @@ const FormQuestions = () => {
       ...prev,
       [name]: value,
     }));
+
+    // Si hay un error en el campo actual, eliminarlo
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: undefined, // Borra el error de este campo
+    }));
   };
 
   // Validación de campos obligatorios
   const validate = () => {
-    let formErrors = {};
+    let formErrors: FormErrors = {};
+    const days = Number(formData.days);
 
     // Validar campo de días
-    if (!formData.days || isNaN(Number(formData.days)) || Number(formData.days) <= 0) {
-      formErrors = { ...formErrors, days: 'Por favor ingrese un número válido de días.' };
+    if (!formData.days || isNaN(days) || days <= 0) {
+      formErrors.days = 'Por favor ingrese un número válido de días.';
     }
 
     setErrors(formErrors);
-    return Object.keys(formErrors).length === 0; // Retorna true si no hay errores
+    return Object.keys(formErrors).length === 0; // Devuelve verdadero si no hay errores
   };
 
   // Manejar la selección única
@@ -288,6 +299,9 @@ const FormQuestions = () => {
                         className={`mt-1 block w-[300px] px-3 py-2 border  'border-red-500' : 'border-gray-300'
                         } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
                       />
+                      {errors.days && (
+                        <span className="text-[#ff0000] text-sm font-medium">{errors.days}</span>
+                      )}
                     </div>
 
                     <div className="flex gap-x-4">
