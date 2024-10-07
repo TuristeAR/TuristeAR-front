@@ -98,8 +98,8 @@ const Profile = () => {
 
   return (
     <>
-      <Header containerStyles={'bg-primary relative top-0 z-[60]'} />
-      <div className="flex justify-between min-h-[140vh] ">
+      <Header containerStyles={'relative top-0 z-[60]'} />
+      <div className="flex justify-between h-[160vh] ">
         <LeftCommunity />
         <div className="lg:w-[80%] w-[100%] lg:p-10 lg:pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
           {/* Portada */}

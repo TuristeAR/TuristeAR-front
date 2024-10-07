@@ -143,7 +143,7 @@ const usuariosReview = [
 const ExpectedPlace = () => {
   return (
     <>
-      <Header containerStyles="bg-primary" />
+      <Header/>
 
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
@@ -152,12 +152,12 @@ const ExpectedPlace = () => {
             return (
               <div key={index} className="px-2 sm:px-0 flex flex-col gap-y-4">
                 <h1 className="text-center">{item.place}</h1>
-                <div className="flex gap-2">
-                  <p className="w-11/12 font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
+                <div className="flex flex-wrap sm:flex-nowrap gap-2">
+                  <p className="w-11/12 mx-auto font-light text-gray-500 text-sm md:text-base lg:text-lg text-justify sm:text-start">
                     {item.descripcion}
                   </p>
 
-                  <div className="flex">
+                  <div className="flex mx-auto">
                     <div className="flex flex-col items-center max-lg:justify-center w-full h-full">
                       <div className="flex flex-row items-center  ">
                         <div className="flex items-center justify-start gap-3 mb-4">

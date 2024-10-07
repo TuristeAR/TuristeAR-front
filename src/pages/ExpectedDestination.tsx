@@ -153,7 +153,7 @@ const ExpectedDestination = () => {
 
   return (
     <>
-      <Header containerStyles="bg-primary" />
+      <Header/>
 
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
@@ -378,7 +378,7 @@ const ExpectedDestination = () => {
                   </a>
                 </div>
                 <div className="mx-auto place-self-center lg:col-span-7 md:p-8 lg:p-16 p-4">
-                  <h1 className="mb-3 text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
+                  <h1 className="mb-3 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-3xl">
                     Festival
                   </h1>
                   <p className="mb-6 text-gray-500">{provincia.culture.festivals}</p>
@@ -397,7 +397,7 @@ const ExpectedDestination = () => {
                   </a>
                 </div>
                 <div className="mx-auto place-self-center lg:col-span-7 md:p-8 lg:p-16 p-4">
-                  <h1 className="mb-3 text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl">
+                  <h1 className="mb-3 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-3xl">
                     Comida tradicional
                   </h1>
                   <p className="mb-6 text-gray-500">{provincia.culture.traditionalFood}</p>

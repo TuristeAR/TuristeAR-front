@@ -13,6 +13,10 @@
         @apply w-full h-[60px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all;
     }
 
+    .btn-drop-down-blue-itinerary{
+        @apply w-full h-[30px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all;
+    }
+
     .btn-question {
         @apply min-w-[156px] h-[38px] px-6 bg-primary hover:bg-primary-3 text-white text-[10px] md:text-[13px] uppercase rounded-md font-semibold tracking-[.15em] transition-all;
     }
@@ -52,6 +56,7 @@
 }
 
 /*  Full calendar */
+
 .fc-today-button {
     background-color: #007bff !important;
     border-color: #007bff !important;
@@ -93,4 +98,112 @@
     background-color: #0056b3 !important;
     border-color: #007bff !important;
     border-radius: 4px;
+}
+
+/* Responsividad para pantallas pequeñas (dispositivos móviles) */
+@media (max-width: 768px) {
+    /* Ajustar el tamaño del título para pantallas pequeñas */
+    .fc-toolbar-title {
+        font-size: 1.2rem;  /* Reduce el tamaño del título */
+    }
+
+    /* Botones del calendario (mes, semana, día) */
+    .fc-dayGridMonth-button,
+    .fc-dayGridWeek-button,
+    .fc-dayGridDay-button {
+        padding: 8px;  /* Reduce el padding de los botones */
+        font-size: 0.9rem; /* Ajusta el tamaño de fuente de los botones */
+    }
+
+    /* Cambia la disposición de los botones de navegación */
+    .fc-toolbar-chunk {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap; /* Ajusta los botones a una nueva línea si es necesario */
+    }
+
+    /* Cambia el tamaño de los botones de navegación (previo, siguiente) */
+    .fc-next-button,
+    .fc-prev-button {
+        padding: 8px;
+        font-size: 0.8rem; /* Tamaño más pequeño para dispositivos móviles */
+    }
+    
+    /* Botón de 'Hoy' más pequeño */
+    .fc-today-button {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+    
+    /* Ajustes generales de tamaños y márgenes */
+    .fc-toolbar {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    /* Calendario en sí, ajustando el tamaño */
+    .fc {
+        font-size: 0.9rem; /* Reduce el tamaño de fuente del calendario */
+    }
+}
+
+/* Progress bar */
+
+.progress-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Para centrar verticalmente las burbujas */
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.progress-bar::before {
+    content: "";
+    position: absolute;
+    top: 15%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #d3d3d3; /* Línea entre los círculos */
+    z-index: 0;
+}
+
+.step {
+    position: relative;
+    z-index: 1; /* Asegura que las burbujas estén sobre la línea */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.step::before {
+    content: "";
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #d3d3d3; /* Color por defecto de la burbuja */
+    margin-bottom: 5px;
+    border: 2px solid #d3d3d3;
+}
+
+.step.active::before {
+    background-color: #007bff; /* Color de la burbuja activa */
+    border-color: #74abe6;
+    
+}
+
+.step.active {
+    color: #007bff; 
+    font-weight: bold;
+
+}
+
+.step span {
+    text-align: center;
+    width: 200px;
+    font-size: small;
+    white-space: nowrap; /* Evita que el texto se corte o haga salto de línea */
 }
