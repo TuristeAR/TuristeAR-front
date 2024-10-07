@@ -4,11 +4,15 @@ import { MapaArg } from '../components/Destinations/MapaArg';
 import { useNavigate } from 'react-router-dom';
 import { provincias } from '../utilities/provincias';
 import { ProgressBar } from '../components/Questions/ProgressBar';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
+import { DateRangePicker } from 'react-date-range';
+import { es } from 'date-fns/locale';
 
 interface FormData {
-  province?: string; // Agregamos la provincia aquí
-  date: string;
-  days: number | string;
+  province?: string;
+  fromDate: string;
+  toDate: string;
   economy: string;
   activities: string[];
   weather: string;
@@ -19,6 +23,7 @@ interface FormErrors {
   days?: string;
   date?: string;
 }
+
 const questions = [
   {
     question: 'Fecha del viaje y Duración del viaje',
@@ -84,8 +89,8 @@ const FormQuestions = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0); // Controla el índice de la pregunta actual
   const [formData, setFormData] = useState<FormData>({
     province: '',
-    date: '',
-    days: 0,
+    fromDate: '',
+    toDate: '',
     economy: '',
     activities: [],
     weather: '',
@@ -95,6 +100,14 @@ const FormQuestions = () => {
 
   const [errors, setErrors] = useState<FormErrors>({}); // Estado para errores de validación
   const navigate = useNavigate();
+
+  const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: 'selection',
+    },
+  ]);
 
   const handleProvinceClick = (nombre: string) => {
     const province = provincias.find((p) => p.id === nombre);
@@ -120,12 +133,6 @@ const FormQuestions = () => {
   // Validación de campos obligatorios
   const validate = () => {
     let formErrors: FormErrors = {};
-    const days = Number(formData.days);
-
-    // Validar campo de días
-    if (!formData.days || isNaN(days) || days <= 0) {
-      formErrors.days = 'Por favor ingrese un número válido de días.';
-    }
 
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0; // Devuelve verdadero si no hay errores
@@ -157,7 +164,7 @@ const FormQuestions = () => {
   const handleNextQuestion = () => {
     if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
-  }
+    }
     if (currentQuestion === 0 && !validate()) {
       return; // No avanzar si la validación falla
     }
@@ -173,6 +180,10 @@ const FormQuestions = () => {
 
   const submitFormData = async () => {
     try {
+      formData.fromDate = state[0].startDate.toISOString();
+      formData.toDate = state[0].endDate.toISOString();
+      console.log(formData);
+      /*
       const response = await fetch('https://api-turistear.koyeb.app/formQuestion', {
         method: 'POST',
         headers: {
@@ -190,6 +201,7 @@ const FormQuestions = () => {
       console.log('Datos enviados con éxito:', responseData);
       console.log('Redirigiendo a /calendarioItinerario');
       navigate('/calendarioItinerario');
+        */
     } catch (error) {
       console.error('Error al enviar los datos:', error);
     }
@@ -202,7 +214,7 @@ const FormQuestions = () => {
       <section className="min-h-screen flex items-center justify-center bg-gray-100 text-black py-8">
         <div className="container mx-auto flex flex-col md:flex-row justify-center z-30 relative">
           <form className="flex flex-col w-full max-w-full items-center justify-center bg-white p-4 gap-y-6 md:gap-y-4 min-h-[500px]">
-          <ProgressBar currentStep={currentStep} />
+            <ProgressBar currentStep={currentStep} />
 
             <div>
               {questions[currentQuestion].type === 'image' ? (
@@ -275,41 +287,35 @@ const FormQuestions = () => {
                     </h2>
 
                     <div>
-                      <label
-                        htmlFor="date"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
+                      <span className="block text-sm font-medium leading-6 text-gray-900">
                         Fecha del viaje
-                      </label>
-                      <input
-                        type="date"
-                        name="date"
-                        value={formData.date}
-                        onChange={handleInputChange}
-                        className={`mt-1 block w-[300px] px-3 py-2 border  'border-red-500' : 'border-gray-300'
-                          } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                      </span>
+                      <DateRangePicker
+                        editableDateInputs={true}
+                        onChange={(item) => setState([item.selection])}
+                        moveRangeOnFirstSelection={false}
+                        ranges={state}
+                        locale={es}
+                        retainEndDateOnFirstSelection={false}
+                        staticRanges={[]}
+                        inputRanges={[]}
                       />
                     </div>
 
                     <div>
-                      <label
-                        htmlFor="days"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Cantidad de días <span className="text-[#ff0000]">*</span>
-                      </label>
-                      <input
-                        type="number"
-                        name="days"
-                        value={formData.days}
-                        onChange={handleInputChange}
-                        placeholder="Ingresá cantidad de días"
-                        className={`mt-1 block w-[300px] px-3 py-2 border  'border-red-500' : 'border-gray-300'
-                        } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
-                      />
-                      {errors.days && (
-                        <span className="text-[#ff0000] text-sm font-medium">{errors.days}</span>
-                      )}
+                      <span>
+                        {state[0].endDate && state[0].startDate && (
+                          <p>
+                            Cantidad de días:{' '}
+                            {state[0].endDate && state[0].startDate
+                              ? Math.ceil(
+                                  (state[0].endDate.getTime() - state[0].startDate.getTime()) /
+                                    (1000 * 60 * 60 * 24),
+                                )
+                              : 0}
+                          </p>
+                        )}
+                      </span>
                     </div>
 
                     <div className="flex gap-x-4">
