@@ -1,8 +1,9 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
-import { RightCommunity } from '../components/Community/RightCommunity';
 import { CreatePost } from '../components/Community/CreatePost';
 import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
+import { TravelCard } from '../components/Community/TravelCard';
+import { useRef, useState } from 'react';
 
 const itineraries = [
   {
@@ -30,15 +31,77 @@ const itineraries = [
     ],
   },
 ];
+const travels =[
+  {
+    imgProvince: '/assets/san-nicolas-buenos-aires.webp',
+    province: 'Buenos Aires',
+    departure: '09-12-2018',
+    arrival: '04-11-2023',
+    participants:[
+      {
+        imgPerson: '/assets/person.svg',
+        user: 'Germán Cano',
+      },
+      {
+        imgPerson: '/assets/person.svg',
+        user: 'John Kennedy',
+      },
+      {
+        imgPerson: '/assets/person.svg',
+        user: 'Fernando Diniz',
+      },
+    ]
+  },
+  {
+    imgProvince: '/assets/san-nicolas-buenos-aires.webp',
+    province: 'Catamarca',
+    departure: '25-02-2023',
+    arrival: '04-03-2023',
+    participants:[
+      {
+        imgPerson: '/assets/person.svg',
+        user: 'Germán Cano',
+      }
+    ]
+  },
+]
+
+const components={
+  travels : travels.map((travel, index) => (
+      <TravelCard imgProvince={travel.imgProvince} province={travel.province}
+                  departure={travel.departure} arrival={travel.arrival}
+                  participants={travel.participants}  />
+    )),
+  posts : itineraries.map((itinerarie, index) => (
+    <ItineraryCard imgPerson={itinerarie.imgPerson} usuario={itinerarie.usuario}
+                   fecha={itinerarie.fecha} descripcion={itinerarie.descripcion} img={itinerarie.img} />
+  ))
+}
+
 const options = ['Imagen', 'Itinerario', 'Categoría', 'Ubicación'];
 
+
 const Profile = () => {
+  // @ts-ignore
+  const [content, setContent] = useState<JSX.Element | null>(components.posts);
+  const [activeItem, setActiveItem] = useState('posts');
+  const contentRef = useRef<HTMLDivElement | null>(null);
+
+  const handleClick = (name: string) => {
+    setActiveItem(name)
+    // @ts-ignore
+    setContent(components[name]);
+    if (contentRef.current) {
+      contentRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
         <LeftCommunity />
-        <div className="lg:w-[64%] w-[100%] lg:p-10 lg:pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
+        <div className="lg:w-[80%] w-[100%] lg:p-10 lg:pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
           {/* Portada */}
           <div className="">
             <div className="h-[200px] bg-black"></div>
@@ -71,27 +134,18 @@ const Profile = () => {
             </div>
           </div>
           {/* Publicaciones */}
-          <div className="border-b border-black pb-2">
-            <h2 className="lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">Mis publicaciones</h2>
+          <div className="border-b border-black grid grid-cols-2 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold ">
+            <h2 className={`text-center pb-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`} onClick={()=> handleClick("posts")}>Mis publicaciones</h2>
+            <h2 className={`text-center pb-2 rounded-t-xl ${activeItem === 'travels' ? 'bg-[#c0daeb]' : ''}`}  onClick={()=> handleClick("travels")}>Mis viajes</h2>
           </div>
           <div className="rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto ">
             <CreatePost options={options} />
           </div>
-          {/* Posts */}
-          <div className="flex flex-col gap-6 lg:w-[100%] w-[90%] mx-auto">
-            {itineraries.map((userPost, index) => (
-              <ItineraryCard
-                key={index}
-                imgPerson={userPost.imgPerson}
-                usuario={userPost.usuario}
-                fecha={userPost.fecha}
-                descripcion={userPost.descripcion}
-                img={userPost.img}
-              />
-            ))}
+          {/* Content */}
+          <div className="grid lg:grid-cols-2 grid-cols-1 gap-6 lg:w-[100%] w-[90%] mx-auto" ref={contentRef}>
+            {content}
           </div>
         </div>
-        <RightCommunity />
       </div>
     </>
   );
