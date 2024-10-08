@@ -99,8 +99,8 @@ const Profile = () => {
   };
 
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('https://api-turistear.koyeb.app/session', {
@@ -116,12 +116,17 @@ const Profile = () => {
       .then((data) => {
         setIsAuthenticated(true);
         setUser(data.user);
+        setError('');
       })
       .catch((err) => {
-        setError(err.message);
+        setError('Error al obtener el usuario!');
         setIsAuthenticated(false);
       });
   }, []);
+
+  if(!isAuthenticated){
+    return (<p>User is not authenticated</p>);
+  }
 
   return (
     <>
@@ -160,10 +165,13 @@ const Profile = () => {
                 <div
                   className={`lg:w-[150px] w-[100px] lg:h-[150px] h-[100px] bg-gray border-white border-4`}
                 >
-                  <img src={user?.profilePicture} alt="Foto de perfil" className="w-[100%]" />
+                  <img src={user?.profilePicture} alt={user?.name} className="w-[100%]" />
                 </div>
                 <div>
-                  <a href={`/editProfile/${user?.id}`} className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl">
+                  <a
+                    href={`/editProfile/${user?.id}`}
+                    className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl"
+                  >
                     Editar perfil
                   </a>
                 </div>
