@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { NavMobile } from '../src/components/NavMobile/NavMobile';
 
@@ -14,17 +14,19 @@ afterEach(() => {
 });
 
 describe('NavMobile Component', () => {
-  test('renders login link when user is not authenticated', () => {
+  test('renders login link when user is not authenticated', async () => {
     // Simula la respuesta de la API para un usuario no autenticado
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
     });
 
-    render(
-      <Router>
-        <NavMobile />
-      </Router>,
-    );
+    await act(async () => {
+      render(
+        <Router>
+          <NavMobile />
+        </Router>,
+      );
+    });
 
     const loginLink = screen.getByRole('link', { name: /Login/i });
     expect(loginLink).toBeInTheDocument();
@@ -51,15 +53,18 @@ describe('NavMobile Component', () => {
       }),
     });
 
-    render(
-      <Router>
-        <NavMobile />
-      </Router>,
-    );
+    await act(async () => {
+      render(
+        <Router>
+          <NavMobile />
+        </Router>,
+      );
+    });
 
     // Espera a que el componente se actualice con la información del usuario
     await waitFor(() => {
       expect(screen.getByText(/Juan Pérez/i)).toBeInTheDocument();
+      expect(screen.getByAltText(/Foto de perfil/i)).toHaveAttribute('src', 'https://example.com/profile.jpg');
     });
 
     // Verifica que los enlaces de navegación también se muestren
@@ -70,5 +75,27 @@ describe('NavMobile Component', () => {
     expect(destinationsLink).toBeInTheDocument();
     expect(comunidadLink).toBeInTheDocument();
     expect(armatuViajeLink).toBeInTheDocument();
+  });
+
+  test('handles fetch error correctly', async () => {
+    // Simula un error en la solicitud de la API
+    (fetch as jest.Mock).mockRejectedValueOnce(new Error('Fetch error'));
+
+    await act(async () => {
+      render(
+        <Router>
+          <NavMobile />
+        </Router>,
+      );
+    });
+
+    // Verifica que el enlace de inicio de sesión está en el documento
+    await waitFor(() => {
+      const loginLink = screen.getByRole('link', { name: /Login/i });
+      expect(loginLink).toBeInTheDocument();
+    });
+
+    // Asegúrate de que no se muestra el nombre de usuario
+    expect(screen.queryByText(/Juan Pérez/i)).not.toBeInTheDocument();
   });
 });
