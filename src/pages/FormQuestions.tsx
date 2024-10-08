@@ -7,6 +7,7 @@ import 'react-date-range/dist/theme/default.css';
 import { DateRangePicker } from 'react-date-range';
 import { es } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
+import { get, post } from '../utilities/http.util';
 
 interface FormData {
   province?: number | null;
@@ -155,19 +156,13 @@ const FormQuestions = () => {
     try {
       formData.fromDate = state[0].startDate.toISOString();
       formData.toDate = state[0].endDate.toISOString();
-
-      const response = await fetch('https://api-turistear.koyeb.app/formQuestion', {
-        method: 'POST',
-        headers: {
+      await post(
+        'https://api-turistear.koyeb.app/formQuestion',
+        {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error en la red: ${response.statusText} (${response.status})`);
-      }
-
+        formData,
+      );
       navigate('/calendarioItinerario');
     } catch (error) {
       console.error('Error al enviar los datos:', error);
@@ -177,15 +172,11 @@ const FormQuestions = () => {
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
-        const response = await fetch('https://api-turistear.koyeb.app/province');
+        const response = await get('https://api-turistear.koyeb.app/province', {
+          'Content-Type': 'application/json',
+        });
 
-        if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.statusText}`);
-        }
-
-        const fetchResponse = await response.json();
-
-        setProvinces(fetchResponse.data);
+        setProvinces(response.data);
       } catch (error) {
         console.error('Error fetching provinces:', error);
       }

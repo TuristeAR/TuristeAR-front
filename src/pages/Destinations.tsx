@@ -3,6 +3,7 @@ import { Header } from '../components/Header/Header';
 import { MapaArg } from '../components/Destinations/MapaArg';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { get } from '../utilities/http.util';
 
 interface Province {
   id: number;
@@ -94,16 +95,12 @@ const Destinations = () => {
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
-        const response = await fetch('https://api-turistear.koyeb.app/province');
+        const response = await get('https://api-turistear.koyeb.app/province', {
+          'Content-Type': 'application/json',
+        });
 
-        if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.statusText}`);
-        }
-
-        const fetchResponse = await response.json();
-
-        setSelectedProvince(fetchResponse.data[0]);
-        setProvinces(fetchResponse.data);
+        setSelectedProvince(response.data[0]);
+        setProvinces(response.data);
       } catch (error) {
         console.error('Error fetching provinces:', error);
       }
