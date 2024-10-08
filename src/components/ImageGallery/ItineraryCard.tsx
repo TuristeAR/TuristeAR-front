@@ -2,7 +2,7 @@ import { ImageGallery } from './ImageGallery';
 
 export function ItineraryCard(props: {
   imgPerson: string;
-  usuario: string;
+  usuario: string | undefined;
   fecha: string;
   descripcion: string;
   img: { id: number; src: string }[];

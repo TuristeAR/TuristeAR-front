@@ -13,6 +13,7 @@ import { Login } from './pages/Login';
 import Profile from './pages/Profile';
 import { ItineraryCalendar } from './pages/ItineraryCalendar';
 import { ItineraryDetail } from './pages/ItineraryDetail';
+import EditProfile from './pages/EditProfile';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -27,6 +28,7 @@ root.render(
       <Route path="/destino-esperado/:nombreDeLaProvincia" element={<ExpectedDestination />} />
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/editProfile/:id" element={<EditProfile />} />
       <Route path="/community" element={<Profile />} />
       <Route path="/publications" element={<Publications />} />
       <Route path="/profile" element={<Profile />} />

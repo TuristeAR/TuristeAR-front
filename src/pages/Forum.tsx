@@ -41,7 +41,7 @@ const infoComments = [
     ],
   },
 ];
-const options = ['Seleccionar imagen', 'Seleccionar archivo', 'Importar itinerario'];
+const options = ['Imagen', 'Archivo', 'Itinerario'];
 
 const Forum = () => {
   return (

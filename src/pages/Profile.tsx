@@ -3,7 +3,7 @@ import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePost } from '../components/Community/CreatePost';
 import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 import { TravelCard } from '../components/Community/TravelCard';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const itineraries = [
   {
@@ -65,27 +65,29 @@ const travels =[
     ]
   },
 ]
-
 const components={
   travels : travels.map((travel, index) => (
-      <TravelCard imgProvince={travel.imgProvince} province={travel.province}
+      <TravelCard key={index} imgProvince={travel.imgProvince} province={travel.province}
                   departure={travel.departure} arrival={travel.arrival}
                   participants={travel.participants}  />
     )),
   posts : itineraries.map((itinerarie, index) => (
-    <ItineraryCard imgPerson={itinerarie.imgPerson} usuario={itinerarie.usuario}
+    <ItineraryCard key={index} imgPerson={itinerarie.imgPerson} usuario={itinerarie.usuario}
                    fecha={itinerarie.fecha} descripcion={itinerarie.descripcion} img={itinerarie.img} />
   ))
 }
-
 const options = ['Imagen', 'Itinerario', 'Categoría', 'Ubicación'];
-
 
 const Profile = () => {
   // @ts-ignore
-  const [content, setContent] = useState<JSX.Element | null>(components.posts);
+  const [content, setContent] = useState<React.JSX.Element | null>(components.posts);
   const [activeItem, setActiveItem] = useState('posts');
   const contentRef = useRef<HTMLDivElement | null>(null);
+  type User={
+    id: number;
+    name: string,
+    profilePicture: string,
+  }
 
   const handleClick = (name: string) => {
     setActiveItem(name)
@@ -95,6 +97,36 @@ const Profile = () => {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('https://api-turistear.koyeb.app/session', {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((response) => {
+        if (!response.ok) {
+          window.location.href = '/';
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setIsAuthenticated(true);
+        setUser(data.user);
+        setError('');
+      })
+      .catch((err) => {
+        setError('Error al obtener el usuario!');
+        setIsAuthenticated(false);
+      });
+  }, []);
+
+  if(!isAuthenticated){
+    return (<p>User is not authenticated</p>);
+  }
 
   return (
     <>
@@ -108,7 +140,9 @@ const Profile = () => {
             <div className="flex text-l relative pl-2">
               <div className="lg:w-[78%] w-[90%] pt-4">
                 <div className="lg:flex items-center lg:flex-row flex-col gap-x-4">
-                  <h1 className="lg:text-3xl text-xl tracking-[.1em] text-[#215a9d]">Manuel López</h1>
+                  <h1 className="lg:text-3xl text-xl tracking-[.1em] text-[#215a9d]">
+                    {user?.name}
+                  </h1>
                   <h3 className="text-xl text-[#a2c8de]">@Manu10</h3>
                 </div>
                 <p className="mt-4">
@@ -122,27 +156,53 @@ const Profile = () => {
                     <p>Argentina, Buenos Aires</p>
                   </div>
                   <div className="flex items-center gap-x-2">
-                    <img src="/assets/calendar.svg" alt="Calendario" className="w-6 h-6"  />
+                    <img src="/assets/calendar.svg" alt="Calendario" className="w-6 h-6" />
                     <p>22 de enero del 2000</p>
                   </div>
                 </div>
               </div>
               <div className="flex flex-col gap-6 items-center absolute right-0 -top-20 ">
-                <div className="lg:w-[150px] w-[100px] lg:h-[150px] h-[100px] bg-gray border-white border-4"></div>
-                <button className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl">Editar perfil</button>
+                <div
+                  className={`lg:w-[150px] w-[100px] lg:h-[150px] h-[100px] bg-gray border-white border-4`}
+                >
+                  <img src={user?.profilePicture} alt={user?.name} className="w-[100%]" />
+                </div>
+                <div>
+                  <a
+                    href={`/editProfile/${user?.id}`}
+                    className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl"
+                  >
+                    Editar perfil
+                  </a>
+                </div>
               </div>
             </div>
           </div>
           {/* Publicaciones */}
-          <div className="border-b border-black grid grid-cols-2 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold ">
-            <h2 className={`text-center pb-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`} onClick={()=> handleClick("posts")}>Mis publicaciones</h2>
-            <h2 className={`text-center pb-2 rounded-t-xl ${activeItem === 'travels' ? 'bg-[#c0daeb]' : ''}`}  onClick={()=> handleClick("travels")}>Mis viajes</h2>
+          <div className="border-b border-black grid grid-cols-2 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
+            <h2
+              className={`hover:cursor-pointer text-center pb-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`}
+              onClick={() => handleClick('posts')}
+            >
+              Mis publicaciones
+            </h2>
+            <h2
+              className={`hover:cursor-pointer text-center pb-2 rounded-t-xl ${activeItem === 'travels' ? 'bg-[#c0daeb]' : ''}`}
+              onClick={() => handleClick('travels')}
+            >
+              Mis viajes
+            </h2>
           </div>
-          <div className="rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto ">
+          <div
+            className={`rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto ${activeItem === 'travels' ? 'hidden' : ''}`}
+          >
             <CreatePost options={options} />
           </div>
           {/* Content */}
-          <div className="grid lg:grid-cols-2 grid-cols-1 gap-6 lg:w-[100%] w-[90%] mx-auto" ref={contentRef}>
+          <div
+            className="grid lg:grid-cols-2 grid-cols-1 gap-6 lg:w-[100%] w-[90%] mx-auto"
+            ref={contentRef}
+          >
             {content}
           </div>
         </div>
