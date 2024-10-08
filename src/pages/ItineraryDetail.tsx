@@ -1,10 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { useState } from 'react';
-import { ItineraryCalendar } from './ItineraryCalendar';
+import { useState, useEffect } from 'react';
 
 export const ItineraryDetail = () => {
+  const location = useLocation();
+  const itinerary = location.state?.itinerary;
+
+  useEffect(() => {
+    if (itinerary) {
+      console.log('Itinerary:', itinerary);
+    }
+  }, [itinerary]);
   const [showedInfo, setShowedInfo] = useState(false);
 
   const imgs = [
@@ -17,13 +24,12 @@ export const ItineraryDetail = () => {
     },
   ];
 
-  const itinerario = [
-    {
-      date: '10:00 - 12:00',
-      title: 'Museo Nacional de Bellas artes',
-      info: 'Aqui podras ver una gran cantidad de obras de arte de distintas epocas. Muy recomendado para los amantes del arte.',
-    },
-  ];
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const options = { hour: '2-digit', minute: '2-digit', hour12: false } as const;
+    return date.toLocaleTimeString([], options);
+  };
+
 
   return (
     <>
@@ -43,7 +49,7 @@ export const ItineraryDetail = () => {
               <div className="md:max-w-[650px] flex-1">
                 <div className="border-b pb-2 border-gray-50 ">
                   <h2 className="text-xl font-bold text-primary-3">
-                    Viaje a Buenos Aires - 4 Días
+                    Viaje a Buenos Aires - 4 Días:{itinerary.name}
                   </h2>
                 </div>
                 <div>
@@ -82,7 +88,9 @@ export const ItineraryDetail = () => {
                   onClick={() => setShowedInfo(!showedInfo)}
                   className="text-sm sm:text-md font-semibold flex items-center rounded-md"
                 >
-                  Día 1 - Recoleta
+                  {itinerary.activities.map((item:any, index:number) => (
+                    <p key={index}>{item[0]}</p>
+                  ))}
                   <div className="icons">
                     <svg
                       className={`${!showedInfo ? 'block' : 'hidden'}`}
@@ -109,18 +117,20 @@ export const ItineraryDetail = () => {
               </button>
               {/* Info */}
               <div className={`${showedInfo ? 'block' : 'hidden'}`}>
-                <div className="relative px-1 sm:px-0 flex flex-col sm:flex-row gap-2 mt-5 flex-wrap">
-                  {itinerario.map((item, index) => (
+                <div className="relative px-1 sm:px-0 flex flex-col  gap-2 mt-5 flex-wrap">
+                  {itinerary.activities.map((item:any, index:number) => (
                     <div
                       key={index}
                       className="flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 sm:px-8"
                     >
                       <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
-                        <span className="text-sm">{item.date}</span>
+                        <span className="text-sm">{formatTime(item.fromDate)} - {formatTime(item.toDate)}</span>
+
+                        <span></span>
                       </div>
                       <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
                         <p className="font-semibold text-sm sm:text-base">
-                          {item.title}: <span className="font-normal">{item.info}</span>
+                        {item.name?.split(' - ')[0]}
                         </p>
                       </div>
                     </div>

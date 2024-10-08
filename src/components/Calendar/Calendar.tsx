@@ -3,8 +3,13 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es'; 
 
+import {  useEffect } from 'react';
 
 export const Calendar = ({ setEvents, events }: { setEvents: any; events: any }) => {
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
+  
   const handleDateClick = (arg: { dateStr: any }) => {
     const title = prompt('Introduce el título del nuevo evento:');
     if (title) {

@@ -5,46 +5,24 @@ import galleryIcon from '/assets/gallery.svg';
 import alignIcon from '/assets/align.svg';
 import deleteIcon from '/assets/delete.svg';
 
-/* Hooks */
-import { useEffect, useState } from 'react';
-
-
 /* Components */
-import {Calendar} from '../components/Calendar/Calendar';
+import { Calendar } from '../components/Calendar/Calendar';
 import { Header } from '../components/Header/Header';
-
-import { useLocation } from 'react-router-dom';
-
-interface Event {
-  id: number;
-  title: string;
-  date: string;
-}
+import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useItineraryEvents } from '../utilities/useItinerary';
 
 export const ItineraryCalendar = () => {
+  const { events, setEvents, itinerary } = useItineraryEvents();
 
-  const location = useLocation();
-  const itinerary = location.state?.itinerary; // Obtener el itinerario del estado
+  useEffect(() => {
+    console.log(events);
+    console.log(itinerary);
+  }, []);
 
-   // Estado para los eventos
-   const [events, setEvents] = useState<Event[]>([]); // Estado con tipo Event[]
-   // Efecto para actualizar el estado de eventos con las actividades del itinerario
-   useEffect(() => {
-     if (itinerary && Array.isArray(itinerary.activities)) { // Verificar que itinerary.activities sea un array
-       const newEvents = itinerary.activities.map((activity: { id: any; name: any; fromDate: any; }) => ({
-         id: activity.id, // ID de la actividad
-         title: activity.name, // Nombre de la actividad
-         date: activity.fromDate, // Fecha de inicio de la actividad
-       }));
- 
-       setEvents(newEvents); // Actualizar el estado con las nuevas actividades
-     }
-   }, [itinerary]);
-
-
-   const deleteEvent = (id: number) => {
+  const deleteEvent = (id: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este evento?')) {
-      setEvents((prevEvents) => prevEvents.filter(event => event.id !== id));
+      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
     }
   };
 
@@ -56,12 +34,10 @@ export const ItineraryCalendar = () => {
         <aside className="col-span-1 p-4 flex">
           <div className="flex flex-col h-full w-full">
             <div className="flex flex-col justify-center border-b border-gray">
-              <h2 className="font-semibold tracking-[-0.5px] leading-none">
-                Buenos Aires - 4 días
-              </h2>
+              <h2 className="font-semibold tracking-[-0.5px] leading-none">{itinerary.name}</h2>
               <div className="flex flex-col p-2 gap-y-2">
                 <div className="flex items-center gap-x-2 cursor-pointer">
-                  <img src={plusIcon} alt=""  />
+                  <img src={plusIcon} alt="" />
                   <p className="text-sm">Agregar actividad</p>
                 </div>
                 <div className="flex items-center gap-x-2 cursor-pointer">
@@ -74,7 +50,9 @@ export const ItineraryCalendar = () => {
                 </div>
                 <div className="flex items-center gap-x-2 cursor-pointer">
                   <img src={alignIcon} alt="" />
-                  <p className="text-sm">Resumen del viaje</p>
+                  <Link to="/ItineraryDetail" state={{ itinerary }}>
+                    <p className="text-sm">Resumen del viaje</p>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -91,7 +69,7 @@ export const ItineraryCalendar = () => {
                   ),
                 )}
                 <div>
-                  <p className='cursor-pointer'>Agregar amigos</p>
+                  <p className="cursor-pointer">Agregar amigos</p>
                 </div>
               </div>
             </div>
@@ -105,7 +83,7 @@ export const ItineraryCalendar = () => {
                   <h2 className="font-semibold tracking-[-0.5px] leading-none">
                     Eliminar actividades
                   </h2>
-                  
+
                   <div className="w-full flex flex-col gap-2 mb-2">
                     {events.map((event, index) => (
                       <div key={index} className="flex items-center w-full gap-2">
@@ -135,4 +113,3 @@ export const ItineraryCalendar = () => {
     </section>
   );
 };
-
