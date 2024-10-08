@@ -13,70 +13,7 @@ type Province = {
   places: Place[]
 }
 
-const reviews = [
-  {
-    imgPerson: '/assets/person.svg',
-    usuario: 'Pablo Ramirez',
-    fecha: '26 Sep 2024',
-    description:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-  },
-  {
-    imgPerson: '/assets/person.svg',
-    usuario: 'Victor Gonzalez',
-    fecha: '26 Sep 2024',
-    description:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-  },
-  {
-    imgPerson: '/assets/person.svg',
-    usuario: 'Malena Yannone',
-    fecha: '26 Sep 2024',
-    description:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-  },
-  {
-    imgPerson: '/assets/person.svg',
-    usuario: 'Belen Peña',
-    fecha: '26 Sep 2024',
-    description:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-  },
-  {
-    imgPerson: '/assets/person.svg',
-    usuario: 'Gabriel Fuentes',
-    fecha: '26 Sep 2024',
-    description:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-  },
-];
-
-interface Review {
+type Review = {
   id: number;
   createdAt: string;
   publishedTime: string;
@@ -87,7 +24,7 @@ interface Review {
   photos: string[];
 }
 
-interface Place {
+type Place = {
   id: number;
   createdAt: string;
   googleId: string;
@@ -146,7 +83,6 @@ const Destinations = () => {
           const response = await get(`https://api-turistear.koyeb.app/provinces/${selectedProvince.id}`, {
             'Content-Type': 'application/json',
           });
-          console.log(response)
           setReviews(response);
         } catch (error) {
           console.error('Error fetching reviews:', error);
