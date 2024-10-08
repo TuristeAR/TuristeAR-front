@@ -15,6 +15,11 @@ import { Header } from '../components/Header/Header';
 
 import { useLocation } from 'react-router-dom';
 
+interface Event {
+  id: number;
+  title: string;
+  date: string;
+}
 
 export const ItineraryCalendar = () => {
 
@@ -22,8 +27,7 @@ export const ItineraryCalendar = () => {
   const itinerary = location.state?.itinerary; // Obtener el itinerario del estado
 
    // Estado para los eventos
-   const [events, setEvents] = useState([]);
-
+   const [events, setEvents] = useState<Event[]>([]); // Estado con tipo Event[]
    // Efecto para actualizar el estado de eventos con las actividades del itinerario
    useEffect(() => {
      if (itinerary && Array.isArray(itinerary.activities)) { // Verificar que itinerary.activities sea un array
@@ -38,10 +42,11 @@ export const ItineraryCalendar = () => {
    }, [itinerary]);
 
 
-
-  function deleteEvent(): void {
-    throw new Error('Function not implemented.');
-  }
+   const deleteEvent = (id: number) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar este evento?')) {
+      setEvents((prevEvents) => prevEvents.filter(event => event.id !== id));
+    }
+  };
 
   return (
     <section className="h-screen xl:h-auto overflow-x-clip relative">
@@ -100,13 +105,14 @@ export const ItineraryCalendar = () => {
                   <h2 className="font-semibold tracking-[-0.5px] leading-none">
                     Eliminar actividades
                   </h2>
+                  
                   <div className="w-full flex flex-col gap-2 mb-2">
-                    {events.map((activity, index) => (
+                    {events.map((event, index) => (
                       <div key={index} className="flex items-center w-full gap-2">
-                        <button onClick={() => deleteEvent()}>
+                        <button onClick={() => deleteEvent(event.id)}>
                           <img src={deleteIcon} alt="" />
                         </button>
-                        <p>{}</p>
+                        <p>{event.title}</p>
                       </div>
                     ))}
                   </div>
