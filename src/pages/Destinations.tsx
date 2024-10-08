@@ -3,20 +3,15 @@ import { Header } from '../components/Header/Header';
 import { MapaArg } from '../components/Destinations/MapaArg';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import provinciasData from '../data/provinces-data.json';
+import { get } from '../utilities/http.util';
 
-type Image = {
+interface Province {
   id: number;
-  src: string;
-};
-type Province = {
-  id: string;
   name: string;
   description: string;
-  img: Image[];
-};
+  images: string[];
+}
 
-const provincias: Province[] = provinciasData;
 const usuariosReview = [
   {
     imgPerson: '/assets/person.svg',
@@ -83,32 +78,50 @@ const usuariosReview = [
 const Destinations = () => {
   const navigate = useNavigate();
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [provinces, setProvinces] = useState<Province[]>([]);
 
   const scrollToSection = () => {
     if (sectionRef.current) {
       sectionRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
   const handleRedirect = () => {
     navigate(`/destino-esperado/${selectedProvince?.name}`);
   };
+
   const [selectedProvince, setSelectedProvince] = useState<Province>();
+
   useEffect(() => {
-    setSelectedProvince(provincias[3]);
+    const fetchProvinces = async () => {
+      try {
+        const response = await get('https://api-turistear.koyeb.app/province', {
+          'Content-Type': 'application/json',
+        });
+
+        setSelectedProvince(response.data[0]);
+        setProvinces(response.data);
+      } catch (error) {
+        console.error('Error fetching provinces:', error);
+      }
+    };
+
+    fetchProvinces();
   }, []);
-  const handleProvinceClick = (name: string) => {
-    const province = provincias.find((p) => p.id === name);
+
+  const handleProvinceClick = (id: number) => {
+    const province = provinces.find((p) => p.id === id);
     setSelectedProvince(province);
   };
 
   return (
     <>
-      <Header/>
+      <Header />
       <section>
         <div className="bg-[#E6E6E6] w-full h-[120px]">
           <div className="container mx-auto h-full flex flex-col items-center justify-center gap-y-4 ">
             <p className="px-8 lg:px-0 max-w-[600px] text-center font-semibold tracking-tight   ">
-              Si ya sabes cual es tu destino seleccionalo para descubrir los mejores lugares y
+              Si ya sabés cuál es tu destino, seleccionalo para descubrir los mejores lugares y
               actividades
             </p>
             <div>
@@ -123,39 +136,27 @@ const Destinations = () => {
             </div>
           </div>
         </div>
-
         <div className="flex flex-wrap my-6 container mx-auto gap-1 p-4">
           <div className="flex-1 md:w-[400px] xl:w-auto">
-            {/* Mapa svg */}
             <div className="flex justify-center items-center" onClick={scrollToSection}>
-              <MapaArg
-                onProvinceClick={handleProvinceClick}
-                defaultProvinceId={selectedProvince?.id}
-              ></MapaArg>
+              <MapaArg onProvinceClick={handleProvinceClick} />
             </div>
           </div>
-
-          <div
-            ref={sectionRef}
-            className="flex-1  max-w-[600px] w-full flex flex-col gap-y-6 "
-          >
-            {/* Info */}
-
+          <div ref={sectionRef} className="flex-1  max-w-[600px] w-full flex flex-col gap-y-6 ">
             <div className="flex flex-col gap-y-4">
               <h1 className="text-center">{selectedProvince?.name} </h1>
               <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
                 {selectedProvince?.description}
               </p>
-
               <div className="flex justify-center gap-2 overflow-hidden">
-                {selectedProvince?.img.map((image, index) => (
+                {selectedProvince?.images.map((image, index) => (
                   <div
                     key={index}
-                    className="w-[150px] h-[100px] md:w-[200px] md:h-[170px] overflow-hidden"
+                    className="w-[150px] h-[100px] md:w-[300px] md:h-[300px] overflow-hidden"
                   >
                     <img
-                      key={image.id}
-                      src={image.src}
+                      key={image}
+                      src={image}
                       className="w-full h-full object-cover"
                       alt={selectedProvince?.name}
                     />
@@ -168,9 +169,7 @@ const Destinations = () => {
                 </button>
               </div>
             </div>
-
             <div className="border-b border-gray my-4 "></div>
-            {/* Publicaciones */}
             <Carousel>
               {usuariosReview.map((item, index) => {
                 return (

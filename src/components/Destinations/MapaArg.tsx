@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 interface MapaProps {
-  onProvinceClick: (provinceId: string ) => void;
-  defaultProvinceId?: string;
+  onProvinceClick: (provinceId: number) => void;
+  defaultProvinceId?: number;
 }
 
 export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceId }) => {
@@ -11,7 +11,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
 
   useEffect(() => {
     if (defaultProvinceId) {
-      const path = document.getElementById(defaultProvinceId) as unknown as SVGPathElement;
+      const path = document.getElementById(String(defaultProvinceId)) as unknown as SVGPathElement;
       if (path) {
         setOriginalColor(path.getAttribute('fill') || '');
         path.style.fill = '#4700BB';
@@ -33,7 +33,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
       path.style.fill = '#4700BB';
       setPreviousPath(path);
 
-      onProvinceClick(path.id);
+      onProvinceClick(Number(path.id));
     }
   };
 
@@ -63,7 +63,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="buenos-aires"
+          id="1"
         ></path>
         <path
           className="cursor-pointer"
@@ -71,7 +71,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="la-rioja"
+          id="12"
         ></path>
         <path
           className="cursor-pointer"
@@ -79,7 +79,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="misiones"
+          id="14"
         ></path>
         <path
           className="cursor-pointer"
@@ -87,7 +87,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="santa-cruz"
+          id="20"
         ></path>
         <path
           className="cursor-pointer"
@@ -95,7 +95,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="la-pampa"
+          id="11"
         ></path>
         <path
           className="cursor-pointer"
@@ -103,7 +103,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="mendoza"
+          id="13"
         ></path>
         <path
           className="cursor-pointer"
@@ -111,7 +111,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="salta"
+          id="17"
         ></path>
         <path
           className="cursor-pointer"
@@ -119,7 +119,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="santiago-del-estero"
+          id="22"
         ></path>
         <path
           className="cursor-pointer"
@@ -127,7 +127,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="tierra-del-fuego"
+          id="23"
         ></path>
         <path
           className="cursor-pointer"
@@ -135,7 +135,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="rio-negro"
+          id="16"
         ></path>
         <path
           className="cursor-pointer"
@@ -143,7 +143,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="catamarca"
+          id="3"
         ></path>
         <path
           className="cursor-pointer"
@@ -151,7 +151,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="jujuy"
+          id="10"
         ></path>
         <path
           className="cursor-pointer"
@@ -159,7 +159,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="chaco"
+          id="4"
         ></path>
         <path
           className="cursor-pointer"
@@ -167,7 +167,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="formosa"
+          id="9"
         ></path>
         <path
           className="cursor-pointer"
@@ -175,7 +175,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="entre-rios"
+          id="8"
         ></path>
         <path
           className="cursor-pointer"
@@ -183,7 +183,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="chubut"
+          id="5"
         ></path>
         <path
           className="cursor-pointer"
@@ -191,7 +191,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="neuquen"
+          id="15"
         ></path>
         <path
           className="cursor-pointer"
@@ -199,7 +199,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="cordoba"
+          id="6"
         ></path>
         <path
           className="cursor-pointer"
@@ -207,7 +207,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="tucuman"
+          id="24"
         ></path>
         <path
           className="cursor-pointer"
@@ -215,7 +215,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="santa-fe"
+          id="21"
         ></path>
         <path
           className="cursor-pointer"
@@ -223,7 +223,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="corrientes"
+          id="7"
         ></path>
         <path
           className="cursor-pointer"
@@ -231,7 +231,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="san-juan"
+          id="18"
         ></path>
         <path
           className="cursor-pointer"
@@ -239,13 +239,13 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="san-luis"
+          id="19"
         ></path>
         <path
           d="M295.058 360.654L291.629 361.544L287.373 367.416L286.49 371.517L290.834 378.2L292.983 376.366L293.047 376.14L293.283 376.114L295.005 374.601L296.231 374.482L296.709 374.841L297.097 374.808L297.454 375.182L297.759 375.314C297.759 375.314 298.285 375.417 298.689 375C298.689 375 299.586 375.361 299.94 374.949C300.026 374.779 300.152 374.709 300.152 374.709C300.152 374.709 300.735 374.53 300.88 374.577L301.233 374.362L301.27 374.112L300.99 373.837L301.178 373.719L301.43 373.784L301.949 373.477L301.911 372.94L301.501 372.332L301.659 372.061L302.303 372.916L302.289 373.204L302.491 373.236L302.532 372.919L302.727 372.742L302.898 373.056L303.077 372.996L302.929 372.799L303.114 372.737L303.424 373.051L303.671 372.967L303.271 372.529L302.839 372.468L302.85 371.97L302.33 371.898L302.27 371.713L302.56 371.725L303.324 370.719L303.122 369.468L302.677 369.288L302.27 369.436L301.784 369.365L301.675 368.885L301.999 368.847L301.892 368.54L302.115 368.425L302.189 368.142L301.504 367.401L301.026 367.651L299.564 365.92L299.709 365.74L299.146 364.516L298.596 363.88L298.306 363.864L297.775 363.385L297.73 363.138L297.468 363.13L296.279 361.761L295.608 361.462L295.058 360.654Z"
           fill="#0072BB"
           stroke="#CCCCCC"
-          id="caba"
+          id="2"
         ></path>
         <path
           className="cursor-pointer"
@@ -253,10 +253,9 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
           fill="#0072BB"
           stroke="#CCCCCC"
           strokeMiterlimit="10"
-          id="caba-z"
+          id="2"
         ></path>
       </svg>
     </>
   );
 };
-
