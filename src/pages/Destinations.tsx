@@ -83,7 +83,6 @@ const Destinations = () => {
           const response = await get(`https://api-turistear.koyeb.app/provinces/${selectedProvince.id}`, {
             'Content-Type': 'application/json',
           });
-          console.log(response)
           setReviews(response);
         } catch (error) {
           console.error('Error fetching reviews:', error);
