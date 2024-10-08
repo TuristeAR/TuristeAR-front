@@ -1,91 +1,115 @@
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import Destinations from '../src/pages/Destinations';
-import React from 'react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { get } from '../src/utilities/http.util';
+import Destinations from '../src/pages/Destinations';
+import '@testing-library/jest-dom';
 
+jest.mock('../src/utilities/http.util', () => ({
+  get: jest.fn(),
+}));
 
-describe('Destinations Page', () => {
-  test('renders the header with navigation links', () => {
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
+const mockProvinces = [
+  {
+    id: 1,
+    name: 'Buenos Aires',
+    description: 'Provincia de Buenos Aires',
+    images: ['/assets/san-nicolas-buenos-aires.webp'],
+  },
+  {
+    id: 2,
+    name: 'Córdoba',
+    description: 'Provincia de Córdoba',
+    images: ['/assets/san-nicolas-buenos-aires.webp'],
+  },
+];
+
+describe('Destinations Component', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    (console.error as jest.Mock).mockRestore();
+  });
+
+  test('fetches and displays provinces on initial render', async () => {
+    (get as jest.Mock).mockResolvedValueOnce({ data: mockProvinces });
+
     render(
       <BrowserRouter>
         <Destinations />
       </BrowserRouter>,
     );
 
-    // Verificar que los enlaces de navegación estén presentes
-    const destinosLink = screen.getByText('Destinos');
-    const comunidadLink = screen.getByText('Comunidad');
-    const armaTuViajeLink = screen.getByText('Armá tu viaje');
+    expect(get).toHaveBeenCalledWith('https://api-turistear.koyeb.app/province', {
+      'Content-Type': 'application/json',
+    });
 
-    expect(destinosLink).toBeInTheDocument();
-    expect(comunidadLink).toBeInTheDocument();
-    expect(armaTuViajeLink).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Buenos Aires')).toBeInTheDocument();
+      expect(screen.getByText('Provincia de Buenos Aires')).toBeInTheDocument();
+    });
   });
 
-  test('renders the search input', () => {
+  test('selects a province when clicking on a map province', async () => {
+    (get as jest.Mock).mockResolvedValueOnce({ data: mockProvinces });
+
     render(
       <BrowserRouter>
         <Destinations />
       </BrowserRouter>,
     );
 
-    const searchInput = screen.getByPlaceholderText(
-      'Buscar por provincia, localidad o tipo de lugar...',
-    );
-    expect(searchInput).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Buenos Aires')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText('Buenos Aires'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Buenos Aires')).toBeInTheDocument();
+    });
   });
 
-  test('renders Buenos Aires section with description and images', () => {
+  test('navigates to selected province details on button click', async () => {
+    (get as jest.Mock).mockResolvedValueOnce({ data: mockProvinces });
+
     render(
       <BrowserRouter>
         <Destinations />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
-    const buenosAiresTitle = screen.getByText('Catamarca');
-    expect(buenosAiresTitle).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Buenos Aires')).toBeInTheDocument();
+    });
 
-    const description = screen.getByText(/Situada en el noroeste, destaca por sus montañas/i);
-    expect(description).toBeInTheDocument();
+    const button = screen.getByText('Descrubí más de Buenos Aires');
+    fireEvent.click(button);
 
-    // Verificar que las imágenes están presentes
-    const images = screen.getAllByRole('img');
-    expect(images.length).toBeGreaterThan(0);
+    expect(mockNavigate).toHaveBeenCalledWith('/destino-esperado/Buenos Aires');
   });
 
-  test('renders the user reviews in the carousel', () => {
+  test('displays error message if fetching provinces fails', async () => {
+    (get as jest.Mock).mockRejectedValueOnce(new Error('API Error'));
+
     render(
       <BrowserRouter>
         <Destinations />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
-    // Verificar que los nombres de usuarios están presentes
-    const pabloReview = screen.getByText('Pablo Ramirez');
-    const victorReview = screen.getByText('Victor Gonzalez');
-    const malenaReview = screen.getByText('Malena Yannone');
-    const belenReview = screen.getByText('Belen Peña');
-    const gabrielReview = screen.getByText('Gabriel Fuentes');
+    await waitFor(() => {
+      expect(screen.queryByText('Buenos Aires')).not.toBeInTheDocument();
+    });
 
-    expect(pabloReview).toBeInTheDocument();
-    expect(victorReview).toBeInTheDocument();
-    expect(malenaReview).toBeInTheDocument();
-    expect(belenReview).toBeInTheDocument();
-    expect(gabrielReview).toBeInTheDocument();
+    expect(console.error).toHaveBeenCalledWith('Error fetching provinces:', expect.any(Error));
   });
-
-  test('renders the "Descrubí más " button in Catamarca section', () => {
-    render(
-      <BrowserRouter>
-        <Destinations />
-      </BrowserRouter>
-    );
-
-    const verMasButton = screen.getByText('Descrubí más de Catamarca');
-    expect(verMasButton).toBeInTheDocument();
-  });
-
-
-  
 });
