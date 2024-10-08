@@ -58,7 +58,7 @@ const questions = [
       { src: '/assets/playa.webp', alt: 'Naturaleza', data: 'national_park' },
       { src: '/assets/escalar.webp', alt: 'Montañas', data: 'hiking_area' },
       { src: '/assets/aire_libre.webp', alt: 'Comida', data: 'food' },
-      { src: '/assets/urbano.jpg', webp: 'Atracciones turísticas', data: 'tourist_attraction' },
+      { src: '/assets/urbano.webp', alt: 'Atracciones turísticas', data: 'tourist_attraction' },
     ],
     type: 'image',
     name: 'activities',
@@ -183,6 +183,7 @@ const FormQuestions = () => {
           'Content-Type': 'application/json',
         });
 
+        setSelectedProvince(response.data[0]);
         setProvinces(response.data);
       } catch (error) {
         console.error('Error fetching provinces:', error);
@@ -253,6 +254,7 @@ const FormQuestions = () => {
               ) : questions[currentQuestion].type === 'calendar' ? (
                 <div className="flex flex-col md:flex-row w-full">
                   <div className="flex flex-col items-center relative">
+                    <div>{selectedProvince?.name}</div>
                     <MapaArg onProvinceClick={handleProvinceClick} />
                   </div>
                   <div className="flex flex-col gap-y-4 justify-center items-center w-full">
