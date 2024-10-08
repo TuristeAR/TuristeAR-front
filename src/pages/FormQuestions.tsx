@@ -32,9 +32,9 @@ const questions = [
   {
     question: '¿Qué nivel de comodidad se ajusta a tu presupuesto?',
     options: [
-      { src: '/assets/pancho.jpg', alt: 'Económico', data: 1 },
-      { src: '/assets/canelones.jpg', alt: 'Moderado', data: 2 },
-      { src: '/assets/pollo.jpg', alt: 'Lujoso', data: 3 },
+      { src: '/assets/pancho.webp', alt: 'Económico', data: 1 },
+      { src: '/assets/canelones.webp', alt: 'Moderado', data: 2 },
+      { src: '/assets/pollo.webp', alt: 'Lujoso', data: 3 },
     ],
     type: 'image',
     name: 'economy',
@@ -43,10 +43,10 @@ const questions = [
   {
     question: '¿Qué tipo de clima preferís?',
     options: [
-      { src: '/assets/clima_calido.jpg', alt: 'Cálido', data: 4 },
-      { src: '/assets/clima_templado.jpg', alt: 'Templado', data: 3 },
-      { src: '/assets/clima_frio.jpg', alt: 'Frío', data: 2 },
-      { src: '/assets/clima_arido.jpg', alt: 'Árido', data: 1 },
+      { src: '/assets/clima_calido.webp', alt: 'Cálido', data: 4 },
+      { src: '/assets/clima_templado.webp', alt: 'Templado', data: 3 },
+      { src: '/assets/clima_frio.webp', alt: 'Frío', data: 2 },
+      { src: '/assets/clima_arido.webp', alt: 'Árido', data: 1 },
     ],
     type: 'image',
     name: 'weather',
@@ -55,10 +55,10 @@ const questions = [
   {
     question: '¿Qué tipo de actividades te gusta hacer?',
     options: [
-      { src: '/assets/playa.jpg', alt: 'Naturaleza', data: 'national_park' },
-      { src: '/assets/escalar.jpg', alt: 'Montañas', data: 'hiking_area' },
-      { src: '/assets/aire_libre.jpg', alt: 'Comida', data: 'food' },
-      { src: '/assets/urbano.jpg', alt: 'Atracciones turísticas', data: 'tourist_attraction' },
+      { src: '/assets/playa.webp', alt: 'Naturaleza', data: 'national_park' },
+      { src: '/assets/escalar.webp', alt: 'Montañas', data: 'hiking_area' },
+      { src: '/assets/aire_libre.webp', alt: 'Comida', data: 'food' },
+      { src: '/assets/urbano.jpg', webp: 'Atracciones turísticas', data: 'tourist_attraction' },
     ],
     type: 'image',
     name: 'activities',
@@ -67,10 +67,10 @@ const questions = [
   {
     question: '¿Con quién vas a emprender tu nueva aventura?',
     options: [
-      { src: '/assets/solo.jpg', alt: 'Sólo', data: 1 },
-      { src: '/assets/en_pareja.jpg', alt: 'En pareja', data: 2 },
-      { src: '/assets/amigos.jpg', alt: 'Amigos', data: 3 },
-      { src: '/assets/familia.jpg', alt: 'Familia', data: 4 },
+      { src: '/assets/solo.webp', alt: 'Sólo', data: 1 },
+      { src: '/assets/en_pareja.webp', alt: 'En pareja', data: 2 },
+      { src: '/assets/amigos.webp', alt: 'Amigos', data: 3 },
+      { src: '/assets/familia.webp', alt: 'Familia', data: 4 },
     ],
     type: 'image',
     name: 'company',
@@ -163,7 +163,7 @@ const FormQuestions = () => {
         },
         formData,
       );
-      navigate('/calendarioItinerario');
+      navigate('/itineraryCalendar');
     } catch (error) {
       console.error('Error al enviar los datos:', error);
     }

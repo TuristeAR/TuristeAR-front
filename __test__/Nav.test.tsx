@@ -1,8 +1,8 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { NavMobile } from '../src/components/NavMobile/NavMobile';
+import { Nav } from '../src/components/Nav/Nav';
 
 // Mocks para simular la respuesta de la API
 beforeEach(() => {
@@ -13,22 +13,22 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe('NavMobile Component', () => {
+describe('Nav Component', () => {
   test('renders login link when user is not authenticated', async () => {
     // Simula la respuesta de la API para un usuario no autenticado
     (fetch as jest.Mock).mockResolvedValueOnce({
-      ok: false,
+      ok: true,
+      json: async () => ({ user: null }), // No hay usuario
     });
 
-    await act(async () => {
-      render(
-        <Router>
-          <NavMobile />
-        </Router>,
-      );
-    });
+    render(
+      <Router>
+        <Nav />
+      </Router>
+    );
 
-    const loginLink = screen.getByRole('link', { name: /Login/i });
+    // Verifica que el enlace de inicio de sesión está en el documento
+    const loginLink = screen.getByText(/Iniciá sesión/i);
     expect(loginLink).toBeInTheDocument();
 
     // Verifica que los enlaces de navegación se muestren
@@ -53,13 +53,11 @@ describe('NavMobile Component', () => {
       }),
     });
 
-    await act(async () => {
-      render(
-        <Router>
-          <NavMobile />
-        </Router>,
-      );
-    });
+    render(
+      <Router>
+        <Nav />
+      </Router>
+    );
 
     // Espera a que el componente se actualice con la información del usuario
     await waitFor(() => {
@@ -77,21 +75,19 @@ describe('NavMobile Component', () => {
     expect(armatuViajeLink).toBeInTheDocument();
   });
 
-  test('handles fetch error correctly', async () => {
+  test('sets error state correctly on fetch error', async () => {
     // Simula un error en la solicitud de la API
     (fetch as jest.Mock).mockRejectedValueOnce(new Error('Fetch error'));
 
-    await act(async () => {
-      render(
-        <Router>
-          <NavMobile />
-        </Router>,
-      );
-    });
+    render(
+      <Router>
+        <Nav />
+      </Router>
+    );
 
     // Verifica que el enlace de inicio de sesión está en el documento
     await waitFor(() => {
-      const loginLink = screen.getByRole('link', { name: /Login/i });
+      const loginLink = screen.getByText(/Iniciá sesión/i);
       expect(loginLink).toBeInTheDocument();
     });
 
