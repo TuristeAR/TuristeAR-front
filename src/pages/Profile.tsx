@@ -85,8 +85,13 @@ const Profile = () => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   type User={
     id: number;
+    username: string,
     name: string,
     profilePicture: string,
+    description: string,
+    birthdate: string,
+    coverPicture: string,
+    location: string
   }
 
   const handleClick = (name: string) => {
@@ -99,7 +104,7 @@ const Profile = () => {
   };
 
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -109,7 +114,7 @@ const Profile = () => {
     })
       .then((response) => {
         if (!response.ok) {
-          window.location.href = '/';
+          window.location.href = '/login';
         }
         return response.json();
       })
@@ -125,9 +130,10 @@ const Profile = () => {
   }, []);
 
   if(!isAuthenticated){
-    return (<p>User is not authenticated</p>);
+    return (<><p>User is not authenticated</p></>);
   }
 
+  // @ts-ignore
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
@@ -136,28 +142,28 @@ const Profile = () => {
         <div className="lg:w-[80%] w-[100%] lg:p-10 lg:pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
           {/* Portada */}
           <div className="">
-            <div className="h-[200px] bg-black"></div>
+            <div className="h-[200px]">
+              <img src={user?.coverPicture} alt={'Foto de portada'} className={'w-[100%] h-[100%]'}/>
+            </div>
             <div className="flex text-l relative pl-2">
               <div className="lg:w-[78%] w-[90%] pt-4">
                 <div className="lg:flex items-center lg:flex-row flex-col gap-x-4">
                   <h1 className="lg:text-3xl text-xl tracking-[.1em] text-[#215a9d]">
                     {user?.name}
                   </h1>
-                  <h3 className="text-xl text-[#a2c8de]">@Manu10</h3>
+                  <h3 className="text-xl text-[#a2c8de]">{'@'+user?.username}</h3>
                 </div>
                 <p className="mt-4">
-                  Explorador apasionado de nuevas culturas y destinos. Compartiendo experiencias
-                  únicas de viajes, consejos útiles y las mejores rutas para descubrir Argentina,
-                  ¡Acompáñame en esta aventura!
+                  {user?.description}
                 </p>
                 <div className="flex gap-4 lg:text-[14px] text-[10px] mt-2 text-[#999999]">
                   <div className="flex items-center gap-x-2">
                     <img src="/assets/location.svg" alt="Ubicación" className="w-6 h-6" />
-                    <p>Argentina, Buenos Aires</p>
+                    <p>{user?.location}</p>
                   </div>
                   <div className="flex items-center gap-x-2">
                     <img src="/assets/calendar.svg" alt="Calendario" className="w-6 h-6" />
-                    <p>22 de enero del 2000</p>
+                    <p>{user?.birthdate.slice(0,-14)}</p>
                   </div>
                 </div>
               </div>
@@ -196,7 +202,7 @@ const Profile = () => {
           <div
             className={`rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto ${activeItem === 'travels' ? 'hidden' : ''}`}
           >
-            <CreatePost options={options} />
+            <CreatePost options={options} profilePicture={user?.profilePicture} />
           </div>
           {/* Content */}
           <div
