@@ -8,7 +8,7 @@ export const NavTriggerBtn = ({
   return (
     <button
       onClick={() => setNavActive(!navActive)}
-      className="w-8 h-6 md:hidden text-white relative top-3 flex items-center justify-center z-[60] outline-none "
+      className="w-8 h-6 md:hidden text-white absolute top-9 right-6 flex items-center justify-center z-[60] outline-none "
     >
       {/* 1 */}
       <span

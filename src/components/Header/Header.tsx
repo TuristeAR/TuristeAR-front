@@ -9,7 +9,7 @@ export const Header = ( { containerStyles, isHome }: { containerStyles?: any , i
   return (
     <>
       <header className={`w-full text-gray-600 body-font ${containerStyles}  ${backgroundClass}`}>
-        <div className="container mx-auto flex flex-wrap p-2 md:flex-row items-center justify-between">
+        <div className="container mx-auto relative flex flex-wrap p-2 md:flex-row items-center justify-between">
           {navActive ? <NavMobile /> : <Nav />}
           <NavTriggerBtn navActive={navActive} setNavActive={setNavActive} />
         </div>

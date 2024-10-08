@@ -27,9 +27,9 @@ const questions = [
   {
     question: '¿Qué nivel de comodidad se ajusta a tu presupuesto?',
     options: [
-      { src: '/assets/pancho.jpg', alt: 'Económico' },
-      { src: '/assets/canelones.jpg', alt: 'Moderado' },
-      { src: '/assets/pollo.jpg', alt: 'Lujoso' },
+      { src: '/assets/pancho.webp', alt: 'Económico' },
+      { src: '/assets/canelones.webp', alt: 'Moderado' },
+      { src: '/assets/pollo.webp', alt: 'Lujoso' },
     ],
     type: 'image',
     name: 'economy',
@@ -38,10 +38,10 @@ const questions = [
   {
     question: '¿Qué tipo de clima preferís?',
     options: [
-      { src: '/assets/clima_calido.jpg', alt: 'Clima calido' },
-      { src: '/assets/clima_templado.jpg', alt: 'Clima templado' },
-      { src: '/assets/clima_frio.jpg', alt: 'Clima frio' },
-      { src: '/assets/clima_arido.jpg', alt: 'Clima arido' },
+      { src: '/assets/clima_calido.webp', alt: 'Clima calido' },
+      { src: '/assets/clima_templado.webp', alt: 'Clima templado' },
+      { src: '/assets/clima_frio.webp', alt: 'Clima frio' },
+      { src: '/assets/clima_arido.webp', alt: 'Clima arido' },
     ],
     type: 'image',
     name: 'weather',
@@ -50,10 +50,10 @@ const questions = [
   {
     question: '¿Qué tipo de actividades te gusta hacer?',
     options: [
-      { src: '/assets/playa.jpg', alt: 'Relajar' },
-      { src: '/assets/escalar.jpg', alt: 'Deportes de aventura' },
-      { src: '/assets/aire_libre.jpg', alt: 'Naturaleza' },
-      { src: '/assets/urbano.jpg', alt: 'Urbano' },
+      { src: '/assets/playa.webp', alt: 'Relajar' },
+      { src: '/assets/escalar.webp', alt: 'Deportes de aventura' },
+      { src: '/assets/aire_libre.webp', alt: 'Naturaleza' },
+      { src: '/assets/urbano.webp', alt: 'Urbano' },
     ],
     type: 'image',
     name: 'activities',
@@ -62,10 +62,10 @@ const questions = [
   {
     question: '¿Con quién vas a emprender tu nueva aventura?',
     options: [
-      { src: '/assets/solo.jpg', alt: 'Solo' },
-      { src: '/assets/en_pareja.jpg', alt: 'En pareja' },
-      { src: '/assets/amigos.jpg', alt: 'Amigos' },
-      { src: '/assets/familia.jpg', alt: 'Familia' },
+      { src: '/assets/solo.webp', alt: 'Solo' },
+      { src: '/assets/en_pareja.webp', alt: 'En pareja' },
+      { src: '/assets/amigos.webp', alt: 'Amigos' },
+      { src: '/assets/familia.webp', alt: 'Familia' },
     ],
     type: 'image',
     name: 'company',
@@ -157,7 +157,7 @@ const FormQuestions = () => {
   const handleNextQuestion = () => {
     if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
-  }
+    }
     if (currentQuestion === 0 && !validate()) {
       return; // No avanzar si la validación falla
     }
@@ -173,13 +173,8 @@ const FormQuestions = () => {
 
   const submitFormData = async () => {
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/formQuestion', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch('https://api-turistear.koyeb.app/formQuestions/id');
+
       console.log('Código de estado:', response.status);
 
       if (!response.ok) {
@@ -187,9 +182,8 @@ const FormQuestions = () => {
       }
 
       const responseData = await response.json();
-      console.log('Datos enviados con éxito:', responseData);
-      console.log('Redirigiendo a /calendarioItinerario');
-      navigate('/calendarioItinerario');
+      console.log(responseData);
+      navigate('/itineraryCalendar');
     } catch (error) {
       console.error('Error al enviar los datos:', error);
     }
@@ -202,7 +196,7 @@ const FormQuestions = () => {
       <section className="min-h-screen flex items-center justify-center bg-gray-100 text-black py-8">
         <div className="container mx-auto flex flex-col md:flex-row justify-center z-30 relative">
           <form className="flex flex-col w-full max-w-full items-center justify-center bg-white p-4 gap-y-6 md:gap-y-4 min-h-[500px]">
-          <ProgressBar currentStep={currentStep} />
+            <ProgressBar currentStep={currentStep} />
 
             <div>
               {questions[currentQuestion].type === 'image' ? (
