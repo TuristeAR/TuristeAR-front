@@ -19,12 +19,11 @@ export const Nav = () => {
         const response = await fetch('https://api-turistear.koyeb.app/session', {
           credentials: 'include',
         });
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-        } else {
-          console.log('Usuario no autenticado');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
+        const data = await response.json();
+        setUser(data.user);
       } catch (error) {
         console.error('Error al obtener el usuario:', error);
       } finally {
