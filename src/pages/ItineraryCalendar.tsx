@@ -6,20 +6,46 @@ import alignIcon from '/assets/align.svg';
 import deleteIcon from '/assets/delete.svg';
 
 /* Hooks */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
 
 /* Components */
 import {Calendar} from '../components/Calendar/Calendar';
 import { Header } from '../components/Header/Header';
 
-export const ItineraryCalendar = () => {
-  const [events, setEvents] = useState([
-    { id: '1', title: 'Pasear por el Jardin Japones', date: '2024-10-04' },
-    { id: '2', title: 'Tomar mates en el Rosedal', date: '2024-10-05' },
-  ]);
+import { useLocation } from 'react-router-dom';
 
-  const deleteEvent = (id: string) => {
-    setEvents(events.filter((event) => event.id !== id));
+interface Event {
+  id: number;
+  title: string;
+  date: string;
+}
+
+export const ItineraryCalendar = () => {
+
+  const location = useLocation();
+  const itinerary = location.state?.itinerary; // Obtener el itinerario del estado
+
+   // Estado para los eventos
+   const [events, setEvents] = useState<Event[]>([]); // Estado con tipo Event[]
+   // Efecto para actualizar el estado de eventos con las actividades del itinerario
+   useEffect(() => {
+     if (itinerary && Array.isArray(itinerary.activities)) { // Verificar que itinerary.activities sea un array
+       const newEvents = itinerary.activities.map((activity: { id: any; name: any; fromDate: any; }) => ({
+         id: activity.id, // ID de la actividad
+         title: activity.name, // Nombre de la actividad
+         date: activity.fromDate, // Fecha de inicio de la actividad
+       }));
+ 
+       setEvents(newEvents); // Actualizar el estado con las nuevas actividades
+     }
+   }, [itinerary]);
+
+
+   const deleteEvent = (id: number) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar este evento?')) {
+      setEvents((prevEvents) => prevEvents.filter(event => event.id !== id));
+    }
   };
 
   return (
@@ -79,13 +105,14 @@ export const ItineraryCalendar = () => {
                   <h2 className="font-semibold tracking-[-0.5px] leading-none">
                     Eliminar actividades
                   </h2>
+                  
                   <div className="w-full flex flex-col gap-2 mb-2">
-                    {events.map((activity, index) => (
+                    {events.map((event, index) => (
                       <div key={index} className="flex items-center w-full gap-2">
-                        <button onClick={() => deleteEvent(activity.id)}>
+                        <button onClick={() => deleteEvent(event.id)}>
                           <img src={deleteIcon} alt="" />
                         </button>
-                        <p>{activity.title}</p>
+                        <p>{event.title}</p>
                       </div>
                     ))}
                   </div>

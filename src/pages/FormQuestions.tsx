@@ -156,14 +156,21 @@ const FormQuestions = () => {
     try {
       formData.fromDate = state[0].startDate.toISOString();
       formData.toDate = state[0].endDate.toISOString();
-      await post(
-        'https://api-turistear.koyeb.app/formQuestion',
-        {
-          'Content-Type': 'application/json',
-        },
-        formData,
-      );
-      navigate('/itineraryCalendar');
+      // Hacer la solicitud POST y obtener la respuesta
+    const response = await post(
+      'https://api-turistear.koyeb.app/formQuestion',
+      {
+        'Content-Type': 'application/json',
+      },
+      formData,
+    );
+    // Verificar si la respuesta fue exitosa
+    if (response.statusCode === 201) {
+      // Guardar el itinerario en el estado de la aplicación
+      const itinerary = response.data; // Aquí obtienes el itinerario creado
+      // Navegar a la nueva vista, pasando el itinerario como estado
+      navigate('/itineraryCalendar', { state: { itinerary } });
+    }
     } catch (error) {
       console.error('Error al enviar los datos:', error);
     }
