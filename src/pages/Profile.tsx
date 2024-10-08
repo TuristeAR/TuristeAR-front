@@ -76,15 +76,17 @@ const components={
                    fecha={itinerarie.fecha} descripcion={itinerarie.descripcion} img={itinerarie.img} />
   ))
 }
-
 const options = ['Imagen', 'Itinerario', 'Categoría', 'Ubicación'];
-
 
 const Profile = () => {
   // @ts-ignore
   const [content, setContent] = useState<React.JSX.Element | null>(components.posts);
   const [activeItem, setActiveItem] = useState('posts');
   const contentRef = useRef<HTMLDivElement | null>(null);
+  type User={
+    name: string,
+    profilePicture: string,
+  }
 
   const handleClick = (name: string) => {
     setActiveItem(name)
@@ -95,17 +97,15 @@ const Profile = () => {
     }
   };
 
-  const [user, setUser] = useState(null);
+
+  const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch('https://api-turistear.koyeb.app/session', {
       method: 'GET',
-      headers: {
-        'Authorization': `Bearer`, // Si estás usando un token
-      },
-      credentials: 'include', // Si estás usando cookies
+      credentials: 'include',
     })
       .then((response) => {
         if (!response.ok) {
@@ -144,10 +144,7 @@ const Profile = () => {
               <div className="lg:w-[78%] w-[90%] pt-4">
                 <div className="lg:flex items-center lg:flex-row flex-col gap-x-4">
                   <h1 className="lg:text-3xl text-xl tracking-[.1em] text-[#215a9d]">
-                    {
-                      // @ts-ignore
-                      user.name
-                    }
+                    {user?.name}
                   </h1>
                   <h3 className="text-xl text-[#a2c8de]">@Manu10</h3>
                 </div>
@@ -169,8 +166,7 @@ const Profile = () => {
               </div>
               <div className="flex flex-col gap-6 items-center absolute right-0 -top-20 ">
                 <div className={`lg:w-[150px] w-[100px] lg:h-[150px] h-[100px] bg-gray border-white border-4`}>
-                  <img src={// @ts-ignore
-                          user.profilePicture} alt="Foto de perfil" className="w-[100%]" />
+                  <img src={user?.profilePicture} alt="Foto de perfil" className="w-[100%]" />
                 </div>
                 <button className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl">
                   Editar perfil
