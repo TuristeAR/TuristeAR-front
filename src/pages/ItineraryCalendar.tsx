@@ -34,7 +34,7 @@ export const ItineraryCalendar = () => {
         <aside className="col-span-1 p-4 flex">
           <div className="flex flex-col h-full w-full">
             <div className="flex flex-col justify-center border-b border-gray">
-              <h2 className="font-semibold tracking-[-0.5px] leading-none">{itinerary.name}</h2>
+              <h2 className="font-semibold tracking-[-0.5px] leading-none">{itinerary?.name}</h2>
               <div className="flex flex-col p-2 gap-y-2">
                 <div className="flex items-center gap-x-2 cursor-pointer">
                   <img src={plusIcon} alt="" />
