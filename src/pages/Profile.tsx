@@ -84,6 +84,7 @@ const Profile = () => {
   const [activeItem, setActiveItem] = useState('posts');
   const contentRef = useRef<HTMLDivElement | null>(null);
   type User={
+    id: number;
     name: string,
     profilePicture: string,
   }
@@ -97,7 +98,6 @@ const Profile = () => {
     }
   };
 
-
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState(null);
@@ -109,7 +109,7 @@ const Profile = () => {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('User is not authenticated');
+          window.location.href = '/';
         }
         return response.json();
       })
@@ -122,14 +122,6 @@ const Profile = () => {
         setIsAuthenticated(false);
       });
   }, []);
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  if (!isAuthenticated) {
-    return <div>User is not authenticated</div>;
-  }
 
   return (
     <>
@@ -165,25 +157,29 @@ const Profile = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-6 items-center absolute right-0 -top-20 ">
-                <div className={`lg:w-[150px] w-[100px] lg:h-[150px] h-[100px] bg-gray border-white border-4`}>
+                <div
+                  className={`lg:w-[150px] w-[100px] lg:h-[150px] h-[100px] bg-gray border-white border-4`}
+                >
                   <img src={user?.profilePicture} alt="Foto de perfil" className="w-[100%]" />
                 </div>
-                <button className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl">
-                  Editar perfil
-                </button>
+                <div>
+                  <a href={`/editProfile/${user?.id}`} className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl">
+                    Editar perfil
+                  </a>
+                </div>
               </div>
             </div>
           </div>
           {/* Publicaciones */}
           <div className="border-b border-black grid grid-cols-2 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
             <h2
-              className={`text-center pb-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`}
+              className={`hover:cursor-pointer text-center pb-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`}
               onClick={() => handleClick('posts')}
             >
               Mis publicaciones
             </h2>
             <h2
-              className={`text-center pb-2 rounded-t-xl ${activeItem === 'travels' ? 'bg-[#c0daeb]' : ''}`}
+              className={`hover:cursor-pointer text-center pb-2 rounded-t-xl ${activeItem === 'travels' ? 'bg-[#c0daeb]' : ''}`}
               onClick={() => handleClick('travels')}
             >
               Mis viajes
