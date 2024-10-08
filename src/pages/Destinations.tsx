@@ -234,6 +234,7 @@ const Destinations = () => {
                     <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
                       {item.reviews[0].text}
                     </p>
+                    <p className='italic text-sm'>{item.name}, {selectedProvince?.name}</p>
                     <div className="flex justify-center gap-2">
                       {item.reviews[0].photos.map((image, index) => (
                         <div
