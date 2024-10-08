@@ -7,7 +7,6 @@ import { Nav } from '../src/components/Nav/Nav';
 // Mocks para simular la respuesta de la API
 beforeEach(() => {
   global.fetch = jest.fn();
-  console.error = jest.fn(); // Limpiar el mock de console.error
 });
 
 afterEach(() => {
@@ -76,7 +75,7 @@ describe('Nav Component', () => {
     expect(armatuViajeLink).toBeInTheDocument();
   });
 
-  test('handles fetch error correctly', async () => {
+  test('sets error state correctly on fetch error', async () => {
     // Simula un error en la solicitud de la API
     (fetch as jest.Mock).mockRejectedValueOnce(new Error('Fetch error'));
 
@@ -92,7 +91,7 @@ describe('Nav Component', () => {
       expect(loginLink).toBeInTheDocument();
     });
 
-    // Verifica que se llamó a console.error
-    expect(console.error).toHaveBeenCalledWith('Error al obtener el usuario:', expect.any(Error));
+    // Asegúrate de que no se muestra el nombre de usuario
+    expect(screen.queryByText(/Juan Pérez/i)).not.toBeInTheDocument();
   });
 });

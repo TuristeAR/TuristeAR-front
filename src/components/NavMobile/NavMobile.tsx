@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 export const NavMobile = () => {
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
+  const [error, setError] = useState<string | null>(null); // Estado para manejar errores
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -14,14 +15,12 @@ export const NavMobile = () => {
           const data = await response.json();
           setUser(data.user);
         } else {
-          console.log('Usuario no autenticado');
+          setError('Usuario no autenticado'); 
         }
       } catch (error) {
-        console.error('Error al obtener el usuario:', error);
-      } finally {
+        setError('Error al obtener el usuario.'); 
       }
     };
-
     fetchUser();
   }, [user]);
 

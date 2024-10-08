@@ -7,7 +7,8 @@ export const Nav = () => {
   const location = useLocation();
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
+  const [error, setError] = useState<string | null>(null);
+
   const handleLogout = () => {
     setUser(null);
     window.location.href = '/';
@@ -25,13 +26,13 @@ export const Nav = () => {
         const data = await response.json();
         setUser(data.user);
       } catch (error) {
-        console.error('Error al obtener el usuario:', error);
-      } finally {
+        setError('Error al obtener el usuario.'); // Manejo del error sin console.error
       }
     };
 
     fetchUser();
   }, [user]);
+
   return (
     <>
       <Link to={'/'} className="flex title-font font-medium items-center md:mb-0">
