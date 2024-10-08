@@ -139,7 +139,7 @@ const ExpectedDestination = () => {
   useEffect(() => {
     const fetchProvince = async () => {
       try {
-        const response = await fetch(`https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}`);
+        const response = await fetch(`https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}/2`);
         const data = await response.json();
         if (data) {
           setProvincia(data);
