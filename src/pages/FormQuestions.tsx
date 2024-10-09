@@ -346,7 +346,7 @@ const FormQuestions = () => {
                   <h3 className="text-primary-4 font-bold text-xl text-center">
                     {questions[currentQuestion].question}
                   </h3>
-                  <div className="flex flex-col md:flex-row gap-x-5 justify-center">
+                  <div className="flex flex-wrap justify-center gap-5">
                     {questions[currentQuestion].options?.map((option: any, index: number) => (
                       <div key={index}>
                         <div
