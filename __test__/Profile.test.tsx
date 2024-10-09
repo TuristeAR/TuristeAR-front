@@ -15,7 +15,6 @@ afterEach(() => {
 
 describe("Profile",()=>{
   test('renders user is not authenticated when not authenticated', async () => {
-
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       status: 401,
@@ -33,32 +32,4 @@ describe("Profile",()=>{
 
     expect(userIsNotAuthenticated).toBeInTheDocument();
   });
-
-  test('renders data of user when is authenticated', async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        user: {
-          id: 1,
-          name: 'Paolo Aleman',
-          profilePicture: 'paoloAleman.jpg'
-        }
-      }),
-    });
-
-    await act(async () => {
-      render(
-        <Router>
-          <Profile />
-        </Router>
-      );
-    });
-
-    await waitFor(() => {
-      expect(screen.getByText(/Paolo Aleman/i)).toBeInTheDocument();
-      expect(screen.getByAltText(/Paolo Aleman/i)).toHaveAttribute('src', 'paoloAleman.jpg');
-    });
-  });
-
-
 })

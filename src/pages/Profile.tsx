@@ -70,13 +70,14 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Primer fetch - Obtener la sesión y el usuario
+
         const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
           method: 'GET',
           credentials: 'include',
         });
 
         if (!sessionResponse.ok) {
+          setIsAuthenticated(false);
           window.location.href = '/login';
           return;
         }
@@ -86,7 +87,6 @@ const Profile = () => {
         setIsAuthenticated(true);
         setError('');
 
-        // Segundo fetch - Obtener las publicaciones solo si se obtuvo el usuario
         const publicationsResponse = await fetch(
           `https://api-turistear.koyeb.app/publications/${sessionData.user.id}`,
           {
