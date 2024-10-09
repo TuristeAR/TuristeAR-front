@@ -1,17 +1,36 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import { useState, useEffect } from 'react';
 
 export const ItineraryDetail = () => {
-  const location = useLocation();
-  const itinerary = location.state?.itinerary;
+  const { itineraryId } = useParams();
+
+  const [itinerary, setItinerary] = useState(null);
+  const [activities, setActivities] = useState<{ id: number; name: string }[]>([]);
+  
+/*   useEffect(() => {
+    const fetchItinerary = async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/itinerary/${itineraryId}`);
+        const data = await response.json();
+        setItinerary(data.data.itinerary || null);
+        setActivities(data.data.activities?.activities || []);
+      } catch (error) {
+        console.error('Error fetching itinerary:', error);
+      }
+    };
+    if (itineraryId) {
+      fetchItinerary();
+    }
+  }, [itineraryId]);
 
   useEffect(() => {
-    if (itinerary) {
-      console.log('Itinerary:', itinerary);
-    }
-  }, [itinerary]);
+    console.log('Itinerario:', itinerary);
+    console.log('Activities:', activities);
+  }, [itinerary, activities]);
+ */
+
   const [showedInfo, setShowedInfo] = useState<boolean[]>([]);
 
   const toggleInfo = (index: number) => {

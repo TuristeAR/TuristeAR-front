@@ -164,12 +164,9 @@ const FormQuestions = () => {
       },
       formData,
     );
-    // Verificar si la respuesta fue exitosa
     if (response.statusCode === 201) {
-      // Guardar el itinerario en el estado de la aplicación
-      const itinerary = response.data; // Aquí obtienes el itinerario creado
-      // Navegar a la nueva vista, pasando el itinerario como estado
-      navigate('/itineraryCalendar', { state: { itinerary } });
+      const itineraryId = response.data.id;
+      navigate(`/itineraryCalendar/${itineraryId}`);
     }
     } catch (error) {
       console.error('Error al enviar los datos:', error);
