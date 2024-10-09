@@ -80,7 +80,7 @@ const Destinations = () => {
     const fetchReviews = async () => {
       if (selectedProvince) {
         try {
-          const response = await get(`https://api-turistear.koyeb.app/provinces/${selectedProvince.id}/4`, {
+          const response = await get(`https://api-turistear.koyeb.app/provinces/${selectedProvince.name}/4`, {
             'Content-Type': 'application/json',
           });
           setReviews(response);
