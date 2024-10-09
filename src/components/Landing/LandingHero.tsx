@@ -1,6 +1,10 @@
 import pathMap from '/assets/path-map.svg';
 
 export const LandingHero = () => {
+  const goToArmaTuViaje = () => {
+    window.location.href = '/formQuestions';
+  };
+
   return (
     <section className="w-full h-screen overflow-hidden text-gray-600 body-font">
       <video
@@ -21,7 +25,10 @@ export const LandingHero = () => {
             comunidad.
           </p>
           <div>
-            <button className="w-60 my-auto flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded-lg text-lg bg-primary">
+            <button
+              onClick={goToArmaTuViaje}
+              className="w-60 my-auto flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded-lg text-lg bg-primary"
+            >
               <span className="my-auto mr-4">Planificá tu viaje</span>
               <img src={pathMap} alt="Path Map" />
             </button>
