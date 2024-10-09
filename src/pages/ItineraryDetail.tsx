@@ -1,12 +1,26 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { useState } from 'react';
-import { ItineraryCalendar } from './ItineraryCalendar';
+import { useState, useEffect } from 'react';
 
 export const ItineraryDetail = () => {
-  const [showedInfo, setShowedInfo] = useState(false);
+  const location = useLocation();
+  const itinerary = location.state?.itinerary;
 
+  useEffect(() => {
+    if (itinerary) {
+      console.log('Itinerary:', itinerary);
+    }
+  }, [itinerary]);
+  const [showedInfo, setShowedInfo] = useState<boolean[]>([]);
+
+  const toggleInfo = (index: number) => {
+    setShowedInfo((prevState) => {
+      const newState = [...prevState];
+      newState[index] = !newState[index]; // Cambiar visibilidad solo del día clicado
+      return newState;
+    });
+  };
   const imgs = [
     {
       img: [
@@ -17,13 +31,20 @@ export const ItineraryDetail = () => {
     },
   ];
 
-  const itinerario = [
-    {
-      date: '10:00 - 12:00',
-      title: 'Museo Nacional de Bellas artes',
-      info: 'Aqui podras ver una gran cantidad de obras de arte de distintas epocas. Muy recomendado para los amantes del arte.',
-    },
-  ];
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const options = { hour: '2-digit', minute: '2-digit', hour12: false } as const;
+    return date.toLocaleTimeString([], options);
+  };
+
+  const activitiesByDay = itinerary.activities.reduce((acc: any, activity: any) => {
+    const date = new Date(activity.fromDate).toISOString().split('T')[0]; // Obtener solo la fecha
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push(activity);
+    return acc;
+  }, {});
 
   return (
     <>
@@ -43,7 +64,7 @@ export const ItineraryDetail = () => {
               <div className="md:max-w-[650px] flex-1">
                 <div className="border-b pb-2 border-gray-50 ">
                   <h2 className="text-xl font-bold text-primary-3">
-                    Viaje a Buenos Aires - 4 Días
+                    Viaje a Buenos Aires - 4 Días:{itinerary.name}
                   </h2>
                 </div>
                 <div>
@@ -77,56 +98,74 @@ export const ItineraryDetail = () => {
             <div className="mb-10">
               {/*Itinerario */}
               <h2 className="font-semibold text-md my-2">Itinerario de viaje</h2>
-              <button className="btn-drop-down-blue-itinerary ">
-                <h3
-                  onClick={() => setShowedInfo(!showedInfo)}
-                  className="text-sm sm:text-md font-semibold flex items-center rounded-md"
-                >
-                  Día 1 - Recoleta
-                  <div className="icons">
-                    <svg
-                      className={`${!showedInfo ? 'block' : 'hidden'}`}
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="30px"
-                      viewBox="0 -960 960 960"
-                      width="50px"
-                      fill="#FFFFFF"
+              {/* Días */}
+              {itinerary.activities.map((item: any, index: number) => {
+                const dateKey = new Date(item.fromDate).toISOString().split('T')[0]; // Obtener la fecha para este día
+
+                return (
+                  <div key={index}>
+                    <button
+                      className="btn-drop-down-blue-itinerary"
+                      onClick={() => toggleInfo(index)} // Asumir que toggleInfo actualiza el estado correspondiente a este índice
                     >
-                      <path d="M480-360 280-560h400L480-360Z" />
-                    </svg>
-                    <svg
-                      className={`${showedInfo ? 'block' : 'hidden'}`}
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="30px"
-                      viewBox="0 -960 960 960"
-                      width="50px"
-                      fill="#FFFFFF"
-                    >
-                      <path d="m280-400 200-200 200 200H280Z" />
-                    </svg>
-                  </div>
-                </h3>
-              </button>
-              {/* Info */}
-              <div className={`${showedInfo ? 'block' : 'hidden'}`}>
-                <div className="relative px-1 sm:px-0 flex flex-col sm:flex-row gap-2 mt-5 flex-wrap">
-                  {itinerario.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 sm:px-8"
-                    >
-                      <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
-                        <span className="text-sm">{item.date}</span>
-                      </div>
-                      <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
-                        <p className="font-semibold text-sm sm:text-base">
-                          {item.title}: <span className="font-normal">{item.info}</span>
-                        </p>
+                      <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md">
+                        Dia: {index + 1}
+                        <div className="icons">
+                          <svg
+                            className={`${!showedInfo[index] ? 'block' : 'hidden'}`}
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="30px"
+                            viewBox="0 -960 960 960"
+                            width="50px"
+                            fill="#FFFFFF"
+                          >
+                            <path d="M480-360 280-560h400L480-360Z" />
+                          </svg>
+                          <svg
+                            className={`${showedInfo[index] ? 'block' : 'hidden'}`}
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="30px"
+                            viewBox="0 -960 960 960"
+                            width="50px"
+                            fill="#FFFFFF"
+                          >
+                            <path d="m280-400 200-200 200 200H280Z" />
+                          </svg>
+                        </div>
+                      </h3>
+                    </button>
+
+                    {/* Info */}
+                    <div className={`${showedInfo[index] ? 'block' : 'hidden'}`}>
+                      <div className="relative px-1 sm:px-0 flex flex-col gap-2 my-2 flex-wrap">
+                        {/* Título del día */}
+                        <h3 className="font-semibold text-sm px-10">
+                          {new Date(dateKey).toLocaleDateString()}
+                        </h3>
+
+                        {/* Mostrar actividades del día */}
+                        {activitiesByDay[dateKey]?.map((activity: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className="flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 sm:px-8"
+                          >
+                            <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
+                              <span className="text-sm">
+                                {formatTime(activity.fromDate)} - {formatTime(activity.toDate)}
+                              </span>
+                            </div>
+                            <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
+                              <p className="font-semibold text-sm sm:text-base">
+                                {activity.name?.split(' - ')[0]}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

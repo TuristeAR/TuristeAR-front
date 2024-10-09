@@ -2,9 +2,9 @@ import { ArticleCard } from '../components/Destinations/ArticleCard';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import { PostCard } from '../components/Destinations/PostCard';
-import provinciasData from '../data/provinces-data.json';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { get } from '../utilities/http.util';
 
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 
@@ -91,65 +91,72 @@ const puntosDeInteres = [
   },
 ];
 
-const usuariosReview = [
-  {
-    imgPerson: '/assets/person.svg',
-    usuario: 'Pablo Ramirez',
-    fecha: '26 Sep 2024',
-    descripcion:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-  },
-  {
-    imgPerson: '/assets/person.svg',
-    usuario: 'Victor Gonzalez',
-    fecha: '26 Sep 2024',
-    descripcion:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    img: [{ id: 1, src: '/assets/san-nicolas-buenos-aires.webp' }],
-  },
-];
+
+type Image = {
+  id: number;
+  src: string;
+};
+interface Culture {
+  festivals: string;
+  traditionalFood: string;
+  music: string;
+  customs: string;
+}
+type Province = {
+  id: number;
+  name: string;
+  description: string;
+  images: string;
+  places: Place[];
+}
+
+type Review = {
+  id: number;
+  publishedTime: string;
+  rating: number;
+  text: string;
+  authorName: string;
+  authorPhoto: string;
+  photos: string[];
+}
+
+type Place = {
+  id: number;
+  name: string;
+  rating: number;
+  reviews: Review[];
+}
 
 const ExpectedDestination = () => {
   const [showedLugares, setShowedLugares] = useState(false);
   const [showedCulturaTradicion, setShowedCulturaTradicion] = useState(false);
   const [showedGastronomia, setShowedGastronomia] = useState(false);
 
-  type Image = {
-    id: number;
-    src: string;
-  };
-  interface Culture {
-    festivals: string;
-    traditionalFood: string;
-    music: string;
-    customs: string;
-  }
-  type Province = {
-    id: string;
-    name: string;
-    description: string;
-    img: Image[];
-    culture: Culture;
-  };
-
+ 
   const { nombreDeLaProvincia } = useParams();
-  const [provincia, setProvincia] = useState<Province | undefined>(undefined); // Inicializa como undefined
-
-  const provincias: Province[] = provinciasData;
+  const [provincia, setProvincia] = useState<Province>(); 
 
   useEffect(() => {
-    const foundProvincia = provincias.find(
-      (prov) => prov.name.toLowerCase() === nombreDeLaProvincia!.toLowerCase(),
-    );
-    setProvincia(foundProvincia); // No es necesario verificar si es undefined aquí
-  }, [nombreDeLaProvincia, provincias]);
+    const fetchProvince = async () => {
+      try {
+        const response = await get(`https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}/2`, {
+          'Content-Type': 'application/json',
+        });
 
-  if (!provincia) return <div>Provincia no encontrada</div>;
+       
+        console.log(response)
+
+          setProvincia(response);
+        
+      } catch (error) {
+        console.error('Error fetching province:', error);
+      } 
+    };
+
+    fetchProvince();
+  }, [nombreDeLaProvincia]);
+
+  if (!provincia) return <div></div>;
 
   return (
     <>
@@ -157,10 +164,11 @@ const ExpectedDestination = () => {
 
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
-          <ImageGallery images={provincia.img} height={70}></ImageGallery>
+          <ImageGallery images={[{src:provincia.images[0]}]}  height={70}></ImageGallery> 
 
           <div className="px-2 sm:px-0 flex flex-col gap-y-4">
-            <h1 className="text-center">{provincia.name}</h1>
+            <h1 className="text-center">{provincia.name}
+            </h1>
             <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-center">
               {provincia.description}
             </p>
@@ -231,14 +239,16 @@ const ExpectedDestination = () => {
           </h3>
           <hr />
           <div className="flex gap-2 mt-5 justify-around flex-wrap">
-            {usuariosReview.map((userPost, index) => (
+            {provincia.places.map((userPost, index) => (
               <PostCard
                 key={index}
-                imgPerson={userPost.imgPerson}
-                usuario={userPost.usuario}
-                fecha={userPost.fecha}
-                descripcion={userPost.descripcion}
-                img={userPost.img}
+                imgPerson={userPost.reviews[0].authorPhoto}
+                usuario={userPost.reviews[0].authorName}
+                fecha={userPost.reviews[0].publishedTime}
+                descripcion={userPost.reviews[0].text}
+                place={userPost.name}
+                province={provincia.name}
+                img={userPost.reviews[0].photos.map((photo, i) => ({ id: i + 1, src: photo }))}
               />
             ))}
           </div>
@@ -381,7 +391,7 @@ const ExpectedDestination = () => {
                   <h1 className="mb-3 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-3xl">
                     Festival
                   </h1>
-                  <p className="mb-6 text-gray-500">{provincia.culture.festivals}</p>
+                 {/*  <p className="mb-6 text-gray-500">{provincia.culture.festivals}</p> */}
                 </div>
               </div>
             </div>
@@ -400,7 +410,7 @@ const ExpectedDestination = () => {
                   <h1 className="mb-3 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-3xl">
                     Comida tradicional
                   </h1>
-                  <p className="mb-6 text-gray-500">{provincia.culture.traditionalFood}</p>
+                 {/*  <p className="mb-6 text-gray-500">{provincia.culture.traditionalFood}</p> */}
                 </div>
               </div>
             </div>
