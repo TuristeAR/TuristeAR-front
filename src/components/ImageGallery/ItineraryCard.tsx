@@ -24,9 +24,9 @@ export function ItineraryCard(props: {
         <p className="font-light p-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
           {description}
         </p>
-        {images.map((image, index) => (
-          <ImageGallery images={[{ src: image }]}></ImageGallery>
-        ))}
+        
+          <ImageGallery images={images}></ImageGallery>
+    
         <div>
           <div className="text-gray-500 dark:text-gray-400 flex mt-3 justify-around">
             <div className="flex items-center mr-6">

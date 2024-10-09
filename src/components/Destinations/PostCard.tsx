@@ -6,7 +6,7 @@ export function PostCard(props: {
   descripcion: string;
   province?: string;
   place?: string;
-  img: { id?: number; src: string }[];
+  img: string[] ;
 }) {
   const { imgPerson, usuario, fecha, descripcion, img, province, place } = props;
 
@@ -25,7 +25,7 @@ export function PostCard(props: {
         <p className="font-light px-2 text-gray-500 text-sm md:text-base lg:text-lg text-start">
           {descripcion}
         </p>
-        <p className='italic text-sm'>{place}, {province}</p>
+        <p className='italic text-sm mt-4'>{place}, {province}</p>
         <ImageGallery images={img}></ImageGallery>
         <div>
           <div className="text-gray-500 dark:text-gray-400 flex mt-3 justify-between">
