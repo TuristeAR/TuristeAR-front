@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom';
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { ItineraryCard } from '../src/components/ImageGallery/ItineraryCard';
@@ -39,11 +38,11 @@ describe('Jobs', () => {
           return (
             <ItineraryCard
               key={index}
-              usuario={item.usuario}
-              fecha={item.fecha}
-              descripcion={item.descripcion}
-              img={item.img}
-              imgPerson={item.imgPerson}
+              userId={item.usuario}
+              creationDate={item.fecha}
+              description={item.descripcion}
+              images={[item.img[0].src]}
+              profilePicture={item.imgPerson}
             />
           );
         })}
