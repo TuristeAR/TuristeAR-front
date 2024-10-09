@@ -164,7 +164,7 @@ const ExpectedDestination = () => {
 
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
-          <ImageGallery images={[{src:provincia.images[0]}]}  height={70}></ImageGallery> 
+          <ImageGallery images={[provincia.images]}  height={70}></ImageGallery> 
 
           <div className="px-2 sm:px-0 flex flex-col gap-y-4">
             <h1 className="text-center">{provincia.name}
@@ -248,7 +248,7 @@ const ExpectedDestination = () => {
                 descripcion={userPost.reviews[0].text}
                 place={userPost.name}
                 province={provincia.name}
-                img={userPost.reviews[0].photos.map((photo, i) => ({ id: i + 1, src: photo }))}
+                img={userPost.reviews[0].photos}
               />
             ))}
           </div>
