@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { LeftCommunity } from '../src/components/Community/LeftCommunity';
 import { CommunityFilters } from '../src/components/Community/CommunityFilters';
@@ -23,7 +22,7 @@ describe('Publications', () => {
   test('render menu with navigation links', () => {
     render(
       <BrowserRouter>
-        <LeftCommunity />
+        <LeftCommunity vista={'jobs'} />
       </BrowserRouter>,
     );
 

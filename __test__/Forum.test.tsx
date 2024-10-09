@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom';
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { CreatePost } from '../src/components/Community/CreatePost';
@@ -9,7 +8,7 @@ describe('Jobs', () => {
   test('render options of create post', () => {
     render(
       <BrowserRouter>
-        <CreatePost options={options} />
+        <CreatePost options={options} profilePicture={''} />
       </BrowserRouter>,
     );
     const imageButton = screen.getByText('Seleccionar imagen');

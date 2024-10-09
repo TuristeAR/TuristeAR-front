@@ -1,13 +1,13 @@
 import { ImageGallery } from './ImageGallery';
 
 export function ItineraryCard(props: {
-  imgPerson: string;
-  usuario: string | undefined;
-  fecha: string;
-  descripcion: string;
-  img: { id: number; src: string }[];
+  profilePicture: string | undefined;
+  userId: string | undefined;
+  creationDate: string;
+  description: string;
+  images: string[];
 }) {
-  const { imgPerson, usuario, fecha, descripcion, img } = props;
+  const { profilePicture, userId, creationDate, description, images } = props;
 
   return (
     <>
@@ -15,16 +15,18 @@ export function ItineraryCard(props: {
         <div className="flex justify-between items-center px-2 text-gray">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
-              <img className="w-8 h-8" src={imgPerson} alt="person" />
+              <img className="w-8 h-8 rounded-full" src={profilePicture} alt="person" />
             </div>
-            <p>{usuario}</p>
+            <p>{userId}</p>
           </div>
-          <p>{fecha}</p>
+          <p>{creationDate.slice(0, -14)}</p>
         </div>
         <p className="font-light p-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
-          {descripcion}
+          {description}
         </p>
-        <ImageGallery images={img}></ImageGallery>
+        {images.map((image, index) => (
+          <ImageGallery images={[{ src: image }]}></ImageGallery>
+        ))}
         <div>
           <div className="text-gray-500 dark:text-gray-400 flex mt-3 justify-around">
             <div className="flex items-center mr-6">

@@ -8,6 +8,7 @@ interface MapaProps {
 export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceId }) => {
   const [previousPath, setPreviousPath] = useState<SVGPathElement | null>(null);
   const [originalColor, setOriginalColor] = useState<string>('');
+  const [selectedProvinceName, setSelectedProvinceName] = useState<string>(''); // Estado para el nombre de la provincia seleccionada
 
   useEffect(() => {
     if (defaultProvinceId) {
