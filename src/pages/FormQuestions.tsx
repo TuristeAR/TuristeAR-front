@@ -8,6 +8,26 @@ import { DateRangePicker } from 'react-date-range';
 import { es } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { get, post } from '../utilities/http.util';
+import {
+  Baby,
+  Banknote,
+  Binoculars,
+  Book,
+  CloudSun,
+  Flame,
+  Gem,
+  HandCoins,
+  Handshake,
+  Heart,
+  Mountain,
+  PartyPopper,
+  PersonStanding,
+  Snowflake,
+  Sun,
+  TreePine,
+  Trophy,
+  Utensils,
+} from 'lucide-react';
 
 interface FormData {
   province?: number | null;
@@ -32,47 +52,122 @@ const questions = [
   {
     question: '¿Qué nivel de comodidad se ajusta a tu presupuesto?',
     options: [
-      { src: '/assets/pancho.webp', alt: 'Económico', data: 1 },
-      { src: '/assets/canelones.webp', alt: 'Moderado', data: 2 },
-      { src: '/assets/pollo.webp', alt: 'Lujoso', data: 3 },
+      {
+        src: <HandCoins width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Económico',
+        data: 1,
+      },
+      {
+        src: <Banknote width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Moderado',
+        data: 2,
+      },
+      {
+        src: <Gem width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Lujoso',
+        data: 3,
+      },
     ],
-    type: 'image',
+    type: 'icon',
     name: 'economy',
     multipleSelection: false,
   },
   {
     question: '¿Qué tipo de clima preferís?',
     options: [
-      { src: '/assets/clima_calido.webp', alt: 'Cálido', data: 4 },
-      { src: '/assets/clima_templado.webp', alt: 'Templado', data: 3 },
-      { src: '/assets/clima_frio.webp', alt: 'Frío', data: 2 },
-      { src: '/assets/clima_arido.webp', alt: 'Árido', data: 1 },
+      {
+        src: <Flame width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Árido',
+        data: 1,
+      },
+      {
+        src: <Snowflake width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Frío',
+        data: 2,
+      },
+      {
+        src: <CloudSun width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Templado',
+        data: 3,
+      },
+      {
+        src: <Sun width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Cálido',
+        data: 4,
+      },
     ],
-    type: 'image',
+    type: 'icon',
     name: 'weather',
     multipleSelection: false,
   },
   {
     question: '¿Qué tipo de actividades te gusta hacer?',
     options: [
-      { src: '/assets/playa.webp', alt: 'Naturaleza', data: 'national_park' },
-      { src: '/assets/escalar.webp', alt: 'Montañas', data: 'hiking_area' },
-      { src: '/assets/aire_libre.webp', alt: 'Comida', data: 'food' },
-      { src: '/assets/urbano.webp', alt: 'Atracciones turísticas', data: 'tourist_attraction' },
+      {
+        src: <Binoculars width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Atracción turística',
+        data: 'tourist_attraction',
+      },
+      {
+        src: <Utensils width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Comida',
+        data: 'food,restaurant,cafe,coffee_shop',
+      },
+      {
+        src: <Book width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Cultura',
+        data: 'library,museum,political',
+      },
+      {
+        src: <Trophy width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Deporte',
+        data: 'sports_complex,stadium',
+      },
+      {
+        src: <PartyPopper width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Fiesta',
+        data: 'bar,night_club',
+      },
+      {
+        src: <Mountain width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Montaña',
+        data: 'hiking_area',
+      },
+      {
+        src: <TreePine width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Naturaleza',
+        data: 'campground,national_park,park',
+      },
     ],
-    type: 'image',
+    type: 'icon',
     name: 'activities',
     multipleSelection: true,
   },
   {
     question: '¿Con quién vas a emprender tu nueva aventura?',
     options: [
-      { src: '/assets/solo.webp', alt: 'Sólo', data: 1 },
-      { src: '/assets/en_pareja.webp', alt: 'En pareja', data: 2 },
-      { src: '/assets/amigos.webp', alt: 'Amigos', data: 3 },
-      { src: '/assets/familia.webp', alt: 'Familia', data: 4 },
+      {
+        src: <PersonStanding width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Sólo',
+        data: 1,
+      },
+      {
+        src: <Heart width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'En pareja',
+        data: 2,
+      },
+      {
+        src: <Handshake width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Amigos',
+        data: 3,
+      },
+      {
+        src: <Baby width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+        alt: 'Familia',
+        data: 4,
+      },
     ],
-    type: 'image',
+    type: 'icon',
     name: 'company',
     multipleSelection: false,
   },
@@ -80,6 +175,7 @@ const questions = [
 
 const FormQuestions = () => {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
   const [selectedProvince, setSelectedProvince] = useState<Province>();
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -113,6 +209,12 @@ const FormQuestions = () => {
         key: 'selection',
       },
     ]);
+
+    setFormData((prev) => ({
+      ...prev,
+      fromDate: startDate?.toISOString() || '',
+      toDate: endDate?.toISOString() || '',
+    }));
   };
 
   const handleProvinceClick = (id: number) => {
@@ -141,6 +243,69 @@ const FormQuestions = () => {
   };
 
   const handleNextQuestion = () => {
+    switch (currentQuestion) {
+      case 0:
+        const fromDate = new Date(formData.fromDate);
+
+        const toDate = new Date(formData.toDate);
+
+        if (!formData.fromDate && !formData.toDate) {
+          setErrorMessage('Tenés que seleccionar una fecha de inicio y de fin para tu viaje');
+          return;
+        }
+
+        const today = new Date();
+
+        today.setHours(0, 0, 0, 0);
+
+        if (fromDate < today || toDate < today) {
+          setErrorMessage('Las fechas no pueden ser anteriores a hoy');
+          return;
+        }
+
+        setErrorMessage('');
+
+        break;
+      case 1:
+        if (!formData.economy) {
+          setErrorMessage('Tenés que seleccionar una opción');
+          return;
+        }
+
+        setErrorMessage('');
+
+        break;
+      case 2:
+        if (!formData.weather) {
+          setErrorMessage('Tenés que seleccionar una opción');
+          return;
+        }
+
+        setErrorMessage('');
+
+        break;
+      case 3:
+        if (formData.types.length === 0) {
+          setErrorMessage('Tenés que seleccionar al menos una opción');
+          return;
+        }
+
+        setErrorMessage('');
+
+        break;
+      case 4:
+        if (!formData.company) {
+          setErrorMessage('Tenés que seleccionar una opción');
+          return;
+        }
+
+        setErrorMessage('');
+
+        break;
+      default:
+        break;
+    }
+
     if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
     }
@@ -156,21 +321,20 @@ const FormQuestions = () => {
     try {
       formData.fromDate = state[0].startDate.toISOString();
       formData.toDate = state[0].endDate.toISOString();
-      // Hacer la solicitud POST y obtener la respuesta
-    const response = await post(
-      'https://api-turistear.koyeb.app/formQuestion',
-      {
-        'Content-Type': 'application/json',
-      },
-      formData,
-    );
-    // Verificar si la respuesta fue exitosa
-    if (response.statusCode === 201) {
-      // Guardar el itinerario en el estado de la aplicación
-      const itinerary = response.data; // Aquí obtienes el itinerario creado
-      // Navegar a la nueva vista, pasando el itinerario como estado
-      navigate('/itineraryCalendar', { state: { itinerary } });
-    }
+
+      const response = await post(
+        'https://api-turistear.koyeb.app/formQuestion',
+        {
+          'Content-Type': 'application/json',
+        },
+        formData,
+      );
+
+      if (response.statusCode === 201) {
+        const itinerary = response.data;
+
+        navigate('/itineraryCalendar', { state: { itinerary } });
+      }
     } catch (error) {
       console.error('Error al enviar los datos:', error);
     }
@@ -196,73 +360,23 @@ const FormQuestions = () => {
   return (
     <>
       <Header />
-      <section className="min-h-screen flex items-center justify-center bg-gray-100 text-black py-8">
+      <section className="min-h-[90vh] flex items-center justify-center bg-gray-100 text-black">
         <div className="container mx-auto flex flex-col md:flex-row justify-center z-30 relative">
           <form className="flex flex-col w-full max-w-full items-center justify-center bg-white p-4 gap-y-6 md:gap-y-4 min-h-[500px]">
             <ProgressBar currentStep={currentStep} />
             <div>
-              {questions[currentQuestion].type === 'image' ? (
-                <div className="flex flex-col items-center gap-4">
-                  <h3 className="text-primary-4 font-bold text-xl text-center">
-                    {questions[currentQuestion].question}
-                  </h3>
-                  <div className="flex flex-col md:flex-row gap-x-5 justify-center">
-                    {questions[currentQuestion].options?.map((option, index) => (
-                      <div key={index} className="flex flex-col justify-center gap-y-2">
-                        {questions[currentQuestion].multipleSelection ? (
-                          <input
-                            type="checkbox"
-                            id={`option-${index}`}
-                            checked={formData.types.includes(option.data as string)}
-                            onChange={() => handleMultipleSelection(option.data as string)}
-                          />
-                        ) : (
-                          <input
-                            type="radio"
-                            id={`option-${index}`}
-                            checked={
-                              formData[questions[currentQuestion].name as keyof FormData] ===
-                              option.data
-                            }
-                            onChange={() =>
-                              handleSingleSelection(
-                                questions[currentQuestion].name as keyof FormData,
-                                option.data as number,
-                              )
-                            }
-                          />
-                        )}
-                        <label htmlFor={`option-${index}`} className="relative">
-                          <img
-                            src={option.src}
-                            alt={option.alt}
-                            className="w-[250px] h-[100px] md:w-[450px] md:h-[250px] object-cover cursor-pointer"
-                          />
-                          <p className="absolute bottom-0 text-sm py-2 bg-black/60 w-full text-white text-center">
-                            {option.alt}
-                          </p>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex gap-x-4">
-                    <button type="button" className="btn-question" onClick={handleNextQuestion}>
-                      {currentQuestion < questions.length - 1 ? 'Siguiente pregunta' : 'Finalizar'}
-                    </button>
-                  </div>
-                </div>
-              ) : questions[currentQuestion].type === 'calendar' ? (
+              {questions[currentQuestion].type === 'calendar' ? (
                 <div className="flex flex-col md:flex-row w-full">
                   <div className="flex flex-col items-center relative">
                     <div>{selectedProvince?.name}</div>
                     <MapaArg onProvinceClick={handleProvinceClick} />
                   </div>
                   <div className="flex flex-col gap-y-4 justify-center items-center w-full">
-                    <h2 className="text-[25px] font-semibold text-primary-4">
+                    <h2 className="text-2xl font-semibold text-primary-4">
                       Armemos tu próxima aventura
                     </h2>
                     <div>
-                      <span className="block text-sm font-medium leading-6 text-gray-900">
+                      <span className="block text-lg font-medium leading-6 text-gray-900 my-2">
                         Fecha del viaje
                       </span>
                       <DateRangePicker
@@ -279,24 +393,98 @@ const FormQuestions = () => {
                     <div>
                       <span>
                         {state[0].endDate && state[0].startDate && (
-                          <p>
-                            Tu viaje va a durar{' '}
-                            {state[0].endDate && state[0].startDate
-                              ? Math.ceil(
-                                  (state[0].endDate.getTime() - state[0].startDate.getTime()) /
-                                    (1000 * 60 * 60 * 24),
-                                )
-                              : 0}{' '}
-                            días
+                          <p className="text-xl">
+                            Tu viaje va a durar
+                            <strong>
+                              {' '}
+                              {state[0].endDate && state[0].startDate
+                                ? Math.ceil(
+                                    (state[0].endDate.getTime() - state[0].startDate.getTime()) /
+                                      (1000 * 60 * 60 * 24),
+                                  )
+                                : 0}{' '}
+                              días
+                            </strong>
                           </p>
                         )}
                       </span>
                     </div>
-                    <div className="flex gap-x-4">
+                    <div className="flex flex-col items-center gap-x-4">
                       <button type="button" className="btn-question" onClick={handleNextQuestion}>
                         Siguiente pregunta
                       </button>
+                      {errorMessage && (
+                        <div className="error-message" role="alert">
+                          {errorMessage}
+                        </div>
+                      )}
                     </div>
+                  </div>
+                </div>
+              ) : questions[currentQuestion].type === 'icon' ? (
+                <div className="flex flex-col items-center gap-4">
+                  <h3 className="text-primary-4 font-bold text-xl text-center">
+                    {questions[currentQuestion].question}
+                  </h3>
+                  <div className="flex flex-wrap justify-center gap-5">
+                    {questions[currentQuestion].options?.map((option: any, index: number) => (
+                      <div key={index}>
+                        <div
+                          className={`w-40 h-40 flex flex-col justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300 ${
+                            questions[currentQuestion].multipleSelection
+                              ? formData.types.includes(option.data as string)
+                                ? 'bg-primary bg-opacity-80'
+                                : ''
+                              : formData[questions[currentQuestion].name as keyof FormData] ===
+                                  option.data
+                                ? 'bg-primary bg-opacity-80'
+                                : ''
+                          }`}
+                          onClick={() =>
+                            questions[currentQuestion].multipleSelection
+                              ? handleMultipleSelection(option.data as string)
+                              : handleSingleSelection(
+                                  questions[currentQuestion].name as keyof FormData,
+                                  option.data as number,
+                                )
+                          }
+                        >
+                          <input
+                            type={
+                              questions[currentQuestion].multipleSelection ? 'checkbox' : 'radio'
+                            }
+                            id={`option-${index}`}
+                            checked={
+                              questions[currentQuestion].multipleSelection
+                                ? formData.types.includes(option.data as string)
+                                : formData[questions[currentQuestion].name as keyof FormData] ===
+                                  option.data
+                            }
+                            onChange={() =>
+                              questions[currentQuestion].multipleSelection
+                                ? handleMultipleSelection(option.data as string)
+                                : handleSingleSelection(
+                                    questions[currentQuestion].name as keyof FormData,
+                                    option.data as number,
+                                  )
+                            }
+                            className="hidden"
+                          />
+                          <div className="mx-auto">{option.src}</div>
+                        </div>
+                        <div className="w-40 p-2 border border-gray text-center">{option.alt}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex flex-col items-center gap-x-4">
+                    <button type="button" className="btn-question" onClick={handleNextQuestion}>
+                      {currentQuestion < questions.length - 1 ? 'Siguiente pregunta' : 'Finalizar'}
+                    </button>
+                    {errorMessage && (
+                      <div className="error-message" role="alert">
+                        {errorMessage}
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : null}
