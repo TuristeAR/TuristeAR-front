@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.bg-custom-gray {
+    background-color: #545454;
+  }
+
+.bg-custom-orange {
+    background-color: #FF8C00;
+}
+
 @layer base {
     h1 {
         @apply sm:text-7xl text-3xl font-bold text-black
