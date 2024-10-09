@@ -8,7 +8,9 @@ interface ImageGalleryProps {
 
 export const ImageGallery: React.FC<ImageGalleryProps> = ({images, height }) => {
   const imageCount = images.length;
-
+  if (!images || images.length === 0) {
+    return null; 
+  }
   const dynamicHeightClass40 = height ? 'h-[200px]' : '';
   const dynamicHeightClass30 = height ? 'h-[200px]' : '';
   const dynamicHeightClass70 = height ? 'h-[400px]' : '';
