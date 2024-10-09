@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { get } from '../src/utilities/http.util';
 import Destinations from '../src/pages/Destinations';
 import '@testing-library/jest-dom';
+import React from 'react';
 
 jest.mock('../src/utilities/http.util', () => ({
   get: jest.fn(),
