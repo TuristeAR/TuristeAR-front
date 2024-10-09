@@ -2,6 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { CreatePost } from '../src/components/Community/CreatePost';
+import React from 'react';
 const options = ['Seleccionar imagen', 'Seleccionar archivo', 'Importar itinerario'];
 
 describe('Jobs', () => {
