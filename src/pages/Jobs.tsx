@@ -46,11 +46,11 @@ export const Jobs = () => {
             {itineraries.map((userPost, index) => (
               <ItineraryCard
                 key={index}
-                imgPerson={userPost.imgPerson}
-                usuario={userPost.usuario}
-                fecha={userPost.fecha}
-                descripcion={userPost.descripcion}
-                img={userPost.img}
+                profilePicture={userPost.imgPerson}
+                userId={userPost.usuario}
+                creationDate={userPost.fecha}
+                description={userPost.descripcion}
+                images={userPost.img}
               />
             ))}
           </div>

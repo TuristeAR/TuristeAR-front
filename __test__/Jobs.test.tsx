@@ -39,11 +39,11 @@ describe('Jobs', () => {
           return (
             <ItineraryCard
               key={index}
-              usuario={item.usuario}
-              fecha={item.fecha}
-              descripcion={item.descripcion}
-              img={item.img}
-              imgPerson={item.imgPerson}
+              userId={item.usuario}
+              creationDate={item.fecha}
+              description={item.descripcion}
+              images={item.img}
+              profilePicture={item.imgPerson}
             />
           );
         })}

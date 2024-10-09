@@ -5,32 +5,6 @@ import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 import { TravelCard } from '../components/Community/TravelCard';
 import { useEffect, useRef, useState } from 'react';
 
-const itineraries = [
-  {
-    imgPerson: '/assets/person.svg',
-    usuario: 'Manuel López',
-    fecha: '26 Sep 2024',
-    descripcion:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-  },
-  {
-    imgPerson: '/assets/person.svg',
-    usuario: 'Manuel López',
-    fecha: '26 Sep 2024',
-    descripcion:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Esse corrupti laborum possimus ad eligendi iusto, perferendis atque accusantium consequatur facere.',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-  },
-];
 const travels =[
   {
     imgProvince: '/assets/san-nicolas-buenos-aires.webp',
@@ -65,23 +39,9 @@ const travels =[
     ]
   },
 ]
-const components={
-  travels : travels.map((travel, index) => (
-      <TravelCard key={index} imgProvince={travel.imgProvince} province={travel.province}
-                  departure={travel.departure} arrival={travel.arrival}
-                  participants={travel.participants}  />
-    )),
-  posts : itineraries.map((itinerarie, index) => (
-    <ItineraryCard key={index} imgPerson={itinerarie.imgPerson} usuario={itinerarie.usuario}
-                   fecha={itinerarie.fecha} descripcion={itinerarie.descripcion} img={itinerarie.img} />
-  ))
-}
 const options = ['Imagen', 'Itinerario', 'Categoría', 'Ubicación'];
 
 const Profile = () => {
-  // @ts-ignore
-  const [content, setContent] = useState<React.JSX.Element | null>(components.posts);
-  const [activeItem, setActiveItem] = useState('posts');
   const contentRef = useRef<HTMLDivElement | null>(null);
   type User={
     id: number;
@@ -94,46 +54,102 @@ const Profile = () => {
     location: string
   }
 
+  type Publication={
+    id: number,
+    description: string,
+    creationDate: string,
+    images: string[],
+    userId:  User | null
+  }
+
+  const [user, setUser] = useState<User | null>(null);
+  const [publications, setPublications] = useState<Publication[] | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Primer fetch - Obtener la sesión y el usuario
+        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!sessionResponse.ok) {
+          window.location.href = '/login';
+          return;
+        }
+
+        const sessionData = await sessionResponse.json();
+        setUser(sessionData.user);
+        setIsAuthenticated(true);
+        setError('');
+
+        // Segundo fetch - Obtener las publicaciones solo si se obtuvo el usuario
+        const publicationsResponse = await fetch(
+          `https://api-turistear.koyeb.app/publications/${sessionData.user.id}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
+        );
+
+        if (!publicationsResponse.ok) {
+          setError('Error al obtener las publicaciones');
+          return;
+        }
+
+        const publicationsData = await publicationsResponse.json();
+        setPublications(publicationsData);
+        setError('');
+      } catch (error) {
+        setError('Error en la comunicación con el servidor');
+        setIsAuthenticated(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+// Inicializa content como null o un valor por defecto
+  const [content, setContent] = useState<React.JSX.Element | null>(null);
+  const [activeItem, setActiveItem] = useState('posts');
+
+  const components = {
+    travels: travels.map((travel, index) => (
+      <TravelCard key={index} imgProvince={travel.imgProvince} province={travel.province}
+                  departure={travel.departure} arrival={travel.arrival}
+                  participants={travel.participants} />
+    )),
+    posts: publications?.map((publication, index) => (
+      <ItineraryCard key={index} profilePicture={user?.profilePicture} userId={user?.name}
+                     creationDate={publication.creationDate} description={publication.description} images={publication.images} />
+    )),
+  };
+  useEffect(() => {
+    // Actualiza el contenido cada vez que publications cambie
+    if (activeItem === 'posts' && publications) {
+      // @ts-ignore
+      setContent(components.posts);
+    } else if (activeItem === 'travels') {
+      // @ts-ignore
+      setContent(components.travels);
+    }
+  }, [publications, activeItem]); // Dependencias para que se ejecute cuando cambien
+
   const handleClick = (name: string) => {
-    setActiveItem(name)
-    // @ts-ignore
-    setContent(components[name]);
+    setActiveItem(name);
+    // Esto se manejará en el useEffect, por lo que no necesitamos setContent aquí
     if (contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch('https://api-turistear.koyeb.app/session', {
-      method: 'GET',
-      credentials: 'include',
-    })
-      .then((response) => {
-        if (!response.ok) {
-          window.location.href = '/login';
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setIsAuthenticated(true);
-        setUser(data.user);
-        setError('');
-      })
-      .catch((err) => {
-        setError('Error al obtener el usuario!');
-        setIsAuthenticated(false);
-      });
-  }, []);
-
   if(!isAuthenticated){
     return (<><p>User is not authenticated</p></>);
   }
 
-  // @ts-ignore
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
