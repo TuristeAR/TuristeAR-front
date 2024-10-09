@@ -18,7 +18,7 @@
     }
 
     .btn-question {
-        @apply min-w-[156px] h-[38px] px-6 bg-primary hover:bg-primary-3 text-white text-[10px] md:text-[13px] uppercase rounded-md font-semibold tracking-[.15em] transition-all;
+        @apply min-w-[156px] h-[38px] px-6 bg-primary hover:bg-primary-3 text-white text-[10px] md:text-[16px] uppercase rounded-md font-semibold tracking-[.15em] transition-all;
     }
 
     .scrollbar-hidden::-webkit-scrollbar {
@@ -148,6 +148,16 @@
     .fc {
         font-size: 0.9rem; /* Reduce el tamaño de fuente del calendario */
     }
+}
+
+.error-message {
+    width: 300px;
+    padding: 0.5rem;
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #dc2626;
+    border-radius: 0.5rem;
+    background-color: #FEE2E2;
 }
 
 /* Progress bar */

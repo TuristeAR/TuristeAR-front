@@ -175,6 +175,7 @@ const questions = [
 
 const FormQuestions = () => {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
   const [selectedProvince, setSelectedProvince] = useState<Province>();
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -208,6 +209,12 @@ const FormQuestions = () => {
         key: 'selection',
       },
     ]);
+
+    setFormData((prev) => ({
+      ...prev,
+      fromDate: startDate?.toISOString() || '',
+      toDate: endDate?.toISOString() || '',
+    }));
   };
 
   const handleProvinceClick = (id: number) => {
@@ -236,6 +243,69 @@ const FormQuestions = () => {
   };
 
   const handleNextQuestion = () => {
+    switch (currentQuestion) {
+      case 0:
+        const fromDate = new Date(formData.fromDate);
+
+        const toDate = new Date(formData.toDate);
+
+        if (!formData.fromDate && !formData.toDate) {
+          setErrorMessage('Tenés que seleccionar una fecha de inicio y de fin para tu viaje');
+          return;
+        }
+
+        const today = new Date();
+
+        today.setHours(0, 0, 0, 0);
+
+        if (fromDate < today || toDate < today) {
+          setErrorMessage('Las fechas no pueden ser anteriores a hoy');
+          return;
+        }
+
+        setErrorMessage('');
+
+        break;
+      case 1:
+        if (!formData.economy) {
+          setErrorMessage('Tenés que seleccionar una opción');
+          return;
+        }
+
+        setErrorMessage('');
+
+        break;
+      case 2:
+        if (!formData.weather) {
+          setErrorMessage('Tenés que seleccionar una opción');
+          return;
+        }
+
+        setErrorMessage('');
+
+        break;
+      case 3:
+        if (formData.types.length === 0) {
+          setErrorMessage('Tenés que seleccionar al menos una opción');
+          return;
+        }
+
+        setErrorMessage('');
+
+        break;
+      case 4:
+        if (!formData.company) {
+          setErrorMessage('Tenés que seleccionar una opción');
+          return;
+        }
+
+        setErrorMessage('');
+
+        break;
+      default:
+        break;
+    }
+
     if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
     }
@@ -300,11 +370,11 @@ const FormQuestions = () => {
                     <MapaArg onProvinceClick={handleProvinceClick} />
                   </div>
                   <div className="flex flex-col gap-y-4 justify-center items-center w-full">
-                    <h2 className="text-[25px] font-semibold text-primary-4">
+                    <h2 className="text-2xl font-semibold text-primary-4">
                       Armemos tu próxima aventura
                     </h2>
                     <div>
-                      <span className="block text-sm font-medium leading-6 text-gray-900">
+                      <span className="block text-lg font-medium leading-6 text-gray-900 my-2">
                         Fecha del viaje
                       </span>
                       <DateRangePicker
@@ -321,23 +391,31 @@ const FormQuestions = () => {
                     <div>
                       <span>
                         {state[0].endDate && state[0].startDate && (
-                          <p>
-                            Tu viaje va a durar{' '}
-                            {state[0].endDate && state[0].startDate
-                              ? Math.ceil(
-                                  (state[0].endDate.getTime() - state[0].startDate.getTime()) /
-                                    (1000 * 60 * 60 * 24),
-                                )
-                              : 0}{' '}
-                            días
+                          <p className="text-xl">
+                            Tu viaje va a durar
+                            <strong>
+                              {' '}
+                              {state[0].endDate && state[0].startDate
+                                ? Math.ceil(
+                                    (state[0].endDate.getTime() - state[0].startDate.getTime()) /
+                                      (1000 * 60 * 60 * 24),
+                                  )
+                                : 0}{' '}
+                              días
+                            </strong>
                           </p>
                         )}
                       </span>
                     </div>
-                    <div className="flex gap-x-4">
+                    <div className="flex flex-col items-center gap-x-4">
                       <button type="button" className="btn-question" onClick={handleNextQuestion}>
                         Siguiente pregunta
                       </button>
+                      {errorMessage && (
+                        <div className="error-message" role="alert">
+                          {errorMessage}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -396,10 +474,15 @@ const FormQuestions = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="flex gap-x-4">
+                  <div className="flex flex-col items-center gap-x-4">
                     <button type="button" className="btn-question" onClick={handleNextQuestion}>
                       {currentQuestion < questions.length - 1 ? 'Siguiente pregunta' : 'Finalizar'}
                     </button>
+                    {errorMessage && (
+                      <div className="error-message" role="alert">
+                        {errorMessage}
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : null}
