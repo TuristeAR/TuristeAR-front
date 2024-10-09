@@ -19,12 +19,14 @@ export function ItineraryCard(props: {
             </div>
             <p>{userId}</p>
           </div>
-          <p>{creationDate.slice(0,-14)}</p>
+          <p>{creationDate.slice(0, -14)}</p>
         </div>
         <p className="font-light p-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
           {description}
         </p>
-        <ImageGallery images={images}></ImageGallery>
+        {images.map((image, index) => (
+          <ImageGallery images={[{ src: image }]}></ImageGallery>
+        ))}
         <div>
           <div className="text-gray-500 dark:text-gray-400 flex mt-3 justify-around">
             <div className="flex items-center mr-6">
