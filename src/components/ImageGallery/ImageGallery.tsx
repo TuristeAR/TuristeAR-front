@@ -31,17 +31,17 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({images, height }) => 
 
       {/* Segunda columna con dos imágenes o condicionalmente menos */}
       {imageCount > 1 && (
-        <div className={`flex flex-col gap-1 ${imageCount == 2 ? ' justify-center items-center w-full overflow-hidden' : ''}`}>
-          <div className="overflow-hidden">
+        <div className={`flex flex-col gap-1 ${imageCount == 2 ? ' justify-center items-center w-full overflow-hidden h-full' : 'aaa'}`}>
+          <div className={`overflow-hidden ${imageCount == 2 ? " h-[500px] ":""}`}>
             <img
-               className={`w-full ${imageCount === 2 ? 'h-[500px] object-cover' : `${dynamicHeightClass40} object-cover`}`}
+               className={`w-full ${imageCount === 2 ? 'object-cover h-full' : `${!(dynamicHeightClass40=='') ? dynamicHeightClass40 :"r h-[150px] " }  object-cover river`}`}
                src={images[1]}
             />
           </div>
           {imageCount > 2 && (
             <div className="relative overflow-hidden">
               <img
-                className={`w-full ${dynamicHeightClass30} object-cover`}
+                className={`w-full  ${!(dynamicHeightClass40=='') ? dynamicHeightClass40 :"r h-[150px] " }  object-cover`}
                 src={images[2]}
               />
               {imageCount > 3 && (

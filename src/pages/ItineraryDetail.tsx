@@ -24,9 +24,9 @@ export const ItineraryDetail = () => {
   const imgs = [
     {
       img: [
-        { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-        { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-        { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
+        '/assets/san-nicolas-buenos-aires.webp' ,
+        '/assets/san-nicolas-buenos-aires.webp' ,
+        '/assets/san-nicolas-buenos-aires.webp' ,
       ],
     },
   ];
