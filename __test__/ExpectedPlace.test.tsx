@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import React from 'react';
 import { ArticleCard } from '../src/components/Destinations/ArticleCard';
 import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
 
 describe('ArticleCard', () => {
   const mockProps = {

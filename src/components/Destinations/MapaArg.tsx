@@ -31,7 +31,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
 
       const currentOriginalColor = path.getAttribute('fill') || '';
       setOriginalColor(currentOriginalColor);
-      path.style.fill = '#4700BB';
+      path.style.fill = '#FF8C00';
       setPreviousPath(path);
 
       onProvinceClick(Number(path.id));

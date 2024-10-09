@@ -80,7 +80,7 @@ const Destinations = () => {
     const fetchReviews = async () => {
       if (selectedProvince) {
         try {
-          const response = await get(`https://api-turistear.koyeb.app/provinces/${selectedProvince.id}`, {
+          const response = await get(`https://api-turistear.koyeb.app/provinces/${selectedProvince.name}/4`, {
             'Content-Type': 'application/json',
           });
           setReviews(response);
@@ -126,6 +126,7 @@ const Destinations = () => {
               <MapaArg onProvinceClick={handleProvinceClick} />
             </div>
           </div>
+          <div className="w-px bg-custom-orange m-10"></div>
           <div ref={sectionRef} className="flex-1  max-w-[600px] w-full flex flex-col gap-y-6 ">
             <div className="flex flex-col gap-y-4">
               <h1 className="text-center">{selectedProvince?.name} </h1>

@@ -5,7 +5,7 @@ import { NavTriggerBtn } from '../NavMobile/NavTriggerBtn';
 
 export const Header = ( { containerStyles, isHome }: { containerStyles?: any , isHome?: boolean}) => {
   const [navActive, setNavActive] = useState(false);
-  const backgroundClass = isHome ? 'bg-transparent' : 'bg-gray';
+  const backgroundClass = isHome ? 'bg-transparent' : 'bg-custom-gray';
   return (
     <>
       <header className={`w-full text-gray-600 body-font ${containerStyles}  ${backgroundClass}`}>

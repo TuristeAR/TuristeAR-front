@@ -4,6 +4,7 @@ import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import { PostCard } from '../components/Destinations/PostCard';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { get } from '../utilities/http.util';
 
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 
@@ -91,64 +92,64 @@ const puntosDeInteres = [
 ];
 
 
+type Image = {
+  id: number;
+  src: string;
+};
+interface Culture {
+  festivals: string;
+  traditionalFood: string;
+  music: string;
+  customs: string;
+}
+type Province = {
+  id: number;
+  name: string;
+  description: string;
+  images: string;
+  places: Place[];
+}
+
+type Review = {
+  id: number;
+  publishedTime: string;
+  rating: number;
+  text: string;
+  authorName: string;
+  authorPhoto: string;
+  photos: string[];
+}
+
+type Place = {
+  id: number;
+  name: string;
+  rating: number;
+  reviews: Review[];
+}
 
 const ExpectedDestination = () => {
   const [showedLugares, setShowedLugares] = useState(false);
   const [showedCulturaTradicion, setShowedCulturaTradicion] = useState(false);
   const [showedGastronomia, setShowedGastronomia] = useState(false);
 
-  type Image = {
-    id: number;
-    src: string;
-  };
-  interface Culture {
-    festivals: string;
-    traditionalFood: string;
-    music: string;
-    customs: string;
-  }
-  type Province = {
-    id: number;
-    name: string;
-    description: string;
-    images: string[];
-    places: Place[]
-  }
-  
-  type Review = {
-    id: number;
-    publishedTime: string;
-    rating: number;
-    text: string;
-    authorName: string;
-    authorPhoto: string;
-    photos: string[];
-  }
-  
-  type Place = {
-    id: number;
-    name: string;
-    rating: number;
-    reviews: Review[];
-  }
-  
+ 
   const { nombreDeLaProvincia } = useParams();
-  const [provincia, setProvincia] = useState<Province | undefined>(undefined); // Inicializa como undefined
-
+  const [provincia, setProvincia] = useState<Province>(); 
 
   useEffect(() => {
     const fetchProvince = async () => {
       try {
-        const response = await fetch(`https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}/2`);
-        const data = await response.json();
-        if (data) {
-          setProvincia(data);
-        } else {
-          setProvincia(undefined); 
-        }
+        const response = await get(`https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}/2`, {
+          'Content-Type': 'application/json',
+        });
+
+       
+        console.log(response)
+
+          setProvincia(response);
+        
       } catch (error) {
         console.error('Error fetching province:', error);
-        setProvincia(undefined);
       } 
     };
 
@@ -163,10 +164,11 @@ const ExpectedDestination = () => {
 
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
-          <ImageGallery images={[{src:provincia.images[0]}]}  height={70}></ImageGallery>
+          <ImageGallery images={[provincia.images]}  height={70}></ImageGallery> 
 
           <div className="px-2 sm:px-0 flex flex-col gap-y-4">
-            <h1 className="text-center">{provincia.name}</h1>
+            <h1 className="text-center">{provincia.name}
+            </h1>
             <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-center">
               {provincia.description}
             </p>
@@ -246,7 +248,7 @@ const ExpectedDestination = () => {
                 descripcion={userPost.reviews[0].text}
                 place={userPost.name}
                 province={provincia.name}
-                img={userPost.reviews[0].photos.map((photo, i) => ({ id: i + 1, src: photo }))}
+                img={userPost.reviews[0].photos}
               />
             ))}
           </div>

@@ -1,10 +1,10 @@
-export const CreatePost = (props: { options: string[] }) => {
-  const { options } = props;
+export const CreatePost = (props: { options: string[], profilePicture: string | undefined }) => {
+  const { options , profilePicture } = props;
   return (
     <>
       <div className="flex justify-around items-center lg:p-2 pt-4 pb-4">
         <div className="w-[20%]">
-          <img src="/assets/person.svg" alt="logo" className="h-8 w-8 object-cover mx-auto" />
+          <img src={(profilePicture!=undefined) ? profilePicture : '/assets/person.svg'} alt="logo" className="h-12 w-12 object-cover mx-auto rounded-full" />
         </div>
         <input
           type="text"

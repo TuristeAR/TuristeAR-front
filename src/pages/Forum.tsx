@@ -22,9 +22,9 @@ const infoComments = [
       ' ad eligendi iusto, perferendis atque accusantium consequatur facere.',
     imgPerson: '/assets/person.svg',
     imgs: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
+     '/assets/san-nicolas-buenos-aires.webp' ,
+     '/assets/san-nicolas-buenos-aires.webp' ,
+     '/assets/san-nicolas-buenos-aires.webp' ,
     ],
   },
   {
@@ -35,9 +35,9 @@ const infoComments = [
       ' ad eligendi iusto, perferendis atque accusantium consequatur facere.',
     imgPerson: '/assets/person.svg',
     imgs: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
+      '/assets/san-nicolas-buenos-aires.webp' ,
+      '/assets/san-nicolas-buenos-aires.webp' ,
+      '/assets/san-nicolas-buenos-aires.webp' ,
     ],
   },
 ];
@@ -48,7 +48,7 @@ const Forum = () => {
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
       <div className="flex justify-between lg:h-[160vh] ">
-        <LeftCommunity />
+        <LeftCommunity vista={'forum'} />
         <div className="lg:w-[80%] w-[100%] pt-10 overflow-scroll scrollbar-hidden">
           <div className="flex flex-col gap-y-6 lg:w-[80%] w-[100%] mx-auto  overflow-scroll scrollbar-hidden">
             {infoComments.map((info, index) => {
@@ -72,7 +72,7 @@ const Forum = () => {
             })}
           </div>
           <div className="bg-[#009fe3] bg-opacity-10">
-            <CreatePost options={options} />
+            <CreatePost options={options} profilePicture={'/assets/person.svg'}/>
           </div>
         </div>
       </div>
