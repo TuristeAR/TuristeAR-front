@@ -59,7 +59,7 @@ const Profile = () => {
     description: string,
     creationDate: string,
     images: string[],
-    userId:  User | null
+    user:  User | null
   }
 
   const [user, setUser] = useState<User | null>(null);
@@ -154,7 +154,7 @@ const Profile = () => {
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
-        <LeftCommunity />
+        <LeftCommunity vista={'publications'}/>
         <div className="lg:w-[80%] w-[100%] lg:p-10 lg:pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
           {/* Portada */}
           <div className="">

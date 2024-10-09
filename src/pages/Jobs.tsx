@@ -37,10 +37,10 @@ export const Jobs = () => {
     <>
       <Header containerStyles={' relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
-        <LeftCommunity />
+        <LeftCommunity vista={'jobs'} />
         <div className="lg:w-[80%] pt-10 pb-10 overflow-scroll scrollbar-hidden ">
           <div className="lg:w-[80%] w-[90%] mx-auto rounded-xl mb-10 shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
-            <CreatePost options={options} />
+            <CreatePost options={options} profilePicture={'/assets/person.svg'} />
           </div>
           <div className="flex flex-col gap-6 lg:w-[80%] w-[90%] mx-auto" >
             {itineraries.map((userPost, index) => (
@@ -50,7 +50,7 @@ export const Jobs = () => {
                 userId={userPost.usuario}
                 creationDate={userPost.fecha}
                 description={userPost.descripcion}
-                images={userPost.img}
+                images={[userPost.img[0].src]}
               />
             ))}
           </div>
