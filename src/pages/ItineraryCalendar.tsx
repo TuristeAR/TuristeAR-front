@@ -9,29 +9,13 @@ import deleteIcon from '/assets/delete.svg';
 import { Calendar } from '../components/Calendar/Calendar';
 import { Header } from '../components/Header/Header';
 import { Link, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import useFetchItinerary from '../utilities/useFetchItinerary';
 
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
 
-  const [itinerary, setItinerary] = useState(null);
-  const [activities, setActivities] = useState<{ id: number; name: string }[]>([]);
-
-  useEffect(() => {
-    const fetchItinerary = async () => {
-      try {
-        const response = await fetch(`http://localhost:3001/itinerary/${itineraryId}`);
-        const data = await response.json();
-        setItinerary(data.data.itinerary || null);
-        setActivities(data.data.activities?.activities || []);
-      } catch (error) {
-        console.error('Error fetching itinerary:', error);
-      }
-    };
-    if (itineraryId) {
-      fetchItinerary();
-    }
-  }, [itineraryId]);
+  const { itinerary, activities, setActivities } = useFetchItinerary(itineraryId || null);
 
   useEffect(() => {
     console.log('Itinerario:', itinerary);

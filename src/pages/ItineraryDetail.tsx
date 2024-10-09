@@ -1,42 +1,20 @@
 import { Link, useParams } from 'react-router-dom';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import useFetchItinerary from '../utilities/useFetchItinerary';
 
 export const ItineraryDetail = () => {
   const { itineraryId } = useParams();
 
-  const [itinerary, setItinerary] = useState(null);
-  const [activities, setActivities] = useState<{ id: number; name: string }[]>([]);
-  
-/*   useEffect(() => {
-    const fetchItinerary = async () => {
-      try {
-        const response = await fetch(`http://localhost:3001/itinerary/${itineraryId}`);
-        const data = await response.json();
-        setItinerary(data.data.itinerary || null);
-        setActivities(data.data.activities?.activities || []);
-      } catch (error) {
-        console.error('Error fetching itinerary:', error);
-      }
-    };
-    if (itineraryId) {
-      fetchItinerary();
-    }
-  }, [itineraryId]);
-
-  useEffect(() => {
-    console.log('Itinerario:', itinerary);
-    console.log('Activities:', activities);
-  }, [itinerary, activities]);
- */
+  const { itinerary, activities } = useFetchItinerary(itineraryId || null);
 
   const [showedInfo, setShowedInfo] = useState<boolean[]>([]);
 
   const toggleInfo = (index: number) => {
     setShowedInfo((prevState) => {
       const newState = [...prevState];
-      newState[index] = !newState[index]; // Cambiar visibilidad solo del día clicado
+      newState[index] = !newState[index];
       return newState;
     });
   };
@@ -56,7 +34,7 @@ export const ItineraryDetail = () => {
     return date.toLocaleTimeString([], options);
   };
 
-  const activitiesByDay = itinerary.activities.reduce((acc: any, activity: any) => {
+  const activitiesByDay = activities.reduce((acc: any, activity: any) => {
     const date = new Date(activity.fromDate).toISOString().split('T')[0]; // Obtener solo la fecha
     if (!acc[date]) {
       acc[date] = [];
@@ -68,7 +46,6 @@ export const ItineraryDetail = () => {
   return (
     <>
       <Header />
-
       <section>
         <div className="container mx-auto max-w-[980px] flex flex-col justify-center z-30 relative p-4">
           <div className="w-full my-8">
@@ -82,9 +59,7 @@ export const ItineraryDetail = () => {
               {/* Informacion general */}
               <div className="md:max-w-[650px] flex-1">
                 <div className="border-b pb-2 border-gray-50 ">
-                  <h2 className="text-xl font-bold text-primary-3">
-                    Viaje a Buenos Aires - 4 Días:{itinerary.name}
-                  </h2>
+                  <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
                 </div>
                 <div>
                   <h2 className="font-semibold text-md my-2">Información general</h2>
@@ -98,7 +73,10 @@ export const ItineraryDetail = () => {
               {/* Calendario, Participantes */}
               <div className="flex flex-col gap-y-4">
                 <div className="bg-primary/40 rounded-sm flex justify-center py-1">
-                  <Link to={'/ItineraryCalendar'} className="text-primary-4 text-sm font-semibold">
+                  <Link
+                    to={`/ItineraryCalendar/${itineraryId}`}
+                    className="text-primary-4 text-sm font-semibold"
+                  >
                     Ir a calendario
                   </Link>
                 </div>
@@ -113,12 +91,11 @@ export const ItineraryDetail = () => {
                 </div>
               </div>
             </div>
-
+            {/*Itinerario */}
             <div className="mb-10">
-              {/*Itinerario */}
               <h2 className="font-semibold text-md my-2">Itinerario de viaje</h2>
               {/* Días */}
-              {itinerary.activities.map((item: any, index: number) => {
+              {activities.map((item: any, index: number) => {
                 const dateKey = new Date(item.fromDate).toISOString().split('T')[0]; // Obtener la fecha para este día
 
                 return (
