@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header } from '../components/Header/Header';
 import { MapaArg } from '../components/Destinations/MapaArg';
 import { ProgressBar } from '../components/Questions/ProgressBar';
@@ -28,6 +28,7 @@ import {
   Trophy,
   Utensils,
 } from 'lucide-react';
+import { DialogWindow } from '../components/Questions/DialogWindow';
 
 interface FormData {
   province?: number | null;
@@ -176,6 +177,7 @@ const questions = [
 const FormQuestions = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
+  const [dialogWindowOpen, setDialogWindowOpen] = useState(false);
   const [selectedProvince, setSelectedProvince] = useState<Province>();
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -189,6 +191,10 @@ const FormQuestions = () => {
     company: null,
   });
   const [currentStep, setCurrentStep] = useState(1);
+
+  const handleCloseDialogWindow = () => {
+    setDialogWindowOpen(false);
+  };
 
   const [state, setState] = useState([
     {
@@ -242,7 +248,7 @@ const FormQuestions = () => {
     });
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     switch (currentQuestion) {
       case 0:
         const fromDate = new Date(formData.fromDate);
@@ -318,25 +324,25 @@ const FormQuestions = () => {
   };
 
   const submitFormData = async () => {
-    try {
-      formData.fromDate = state[0].startDate.toISOString();
-      formData.toDate = state[0].endDate.toISOString();
+    formData.fromDate = state[0].startDate.toISOString();
+    formData.toDate = state[0].endDate.toISOString();
 
-      const response = await post(
-        'https://api-turistear.koyeb.app/formQuestion',
-        {
-          'Content-Type': 'application/json',
-        },
-        formData,
-      );
+    const response = await post(
+      'https://api-turistear.koyeb.app/formQuestion',
+      {
+        'Content-Type': 'application/json',
+      },
+      formData,
+    );
 
-      if (response.statusCode === 201) {
-        const itinerary = response.data;
+    if (response.statusCode === 201) {
+      const itinerary = response.data;
 
-        navigate('/itineraryCalendar', { state: { itinerary } });
-      }
-    } catch (error) {
-      console.error('Error al enviar los datos:', error);
+      navigate('/itineraryCalendar', { state: { itinerary } });
+    }
+
+    if (response.statusCode === 401) {
+      setDialogWindowOpen(true);
     }
   };
 
@@ -360,7 +366,10 @@ const FormQuestions = () => {
   return (
     <>
       <Header />
-      <section className="min-h-[90vh] flex items-center justify-center bg-gray-100 text-black">
+      <DialogWindow isOpen={dialogWindowOpen} onClose={handleCloseDialogWindow} />
+      <section
+        className={`min-h-[90vh] flex items-center justify-center ${dialogWindowOpen ? 'opacity-10' : 'bg-gray-100'} text-black`}
+      >
         <div className="container mx-auto flex flex-col md:flex-row justify-center z-30 relative">
           <form className="flex flex-col w-full max-w-full items-center justify-center bg-white p-4 gap-y-6 md:gap-y-4 min-h-[500px]">
             <ProgressBar currentStep={currentStep} />
