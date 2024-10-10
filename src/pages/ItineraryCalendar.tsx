@@ -8,21 +8,23 @@ import deleteIcon from '/assets/delete.svg';
 /* Components */
 import { Calendar } from '../components/Calendar/Calendar';
 import { Header } from '../components/Header/Header';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useItineraryEvents } from '../utilities/useItinerary';
+import useFetchItinerary from '../utilities/useFetchItinerary';
 
 export const ItineraryCalendar = () => {
-  const { events, setEvents, itinerary } = useItineraryEvents();
+  const { itineraryId } = useParams();
+
+  const { itinerary, activities, setActivities } = useFetchItinerary(itineraryId || null);
 
   useEffect(() => {
-    console.log(events);
-    console.log(itinerary);
-  }, []);
+    console.log('Itinerario:', itinerary);
+    console.log('Activities:', activities);
+  }, [itinerary, activities]);
 
   const deleteEvent = (id: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este evento?')) {
-      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
+      setActivities((prevEvents) => prevEvents.filter((event) => event.id !== id));
     }
   };
 
@@ -34,7 +36,9 @@ export const ItineraryCalendar = () => {
         <aside className="col-span-1 p-4 flex">
           <div className="flex flex-col h-full w-full">
             <div className="flex flex-col justify-center border-b border-gray">
-              <h2 className="font-semibold tracking-[-0.5px] leading-none">{itinerary?.name}</h2>
+              <h2 className="font-semibold tracking-[-0.5px] leading-none">
+                {(itinerary as any)?.name}
+              </h2>
               <div className="flex flex-col p-2 gap-y-2">
                 <div className="flex items-center gap-x-2 cursor-pointer">
                   <img src={plusIcon} alt="" />
@@ -50,7 +54,7 @@ export const ItineraryCalendar = () => {
                 </div>
                 <div className="flex items-center gap-x-2 cursor-pointer">
                   <img src={alignIcon} alt="" />
-                  <Link to="/ItineraryDetail" state={{ itinerary }}>
+                  <Link to={`/itineraryDetail/${itineraryId}`}>
                     <p className="text-sm">Resumen del viaje</p>
                   </Link>
                 </div>
@@ -76,7 +80,7 @@ export const ItineraryCalendar = () => {
 
             {/* Eliminar actividad */}
             <div className="flex flex-col gap-4 md:my-4">
-              {events.length === 0 ? (
+              {activities.length === 0 ? (
                 <p>No hay actividades para eliminar</p>
               ) : (
                 <>
@@ -85,12 +89,12 @@ export const ItineraryCalendar = () => {
                   </h2>
 
                   <div className="w-full flex flex-col gap-2 mb-2">
-                    {events.map((event, index) => (
+                    {activities.map((activity, index) => (
                       <div key={index} className="flex items-center w-full gap-2">
-                        <button onClick={() => deleteEvent(event.id)}>
+                        <button onClick={() => deleteEvent(activity.id)}>
                           <img src={deleteIcon} alt="" />
                         </button>
-                        <p>{event.title}</p>
+                        <p>{activity.name}</p>
                       </div>
                     ))}
                   </div>
@@ -106,7 +110,7 @@ export const ItineraryCalendar = () => {
         {/* Main Column */}
         <main className="col-span-1 container mx-auto flex justify-center flex-1 ">
           <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-[900px]">
-            <Calendar setEvents={setEvents} events={events} />
+            <Calendar activities={activities} setActivities={setActivities} />
           </div>
         </main>
       </div>
