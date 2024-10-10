@@ -126,7 +126,7 @@ const Profile = () => {
     if (activeItem === 'posts' && publications) {
       // @ts-ignore
       setContent(components.posts);
-    } else if (activeItem === 'itineries') {
+    } else if (activeItem === 'itineraries') {
       // @ts-ignore
       setContent(components.itineries);
     }
@@ -148,12 +148,16 @@ const Profile = () => {
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
-        <LeftCommunity vista={'publications'}/>
+        <LeftCommunity vista={'publications'} />
         <div className="lg:w-[80%] w-[100%] lg:p-10 lg:pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
           {/* Portada */}
           <div className="">
             <div className="h-[200px]">
-              <img src={user?.coverPicture} alt={'Foto de portada'} className={'w-[100%] h-[100%]'}/>
+              <img
+                src={user?.coverPicture}
+                alt={'Foto de portada'}
+                className={'w-[100%] h-[100%]'}
+              />
             </div>
             <div className="flex text-l relative pl-2">
               <div className="lg:w-[78%] w-[90%] pt-4">
@@ -161,11 +165,9 @@ const Profile = () => {
                   <h1 className="lg:text-3xl text-xl tracking-[.1em] text-[#215a9d]">
                     {user?.name}
                   </h1>
-                  <h3 className="text-xl text-[#a2c8de]">{'@'+user?.username}</h3>
+                  <h3 className="text-xl text-[#a2c8de]">{'@' + user?.username}</h3>
                 </div>
-                <p className="mt-4">
-                  {user?.description}
-                </p>
+                <p className="mt-4">{user?.description}</p>
                 <div className="flex gap-4 lg:text-[14px] text-[10px] mt-2 text-[#999999]">
                   <div className="flex items-center gap-x-2">
                     <img src="/assets/location.svg" alt="Ubicación" className="w-6 h-6" />
@@ -173,7 +175,11 @@ const Profile = () => {
                   </div>
                   <div className="flex items-center gap-x-2">
                     <img src="/assets/calendar.svg" alt="Calendario" className="w-6 h-6" />
-                    <p>{user?.birthdate.slice(0,-14)}</p>
+                    <p>
+                      {user?.birthdate && typeof user.birthdate === 'string'
+                        ? user.birthdate.slice(0, -14)
+                        : ''}
+                    </p>
                   </div>
                 </div>
               </div>
