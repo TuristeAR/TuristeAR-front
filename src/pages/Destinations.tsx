@@ -126,7 +126,7 @@ const Destinations = () => {
               <MapaArg onProvinceClick={handleProvinceClick} />
             </div>
           </div>
-          <div className="w-px bg-custom-orange m-10"></div>
+          <div className="w-px bg-custom-orange m-10 "></div>
           <div ref={sectionRef} className="flex-1  max-w-[600px] w-full flex flex-col gap-y-6 ">
             <div className="flex flex-col gap-y-4">
               <h1 className="text-center">{selectedProvince?.name} </h1>
