@@ -23,12 +23,8 @@ describe('Nav Component', () => {
     render(
       <Router>
         <Nav />
-      </Router>
+      </Router>,
     );
-
-    // Verifica que el enlace de inicio de sesión está en el documento
-    const loginLink = screen.getByText(/Iniciá sesión/i);
-    expect(loginLink).toBeInTheDocument();
 
     // Verifica que los enlaces de navegación se muestren
     const destinationsLink = screen.getByText(/Destinos/i);
@@ -55,13 +51,16 @@ describe('Nav Component', () => {
     render(
       <Router>
         <Nav />
-      </Router>
+      </Router>,
     );
 
     // Espera a que el componente se actualice con la información del usuario
     await waitFor(() => {
       expect(screen.getByText(/Juan Pérez/i)).toBeInTheDocument();
-      expect(screen.getByAltText(/Foto de perfil/i)).toHaveAttribute('src', 'https://example.com/profile.jpg');
+      expect(screen.getByAltText(/Foto de perfil/i)).toHaveAttribute(
+        'src',
+        'https://example.com/profile.jpg',
+      );
     });
 
     // Verifica que los enlaces de navegación también se muestren
@@ -81,7 +80,7 @@ describe('Nav Component', () => {
     render(
       <Router>
         <Nav />
-      </Router>
+      </Router>,
     );
 
     // Verifica que el enlace de inicio de sesión está en el documento
