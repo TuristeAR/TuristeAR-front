@@ -9,13 +9,12 @@ type Province = {
 
 const provinces: Province[] = provinciasData;
 
-
 const EditProfile = () => {
-  type User={
+  type User = {
     id: number;
-    name: string,
-    profilePicture: string,
-  }
+    name: string;
+    profilePicture: string;
+  };
 
   const [user, setUser] = useState<User | null>(null);
 
@@ -59,7 +58,7 @@ const EditProfile = () => {
             >
               {provinces.map((item, index) => {
                 return (
-                  <option value={item.id}>
+                  <option key={index} value={item.id}>
                     {item.name}
                   </option>
                 );
