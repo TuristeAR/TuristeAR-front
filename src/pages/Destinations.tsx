@@ -102,7 +102,7 @@ const Destinations = () => {
     <>
       <Header />
       <section>
-        <div className="bg-[#E6E6E6] w-full h-[120px]">
+        <div className="bg-custom-whiteBlue15 w-full h-[120px] ">
           <div className="container mx-auto h-full flex flex-col items-center justify-center gap-y-4 ">
             <p className="px-8 lg:px-0 max-w-[600px] text-center font-semibold tracking-tight   ">
               Si ya sabés cuál es tu destino, seleccionalo para descubrir los mejores lugares y
@@ -126,7 +126,7 @@ const Destinations = () => {
               <MapaArg onProvinceClick={handleProvinceClick} />
             </div>
           </div>
-          <div className="w-px bg-custom-orange m-10 p-0.5"></div>
+          <div className="w-px bg-custom-orange m-10"></div>
           <div ref={sectionRef} className="flex-1  max-w-[600px] w-full flex flex-col gap-y-6 ">
             <div className="flex flex-col gap-y-4">
               <h1 className="text-center">{selectedProvince?.name} </h1>
@@ -154,7 +154,7 @@ const Destinations = () => {
                 </button>
               </div>
             </div>
-            <div className="border-b border-gray my-4 "></div>
+            <div className="h-px bg-custom-orange m-10"></div>
             <Carousel>
               {reviews?.places.map((item, index) => {
                 return (

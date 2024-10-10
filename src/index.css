@@ -10,6 +10,18 @@
     background-color: #FF8C00;
 }
 
+.bg-custom-black85 {
+    background-color: hsla(0, 0%, 0%, 0.85);
+}
+
+.bg-custom-whiteBlue15{
+    background-color: hsla(198, 100%, 45%, 0.15);
+}
+
+.custom-color {
+    background-color: #4700BB;
+}
+
 @layer base {
     h1 {
         @apply sm:text-7xl text-3xl font-bold text-black
