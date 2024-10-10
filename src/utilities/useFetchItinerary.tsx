@@ -7,7 +7,7 @@ const useFetchItinerary = (itineraryId: string | null) => {
   useEffect(() => {
     const fetchItinerary = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/itinerary/${itineraryId}`);
+        const response = await fetch(`https://api-turistear.koyeb.app/itinerary/${itineraryId}`);
         const data = await response.json();
         setItinerary(data.data.itinerary || null);
         setActivities(data.data.activities?.activities || []);
