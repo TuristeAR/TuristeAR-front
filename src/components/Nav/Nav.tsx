@@ -2,12 +2,12 @@ import { Link, useLocation } from 'react-router-dom';
 import logo from '/src/assets/TuristeAR-logo.png';
 import arrowRight from '/assets/arrow-right.svg';
 import { useEffect, useState } from 'react';
+import { get } from '../../utilities/http.util';
 
 export const Nav = () => {
   const location = useLocation();
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleLogout = () => {
     setUser(null);
@@ -16,22 +16,15 @@ export const Nav = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        const response = await fetch('https://api-turistear.koyeb.app/session', {
-          credentials: 'include',
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setUser(data.user);
-      } catch (error) {
-        setError('Error al obtener el usuario.'); // Manejo del error sin console.error
-      }
+      const response = await get('https://api-turistear.koyeb.app/session', {
+        'Content-Type': 'application/json',
+      });
+
+      setUser(response.user);
     };
 
     fetchUser();
-  }, [user]);
+  }, []);
 
   return (
     <>
