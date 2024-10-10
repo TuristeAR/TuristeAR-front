@@ -342,11 +342,9 @@ const FormQuestions = () => {
       },
       formData,
     );
-
     if (response.statusCode === 201) {
-      const itinerary = response.data;
-
-      navigate('/itineraryCalendar', { state: { itinerary } });
+      const itineraryId = response.data.id;
+      navigate(`/itineraryCalendar/${itineraryId}`);
     }
   };
 
