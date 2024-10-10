@@ -126,7 +126,7 @@ const ExpectedDestination = () => {
     // points of interest
     useEffect(() => {
     const fetchPointsInterest = async () => {
-      if (provincia) {  // Solo se ejecuta si provincia está definida
+      if (provincia) {  
         try {
           const response = await get(`https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&types=administrative_area_level_1&count=6`, {
             'Content-Type': 'application/json',
