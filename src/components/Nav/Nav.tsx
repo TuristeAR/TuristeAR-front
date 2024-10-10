@@ -2,36 +2,45 @@ import { Link, useLocation } from 'react-router-dom';
 import logo from '/src/assets/TuristeAR-logo.png';
 import arrowRight from '/assets/arrow-right.svg';
 import { useEffect, useState } from 'react';
+import { get } from '../../utilities/http.util';
 
 export const Nav = () => {
   const location = useLocation();
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleLogout = () => {
-    setUser(null);
-    window.location.href = '/';
+  const handleLogout = async () => {
+    try {
+      await get('https://api-turistear.koyeb.app/logout', {
+        'Content-Type': 'application/json',
+      });
+      setUser(null);
+      localStorage.removeItem('user');
+    } catch (error) {
+      console.error('Error al cerrar sesión', error);
+    }
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch('https://api-turistear.koyeb.app/session', {
-          credentials: 'include',
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setUser(data.user);
-      } catch (error) {
-        setError('Error al obtener el usuario.'); // Manejo del error sin console.error
-      }
-    };
+    const cachedUser = localStorage.getItem('user');
 
-    fetchUser();
-  }, [user]);
+    if (cachedUser) {
+      setUser(JSON.parse(cachedUser));
+    } else {
+      const fetchUser = async () => {
+        const response = await get('https://api-turistear.koyeb.app/session', {
+          'Content-Type': 'application/json',
+        });
+
+        if (response.statusCode === 200) {
+          localStorage.setItem('user', JSON.stringify(response.user));
+          setUser(response.user);
+        }
+      };
+
+      fetchUser();
+    }
+  }, []);
 
   return (
     <>
@@ -74,7 +83,7 @@ export const Nav = () => {
           <img src={arrowRight} alt="Arrow Right" className="hidden md:block w-6 h-6 " />
         </Link>
       ) : (
-        <div className="hidden md:flex items-center gap-x-4">
+        <div className="hidden mt-auto md:flex items-center gap-x-4">
           <img
             src={user.profilePicture}
             className="w-[3em] h-[3em] border-2 mt-4 md:mt-auto md:mb-0 border-white rounded-full cursor-pointer"
@@ -82,12 +91,10 @@ export const Nav = () => {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           />
           <h2 className="text-white font-bold text-[16px]">{user.name}</h2>
-
-          {/* Dropdown para cerrar sesión */}
           {isDropdownOpen && (
-            <div className="absolute top-[4em] right-8  bg-white shadow-lg rounded-md py-2 w-40">
+            <div className="absolute top-[4em] right-8 bg-white shadow-lg rounded-md py-2 w-40 z-50">
               <button
-                className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 z-50"
                 onClick={handleLogout}
               >
                 Cerrar sesión

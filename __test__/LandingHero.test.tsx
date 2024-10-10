@@ -12,7 +12,7 @@ describe('LandingHero', () => {
 
   test('renders the main heading', () => {
     render(<LandingHero />);
-    const headingElement = screen.getByText(/Descubrí la/);
+    const headingElement = screen.getByText(/Descubrí /);
     const spanElement = within(headingElement).getByText('Argentina');
     expect(spanElement).toBeInTheDocument();
   });

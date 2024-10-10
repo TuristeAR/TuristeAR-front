@@ -2,7 +2,7 @@ export const LandingTestimonial = () => {
   return (
     <>
       <section className="bg-white">
-        <div className=" max-w-screen-xl px-4 py-10 lg:px-8 ">
+        <div className="max-w-screen-xl xl:mx-auto px-4 py-10 lg:px-8 ">
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center">
             Lo que nuestros viajeros dicen sobre nosotros{' '}
           </h2>

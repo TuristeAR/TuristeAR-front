@@ -1,28 +1,30 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { get } from '../../utilities/http.util';
 
 export const NavMobile = () => {
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
-  const [error, setError] = useState<string | null>(null); // Estado para manejar errores
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch('https://api-turistear.koyeb.app/session', {
-          credentials: 'include',
+    const cachedUser = localStorage.getItem('user');
+
+    if (cachedUser) {
+      setUser(JSON.parse(cachedUser));
+    } else {
+      const fetchUser = async () => {
+        const response = await get('https://api-turistear.koyeb.app/session', {
+          'Content-Type': 'application/json',
         });
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-        } else {
-          setError('Usuario no autenticado'); 
+
+        if (response.statusCode === 200) {
+          localStorage.setItem('user', JSON.stringify(response.user));
+          setUser(response.user);
         }
-      } catch (error) {
-        setError('Error al obtener el usuario.'); 
-      }
-    };
-    fetchUser();
-  }, [user]);
+      };
+
+      fetchUser();
+    }
+  }, []);
 
   return (
     <nav className="bg-primary overflow-hidden my-4 rounded-lg  w-full h-[85vh]">

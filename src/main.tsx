@@ -32,10 +32,10 @@ root.render(
       <Route path="/community" element={<Publications />} />
       <Route path="/publications" element={<Publications />} />
       <Route path="/profile" element={<Profile />} />
-      <Route path="/itineraryCalendar" element={<ItineraryCalendar />} />
+      <Route path="/itineraryCalendar/:itineraryId" element={<ItineraryCalendar />} />
       <Route path="/forum" element={<Forum />} />
       <Route path="/jobs" element={<Jobs />} />
-      <Route path="/itineraryDetail" element={<ItineraryDetail />} />
+      <Route path="/itineraryDetail/:itineraryId" element={<ItineraryDetail />} />
     </Routes>
   </BrowserRouter>,
 );

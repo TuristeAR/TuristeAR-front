@@ -22,9 +22,9 @@ const infoComments = [
       ' ad eligendi iusto, perferendis atque accusantium consequatur facere.',
     imgPerson: '/assets/person.svg',
     imgs: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
+     '/assets/san-nicolas-buenos-aires.webp' ,
+     '/assets/san-nicolas-buenos-aires.webp' ,
+     '/assets/san-nicolas-buenos-aires.webp' ,
     ],
   },
   {
@@ -35,9 +35,9 @@ const infoComments = [
       ' ad eligendi iusto, perferendis atque accusantium consequatur facere.',
     imgPerson: '/assets/person.svg',
     imgs: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 3, src: '/assets/san-nicolas-buenos-aires.webp' },
+      '/assets/san-nicolas-buenos-aires.webp' ,
+      '/assets/san-nicolas-buenos-aires.webp' ,
+      '/assets/san-nicolas-buenos-aires.webp' ,
     ],
   },
 ];
