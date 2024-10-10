@@ -64,7 +64,9 @@ export const Nav = () => {
         </Link>
         <div></div>
       </nav>
-      {!user ? (
+      {user === null ? (
+        <div className="hidden md:w-[170px] md:flex justify-center items-center mt-4 md:mt-auto md:mb-0 gap-x-2"></div>
+      ) : !user ? (
         <Link
           to={'/login'}
           className="hidden md:flex justify-center items-center text-white text-lg mt-4 md:mt-auto md:mb-0 gap-x-2 hover:text-hover font-semibold"
@@ -82,9 +84,9 @@ export const Nav = () => {
           />
           <h2 className="text-white font-bold text-[16px]">{user.name}</h2>
           {isDropdownOpen && (
-            <div className="absolute top-[4em] right-8  bg-white shadow-lg rounded-md py-2 w-40">
+            <div className="absolute top-[4em] right-8 bg-white shadow-lg rounded-md py-2 w-40 z-50">
               <button
-                className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 z-50"
                 onClick={handleLogout}
               >
                 Cerrar sesión
