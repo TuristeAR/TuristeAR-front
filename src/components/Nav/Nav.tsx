@@ -9,9 +9,15 @@ export const Nav = () => {
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleLogout = () => {
-    setUser(null);
-    window.location.href = '/';
+  const handleLogout = async () => {
+    try {
+      await get('https://api-turistear.koyeb.app/logout', {
+        'Content-Type': 'application/json',
+      });
+      setUser(null);
+    } catch (error) {
+      console.error('Error al cerrar sesión', error);
+    }
   };
 
   useEffect(() => {
@@ -67,7 +73,7 @@ export const Nav = () => {
           <img src={arrowRight} alt="Arrow Right" className="hidden md:block w-6 h-6 " />
         </Link>
       ) : (
-        <div className="hidden md:flex items-center gap-x-4">
+        <div className="hidden mt-auto md:flex items-center gap-x-4">
           <img
             src={user.profilePicture}
             className="w-[3em] h-[3em] border-2 mt-4 md:mt-auto md:mb-0 border-white rounded-full cursor-pointer"
@@ -75,8 +81,6 @@ export const Nav = () => {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           />
           <h2 className="text-white font-bold text-[16px]">{user.name}</h2>
-
-          {/* Dropdown para cerrar sesión */}
           {isDropdownOpen && (
             <div className="absolute top-[4em] right-8  bg-white shadow-lg rounded-md py-2 w-40">
               <button
