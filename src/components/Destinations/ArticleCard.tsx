@@ -43,7 +43,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">{title}</h5>
         </a>
         <p className="mb-3 font-normal text-gray-700">{address}</p>
-        <div className="flex gap-1">
+        <div className="flex flex-wrap gap-1">
           <div className="flex">
             {types.slice(0, 3).map((type) => (
               <a
@@ -54,7 +54,8 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
               </a>
             ))}
           </div>
-          <svg
+          <div className='flex'>
+            <svg
             className="items-end ml-auto"
             xmlns="http://www.w3.org/2000/svg"
             height="24px"
@@ -65,6 +66,8 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             <path d="m223-107 68-292L64-596l300-25 116-276 117 276 299 25-227 197 68 292-257-155-257 155Z" />
           </svg>
           <span className="text-primary font-medium">{rating}</span>
+          </div>
+          
         </div>
       </div>
     </div>
