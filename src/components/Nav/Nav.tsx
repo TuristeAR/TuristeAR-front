@@ -15,21 +15,31 @@ export const Nav = () => {
         'Content-Type': 'application/json',
       });
       setUser(null);
+      localStorage.removeItem('user');
     } catch (error) {
       console.error('Error al cerrar sesión', error);
     }
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const response = await get('https://api-turistear.koyeb.app/session', {
-        'Content-Type': 'application/json',
-      });
+    const cachedUser = localStorage.getItem('user');
 
-      setUser(response.user);
-    };
+    if (cachedUser) {
+      setUser(JSON.parse(cachedUser));
+    } else {
+      const fetchUser = async () => {
+        const response = await get('https://api-turistear.koyeb.app/session', {
+          'Content-Type': 'application/json',
+        });
 
-    fetchUser();
+        if (response.statusCode === 200) {
+          localStorage.setItem('user', JSON.stringify(response.user));
+          setUser(response.user);
+        }
+      };
+
+      fetchUser();
+    }
   }, []);
 
   return (
@@ -64,9 +74,7 @@ export const Nav = () => {
         </Link>
         <div></div>
       </nav>
-      {user === null ? (
-        <div className="hidden md:w-[170px] md:flex justify-center items-center mt-4 md:mt-auto md:mb-0 gap-x-2"></div>
-      ) : !user ? (
+      {!user ? (
         <Link
           to={'/login'}
           className="hidden md:flex justify-center items-center text-white text-lg mt-4 md:mt-auto md:mb-0 gap-x-2 hover:text-hover font-semibold"
