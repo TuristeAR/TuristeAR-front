@@ -124,7 +124,7 @@ const Destinations = () => {
               <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
                 {selectedProvince?.description}
               </p>
-              <div className="flex justify-center gap-2 overflow-hidden">
+              <div className="flex justify-start gap-2 overflow-hidden">
                 {selectedProvince?.images.map((image, index) => (
                   <div
                     key={index}
@@ -142,7 +142,7 @@ const Destinations = () => {
               {selectedProvince ? (
                 <div>
                   <button className="btn-blue" onClick={handleRedirect}>
-                    Descrubí más de {selectedProvince?.name}{' '}
+                    Descubrí más de {selectedProvince?.name}
                   </button>
                 </div>
               ) : (
@@ -176,7 +176,7 @@ const Destinations = () => {
                       <p className="italic text-sm">
                         {item.name}, {selectedProvince?.name}
                       </p>
-                      <div className="flex justify-center gap-2">
+                      <div className="flex justify-start gap-2">
                         {item.reviews[0].photos.map((image, imgIndex) => (
                           <div
                             key={imgIndex}
