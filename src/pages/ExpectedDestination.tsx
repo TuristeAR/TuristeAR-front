@@ -23,73 +23,6 @@ const swipper = [
   { id: 5, src: '/assets/san-nicolas-buenos-aires.webp' },
 ];
 
-const puntosDeInteres = [
-  {
-    title: 'Buenos Aires',
-    description:
-      'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-    link: '',
-  },
-  {
-    title: 'Buenos Aires',
-    description:
-      'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-    link: '',
-  },
-  {
-    title: 'Buenos Aires',
-    description:
-      'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-    link: '',
-  },
-  {
-    title: 'Buenos Aires',
-    description:
-      'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-    link: '',
-  },
-  {
-    title: 'Buenos Aires',
-    description:
-      'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y artístico de la ciudad...',
-    img: [
-      { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-      { id: 2, src: '/assets/san-nicolas-buenos-aires.webp' },
-    ],
-    link: '',
-  },
-];
 
 
 type Image = {
@@ -127,6 +60,18 @@ type Place = {
   reviews: Review[];
 }
 
+type PlaceCard = {
+  id: number;
+  name: string;
+  types: string[];
+  rating: number;
+  address: string;
+  reviews: {
+    id: number;
+    photos: string[];
+  }[];
+}
+
 const ExpectedDestination = () => {
   const [showedLugares, setShowedLugares] = useState(false);
   const [showedCulturaTradicion, setShowedCulturaTradicion] = useState(false);
@@ -135,6 +80,8 @@ const ExpectedDestination = () => {
  
   const { nombreDeLaProvincia } = useParams();
   const [provincia, setProvincia] = useState<Province>(); 
+  const [gastronomyPlace, setGastronomyPlace] = useState<PlaceCard[]>([]); 
+  const [pointsInterest, setPointsInterest] = useState<PlaceCard[]>([]); 
 
   useEffect(() => {
     const fetchProvince = async () => {
@@ -156,6 +103,45 @@ const ExpectedDestination = () => {
     fetchProvince();
   }, [nombreDeLaProvincia]);
 
+
+    // Gastronomy
+    useEffect(() => {
+      const fetchGastronomyPlace = async () => {
+        if (provincia) {  // Solo se ejecuta si provincia está definida
+          try {
+            const response = await get(`https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=restaurant&types=food&count=6`, {
+              'Content-Type': 'application/json',
+            });
+
+            setGastronomyPlace(response.data);
+          } catch (error) {
+            console.error('Error fetching GastronomyPlace:', error);
+          } 
+        }
+      };
+  
+      fetchGastronomyPlace();
+    }, [provincia]);
+
+    // points of interest
+    useEffect(() => {
+    const fetchPointsInterest = async () => {
+      if (provincia) {  // Solo se ejecuta si provincia está definida
+        try {
+          const response = await get(`https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&types=administrative_area_level_1&count=6`, {
+            'Content-Type': 'application/json',
+          });
+
+          setPointsInterest(response.data);
+        } catch (error) {
+          console.error('Error fetching GastronomyPlace:', error);
+        }
+      }
+    };
+
+    fetchPointsInterest();
+  }, [provincia]);
+    
   if (!provincia) return <div></div>;
 
   return (
@@ -293,7 +279,7 @@ const ExpectedDestination = () => {
               <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 spaceBetween={5}
-                slidesPerView={4}
+                slidesPerView={pointsInterest.length < 4 ? pointsInterest.length : 4}
                 navigation={{
                   nextEl: '.swiper-button-next',
                   prevEl: '.swiper-button-prev',
@@ -323,13 +309,16 @@ const ExpectedDestination = () => {
                   },
                 }}
               >
-                {puntosDeInteres.map((article, index) => (
+                {pointsInterest.map((article, index) => (
                   <SwiperSlide key={index}>
                     <ArticleCard
-                      title={article.title}
-                      images={article.img}
-                      description={article.description}
-                      link={article.link}
+                       title={article.name}
+                       images={article.reviews.length>0 ? article.reviews[0].photos :[]}
+                       description={article.name}
+                       link={"article.link"}
+                       rating={article.rating}
+                       types={article.types}
+                       address={article.address}
                     />
                   </SwiperSlide>
                 ))}
@@ -484,13 +473,16 @@ const ExpectedDestination = () => {
                   },
                 }}
               >
-                {puntosDeInteres.map((article, index) => (
+                {gastronomyPlace?.map((article, index) => (
                   <SwiperSlide key={index}>
                     <ArticleCard
-                      title={article.title}
-                      images={article.img}
-                      description={article.description}
-                      link={article.link}
+                      title={article.name}
+                      images={article.reviews.length>0 ? article.reviews[0].photos :[]}
+                      description={article.name}
+                      link={"article.link"}
+                      rating={article.rating}
+                      types={article.types}
+                      address={article.address}
                     />
                   </SwiperSlide>
                 ))}
