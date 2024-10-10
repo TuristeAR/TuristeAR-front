@@ -128,7 +128,7 @@ const ExpectedDestination = () => {
     const fetchPointsInterest = async () => {
       if (provincia) {  
         try {
-          const response = await get(`https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&types=administrative_area_level_1&count=6`, {
+          const response = await get(`https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&count=6`, {
             'Content-Type': 'application/json',
           });
 
