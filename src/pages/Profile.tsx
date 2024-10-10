@@ -5,40 +5,6 @@ import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 import { TravelCard } from '../components/Community/TravelCard';
 import { useEffect, useRef, useState } from 'react';
 
-const travels =[
-  {
-    imgProvince: '/assets/san-nicolas-buenos-aires.webp',
-    province: 'Buenos Aires',
-    departure: '09-12-2018',
-    arrival: '04-11-2023',
-    participants:[
-      {
-        imgPerson: '/assets/person.svg',
-        user: 'Germán Cano',
-      },
-      {
-        imgPerson: '/assets/person.svg',
-        user: 'John Kennedy',
-      },
-      {
-        imgPerson: '/assets/person.svg',
-        user: 'Fernando Diniz',
-      },
-    ]
-  },
-  {
-    imgProvince: '/assets/san-nicolas-buenos-aires.webp',
-    province: 'Catamarca',
-    departure: '25-02-2023',
-    arrival: '04-03-2023',
-    participants:[
-      {
-        imgPerson: '/assets/person.svg',
-        user: 'Germán Cano',
-      }
-    ]
-  },
-]
 const options = ['Imagen', 'Itinerario', 'Categoría', 'Ubicación'];
 
 const Profile = () => {
@@ -62,8 +28,19 @@ const Profile = () => {
     user:  User | null
   }
 
+  type Itinerary={
+    id: number,
+    createdAt: string,
+    name: string,
+    fromDate: string,
+    toDate: string,
+    participants: User[],
+    user:  User | null
+  }
+
   const [user, setUser] = useState<User | null>(null);
   const [publications, setPublications] = useState<Publication[] | null>(null);
+  const [itineraries, setItineraries] = useState<Itinerary[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -103,6 +80,23 @@ const Profile = () => {
         const publicationsData = await publicationsResponse.json();
         setPublications(publicationsData);
         setError('');
+
+        const itinerariesResponse = await fetch(
+          `https://api-turistear.koyeb.app/itinerary/byUser/${sessionData.user.id}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
+        );
+
+        if (!itinerariesResponse.ok) {
+          setError('Error al obtener los itinerarios');
+          return;
+        }
+
+        const itinerariesData = await itinerariesResponse.json();
+        setItineraries(itinerariesData.participants)
+        setError('');
       } catch (error) {
         setError('Error en la comunicación con el servidor');
         setIsAuthenticated(false);
@@ -117,10 +111,10 @@ const Profile = () => {
   const [activeItem, setActiveItem] = useState('posts');
 
   const components = {
-    travels: travels.map((travel, index) => (
-      <TravelCard key={index} imgProvince={travel.imgProvince} province={travel.province}
-                  departure={travel.departure} arrival={travel.arrival}
-                  participants={travel.participants} />
+    itineries: itineraries?.map((itinerary, index) => (
+      <TravelCard key={index} imgProvince={'/assets/san-nicolas-buenos-aires.webp'} province={itinerary.name}
+                  departure={itinerary.fromDate} arrival={itinerary.toDate}
+                  participants={itinerary.participants}  id={itinerary.id}/>
     )),
     posts: publications?.map((publication, index) => (
       <ItineraryCard key={index} profilePicture={user?.profilePicture} userId={user?.name}
@@ -132,9 +126,9 @@ const Profile = () => {
     if (activeItem === 'posts' && publications) {
       // @ts-ignore
       setContent(components.posts);
-    } else if (activeItem === 'travels') {
+    } else if (activeItem === 'itineries') {
       // @ts-ignore
-      setContent(components.travels);
+      setContent(components.itineries);
     }
   }, [publications, activeItem]); // Dependencias para que se ejecute cuando cambien
 
@@ -203,20 +197,20 @@ const Profile = () => {
           {/* Publicaciones */}
           <div className="border-b border-black grid grid-cols-2 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
             <h2
-              className={`hover:cursor-pointer text-center pb-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`}
+              className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`}
               onClick={() => handleClick('posts')}
             >
               Mis publicaciones
             </h2>
             <h2
-              className={`hover:cursor-pointer text-center pb-2 rounded-t-xl ${activeItem === 'travels' ? 'bg-[#c0daeb]' : ''}`}
-              onClick={() => handleClick('travels')}
+              className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'itineraries' ? 'bg-[#c0daeb]' : ''}`}
+              onClick={() => handleClick('itineraries')}
             >
-              Mis viajes
+              Mis itinerarios
             </h2>
           </div>
           <div
-            className={`rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto ${activeItem === 'travels' ? 'hidden' : ''}`}
+            className={`rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'hidden' : ''}`}
           >
             <CreatePost options={options} profilePicture={user?.profilePicture} />
           </div>
