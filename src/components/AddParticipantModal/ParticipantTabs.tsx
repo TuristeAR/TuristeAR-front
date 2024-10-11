@@ -6,22 +6,25 @@ type User = {
   name: string;
   username: string;
   profilePicture: string;
-  description: string;
-  coverPicture: string;
-  location: string;
-  birthdate: string;
-  googleId: string;
 };
 
 interface ParticipantTabsProps {
   itinerary: number;
+  tap?: number;
+  usersOldNav: User[];
+  onUsersOldUpdate: (users: User[]) => void;
 }
-const ParticipantTabs: React.FC<ParticipantTabsProps> = ({ itinerary }) => {
-  const [openTab, setOpenTab] = useState(1);
+const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
+  itinerary,
+  tap,
+  usersOldNav,
+  onUsersOldUpdate,
+}) => {
+  const [openTab, setOpenTab] = useState(tap || 1);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState<User[]>([]);
-  const [usersOld, setUsersOld] = useState<User[]>([]);
+  const [usersOld, setUsersOld] = useState<User[]>(usersOldNav);
 
   const closeModal = () => setShowModal(false);
 
@@ -43,7 +46,9 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({ itinerary }) => {
     if (searchTerm) {
       const fetchData = async () => {
         try {
-          const response = await fetch(`http://localhost:3001/users/search?name=${searchTerm}&itineraryId=${itinerary}`);
+          const response = await fetch(
+            `http://localhost:3001/users/search?name=${searchTerm}&itineraryId=${itinerary}`,
+          );
           const data = await response.json();
           setUsers(data.data);
         } catch (error) {
@@ -55,38 +60,38 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({ itinerary }) => {
     }
   }, [searchTerm]);
 
-
   /* Participants */
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            console.log("itinerary:", itinerary);
-            const response = await fetch(`http://localhost:3001/itinerary/paticipants/${itinerary}`); // Asegúrate que la URL es correcta
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+      try {
+        const response = await fetch(`http://localhost:3001/itinerary/participants/${itinerary}`, {
+          method: 'GET',
+          credentials: 'include',
+        });
 
-            const data = await response.json();
-
-            if (data.status === "success" && data.participants) {
-                setUsersOld(data.participants.participants); 
-            } else {
-                setUsersOld([]); 
-            }
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            setUsersOld([]); 
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const data = await response.json();
+        if (data.status === 'success' && data.itineraryParticipants.participants) {
+          setUsersOld(data.itineraryParticipants.participants);
+        } else {
+          setUsersOld([]);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setUsersOld([]);
+      }
     };
 
     fetchData();
-}, [itinerary]);
-
+  }, [itinerary]);
 
   //Add user
   const handleAddUser = async (participantId) => {
     try {
+      handleRemoveUser(participantId);
       const response = await fetch('http://localhost:3001/itinerary/add-user', {
         method: 'POST',
         headers: {
@@ -94,18 +99,19 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({ itinerary }) => {
         },
         body: JSON.stringify({ itineraryId: itinerary, participantId }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
-      const data = await response.json(); 
-  
+
+      const data = await response.json();
+
       if (data.status === 'success') {
         setUsersOld(data.data.participants);
-        handleRemoveUser(participantId);
+        onUsersOldUpdate(data.data.participants);
 
         console.log('Participantes actualizados:', data.data.participants);
+
       } else {
         console.error('Error al agregar el usuario:', data.message);
       }
@@ -113,10 +119,39 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({ itinerary }) => {
       console.error('Error in handleAddUser:', error);
     }
   };
-  
+
   const handleRemoveUser = (userId: number) => {
     setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
   };
+
+  //Delete user
+  const removeParticipant = async (itineraryId: number, participantId: number) => {
+    try {
+      const updatedUsersOld = usersOld.filter((user) => user.id !== participantId);
+    setUsersOld(updatedUsersOld);
+    onUsersOldUpdate(updatedUsersOld);
+
+      const response = await fetch('http://localhost:3001/itinerary/remove-user', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ itineraryId, participantId }),
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error removing participant:', error);
+    }
+  };
+
+  //search userold
+  const filteredUsers = usersOld.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
   return (
     <>
       <div className="flex flex-wrap">
@@ -161,25 +196,25 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({ itinerary }) => {
               </a>
             </li>
           </ul>
-          <div className="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
-            <input
-              type="text"
-              name="email"
-              id="users-search"
-              className="bg-slate-50 border border-gray text-black sm:text-sm rounded-lg focus:ring-slate-50 focus:border-primary block w-full p-2.5"
-              placeholder="Buscar participantes"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
 
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 ">
-            <div className="px-4 py-5 flex-auto">
+            <div className="px-4  pb-5 flex-auto">
               <div className="tab-content tab-space">
                 <div className={openTab === 1 ? 'block' : 'hidden'} id="link1">
-                  <div className="max-h-56 overflow-y-auto">
-                    {usersOld &&
-                      usersOld.map((user) => (
+                  <div className="px-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
+                    <input
+                      type="text"
+                      name="email"
+                      id="users-search"
+                      className="bg-slate-50 border border-gray text-black sm:text-sm rounded-lg focus:ring-slate-50 focus:border-primary block w-full p-2.5"
+                      placeholder="Buscar participantes"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <div className="max-h-52 overflow-y-auto">
+                    {filteredUsers &&
+                      filteredUsers.map((user) => (
                         <div className="flex justify-between" key={user.id}>
                           <div className="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
                             <img
@@ -196,6 +231,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({ itinerary }) => {
                           <div className="p-4 whitespace-nowrap space-x-2">
                             <button
                               type="button"
+                              onClick={() => removeParticipant(itinerary, user.id)}
                               data-modal-toggle="add-user-modal"
                               className="w-1/2 text-white bg-[#ff0000] hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
                             >
@@ -219,6 +255,17 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({ itinerary }) => {
                   </div>
                 </div>
                 <div className={openTab === 2 ? 'block' : 'hidden'} id="link2">
+                  <div className="px-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
+                    <input
+                      type="text"
+                      name="email"
+                      id="users-search"
+                      className="bg-slate-50 border border-gray text-black sm:text-sm rounded-lg focus:ring-slate-50 focus:border-primary block w-full p-2.5"
+                      placeholder="Buscar participantes"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
                   <div className="max-h-56 overflow-y-auto">
                     {users &&
                       users.map((user) => (
@@ -238,7 +285,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({ itinerary }) => {
                           <div className="p-4 whitespace-nowrap space-x-2">
                             <button
                               type="button"
-                              onClick={() => handleAddUser(user.id)} 
+                              onClick={() => handleAddUser(user.id)}
                               data-modal-toggle="add-user-modal"
                               className="w-1/2 text-white bg-primary hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
                             >
