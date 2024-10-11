@@ -79,15 +79,15 @@ export const Calendar = ({
       }}
       eventContent={(eventInfo) => (
         <div className="flex flex-col overflow-hidden">
-          <span className="text-[11px] font-semibold truncate]">
+          <span className="text-[11px] md:text-sm font-semibold whitespace-normal break-words]">
             {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
           </span>
-          <div className="flex space-x-1 mt-1">
-            <button onClick={() => deleteEvent(eventInfo.event.id)} className="ml-2 text-blue-500">
-              ❌
-            </button>
-            <button onClick={() => modifyEvento(eventInfo.event.id)} className=" text-blue-500">
+          <div className="flex justify-between mt-1">
+            <button onClick={() => modifyEvento(eventInfo.event.id)} className="ml-2 text-blue-500">
               ✏️
+            </button>
+            <button onClick={() => deleteEvent(eventInfo.event.id)} className="mr-2 text-blue-500">
+              ❌
             </button>
           </div>
         </div>
