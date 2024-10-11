@@ -7,6 +7,7 @@ import deleteIcon from '/assets/delete.svg';
 
 /* Components */
 import { Calendar } from '../components/Calendar/Calendar';
+import { AddParticipantModal } from '../components/AddParticipantModal/AddParticipantModal';
 import { Header } from '../components/Header/Header';
 import { Link, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -60,7 +61,7 @@ export const ItineraryCalendar = () => {
                 </div>
               </div>
             </div>
-
+            <AddParticipantModal itinerary={Number(itineraryId)} />
             <div className="flex flex-col gap-4 my-4 border-b border-gray">
               <h2 className="font-semibold tracking-[-0.5px] leading-none">Participantes</h2>
               <div className="w-full flex flex-col gap-2 mb-2">
