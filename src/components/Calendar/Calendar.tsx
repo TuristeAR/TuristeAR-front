@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -43,6 +44,25 @@ export const Calendar = ({
     date: activity.fromDate.substring(0, 10),
   }));
 
+  useEffect(() => {
+    const calendarRows = document.querySelectorAll('.fc-daygrid-body tr');
+
+    calendarRows.forEach((row) => {
+      const daysInRow = row.querySelectorAll('.fc-daygrid-day');
+      let allDaysOutOfMonth = true;
+
+      daysInRow.forEach((day) => {
+        if (!day.classList.contains('fc-day-other')) {
+          allDaysOutOfMonth = false;
+        }
+      });
+
+      if (allDaysOutOfMonth) {
+        (row as HTMLElement).style.display = 'none';
+      }
+    });
+  }, []);
+
   return (
     <FullCalendar
       plugins={[dayGridPlugin, interactionPlugin]}
@@ -59,7 +79,9 @@ export const Calendar = ({
       }}
       eventContent={(eventInfo) => (
         <div className="flex flex-col overflow-hidden">
-          <span className="text-[11px] font-semibold truncate]">{eventInfo.event.title}</span>
+          <span className="text-[11px] font-semibold truncate]">
+            {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
+          </span>
           <div className="flex space-x-1 mt-1">
             <button onClick={() => deleteEvent(eventInfo.event.id)} className="ml-2 text-blue-500">
               ❌

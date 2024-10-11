@@ -31,9 +31,9 @@ export const ItineraryCalendar = () => {
   return (
     <section className="h-screen xl:h-auto overflow-x-clip relative">
       <Header containerStyles="fixed top-0 left-0 right-0 z-[60]" />
-      <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-4 h-full mt-20 py-4 ">
+      <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-4 h-full mt-20 py-4">
         {/* Left Column */}
-        <aside className="col-span-1 p-4 flex">
+        <aside className="order-2 lg:order-1 col-span-1 p-4 flex">
           <div className="flex flex-col h-full w-full">
             <div className="flex flex-col justify-center border-b border-gray">
               <h2 className="font-semibold tracking-[-0.5px] leading-none">
@@ -87,14 +87,13 @@ export const ItineraryCalendar = () => {
                   <h2 className="font-semibold tracking-[-0.5px] leading-none">
                     Eliminar actividades
                   </h2>
-
                   <div className="w-full flex flex-col gap-2 mb-2">
                     {activities.map((activity, index) => (
-                      <div key={index} className="flex items-center w-full gap-2">
-                        <button onClick={() => deleteEvent(activity.id)}>
-                          <img src={deleteIcon} alt="" />
+                      <div key={index} className="flex justify-between items-center w-full">
+                        <p className="text-sm w-[90%]">{activity.name}</p>
+                        <button className="w-[10%]" onClick={() => deleteEvent(activity.id)}>
+                          <img className="w-5 mx-auto" src={deleteIcon} alt="" />
                         </button>
-                        <p>{activity.name}</p>
                       </div>
                     ))}
                   </div>
@@ -106,10 +105,9 @@ export const ItineraryCalendar = () => {
             </div>
           </div>
         </aside>
-
         {/* Main Column */}
-        <main className="col-span-1 container mx-auto flex justify-center flex-1 ">
-          <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-[900px]">
+        <main className="order-1 lg:order-2 col-span-1 container mx-auto">
+          <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-full">
             <Calendar activities={activities} setActivities={setActivities} />
           </div>
         </main>
