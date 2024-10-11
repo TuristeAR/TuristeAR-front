@@ -15,7 +15,7 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
       const path = document.getElementById(String(defaultProvinceId)) as unknown as SVGPathElement;
       if (path) {
         setOriginalColor(path.getAttribute('fill') || '');
-        path.style.fill = '#4700BB';
+        path.style.fill = '#FF8C00';
         setPreviousPath(path);
       }
     }

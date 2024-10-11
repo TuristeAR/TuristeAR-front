@@ -31,7 +31,7 @@ import {
 import { DialogWindow } from '../components/Questions/DialogWindow';
 
 interface FormData {
-  province?: number | null;
+  provinceId?: number | null;
   fromDate: string;
   toDate: string;
   economy: number | null;
@@ -185,7 +185,7 @@ const FormQuestions = () => {
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [formData, setFormData] = useState<FormData>({
-    province: null,
+    provinceId: null,
     fromDate: '',
     toDate: '',
     economy: null,
@@ -229,7 +229,7 @@ const FormQuestions = () => {
   const handleProvinceClick = (id: number) => {
     const province = provinces.find((p) => p.id === id);
     setSelectedProvince(province);
-    formData.province = province?.id;
+    formData.provinceId = province.id;
   };
 
   const handleSingleSelection = (name: keyof FormData, value: number) => {
@@ -350,6 +350,7 @@ const FormQuestions = () => {
 
   const saveFormDataToLocalStorage = (data: FormData) => {
     localStorage.setItem('formData', JSON.stringify(data));
+    localStorage.setItem('selectedProvince', JSON.stringify(selectedProvince));
   };
 
   const getFormDataFromLocalStorage = (): FormData | null => {
@@ -357,13 +358,21 @@ const FormQuestions = () => {
     return data ? JSON.parse(data) : null;
   };
 
+  const getSelectedProvinceFromLocalStorage = (): Province | null => {
+    const data = localStorage.getItem('selectedProvince');
+    return data ? JSON.parse(data) : null;
+  };
+
   useEffect(() => {
     const savedFormData = getFormDataFromLocalStorage();
 
     if (savedFormData) {
+      const savedProvince = getSelectedProvinceFromLocalStorage();
       setFormData(savedFormData);
+      setSelectedProvince(savedProvince);
       setPendingItinerary(true);
       localStorage.removeItem('formData');
+      localStorage.removeItem('selectedProvince');
     }
 
     const fetchProvinces = async () => {
@@ -409,10 +418,10 @@ const FormQuestions = () => {
                     Resumen de tu viaje
                   </h2>
                   <div className="flex flex-col">
-                    {formData.province && (
+                    {selectedProvince && (
                       <span className="text-center text-xl my-1">
                         Provincia:{' '}
-                        <strong>{provinces.find((p) => p.id === formData.province)?.name}</strong>
+                        <strong>{provinces.find((p) => p.id === selectedProvince.id)?.name}</strong>
                       </span>
                     )}
                     <span className="text-center text-xl my-1">

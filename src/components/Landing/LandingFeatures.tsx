@@ -25,7 +25,7 @@ export const LandingFeatures = () => {
             </p>
             <a
               href="/community"
-              className="inline-flex items-center text-white bg-primary hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+              className="inline-flex items-center text-white bg-custom-orange hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
             >
               Ver más publicaciones
               <img src={arrowRight} alt="Arrow Right Blue" className="w-6 h-6" />
