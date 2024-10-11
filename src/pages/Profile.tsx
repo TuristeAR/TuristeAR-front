@@ -43,11 +43,10 @@ const Profile = () => {
   const [itineraries, setItineraries] = useState<Itinerary[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-
+        // Fetch de la sesión
         const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
           method: 'GET',
           credentials: 'include',
@@ -64,23 +63,28 @@ const Profile = () => {
         setIsAuthenticated(true);
         setError('');
 
-        const publicationsResponse = await fetch(
-          `https://api-turistear.koyeb.app/publications/${sessionData.user.id}`,
-          {
-            method: 'GET',
-            credentials: 'include',
-          }
-        );
+        // Fetch de publicaciones
+        try {
+          const publicationsResponse = await fetch(
+            `https://api-turistear.koyeb.app/publications/${sessionData.user.id}`,
+            {
+              method: 'GET',
+              credentials: 'include',
+            }
+          );
 
-        if (!publicationsResponse.ok) {
-          setError('Error al obtener las publicaciones');
-          return;
+          if (!publicationsResponse.ok) {
+            console.log('Error al obtener publicaciones:', await publicationsResponse.json());
+          } else {
+            const publicationsData = await publicationsResponse.json();
+            setPublications(publicationsData);
+          }
+        } catch (err) {
+          setError(err)
+          console.log('Error al obtener las publicaciones:', err);
         }
 
-        const publicationsData = await publicationsResponse.json();
-        setPublications(publicationsData);
-        setError('');
-
+        // Fetch de itinerarios (se ejecuta independientemente del resultado de publicaciones)
         const itinerariesResponse = await fetch(
           `https://api-turistear.koyeb.app/itinerary/byUser/${sessionData.user.id}`,
           {
@@ -95,8 +99,9 @@ const Profile = () => {
         }
 
         const itinerariesData = await itinerariesResponse.json();
-        setItineraries(itinerariesData.participants)
+        setItineraries(itinerariesData.participants);
         setError('');
+
       } catch (error) {
         setError('Error en la comunicación con el servidor');
         setIsAuthenticated(false);
@@ -115,12 +120,13 @@ const Profile = () => {
       <TravelCard key={index} imgProvince={'/assets/san-nicolas-buenos-aires.webp'} province={itinerary.name}
                   departure={itinerary.fromDate} arrival={itinerary.toDate}
                   participants={itinerary.participants}  id={itinerary.id}/>
-    )),
+    )) ,
     posts: publications?.map((publication, index) => (
       <ItineraryCard key={index} profilePicture={user?.profilePicture} userId={user?.name}
                      creationDate={publication.creationDate} description={publication.description} images={publication.images} />
     )),
   };
+
   useEffect(() => {
     // Actualiza el contenido cada vez que publications cambie
     if (activeItem === 'posts' && publications) {

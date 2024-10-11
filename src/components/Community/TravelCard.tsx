@@ -34,9 +34,9 @@ export const TravelCard : React.FC<TravelData> = ({imgProvince,province,departur
         </div>
         <div className="lg:w-[60%] p-4 flex flex-col gap-2">
           <h1 className="text-2xl">{province}</h1>
-          <div className="flex flex-col gap-2">
-            <p className="text-l">Ida: {departure.slice(0,-14)}  </p>
-            <p className="text-l">Vuelta: {arrival.slice(0,-14)}</p>
+          <div className="flex flex-col gap-2 text-l">
+            <p>Ida : {departure && typeof departure === 'string' ? departure.slice(0, -14) : ''}</p>
+            <p>Vuelta: {arrival && typeof arrival === 'string' ? arrival.slice(0, -14) : ''}</p>
           </div>
           <details>
             <summary className="font-semibold">Participantes:</summary>
