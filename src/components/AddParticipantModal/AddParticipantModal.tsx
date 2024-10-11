@@ -23,7 +23,7 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({ itinerary,
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/itinerary/participants/${itinerary}`, {
+        const response = await fetch(`https://api-turistear.koyeb.app/itinerary/participants/${itinerary}`, {
           method: 'GET',
           credentials: 'include',
         });

@@ -47,7 +47,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `http://localhost:3001/users/search?name=${searchTerm}&itineraryId=${itinerary}`,
+            `https://api-turistear.koyeb.app/users/search?name=${searchTerm}&itineraryId=${itinerary}`,
           );
           const data = await response.json();
           setUsers(data.data);
@@ -64,7 +64,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/itinerary/participants/${itinerary}`, {
+        const response = await fetch(`https://api-turistear.koyeb.app/itinerary/participants/${itinerary}`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -92,7 +92,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   const handleAddUser = async (participantId) => {
     try {
       handleRemoveUser(participantId);
-      const response = await fetch('http://localhost:3001/itinerary/add-user', {
+      const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
     setUsersOld(updatedUsersOld);
     onUsersOldUpdate(updatedUsersOld);
 
-      const response = await fetch('http://localhost:3001/itinerary/remove-user', {
+      const response = await fetch('https://api-turistear.koyeb.app/itinerary/remove-user', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
