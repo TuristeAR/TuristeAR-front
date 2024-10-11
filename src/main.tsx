@@ -28,8 +28,8 @@ root.render(
       <Route path="/destino-esperado/:nombreDeLaProvincia" element={<ExpectedDestination />} />
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
-      <Route path="/editProfile" element={<EditProfile />} />
-      <Route path="/community" element={<Profile />} />
+      <Route path="/editProfile/:id" element={<EditProfile />} />
+      <Route path="/community" element={<Publications />} />
       <Route path="/publications" element={<Publications />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/itineraryCalendar/:itineraryId" element={<ItineraryCalendar />} />
