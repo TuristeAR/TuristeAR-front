@@ -7,6 +7,7 @@ import deleteIcon from '/assets/delete.svg';
 
 /* Components */
 import { Calendar } from '../components/Calendar/Calendar';
+import { AddParticipantModal } from '../components/AddParticipantModal/AddParticipantModal';
 import { Header } from '../components/Header/Header';
 import { Link, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -60,20 +61,12 @@ export const ItineraryCalendar = () => {
                 </div>
               </div>
             </div>
-
             <div className="flex flex-col gap-4 my-4 border-b border-gray">
-              <h2 className="font-semibold tracking-[-0.5px] leading-none">Participantes</h2>
               <div className="w-full flex flex-col gap-2 mb-2">
-                {['Sofia Ramirez', 'Ana Martinez', 'German Riggiano', 'Camila Ibarra'].map(
-                  (name) => (
-                    <div key={name} className="flex items-center w-full gap-2">
-                      <div className="bg-gray-50 w-8 h-8 rounded-full"></div>
-                      <p>{name}</p>
-                    </div>
-                  ),
-                )}
+             
                 <div>
-                  <p className="cursor-pointer">Agregar amigos</p>
+                  <AddParticipantModal itinerary={Number(itineraryId)} tap={1}/>
+                  <AddParticipantModal itinerary={Number(itineraryId)} tap={2} />
                 </div>
               </div>
             </div>
