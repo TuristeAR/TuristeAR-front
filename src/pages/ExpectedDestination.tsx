@@ -279,7 +279,7 @@ const ExpectedDestination = () => {
               <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 spaceBetween={5}
-                slidesPerView={pointsInterest.length < 4 ? pointsInterest.length : 4}
+                slidesPerView={4}
                 navigation={{
                   nextEl: '.swiper-button-next',
                   prevEl: '.swiper-button-prev',

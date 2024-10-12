@@ -10,13 +10,23 @@ import { Calendar } from '../components/Calendar/Calendar';
 import { AddParticipantModal } from '../components/AddParticipantModal/AddParticipantModal';
 import { Header } from '../components/Header/Header';
 import { Link, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
+
+type User = {
+  id: number;
+  email: string;
+  name: string;
+  username: string;
+  profilePicture: string;
+};
 
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
 
   const { itinerary, activities, setActivities } = useFetchItinerary(itineraryId || null);
+
+  let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
 
   useEffect(() => {
     console.log('Itinerario:', itinerary);
@@ -27,6 +37,54 @@ export const ItineraryCalendar = () => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este evento?')) {
       setActivities((prevEvents) => prevEvents.filter((event) => event.id !== id));
     }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://api-turistear.koyeb.app/itinerary/participants/${itineraryId}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.status === 'success' && data.itineraryParticipants.participants) {
+          console.log('sssssss', data.itineraryParticipants.user);
+          //setUsersOldNav(data.itineraryParticipants.participants);
+          const owner = {
+            ...data.itineraryParticipants.user, // El usuario dueño del itinerario
+            isOwner: true, // Marcamos que este usuario es el owner
+          };
+  
+          setUsersOldNav([owner,
+            ...data.itineraryParticipants.participants,
+            
+          ]);
+        } else {
+          setUsersOldNav([]);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setUsersOldNav([]);
+      }
+    };
+
+    fetchData();
+  }, [itineraryId]);
+
+  //users updated in parent
+  const handleUpdateUsersOld = (updatedUsers: User[]) => {
+    setUsersOldNav(updatedUsers);
+    usersOldNav = updatedUsers;
+    console.log('Usuarios actualizados en el padre:', updatedUsers);
+    console.log('UserNav new: ', usersOldNav);
   };
 
   return (
@@ -63,10 +121,19 @@ export const ItineraryCalendar = () => {
             </div>
             <div className="flex flex-col gap-4 my-4 border-b border-gray">
               <div className="w-full flex flex-col gap-2 mb-2">
-             
                 <div>
-                  <AddParticipantModal itinerary={Number(itineraryId)} tap={1}/>
-                  <AddParticipantModal itinerary={Number(itineraryId)} tap={2} />
+                  <AddParticipantModal
+                    itinerary={Number(itineraryId)}
+                    tap={1}
+                    usersOldNav={usersOldNav}
+                    onUsersOldUpdate={handleUpdateUsersOld}
+                  />
+                  <AddParticipantModal
+                    itinerary={Number(itineraryId)}
+                    tap={2}
+                    usersOldNav={usersOldNav}
+                    onUsersOldUpdate={handleUpdateUsersOld}
+                  />
                 </div>
               </div>
             </div>
