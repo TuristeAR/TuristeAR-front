@@ -49,7 +49,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `http://localhost:3001/users/search?name=${searchTerm}&itineraryId=${itinerary}`,
+            `https://api-turistear.koyeb.app/users/search?name=${searchTerm}&itineraryId=${itinerary}`,
           );
           const data = await response.json();
           setUsers(data.data);
@@ -69,7 +69,8 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
         const response = await fetch(`https://api-turistear.koyeb.app/itinerary/participants/${itinerary}`, {
           method: 'GET',
           credentials: 'include',
-        });
+          },
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -234,35 +235,30 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
                             </div>
                           </div>
                           <div className="p-4 whitespace-nowrap space-x-2">
-                            <button
-                              type="button"
-                              onClick={() => removeParticipant(itinerary, user.id)}
-                              data-modal-toggle="add-user-modal"
-                              className=" text-white bg-[#ff0000] hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-                            >
-                              <svg
-                                className="-ml-1 mr-2 h-6 w-6"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
+                            {user.isOwner ? (
+                              <div className='text-sm font-bold px-3 py-2 text-primary'>Creador</div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => removeParticipant(itinerary, user.id)}
+                                data-modal-toggle="add-user-modal"
+                                className=" text-white bg-[#ff0000] hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
                               >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                              {user.isOwner ? ("Salir"):("Quitar")} 
-                              
-                             {/*  {user.isOwner && (
-                                <button
-                                  type="button"
-                                  className="text-white bg-green-500 hover:bg-green-700 focus:ring-4 focus:ring-green-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                                <svg
+                                  className="-ml-1 mr-2 h-6 w-6"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                  xmlns="http://www.w3.org/2000/svg"
                                 >
-                                  Owner
-                                </button>
-                              */}
-                            </button>
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                Quitar
+                              </button>
+                            )}
                           </div>
                         </div>
                       ))}
