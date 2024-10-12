@@ -40,13 +40,14 @@ const Profile = () => {
 
   const [user, setUser] = useState<User | null>(null);
   const [publications, setPublications] = useState<Publication[] | null>(null);
+  const [likedPublicationes, setLikedPublications] = useState<Publication[] | null>(null);
   const [itineraries, setItineraries] = useState<Itinerary[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch de la sesión
+
         const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
           method: 'GET',
           credentials: 'include',
@@ -63,7 +64,6 @@ const Profile = () => {
         setIsAuthenticated(true);
         setError('');
 
-        // Fetch de publicaciones
         try {
           const publicationsResponse = await fetch(
             `https://api-turistear.koyeb.app/publications/${sessionData.user.id}`,
@@ -84,7 +84,6 @@ const Profile = () => {
           console.log('Error al obtener las publicaciones:', err);
         }
 
-        // Fetch de itinerarios (se ejecuta independientemente del resultado de publicaciones)
         const itinerariesResponse = await fetch(
           `https://api-turistear.koyeb.app/itinerary/byUser/${sessionData.user.id}`,
           {
@@ -102,6 +101,22 @@ const Profile = () => {
         setItineraries(itinerariesData.participants);
         setError('');
 
+        const likedPublicationsResponse = await fetch(
+          `https://api-turistear.koyeb.app/publications/likes/${sessionData.user.id}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
+        );
+
+        if (!likedPublicationsResponse.ok) {
+          setError('Error al obtener las publicaciones likeadas');
+          return;
+        }
+
+        const likedPublicationsData = await likedPublicationsResponse.json();
+        setLikedPublications(likedPublicationsData);
+        setError('');
       } catch (error) {
         setError('Error en la comunicación con el servidor');
         setIsAuthenticated(false);
@@ -111,7 +126,7 @@ const Profile = () => {
     fetchData();
   }, []);
 
-// Inicializa content como null o un valor por defecto
+
   const [content, setContent] = useState<React.JSX.Element | null>(null);
   const [activeItem, setActiveItem] = useState('posts');
 
@@ -124,23 +139,28 @@ const Profile = () => {
     posts: publications?.map((publication, index) => (
       <ItineraryCard key={index} profilePicture={user?.profilePicture} userId={user?.name}
                      creationDate={publication.creationDate} description={publication.description} images={publication.images} />
+    )) ,
+    likes: likedPublicationes?.map((publication, index) => (
+      <ItineraryCard key={index} profilePicture={publication.user.profilePicture} userId={user?.name}
+                     creationDate={publication.creationDate} description={publication.description} images={publication.images} />
     )),
   };
 
   useEffect(() => {
-    // Actualiza el contenido cada vez que publications cambie
     if (activeItem === 'posts' && publications) {
       // @ts-ignore
       setContent(components.posts);
     } else if (activeItem === 'itineraries') {
       // @ts-ignore
       setContent(components.itineries);
+    } else if (activeItem === 'likes') {
+      // @ts-ignore
+      setContent(components.likes);
     }
-  }, [publications, activeItem]); // Dependencias para que se ejecute cuando cambien
+  }, [publications, activeItem]);
 
   const handleClick = (name: string) => {
     setActiveItem(name);
-    // Esto se manejará en el useEffect, por lo que no necesitamos setContent aquí
     if (contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -207,7 +227,7 @@ const Profile = () => {
             </div>
           </div>
           {/* Publicaciones */}
-          <div className="border-b border-black grid grid-cols-2 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
+          <div className="border-b border-black grid grid-cols-3 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
             <h2
               className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`}
               onClick={() => handleClick('posts')}
@@ -220,9 +240,15 @@ const Profile = () => {
             >
               Mis itinerarios
             </h2>
+            <h2
+              className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'likes' ? 'bg-[#c0daeb]' : ''}`}
+              onClick={() => handleClick('likes')}
+            >
+              Mis likes
+            </h2>
           </div>
           <div
-            className={`rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'hidden' : ''}`}
+            className={`rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto ${activeItem === 'posts' ? 'block' : 'hidden'}`}
           >
             <CreatePost options={options} profilePicture={user?.profilePicture} />
           </div>

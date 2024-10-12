@@ -23,9 +23,7 @@ type User = {
 
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
-
   const { itinerary, activities, setActivities } = useFetchItinerary(itineraryId || null);
-
   let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
 
   useEffect(() => {
@@ -33,10 +31,30 @@ export const ItineraryCalendar = () => {
     console.log('Activities:', activities);
   }, [itinerary, activities]);
 
-  const deleteEvent = (id: number) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar este evento?')) {
-      setActivities((prevEvents) => prevEvents.filter((event) => event.id !== id));
-    }
+
+  
+  const deleteActivity = (activityId: number) => {
+    fetch('http://localhost:3001/itinerary/remove-activity', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ itineraryId: itineraryId, activityId }), // Asegúrate de usar el itineraryId correcto
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          // Actualizar las actividades en el frontend después de eliminar una
+          setActivities((prevActivities) =>
+            prevActivities.filter((activity) => activity.id !== activityId),
+          );
+        } else {
+          console.error('Error al eliminar la actividad:', data.message);
+        }
+      })
+      .catch((error) => {
+        console.error('Error al eliminar la actividad:', error);
+      });
   };
 
   useEffect(() => {
@@ -99,9 +117,9 @@ export const ItineraryCalendar = () => {
                 {(itinerary as any)?.name}
               </h2>
               <div className="flex flex-col p-2 gap-y-2">
-                <div className="flex items-center gap-x-2 cursor-pointer">
+                <div className="flex items-center gap-x-2 cursor-pointer" >
                   <img src={plusIcon} alt="" />
-                  <p className="text-sm">Agregar actividad</p>
+                  <button>Agregar actividad</button>
                 </div>
                 <div className="flex items-center gap-x-2 cursor-pointer">
                   <img src={chatIcon} alt="" />
@@ -151,7 +169,7 @@ export const ItineraryCalendar = () => {
                     {activities.map((activity, index) => (
                       <div key={index} className="flex justify-between items-center w-full">
                         <p className="text-sm w-[90%]">{activity.name}</p>
-                        <button className="w-[10%]" onClick={() => deleteEvent(activity.id)}>
+                        <button className="w-[10%]" onClick={() => deleteActivity(activity.id)}>
                           <img className="w-5 mx-auto" src={deleteIcon} alt="" />
                         </button>
                       </div>
@@ -168,7 +186,7 @@ export const ItineraryCalendar = () => {
         {/* Main Column */}
         <main className="order-1 lg:order-2 col-span-1 container mx-auto">
           <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-full">
-            <Calendar activities={activities} setActivities={setActivities} />
+            <Calendar activities={activities} setActivities={setActivities} deleteActivity= {deleteActivity} />
           </div>
         </main>
       </div>
