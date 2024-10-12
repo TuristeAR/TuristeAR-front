@@ -16,7 +16,7 @@ export const Calendar = ({
   setActivities: any;
 }) => {
   const [openNewEvent, setOpenNewEvent] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null); // Cambia a null en lugar de false
 
   const [selectedDate, setSelectedDate] = useState('');
   const [eventName, setEventName] = useState('');
@@ -28,12 +28,12 @@ export const Calendar = ({
 
   const handleEventClick = (info: any) => {
     setSelectedDate(info.event);
-    setSelectedEvent(true);
+    setSelectedEvent(info.event.id);
   };
 
   const handleClose = () => {
     setOpenNewEvent(false);
-    setSelectedEvent(false);
+    setSelectedEvent(null);
   };
 
   const handleSave = () => {
@@ -56,7 +56,7 @@ export const Calendar = ({
       setActivities(updatedEvents);
       console.log('Actividades después:', updatedEvents);
     }
-    setSelectedEvent(false);
+    setSelectedEvent(null);
   };
 
   const editEvent = (id: number, newName: string) => {
@@ -116,7 +116,7 @@ export const Calendar = ({
               <span className="text-[11px] md:text-sm font-semibold whitespace-normal break-words">
                 {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
               </span>
-              {selectedEvent && (
+              {selectedEvent === eventInfo.event.id  && (
                 <ModalActivity
                   handleClose={handleClose}
                   editEvent={editEvent}

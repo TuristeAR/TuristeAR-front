@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 export const ModalActivity = ({ handleClose, editEvent, deleteEvent, eventInfo }) => {
   const [isEditing, setIsEditing] = useState(false); // Estado para controlar si estamos editando
@@ -10,14 +10,19 @@ export const ModalActivity = ({ handleClose, editEvent, deleteEvent, eventInfo }
   };
 
   const handleEvent = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewName(e.target.value); 
+    setNewName(e.target.value);
   };
 
-  
   return (
     <>
-      <div className="flex justify-center items-center absolute top-0 left-0 w-[100%] h-[100%] z-50 bg-black/80">
-        <div className="flex flex-col gap-y-2 bg-white p-5 rounded-lg shadow-md text-center w-auto h-auto relative">
+      <div className="flex justify-center items-center fixed top-0 left-0 w-[100%] h-[100%] z-50 bg-black/80">
+        <div className="flex flex-col gap-y-2 bg-white p-8 rounded-lg shadow-md text-center w-auto h-auto relative">
+          <span
+            className="absolute top-0 right-4 text-[24px] cursor-pointer text-black font-bold"
+            onClick={handleClose}
+          >
+            &times;
+          </span>
           {isEditing ? (
             <input
               className="border border-gray-300 z-50 rounded-md p-1 outline-none text-black border-primary"
