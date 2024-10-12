@@ -5,6 +5,8 @@ import userPlus from '/assets/userPlus.svg';
 interface ParticipantTabsProps {
   itinerary?: number;
   tap?: number;
+  usersOldNav: User[];
+  onUsersOldUpdate: (users: User[]) => void;
 }
 type User = {
   id: number;
@@ -14,54 +16,18 @@ type User = {
   profilePicture: string;
 };
 
-export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({ itinerary, tap }) => {
+export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({ itinerary, tap, usersOldNav, onUsersOldUpdate }) => {
   const [showModal, setShowModal] = useState(false);
   const closeModal = () => setShowModal(false);
   const openModal = () => setShowModal(true);
-  let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`https://api-turistear.koyeb.app/itinerary/participants/${itinerary}`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        if (data.status === 'success' && data.itineraryParticipants.participants) {
-          setUsersOldNav(data.itineraryParticipants.participants);
-        } else {
-          setUsersOldNav([]);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setUsersOldNav([]);
-      }
-    };
-
-    fetchData();
-  }, [itinerary]);
-
-  //users updated in parent
-  const handleUpdateUsersOld = (updatedUsers: User[]) => {
-    setUsersOldNav(updatedUsers);
-    usersOldNav = updatedUsers
-    console.log('Usuarios actualizados en el padre:', updatedUsers);
-    console.log("UserNav new: ", usersOldNav)
-  };
 
   return (
     <>
       {tap === 1 ? (
         <div className="flex flex-col gap-4 mt-4" onClick={openModal}>
           <h2 className="font-semibold tracking-[-0.5px] leading-none">Participantes</h2>
-          <div className="w-full flex flex-col gap-2 mb-2">
-            {usersOldNav.slice(0, 4).map((user) => (
+          <div className="w-full flex flex-col gap-2 mb-2 px-2">
+            {usersOldNav.slice(0, 3).map((user) => (
               <div key={user.name} className="flex items-center w-full gap-2">
                 <div className="bg-gray-50 w-8 h-8 rounded-full overflow-hidden">
                   <img src={user.profilePicture} alt="" className="w-full h-full object-cover" />
@@ -69,14 +35,14 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({ itinerary,
                 <p>{user.name}</p>
               </div>
             ))}
-            {usersOldNav.length > 4 && (
-              <div className="text-gray">+ {usersOldNav.length - 4} más</div>
+            {usersOldNav.length > 3 && (
+              <div className="text-gray">+ {usersOldNav.length - 3} más</div>
             )}
           </div>
         </div>
       ) : (
         <button
-          className="flex items-center gap-x-2 cursor-pointer text-sm hover:underline"
+          className="flex items-center gap-x-2 cursor-pointer text-sm hover:underline px-2"
           type="button"
           onClick={openModal}
         >
@@ -111,7 +77,7 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({ itinerary,
                 <ParticipantTabs
                  itinerary={itinerary}
                  usersOldNav={usersOldNav}
-                 onUsersOldUpdate={handleUpdateUsersOld}
+                 onUsersOldUpdate={onUsersOldUpdate}
                  tap={tap}
                 />
               </div>
