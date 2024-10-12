@@ -1,19 +1,20 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 
-export const ModalActivity = ({ handleClose, editEvent, deleteEvent, eventInfo }) => {
-  const [isEditing, setIsEditing] = useState(false); // Estado para controlar si estamos editando
-  const [newName, setNewName] = useState(eventInfo.event.title); // Estado para el nuevo nombre del evento
-
-  const handleSave = () => {
-    editEvent(Number(eventInfo.event.id), newName); // Llama a la función `editEvent` con el nuevo nombre
-    setIsEditing(false); // Salir del modo de edición
-  };
+export const ModalActivity = ({
+  handleClose,
+  editEvent,
+  deleteEvent,
+  eventInfo,
+  setIsEditing,
+  isEditing,
+  handleSave,
+}) => {
+  const [newName, setNewName] = useState(eventInfo.event.title);
 
   const handleEvent = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewName(e.target.value); 
+    setNewName(e.target.value);
   };
 
-  
   return (
     <>
       <div className="flex justify-center items-center absolute top-0 left-0 w-[100%] h-[100%] z-50 bg-black/80">
@@ -37,15 +38,9 @@ export const ModalActivity = ({ handleClose, editEvent, deleteEvent, eventInfo }
             {eventInfo.event.start && eventInfo.event.start.toLocaleTimeString()}{' '}
           </span>
           <div className="flex gap-x-2 justify-between mt-1 overflow-hidden ">
-            {isEditing ? (
-              <button onClick={handleSave} className="btn-question">
-                Guardar
-              </button>
-            ) : (
-              <button onClick={() => setIsEditing(true)} className="btn-question">
-                Editar actividad
-              </button>
-            )}
+            <button onClick={() => setIsEditing(true)} className="btn-question">
+              Editar actividad
+            </button>
             <button
               onClick={() => deleteEvent(Number(eventInfo.event.id))}
               className="btn-question"
