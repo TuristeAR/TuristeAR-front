@@ -39,9 +39,9 @@ describe('Publications', () => {
     render(
       <BrowserRouter>
         <CommunityFilters
-          link={infoCategories[0].link}
-          title={infoCategories[0].title}
-          users={infoCategories[0].categories}
+          key={infoCategories[0].link}
+          description={infoCategories[0].title}
+          image={infoCategories[0].title}
         />
       </BrowserRouter>,
     );
@@ -56,9 +56,8 @@ describe('Publications', () => {
         {infoCategories.map((item, index) => (
           <CommunityFilters
             key={index}
-            title={item.title}
-            users={item.categories}
-            link={item.link}
+            description={item.title}
+            image={item.title}
           />
         ))}
       </BrowserRouter>,
