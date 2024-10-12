@@ -11,13 +11,9 @@ import { ModalActivity } from './ModalEvent';
 export const Calendar = ({
   activities,
   setActivities,
-  setIsEditing,
-  isEditing,
 }: {
   activities: any;
   setActivities: any;
-  setIsEditing: any;
-  isEditing: any;
 }) => {
   const [openNewEvent, setOpenNewEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(false);
@@ -40,7 +36,7 @@ export const Calendar = ({
     setSelectedEvent(false);
   };
 
-  const handleSaveDate = () => {
+  const handleSave = () => {
     if (eventName) {
       const newId = String(Date.now());
       setActivities([
@@ -96,13 +92,10 @@ export const Calendar = ({
     });
   }, []);
 
-  const handleSave = (eventInfo: { event: { id: any } }, newName: string) => {
-    editEvent(Number(eventInfo.event.id), newName);
-    setIsEditing(false);
-  };
+  
 
   return (
-    <div className="relative">
+    <div className='relative'>
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -129,9 +122,6 @@ export const Calendar = ({
                   editEvent={editEvent}
                   deleteEvent={deleteEvent}
                   eventInfo={eventInfo}
-                  setIsEditing={setIsEditing}
-                  isEditing={isEditing}
-                  handleSave={handleSave}
                 />
               )}
             </div>
@@ -148,7 +138,7 @@ export const Calendar = ({
           eventName={eventName}
           setEventName={setEventName}
           handleClose={handleClose}
-          handleSave={handleSaveDate}
+          handleSave={handleSave}
         />
       )}
     </div>

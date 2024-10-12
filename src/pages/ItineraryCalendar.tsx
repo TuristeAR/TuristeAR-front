@@ -10,12 +10,11 @@ import { Calendar } from '../components/Calendar/Calendar';
 import { AddParticipantModal } from '../components/AddParticipantModal/AddParticipantModal';
 import { Header } from '../components/Header/Header';
 import { Link, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
 
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
-  const [isEditing, setIsEditing] = useState(false);
 
   const { itinerary, activities, setActivities } = useFetchItinerary(itineraryId || null);
 
@@ -64,8 +63,9 @@ export const ItineraryCalendar = () => {
             </div>
             <div className="flex flex-col gap-4 my-4 border-b border-gray">
               <div className="w-full flex flex-col gap-2 mb-2">
+             
                 <div>
-                  <AddParticipantModal itinerary={Number(itineraryId)} tap={1} />
+                  <AddParticipantModal itinerary={Number(itineraryId)} tap={1}/>
                   <AddParticipantModal itinerary={Number(itineraryId)} tap={2} />
                 </div>
               </div>
@@ -90,7 +90,9 @@ export const ItineraryCalendar = () => {
                       </div>
                     ))}
                   </div>
-                  {isEditing && <button className="btn-question">Guardar</button>}
+                  <div className="p-2">
+                    <p className="text-gray">Descubrir más</p>
+                  </div>
                 </>
               )}
             </div>
@@ -99,7 +101,7 @@ export const ItineraryCalendar = () => {
         {/* Main Column */}
         <main className="order-1 lg:order-2 col-span-1 container mx-auto">
           <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-full">
-            <Calendar activities={activities} setActivities={setActivities} isEditing = {isEditing} setIsEditing = {setIsEditing} />
+            <Calendar activities={activities} setActivities={setActivities} />
           </div>
         </main>
       </div>
