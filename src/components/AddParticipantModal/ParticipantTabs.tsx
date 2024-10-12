@@ -94,7 +94,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   //Add user
   const handleAddUser = async (participantId) => {
     try {
-      onUsersOldUpdate([...usersOld, users.find((user) => user.id === participantId)]);
+      onUsersOldUpdate([...usersOldNav, users.find((user) => user.id === participantId)]);
       handleRemoveUser(participantId);
       const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-user', {
         method: 'POST',
@@ -131,8 +131,9 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   const removeParticipant = async (itineraryId: number, participantId: number) => {
     try {
       const updatedUsersOld = usersOld.filter((user) => user.id !== participantId);
+      const updatedUsersOldNav = usersOldNav.filter((user) => user.id !== participantId);
       setUsersOld(updatedUsersOld);
-      onUsersOldUpdate(updatedUsersOld);
+      onUsersOldUpdate(updatedUsersOldNav);
 
       const response = await fetch('https://api-turistear.koyeb.app/itinerary/remove-user', {
         method: 'DELETE',
