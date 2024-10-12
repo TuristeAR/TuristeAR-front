@@ -109,7 +109,6 @@ export const ItineraryCalendar = () => {
 
         const data = await response.json();
         if (data.status === 'success' && data.itineraryParticipants.participants) {
-          console.log('sssssss', data.itineraryParticipants.user);
           //setUsersOldNav(data.itineraryParticipants.participants);
           const owner = {
             ...data.itineraryParticipants.user, // El usuario dueño del itinerario

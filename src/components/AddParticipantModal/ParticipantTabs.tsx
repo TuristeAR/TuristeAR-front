@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type User = {
   id: number;
@@ -27,8 +28,17 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   const [searchTermOld, setSearchTermOld] = useState('');
   const [users, setUsers] = useState<User[]>([]);
   const [usersOld, setUsersOld] = useState<User[]>(usersOldNav);
-
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const closeModal = () => setShowModal(false);
+  const navigate = useNavigate();
+  // Get the localStorage user
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setCurrentUser(parsedUser); // Guarda el usuario actual en el estado
+    }
+  }, []);
 
   useEffect(() => {
     const handleEsc = (event) => {
@@ -66,9 +76,11 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`https://api-turistear.koyeb.app/itinerary/participants/${itinerary}`, {
-          method: 'GET',
-          credentials: 'include',
+        const response = await fetch(
+          `https://api-turistear.koyeb.app/itinerary/participants/${itinerary}`,
+          {
+            method: 'GET',
+            credentials: 'include',
           },
         );
 
@@ -145,6 +157,10 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
       });
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
+      }
+
+      if (currentUser?.id === participantId) {
+        navigate('/profile');
       }
     } catch (error) {
       console.error('Error removing participant:', error);
@@ -237,7 +253,30 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
                           </div>
                           <div className="p-4 whitespace-nowrap space-x-2">
                             {user.isOwner ? (
-                              <div className='text-sm font-bold px-3 py-2 text-primary'>Creador</div>
+                              <div className="text-sm font-bold px-3 py-2 text-primary">
+                                Creador
+                              </div>
+                            ) : currentUser.id == user.id ? (
+                              <button
+                                type="button"
+                                onClick={() => removeParticipant(itinerary, user.id)}
+                                data-modal-toggle="add-user-modal"
+                                className=" text-white bg-[#ff8000] hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                <svg
+                                  className="-ml-1 mr-2 h-6 w-6"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                Salir
+                              </button>
                             ) : (
                               <button
                                 type="button"
