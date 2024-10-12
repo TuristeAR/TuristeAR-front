@@ -15,12 +15,14 @@ interface ParticipantTabsProps {
   tap?: number;
   usersOldNav: User[];
   onUsersOldUpdate: (users: User[]) => void;
+  currentUser: number
 }
 const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   itinerary,
   tap,
   usersOldNav,
   onUsersOldUpdate,
+  currentUser
 }) => {
   const [openTab, setOpenTab] = useState(tap || 1);
   const [showModal, setShowModal] = useState(false);
@@ -28,18 +30,10 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   const [searchTermOld, setSearchTermOld] = useState('');
   const [users, setUsers] = useState<User[]>([]);
   const [usersOld, setUsersOld] = useState<User[]>(usersOldNav);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const closeModal = () => setShowModal(false);
   const navigate = useNavigate();
   // Get the localStorage user
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setCurrentUser(parsedUser); // Guarda el usuario actual en el estado
-    }
-  }, []);
-
+ 
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.key === 'Escape') {
@@ -159,7 +153,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
         throw new Error(`Error: ${response.status}`);
       }
 
-      if (currentUser?.id === participantId) {
+      if (currentUser === participantId) {
         navigate('/profile');
       }
     } catch (error) {
@@ -256,7 +250,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
                               <div className="text-sm font-bold px-3 py-2 text-primary">
                                 Creador
                               </div>
-                            ) : currentUser.id == user.id ? (
+                            ) : currentUser == user.id ? (
                               <button
                                 type="button"
                                 onClick={() => removeParticipant(itinerary, user.id)}
