@@ -69,7 +69,7 @@ export const ItineraryCalendar = () => {
   };
 
   const deleteActivity = (activityId: number) => {
-    fetch('http://localhost:3001/itinerary/remove-activity', {
+    fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
