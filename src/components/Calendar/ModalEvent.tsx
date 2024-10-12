@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 
-export const ModalActivity = ({ handleClose, editEvent, deleteEvent, eventInfo }) => {
+export const ModalActivity = ({ handleClose, editEvent, deleteActivity, eventInfo }) => {
   const [isEditing, setIsEditing] = useState(false); // Estado para controlar si estamos editando
   const [newName, setNewName] = useState(eventInfo.event.title); // Estado para el nuevo nombre del evento
 
@@ -52,7 +52,7 @@ export const ModalActivity = ({ handleClose, editEvent, deleteEvent, eventInfo }
               </button>
             )}
             <button
-              onClick={() => deleteEvent(Number(eventInfo.event.id))}
+              onClick={() => deleteActivity(Number(eventInfo.event.id))}
               className="btn-question"
             >
               Borrar actividad

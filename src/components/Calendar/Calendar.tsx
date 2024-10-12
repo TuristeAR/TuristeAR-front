@@ -11,9 +11,11 @@ import { ModalActivity } from './ModalEvent';
 export const Calendar = ({
   activities,
   setActivities,
+  deleteActivity,
 }: {
   activities: any;
   setActivities: any;
+  deleteActivity: any;
 }) => {
   const [openNewEvent, setOpenNewEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null); // Cambia a null en lugar de false
@@ -48,16 +50,6 @@ export const Calendar = ({
     }
   };
 
-  const deleteEvent = (id: number) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar esta actividad?')) {
-      console.log('Actividades antes:', activities);
-
-      const updatedEvents = activities.filter((event: any) => event.id !== id);
-      setActivities(updatedEvents);
-      console.log('Actividades después:', updatedEvents);
-    }
-    setSelectedEvent(null);
-  };
 
   const editEvent = (id: number, newName: string) => {
     const updatedEvents = activities.map((event: any) =>
@@ -120,7 +112,7 @@ export const Calendar = ({
                 <ModalActivity
                   handleClose={handleClose}
                   editEvent={editEvent}
-                  deleteEvent={deleteEvent}
+                  deleteActivity={deleteActivity}
                   eventInfo={eventInfo}
                 />
               )}
