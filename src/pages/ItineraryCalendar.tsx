@@ -26,13 +26,48 @@ export const ItineraryCalendar = () => {
   const { itinerary, activities, setActivities } = useFetchItinerary(itineraryId || null);
   let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
 
+  const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
+  const [isAddingActivity, setIsAddingActivity] = useState(false);
+
   useEffect(() => {
     console.log('Itinerario:', itinerary);
     console.log('Activities:', activities);
   }, [itinerary, activities]);
 
+  const handleAddActivity = () => {
+    fetch('http://localhost:3001/itinerary/add-activity', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ itineraryId, createActivityDto: newActivity }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Response data:', data); // Verificar la estructura de la respuesta
 
-  
+        if (data.status === 'success') {
+          const updatedItinerary = data.itinerary;
+          const activitiesList = updatedItinerary?.activities || [];
+          const lastActivity = activitiesList[activitiesList.length - 1];
+
+          if (lastActivity) {
+            setActivities((prevActivities) => [...prevActivities, lastActivity]);
+            console.log('activities:', activities);
+            console.log('Itinerary after adding activity front:', lastActivity);
+          }
+
+          setNewActivity({ name: '', fromDate: '', toDate: '', place: '' }); // Resetear el formulario
+          setIsAddingActivity(false); // Cerrar el formulario
+        } else {
+          console.error('Error al agregar la actividad:', data.message);
+        }
+      })
+      .catch((error) => {
+        console.error('Error al agregar la actividad:', error);
+      });
+  };
+
   const deleteActivity = (activityId: number) => {
     fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
       method: 'DELETE',
@@ -80,11 +115,8 @@ export const ItineraryCalendar = () => {
             ...data.itineraryParticipants.user, // El usuario dueño del itinerario
             isOwner: true, // Marcamos que este usuario es el owner
           };
-  
-          setUsersOldNav([owner,
-            ...data.itineraryParticipants.participants,
-            
-          ]);
+
+          setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
         } else {
           setUsersOldNav([]);
         }
@@ -117,9 +149,9 @@ export const ItineraryCalendar = () => {
                 {(itinerary as any)?.name}
               </h2>
               <div className="flex flex-col p-2 gap-y-2">
-                <div className="flex items-center gap-x-2 cursor-pointer" >
+                <div className="flex items-center gap-x-2 cursor-pointer">
                   <img src={plusIcon} alt="" />
-                  <button>Agregar actividad</button>
+                  <button onClick={() => setIsAddingActivity(true)}>Agregar actividad</button>
                 </div>
                 <div className="flex items-center gap-x-2 cursor-pointer">
                   <img src={chatIcon} alt="" />
@@ -155,7 +187,50 @@ export const ItineraryCalendar = () => {
                 </div>
               </div>
             </div>
-
+            {/* Formulario para agregar actividad */}
+            {isAddingActivity && (
+              <div className="mt-4 p-4 border rounded bg-white">
+                <h3 className="font-semibold">Agregar nueva actividad</h3>
+                <input
+                  type="text"
+                  placeholder="Nombre de la actividad"
+                  value={newActivity.name}
+                  onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
+                  className="w-full p-2 border border-gray rounded mb-2"
+                />
+                <input
+                  type="datetime-local"
+                  value={newActivity.fromDate}
+                  onChange={(e) => setNewActivity({ ...newActivity, fromDate: e.target.value })}
+                  className="w-full p-2 border border-gray rounded mb-2"
+                />
+                <input
+                  type="datetime-local"
+                  value={newActivity.toDate}
+                  onChange={(e) => setNewActivity({ ...newActivity, toDate: e.target.value })}
+                  className="w-full p-2 border border-gray rounded mb-2"
+                />
+                <input
+                  type="text"
+                  placeholder="Lugar (opcional)"
+                  value={newActivity.place}
+                  onChange={(e) => setNewActivity({ ...newActivity, place: e.target.value })}
+                  className="w-full p-2 border border-gray rounded mb-2"
+                />
+                <button
+                  onClick={handleAddActivity}
+                  className="w-full p-2 bg-blue-500 text-black rounded"
+                >
+                  Agregar
+                </button>
+                <button
+                  onClick={() => setIsAddingActivity(false)}
+                  className="mt-2 w-full p-2 border border-gray rounded"
+                >
+                  Cancelar
+                </button>
+              </div>
+            )}
             {/* Eliminar actividad */}
             <div className="flex flex-col gap-4 md:my-4">
               {activities.length === 0 ? (
@@ -186,7 +261,11 @@ export const ItineraryCalendar = () => {
         {/* Main Column */}
         <main className="order-1 lg:order-2 col-span-1 container mx-auto">
           <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-full">
-            <Calendar activities={activities} setActivities={setActivities} deleteActivity= {deleteActivity} />
+            <Calendar
+              activities={activities}
+              setActivities={setActivities}
+              deleteActivity={deleteActivity}
+            />
           </div>
         </main>
       </div>
