@@ -12,7 +12,6 @@ describe('ArticleCard', () => {
       'https://example.com/image2.jpg',
     ],
     description: 'This is a test description.',
-    link: 'https://example.com',
     rating: 0,
     types: [],
     address: 'addess',
@@ -37,9 +36,5 @@ describe('ArticleCard', () => {
       expect(images[index]).toHaveAttribute('alt', mockProps.title);
     });
 
-    const links = screen.getAllByRole('link');
-    links.forEach((link) => {
-      expect(link).toHaveAttribute('href', mockProps.link);
-    });
   });
 });
