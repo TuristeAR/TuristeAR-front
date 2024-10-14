@@ -20,7 +20,16 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({ itinerary,
   const [showModal, setShowModal] = useState(false);
   const closeModal = () => setShowModal(false);
   const openModal = () => setShowModal(true);
+  const [currentUser, setCurrentUser] = useState<User | undefined>(undefined)
 
+  useEffect(() => {
+    console.log("Entro", localStorage.getItem('user'))
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setCurrentUser(parsedUser);
+    }
+  }, []);
   return (
     <>
       {tap === 1 ? (
@@ -79,6 +88,7 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({ itinerary,
                  usersOldNav={usersOldNav}
                  onUsersOldUpdate={onUsersOldUpdate}
                  tap={tap}
+                 currentUser={currentUser.id}
                 />
               </div>
             </div>

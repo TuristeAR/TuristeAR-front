@@ -70,7 +70,7 @@ export const ItineraryCalendar = () => {
   };
 
   const deleteActivity = (activityId: number) => {
-    fetch('http://localhost:3001/itinerary/remove-activity', {
+    fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -110,7 +110,6 @@ export const ItineraryCalendar = () => {
 
         const data = await response.json();
         if (data.status === 'success' && data.itineraryParticipants.participants) {
-          console.log('sssssss', data.itineraryParticipants.user);
           //setUsersOldNav(data.itineraryParticipants.participants);
           const owner = {
             ...data.itineraryParticipants.user, // El usuario dueño del itinerario

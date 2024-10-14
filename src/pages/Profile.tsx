@@ -9,45 +9,50 @@ const options = ['Imagen', 'Itinerario', 'Categoría', 'Ubicación'];
 
 const Profile = () => {
   const contentRef = useRef<HTMLDivElement | null>(null);
-  type User={
+  type User = {
     id: number;
-    username: string,
-    name: string,
-    profilePicture: string,
-    description: string,
-    birthdate: string,
-    coverPicture: string,
-    location: string
-  }
+    username: string;
+    name: string;
+    profilePicture: string;
+    description: string;
+    birthdate: string;
+    coverPicture: string;
+    location: string;
+  };
+  type Category = {
+    id: number;
+    description: string;
+    image: string;
+  };
+  type Publication = {
+    id: number;
+    description: string;
+    category: Category | null;
+    creationDate: string;
+    images: string[];
+    user: User | null;
+  };
+  type Itinerary = {
+    id: number;
+    createdAt: string;
+    name: string;
+    fromDate: string;
+    toDate: string;
+    participants: User[];
+    user: User | null;
+  };
 
-  type Publication={
-    id: number,
-    description: string,
-    creationDate: string,
-    images: string[],
-    user:  User | null
-  }
-
-  type Itinerary={
-    id: number,
-    createdAt: string,
-    name: string,
-    fromDate: string,
-    toDate: string,
-    participants: User[],
-    user:  User | null
-  }
-
-  const [user, setUser] = useState<User | null>(null);
+  const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [publications, setPublications] = useState<Publication[] | null>(null);
   const [likedPublicationes, setLikedPublications] = useState<Publication[] | null>(null);
   const [itineraries, setItineraries] = useState<Itinerary[] | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
   const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
           method: 'GET',
           credentials: 'include',
@@ -70,7 +75,7 @@ const Profile = () => {
             {
               method: 'GET',
               credentials: 'include',
-            }
+            },
           );
 
           if (!publicationsResponse.ok) {
@@ -80,7 +85,7 @@ const Profile = () => {
             setPublications(publicationsData);
           }
         } catch (err) {
-          setError(err)
+          setError(err);
           console.log('Error al obtener las publicaciones:', err);
         }
 
@@ -89,7 +94,7 @@ const Profile = () => {
           {
             method: 'GET',
             credentials: 'include',
-          }
+          },
         );
 
         if (!itinerariesResponse.ok) {
@@ -106,7 +111,7 @@ const Profile = () => {
           {
             method: 'GET',
             credentials: 'include',
-          }
+          },
         );
 
         if (!likedPublicationsResponse.ok) {
@@ -126,38 +131,7 @@ const Profile = () => {
     fetchData();
   }, []);
 
-
-  const [content, setContent] = useState<React.JSX.Element | null>(null);
   const [activeItem, setActiveItem] = useState('posts');
-
-  const components = {
-    itineries: itineraries?.map((itinerary, index) => (
-      <TravelCard key={index} imgProvince={'/assets/san-nicolas-buenos-aires.webp'} province={itinerary.name}
-                  departure={itinerary.fromDate} arrival={itinerary.toDate}
-                  participants={itinerary.participants}  id={itinerary.id}/>
-    )) ,
-    posts: publications?.map((publication, index) => (
-      <ItineraryCard key={index} profilePicture={user?.profilePicture} userId={user?.name}
-                     creationDate={publication.creationDate} description={publication.description} images={publication.images} />
-    )) ,
-    likes: likedPublicationes?.map((publication, index) => (
-      <ItineraryCard key={index} profilePicture={publication.user.profilePicture} userId={user?.name}
-                     creationDate={publication.creationDate} description={publication.description} images={publication.images} />
-    )),
-  };
-
-  useEffect(() => {
-    if (activeItem === 'posts' && publications) {
-      // @ts-ignore
-      setContent(components.posts);
-    } else if (activeItem === 'itineraries') {
-      // @ts-ignore
-      setContent(components.itineries);
-    } else if (activeItem === 'likes') {
-      // @ts-ignore
-      setContent(components.likes);
-    }
-  }, [publications, activeItem]);
 
   const handleClick = (name: string) => {
     setActiveItem(name);
@@ -166,15 +140,24 @@ const Profile = () => {
     }
   };
 
-  if(!isAuthenticated){
-    return (<><p>User is not authenticated</p></>);
-  }
+  if (!isAuthenticated)
+    return (
+      <>
+        <p>User is not authenticated</p>
+      </>
+    );
 
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
-        <LeftCommunity vista={'publications'} />
+        <LeftCommunity
+          vista="publications"
+          categorySelected={categorySelected}
+          setCategorySelected={setCategorySelected}
+          activeItem={activeItem}
+          handleClick={handleClick}
+        />
         <div className="lg:w-[80%] w-[100%] lg:p-10 lg:pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
           {/* Portada */}
           <div className="">
@@ -254,10 +237,50 @@ const Profile = () => {
           </div>
           {/* Content */}
           <div
-            className="grid lg:grid-cols-2 grid-cols-1 gap-6 lg:w-[100%] w-[90%] mx-auto"
+            className="lg:w-[100%] w-[90%] mx-auto grid grid-cols-2 gap-6"
             ref={contentRef}
           >
-            {content}
+              {activeItem === 'posts' && publications
+                ?.filter((publication) => {
+                  return categorySelected == null || publication.category.id == categorySelected;
+                })
+                .map((publication, index) => (
+                  <ItineraryCard
+                    key={index}
+                    profilePicture={user?.profilePicture}
+                    userId={user?.name}
+                    creationDate={publication.creationDate}
+                    description={publication.description}
+                    images={publication.images}
+                  />
+                ))}
+              {activeItem === 'itineraries' && itineraries?.map((itinerary, index) => (
+                <TravelCard
+                  key={index}
+                  imgProvince={'/assets/san-nicolas-buenos-aires.webp'}
+                  province={itinerary.name}
+                  departure={itinerary.fromDate}
+                  arrival={itinerary.toDate}
+                  participants={itinerary.participants}
+                  id={itinerary.id}
+                />
+              ))}
+
+
+              {activeItem === 'likes' && likedPublicationes
+                ?.filter((publication) => {
+                  return categorySelected == null || publication.category.id == categorySelected;
+                })
+                .map((publication, index) => (
+                  <ItineraryCard
+                    key={index}
+                    profilePicture={publication.user.profilePicture}
+                    userId={user?.name}
+                    creationDate={publication.creationDate}
+                    description={publication.description}
+                    images={publication.images}
+                  />
+                ))}
           </div>
         </div>
       </div>

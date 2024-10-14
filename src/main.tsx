@@ -24,7 +24,7 @@ root.render(
       <Route path="*" element={<Home />} />
       <Route path="/destinations" element={<Destinations />} />
       <Route path="/formQuestions" element={<FormQuestions />} />
-      <Route path="/expectedPlace" element={<ExpectedPlace />} />
+      <Route path="/lugar-esperado/:googleId" element={<ExpectedPlace />} />
       <Route path="/destino-esperado/:nombreDeLaProvincia" element={<ExpectedDestination />} />
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
