@@ -27,12 +27,13 @@ export const ItineraryCalendar = () => {
   let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
 
   const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
+  const [activityProvince, setActivityProvince] = useState([]);
+
   const [isAddingActivity, setIsAddingActivity] = useState(false);
 
-  useEffect(() => {
-    console.log('Itinerario:', itinerary);
-    console.log('Activities:', activities);
-  }, [itinerary, activities]);
+  const [showPlaces, setShowPlaces] = useState(false);
+
+  const [selectedPlace, setSelectedPlace] = useState(''); // Nuevo estado para el nombre del lugar
 
   const handleAddActivity = () => {
     fetch('http://localhost:3001/itinerary/add-activity', {
@@ -136,6 +137,45 @@ export const ItineraryCalendar = () => {
     console.log('UserNav new: ', usersOldNav);
   };
 
+  // Efecto para cargar lugares por provincia
+  useEffect(() => {
+    const fetchPlacesByProvince = async () => {
+      try {
+        if (itinerary && itinerary.name) {
+          const province = itinerary.name.split(' a ')[1]; // Extrae la provincia del nombre del itinerario
+
+          // Realiza la llamada al endpoint en el backend
+          const response = await fetch(
+            `http://localhost:3001/fetch-activities-places/${province}`,
+            {
+              method: 'GET',
+              credentials: 'include',
+            },
+          );
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+
+          // Verifica si la respuesta es exitosa y tiene lugares
+          if (data.status === 'success') {
+            setActivityProvince(data.data);
+          } else {
+            setActivityProvince([]); // Limpia el estado si no hay lugares
+          }
+        } else {
+          console.error('El itinerario no tiene nombre o no se ha cargado correctamente.');
+        }
+      } catch (error) {
+        console.error('Error fetching places:', error);
+      }
+    };
+
+    fetchPlacesByProvince();
+  }, [itinerary]);
+
   return (
     <section className="h-screen xl:h-auto overflow-x-clip relative">
       <Header containerStyles="fixed top-0 left-0 right-0 z-[60]" />
@@ -188,8 +228,8 @@ export const ItineraryCalendar = () => {
             </div>
             {/* Formulario para agregar actividad */}
             {isAddingActivity && (
-              <div className="mt-4 p-4 border rounded bg-white">
-                <h3 className="font-semibold">Agregar nueva actividad</h3>
+              <div className="flex justify-center items-center w-auto md:w-[450px] h-auto flex-col mx-auto top-0 right-0 left-0 p-4 border rounded  absolute z-50 bg-black/80 ">
+                <h3 className="font-semibold text-white text-2xl mb-4">Agregar nueva actividad</h3>
                 <input
                   type="text"
                   placeholder="Nombre de la actividad"
@@ -209,25 +249,43 @@ export const ItineraryCalendar = () => {
                   onChange={(e) => setNewActivity({ ...newActivity, toDate: e.target.value })}
                   className="w-full p-2 border border-gray rounded mb-2"
                 />
-                <input
-                  type="text"
-                  placeholder="Lugar (opcional)"
-                  value={newActivity.place}
-                  onChange={(e) => setNewActivity({ ...newActivity, place: e.target.value })}
-                  className="w-full p-2 border border-gray rounded mb-2"
-                />
-                <button
-                  onClick={handleAddActivity}
-                  className="w-full p-2 bg-blue-500 text-black rounded"
-                >
-                  Agregar
-                </button>
-                <button
-                  onClick={() => setIsAddingActivity(false)}
-                  className="mt-2 w-full p-2 border border-gray rounded"
-                >
-                  Cancelar
-                </button>
+                <div className="relative w-full">
+                  <input
+                    type="text"
+                    placeholder="Lugar"
+                    value={selectedPlace || newActivity.place}
+                    onChange={(e) => setSelectedPlace(e.target.value)}
+                    onFocus={() => setShowPlaces(true)}
+                    className="w-full p-2 border border-gray rounded mb-2"
+                  />
+
+                  {showPlaces && (
+                    <div className="absolute left-0 right-0 bg-white border border-gray rounded mt-1 z-50">
+                      {activityProvince.map((place, index) => (
+                        <div
+                          key={index}
+                          className="p-2 hover:bg-gray-200 cursor-pointer"
+                          onClick={() => {
+                            setSelectedPlace(place.name);
+                            setNewActivity({ ...newActivity, place: place.id });
+                            setShowPlaces(false);
+                          }}
+                        >
+                          {place.name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex gap-x-2">
+                  <button onClick={handleAddActivity} className="btn-question">
+                    Agregar
+                  </button>
+                  <button onClick={() => setIsAddingActivity(false)} className="btn-question">
+                    Cancelar
+                  </button>
+                </div>
               </div>
             )}
             {/* Eliminar actividad */}
