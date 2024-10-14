@@ -1,5 +1,5 @@
 import { CommunityFilters } from './CommunityFilters';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 const infoCategories = [
   {
     title: 'Filtrar por categoría',
@@ -19,6 +19,75 @@ const infoCategories = [
 
 export const LeftCommunity = (props:{vista : string}) => {
   const {vista}=props;
+  type User={
+    id: number;
+    username: string,
+    name: string,
+    profilePicture: string,
+    description: string,
+    birthdate: string,
+    coverPicture: string,
+    location: string
+  }
+  type Category={
+    id: number,
+    description: string,
+    image: string,
+  }
+
+  const [user, setUser] = useState<User | null>(null);
+  const [categories, setCategories] = useState<Category[] | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!sessionResponse.ok) {
+          setIsAuthenticated(false);
+          window.location.href = '/login';
+          return;
+        }
+
+        const sessionData = await sessionResponse.json();
+        setUser(sessionData.user);
+        setIsAuthenticated(true);
+        setError('');
+
+        try {
+          const categoriesResponse = await fetch(
+            `https://api-turistear.koyeb.app/categories`,
+            {
+              method: 'GET',
+              credentials: 'include',
+            }
+          );
+
+          if (!categoriesResponse.ok) {
+            console.log('Error al obtener publicaciones:', await categoriesResponse.json());
+          } else {
+            const categoriesData = await categoriesResponse.json();
+            setCategories(categoriesData);
+          }
+        } catch (err) {
+          setError(err)
+          console.log('Error al obtener las publicaciones:', err);
+        }
+      } catch (error) {
+        setError('Error en la comunicación con el servidor');
+        setIsAuthenticated(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="flex flex-col lg:w-[20%] w-[100%] lg:block hidden p-6 gap-6 border-r border-[#999999]">
@@ -38,14 +107,20 @@ export const LeftCommunity = (props:{vista : string}) => {
         </div>
         <hr className="border border-[#999999] my-4"></hr>
         <div className="flex flex-col gap-y-4">
-          {infoCategories.map((category, index) => (
+          <h2 className="text-xl font-bold">Categorías</h2>
+          <form className="flex flex-col gap-4">
+            <input type="text" className="border border-[#999999] pl-2" placeholder="Buscar" />
+          </form>
+          {categories?.slice(0, 6).map((category, index) => (
             <CommunityFilters
               key={index}
-              title={category.title}
-              users={category.categories}
-              link={category.link}
+              description={category.description}
+              image={category.image}
             />
           ))}
+          <div className="border-b border-[#999999] p-2 pr-0 hover:bg-[#d9d9d9] rounded-t-xl">
+            <a href={"/"}>Descubrir más</a>
+          </div>
         </div>
       </div>
     </>

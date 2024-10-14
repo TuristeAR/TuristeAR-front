@@ -38,10 +38,10 @@ const Profile = () => {
     user:  User | null
   }
 
-  const [user, setUser] = useState<User | null>(null);
   const [publications, setPublications] = useState<Publication[] | null>(null);
   const [likedPublicationes, setLikedPublications] = useState<Publication[] | null>(null);
   const [itineraries, setItineraries] = useState<Itinerary[] | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
@@ -125,7 +125,6 @@ const Profile = () => {
 
     fetchData();
   }, []);
-
 
   const [content, setContent] = useState<React.JSX.Element | null>(null);
   const [activeItem, setActiveItem] = useState('posts');

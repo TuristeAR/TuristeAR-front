@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { LeftCommunity } from '../src/components/Community/LeftCommunity';
@@ -18,6 +18,17 @@ const infoCategories = [
   },
 ];
 
+// Mocks para simular la respuesta de la API
+beforeEach(() => {
+  global.fetch = jest.fn();
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+
+
 describe('Publications', () => {
   test('render menu with navigation links', () => {
     render(
@@ -35,47 +46,28 @@ describe('Publications', () => {
     expect(jobsLink).toBeInTheDocument();
   });
 
-  test('renders the search input', () => {
-    render(
-      <BrowserRouter>
-        <CommunityFilters
-          link={infoCategories[0].link}
-          title={infoCategories[0].title}
-          users={infoCategories[0].categories}
-        />
-      </BrowserRouter>,
-    );
 
-    const searchInput = screen.getByPlaceholderText('Buscar');
-    expect(searchInput).toBeInTheDocument();
-  });
+  test('render community filters',async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+    });
 
-  test('render community filters', () => {
-    render(
-      <BrowserRouter>
-        {infoCategories.map((item, index) => (
-          <CommunityFilters
-            key={index}
-            title={item.title}
-            users={item.categories}
-            link={item.link}
-          />
-        ))}
-      </BrowserRouter>,
-    );
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          {infoCategories.map((item, index) => (
+            <CommunityFilters
+              key={index}
+              description={item.categories[1].user}
+              image={item.title}
+            />
+          ))}
+        </BrowserRouter>,
+      );
+    });
 
-    const pabloReview = screen.getByText('General');
-    const victorReview = screen.getByText('Buenos Aires');
-    const belenReview = screen.getByText('Salta');
-    const malenaReview = screen.getByText('Córdoba');
-    const santaFeReview = screen.getByText('Santa Fe');
-    const sanLuisReview = screen.getByText('San Luis');
-
-    expect(pabloReview).toBeInTheDocument();
-    expect(victorReview).toBeInTheDocument();
-    expect(malenaReview).toBeInTheDocument();
-    expect(belenReview).toBeInTheDocument();
-    expect(santaFeReview).toBeInTheDocument();
-    expect(sanLuisReview).toBeInTheDocument();
+    const bsAs = screen.getByText('Buenos Aires');
+    expect(bsAs).toBeInTheDocument();
   });
 });

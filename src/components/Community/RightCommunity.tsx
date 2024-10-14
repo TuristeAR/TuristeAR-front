@@ -38,9 +38,8 @@ export function RightCommunity() {
             {infoTrips.map((trip, index) => (
               <CommunityFilters
                 key={index}
-                title={trip.title}
-                users={trip.users}
-                link={trip.link}
+                description={trip.title}
+                image={trip.link}
               />
             ))}
           </div>
