@@ -228,7 +228,7 @@ export const ItineraryCalendar = () => {
             </div>
             {/* Formulario para agregar actividad */}
             {isAddingActivity && (
-              <div className="flex justify-center items-center w-[450px] h-auto flex-col mx-auto right-0 left-0 p-4 border rounded  absolute z-50 bg-black/80 ">
+              <div className="flex justify-center items-center w-auto md:w-[450px] h-auto flex-col mx-auto top-0 right-0 left-0 p-4 border rounded  absolute z-50 bg-black/80 ">
                 <h3 className="font-semibold text-white text-2xl mb-4">Agregar nueva actividad</h3>
                 <input
                   type="text"
