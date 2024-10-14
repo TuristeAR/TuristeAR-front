@@ -26,14 +26,12 @@ export const ItineraryCalendar = () => {
   const { itinerary, activities, setActivities } = useFetchItinerary(itineraryId || null);
   let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
 
+  /* add activity */
   const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
-  const [activityProvince, setActivityProvince] = useState([]);
-
+  const [activityByProvince, setActivityByProvince] = useState([]);
+  const [selectedPlace, setSelectedPlace] = useState('');
   const [isAddingActivity, setIsAddingActivity] = useState(false);
-
   const [showPlaces, setShowPlaces] = useState(false);
-
-  const [selectedPlace, setSelectedPlace] = useState(''); // Nuevo estado para el nombre del lugar
 
   const handleAddActivity = () => {
     fetch('http://localhost:3001/itinerary/add-activity', {
@@ -80,7 +78,6 @@ export const ItineraryCalendar = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === 'success') {
-          // Actualizar las actividades en el frontend después de eliminar una
           setActivities((prevActivities) =>
             prevActivities.filter((activity) => activity.id !== activityId),
           );
@@ -142,28 +139,22 @@ export const ItineraryCalendar = () => {
     const fetchPlacesByProvince = async () => {
       try {
         if (itinerary && itinerary.name) {
-          const province = itinerary.name.split(' a ')[1]; // Extrae la provincia del nombre del itinerario
-
-          // Realiza la llamada al endpoint en el backend
+          const province = itinerary.name.split(' a ')[1];
           const response = await fetch(
-            `http://localhost:3001/fetch-activities-places/${province}`,
+            `https://api-turistear.koyeb.app/fetch-activities-places/${province}`,
             {
               method: 'GET',
               credentials: 'include',
             },
           );
-
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-
           const data = await response.json();
-
-          // Verifica si la respuesta es exitosa y tiene lugares
           if (data.status === 'success') {
-            setActivityProvince(data.data);
+            setActivityByProvince(data.data);
           } else {
-            setActivityProvince([]); // Limpia el estado si no hay lugares
+            setActivityByProvince([]);
           }
         } else {
           console.error('El itinerario no tiene nombre o no se ha cargado correctamente.');
@@ -177,7 +168,9 @@ export const ItineraryCalendar = () => {
   }, [itinerary]);
 
   return (
-    <section className="h-screen xl:h-auto overflow-x-clip relative">
+    <section
+      className={`${isAddingActivity ? 'h-screen overflow-hidden' : ''} h-screen xl:h-auto overflow-x-clip relative`}
+    >
       <Header containerStyles="fixed top-0 left-0 right-0 z-[60]" />
       <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-4 h-full mt-20 py-4">
         {/* Left Column */}
@@ -228,65 +221,73 @@ export const ItineraryCalendar = () => {
             </div>
             {/* Formulario para agregar actividad */}
             {isAddingActivity && (
-              <div className="flex justify-center items-center w-auto md:w-[450px] h-auto flex-col mx-auto top-0 right-0 left-0 p-4 border rounded  absolute z-50 bg-black/80 ">
-                <h3 className="font-semibold text-white text-2xl mb-4">Agregar nueva actividad</h3>
-                <input
-                  type="text"
-                  placeholder="Nombre de la actividad"
-                  value={newActivity.name}
-                  onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
-                  className="w-full p-2 border border-gray rounded mb-2"
-                />
-                <input
-                  type="datetime-local"
-                  value={newActivity.fromDate}
-                  onChange={(e) => setNewActivity({ ...newActivity, fromDate: e.target.value })}
-                  className="w-full p-2 border border-gray rounded mb-2"
-                />
-                <input
-                  type="datetime-local"
-                  value={newActivity.toDate}
-                  onChange={(e) => setNewActivity({ ...newActivity, toDate: e.target.value })}
-                  className="w-full p-2 border border-gray rounded mb-2"
-                />
-                <div className="relative w-full">
-                  <input
-                    type="text"
-                    placeholder="Lugar"
-                    value={selectedPlace || newActivity.place}
-                    onChange={(e) => setSelectedPlace(e.target.value)}
-                    onFocus={() => setShowPlaces(true)}
-                    className="w-full p-2 border border-gray rounded mb-2"
-                  />
+              <>
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"></div>
 
-                  {showPlaces && (
-                    <div className="absolute left-0 right-0 bg-white border border-gray rounded mt-1 z-50">
-                      {activityProvince.map((place, index) => (
-                        <div
-                          key={index}
-                          className="p-2 hover:bg-gray-200 cursor-pointer"
-                          onClick={() => {
-                            setSelectedPlace(place.name);
-                            setNewActivity({ ...newActivity, place: place.id });
-                            setShowPlaces(false);
-                          }}
-                        >
-                          {place.name}
+                <div className="fixed top-0 left-0 right-0 flex justify-center items-center h-screen z-50">
+                  <div className="bg-white w-auto md:w-[450px] h-auto flex flex-col  mx-auto p-4  rounded shadow-lg">
+                    <h3 className="font-semibold text-black text-2xl text-start mb-4">
+                      Agregar nueva actividad
+                    </h3>
+                    <input
+                      type="text"
+                      placeholder="Nombre de la actividad"
+                      value={newActivity.name}
+                      onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
+                      className="w-full p-2 border border-primary  rounded mb-2 outline-none"
+                    />
+                    <input
+                      type="datetime-local"
+                      value={newActivity.fromDate}
+                      onChange={(e) => setNewActivity({ ...newActivity, fromDate: e.target.value })}
+                      className="w-full p-2 border border-primary  rounded mb-2 outline-none"
+                    />
+                    <input
+                      type="datetime-local"
+                      value={newActivity.toDate}
+                      onChange={(e) => setNewActivity({ ...newActivity, toDate: e.target.value })}
+                      className="w-full p-2 border border-primary rounded mb-2 outline-none"
+                    />
+                    <div className="relative w-full">
+                      <input
+                        type="text"
+                        placeholder="Lugar"
+                        value={selectedPlace || newActivity.place}
+                        onChange={(e) => setSelectedPlace(e.target.value)}
+                        onFocus={() => setShowPlaces(true)}
+                        className="w-full p-2 border border-primary rounded mb-2 outline-none"
+                      />
+
+                      {showPlaces && (
+                        <div className="absolute left-0 right-0 max-h-48 bg-white  rounded z-50 overflow-y-auto">
+                          {activityByProvince.map((place, index) => (
+                            <div
+                              key={index}
+                              className="p-2 hover:bg-gray-200 cursor-pointer"
+                              onClick={() => {
+                                setSelectedPlace(place.name);
+                                setNewActivity({ ...newActivity, place: place.id });
+                                setShowPlaces(false);
+                              }}
+                            >
+                              {place.name}
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
-                  )}
-                </div>
 
-                <div className="flex gap-x-2">
-                  <button onClick={handleAddActivity} className="btn-question">
-                    Agregar
-                  </button>
-                  <button onClick={() => setIsAddingActivity(false)} className="btn-question">
-                    Cancelar
-                  </button>
+                    <div className="flex gap-x-2 justify-center">
+                      <button onClick={handleAddActivity} className="btn-question">
+                        Agregar
+                      </button>
+                      <button onClick={() => setIsAddingActivity(false)} className="btn-question">
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </>
             )}
             {/* Eliminar actividad */}
             <div className="flex flex-col gap-4 md:my-4">
@@ -315,6 +316,7 @@ export const ItineraryCalendar = () => {
             </div>
           </div>
         </aside>
+
         {/* Main Column */}
         <main className="order-1 lg:order-2 col-span-1 container mx-auto">
           <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-full">
