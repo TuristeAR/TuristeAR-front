@@ -23,10 +23,8 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       <Carousel>
         {images.length > 0 ? (
           images.map((item, index) => (
-            <div className="h-[200px]" key={index}>
-              <div >
+            <div className="h-[200px] overflow-hidden" key={index}>
                 <img className="rounded-t-lg h-full w-full object-cover" src={item} alt={title} />
-              </div>
             </div>
           ))
         ) : (
