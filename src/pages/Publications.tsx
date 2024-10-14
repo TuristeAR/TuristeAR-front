@@ -2,9 +2,7 @@ import { Header } from '../components/Header/Header';
 import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 import React, { useEffect, useState } from 'react';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
-import { RightCommunity } from '../components/Community/RightCommunity';
 import { CreatePost } from '../components/Community/CreatePost';
-import { useLocation } from 'react-router-dom';
 
 const itineraries = [
   {
@@ -104,7 +102,7 @@ const Publications = () => {
       <>
         <Header containerStyles={'relative top-0 z-[60]'} />
         <div className="flex justify-between h-[160vh] ">
-          <LeftCommunity vista={'publications'} />
+          <LeftCommunity vista={'publications'} activeItem={'posts'} categorySelected={null} handleClick={null} setCategorySelected={null}/>
           <div className="lg:w-[80%] w-[100%] pt-10 pb-10 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
             {/* Create posts */}
             <div className="rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[80%] w-[90%] mx-auto ">

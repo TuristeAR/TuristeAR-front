@@ -1,24 +1,15 @@
-import { CommunityFilters } from './CommunityFilters';
 import { useEffect, useState } from 'react';
-const infoCategories = [
-  {
-    title: 'Filtrar por categoría',
-    categories: [
-      { imgPerson: '/assets/person.svg', user: 'General' },
-      { imgPerson: '/assets/person.svg', user: 'Buenos Aires' },
-      { imgPerson: '/assets/person.svg', user: 'Salta' },
-      { imgPerson: '/assets/person.svg', user: 'Córdoba' },
-      { imgPerson: '/assets/person.svg', user: 'Santa Fe' },
-      { imgPerson: '/assets/person.svg', user: 'San Luis' },
-    ],
-    link: 'categories',
-  },
-];
 
+export const LeftCommunity = (props: {
+  vista: string;
+  categorySelected: number | null;
+  setCategorySelected: (id: number) => void;
+  activeItem: string;
+  handleClick: (section: string) => void;
+}) => {
 
+  const { vista, categorySelected, setCategorySelected, handleClick, activeItem } = props;
 
-export const LeftCommunity = (props:{vista : string}) => {
-  const {vista}=props;
   type User={
     id: number;
     username: string,
@@ -39,6 +30,7 @@ export const LeftCommunity = (props:{vista : string}) => {
   const [categories, setCategories] = useState<Category[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
   const [error, setError] = useState<string | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,19 +80,26 @@ export const LeftCommunity = (props:{vista : string}) => {
     fetchData();
   }, []);
 
+  // @ts-ignore
   return (
     <>
       <div className="flex flex-col lg:w-[20%] w-[100%] lg:block hidden p-6 gap-6 border-r border-[#999999]">
         <div className="flex flex-col gap-4 text-l font-semibold">
-          <div className={`flex flex-row items-center gap-2 hover:bg-[#d9d9d9] rounded-xl py-2 px-4 ${(vista=='publications') ? 'bg-[#c0daeb]' : ''}`}>
+          <div
+            className={`flex flex-row items-center gap-2 hover:bg-[#d9d9d9] rounded-xl py-2 px-4 ${vista == 'publications' ? 'bg-[#c0daeb]' : ''}`}
+          >
             <img src="/assets/home.svg" alt="Publicaciones" className="w-[25px]" />
             <a href="/publications">Publicaciones</a>
           </div>
-          <div className={`flex flex-row items-center gap-2 hover:bg-[#d9d9d9] rounded-xl  py-2 px-4 ${(vista=='forum') ? 'bg-[#c0daeb]' : ''}`}>
+          <div
+            className={`flex flex-row items-center gap-2 hover:bg-[#d9d9d9] rounded-xl  py-2 px-4 ${vista == 'forum' ? 'bg-[#c0daeb]' : ''}`}
+          >
             <img src="/assets/message.svg" alt="Foro y preguntas" className="w-[25px]" />
             <a href="/forum">Foro y preguntas</a>
           </div>
-          <div className={`flex flex-row items-center gap-2 hover:bg-[#d9d9d9] rounded-xl  py-2 px-4 ${(vista=='jobs') ? 'bg-[#c0daeb]' : ''}`}>
+          <div
+            className={`flex flex-row items-center gap-2 hover:bg-[#d9d9d9] rounded-xl  py-2 px-4 ${vista == 'jobs' ? 'bg-[#c0daeb]' : ''}`}
+          >
             <img src="/assets/personBlue.svg" alt="Ofertas de trabajo" className="w-[25px]" />
             <a href="/jobs">Ofertas de trabajo</a>
           </div>
@@ -109,17 +108,63 @@ export const LeftCommunity = (props:{vista : string}) => {
         <div className="flex flex-col gap-y-4">
           <h2 className="text-xl font-bold">Categorías</h2>
           <form className="flex flex-col gap-4">
-            <input type="text" className="border border-[#999999] pl-2" placeholder="Buscar" />
-          </form>
-          {categories?.slice(0, 6).map((category, index) => (
-            <CommunityFilters
-              key={index}
-              description={category.description}
-              image={category.image}
+            <input
+              type="text"
+              onInput={(e) =>
+                setDescription(
+                  //@ts-ignore
+                  e.target.value,
+                )
+              }
+              className="border border-[#999999] pl-2"
+              placeholder="Buscar"
             />
-          ))}
-          <div className="border-b border-[#999999] p-2 pr-0 hover:bg-[#d9d9d9] rounded-t-xl">
-            <a href={"/"}>Descubrir más</a>
+          </form>
+          <div>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <button
+                  onClick={() => {
+                    setCategorySelected(null)
+                    handleClick((activeItem == 'itineraries') ? 'posts' : activeItem);
+                  }}
+                  className={
+                    `flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${null == categorySelected ? 'bg-[#c0daeb]' : ''}`
+                  }
+                >
+                  <div className="flex items-center">
+                    <p className="">General</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+            {categories
+              ?.filter((c) => {
+                return (
+                  description == null ||
+                  c.description.toLowerCase().includes(description.toLowerCase())
+                );
+              })
+              .slice(0, 10)
+              .map((category, index) => (
+                <div className="space-y-4" key={index}>
+                  <div className="flex justify-between items-center">
+                    <button
+                      onClick={() => {
+                        setCategorySelected(category.id)
+                        handleClick((activeItem == 'itineraries') ? 'posts' : activeItem);
+                      }}
+                      className={
+                        `flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${category.id == categorySelected ? 'bg-[#c0daeb]' : ''}`
+                      }
+                    >
+                      <div className="flex items-center">
+                        <p className="">{category.description}</p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
       </div>
