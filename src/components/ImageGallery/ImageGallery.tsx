@@ -19,7 +19,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({images, height }) => 
     <div
       className={`h-[300px] grid ${dynamicHeightClass70} overflow-hidden ${
         imageCount === 2 ? 'grid-cols-2' : imageCount > 2 ? 'grid-cols-[2fr_1fr]' : 'grid-cols-1'
-      } gap-1 m-auto`}
+      } gap-1 mx-auto`}
     >
       {/* Primera columna más ancha */}
       {imageCount > 0 && (
@@ -34,7 +34,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({images, height }) => 
       {/* Segunda columna con dos imágenes o condicionalmente menos */}
       {imageCount > 1 && (
         <div className={`flex flex-col gap-1 ${imageCount == 2 ? ' justify-center items-center w-full overflow-hidden h-full' : 'aaa'}`}>
-          <div className={`overflow-hidden ${imageCount == 2 ? " h-[500px] ":""}`}>
+          <div className={`overflow-hidden w-full ${imageCount == 2 ? " h-[500px] ":""}`}>
             <img
                className={`w-full ${imageCount === 2 ? 'object-cover h-full' : `${!(dynamicHeightClass40=='') ? dynamicHeightClass40 :"r h-[150px] " }  object-cover river`}`}
                src={images[1]}
@@ -48,7 +48,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({images, height }) => 
               />
               {imageCount > 3 && (
                 <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30">
-                  <span className="text-gray text-6xl font-bold">+{imageCount - 3}</span>
+                  <span className="text-[#ffff] text-6xl font-bold">+{imageCount - 3}</span>
                 </div>
               )}
             </div>

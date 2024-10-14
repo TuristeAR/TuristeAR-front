@@ -9,45 +9,50 @@ const options = ['Imagen', 'Itinerario', 'Categoría', 'Ubicación'];
 
 const Profile = () => {
   const contentRef = useRef<HTMLDivElement | null>(null);
-  type User={
+  type User = {
     id: number;
-    username: string,
-    name: string,
-    profilePicture: string,
-    description: string,
-    birthdate: string,
-    coverPicture: string,
-    location: string
-  }
+    username: string;
+    name: string;
+    profilePicture: string;
+    description: string;
+    birthdate: string;
+    coverPicture: string;
+    location: string;
+  };
+  type Category = {
+    id: number;
+    description: string;
+    image: string;
+  };
+  type Publication = {
+    id: number;
+    description: string;
+    category: Category | null;
+    creationDate: string;
+    images: string[];
+    user: User | null;
+  };
+  type Itinerary = {
+    id: number;
+    createdAt: string;
+    name: string;
+    fromDate: string;
+    toDate: string;
+    participants: User[];
+    user: User | null;
+  };
 
-  type Publication={
-    id: number,
-    description: string,
-    creationDate: string,
-    images: string[],
-    user:  User | null
-  }
-
-  type Itinerary={
-    id: number,
-    createdAt: string,
-    name: string,
-    fromDate: string,
-    toDate: string,
-    participants: User[],
-    user:  User | null
-  }
-
-  const [user, setUser] = useState<User | null>(null);
+  const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [publications, setPublications] = useState<Publication[] | null>(null);
+  const [likedPublicationes, setLikedPublications] = useState<Publication[] | null>(null);
   const [itineraries, setItineraries] = useState<Itinerary[] | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
           method: 'GET',
           credentials: 'include',
@@ -64,29 +69,32 @@ const Profile = () => {
         setIsAuthenticated(true);
         setError('');
 
-        const publicationsResponse = await fetch(
-          `https://api-turistear.koyeb.app/publications/${sessionData.user.id}`,
-          {
-            method: 'GET',
-            credentials: 'include',
+        try {
+          const publicationsResponse = await fetch(
+            `https://api-turistear.koyeb.app/publications/${sessionData.user.id}`,
+            {
+              method: 'GET',
+              credentials: 'include',
+            },
+          );
+
+          if (!publicationsResponse.ok) {
+            console.log('Error al obtener publicaciones:', await publicationsResponse.json());
+          } else {
+            const publicationsData = await publicationsResponse.json();
+            setPublications(publicationsData);
           }
-        );
-
-        if (!publicationsResponse.ok) {
-          setError('Error al obtener las publicaciones');
-          return;
+        } catch (err) {
+          setError(err);
+          console.log('Error al obtener las publicaciones:', err);
         }
-
-        const publicationsData = await publicationsResponse.json();
-        setPublications(publicationsData);
-        setError('');
 
         const itinerariesResponse = await fetch(
           `https://api-turistear.koyeb.app/itinerary/byUser/${sessionData.user.id}`,
           {
             method: 'GET',
             credentials: 'include',
-          }
+          },
         );
 
         if (!itinerariesResponse.ok) {
@@ -95,7 +103,24 @@ const Profile = () => {
         }
 
         const itinerariesData = await itinerariesResponse.json();
-        setItineraries(itinerariesData.participants)
+        setItineraries(itinerariesData.participants);
+        setError('');
+
+        const likedPublicationsResponse = await fetch(
+          `https://api-turistear.koyeb.app/publications/likes/${sessionData.user.id}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          },
+        );
+
+        if (!likedPublicationsResponse.ok) {
+          setError('Error al obtener las publicaciones likeadas');
+          return;
+        }
+
+        const likedPublicationsData = await likedPublicationsResponse.json();
+        setLikedPublications(likedPublicationsData);
         setError('');
       } catch (error) {
         setError('Error en la comunicación con el servidor');
@@ -106,49 +131,33 @@ const Profile = () => {
     fetchData();
   }, []);
 
-// Inicializa content como null o un valor por defecto
-  const [content, setContent] = useState<React.JSX.Element | null>(null);
   const [activeItem, setActiveItem] = useState('posts');
-
-  const components = {
-    itineries: itineraries?.map((itinerary, index) => (
-      <TravelCard key={index} imgProvince={'/assets/san-nicolas-buenos-aires.webp'} province={itinerary.name}
-                  departure={itinerary.fromDate} arrival={itinerary.toDate}
-                  participants={itinerary.participants}  id={itinerary.id}/>
-    )),
-    posts: publications?.map((publication, index) => (
-      <ItineraryCard key={index} profilePicture={user?.profilePicture} userId={user?.name}
-                     creationDate={publication.creationDate} description={publication.description} images={publication.images} />
-    )),
-  };
-  useEffect(() => {
-    // Actualiza el contenido cada vez que publications cambie
-    if (activeItem === 'posts' && publications) {
-      // @ts-ignore
-      setContent(components.posts);
-    } else if (activeItem === 'itineraries') {
-      // @ts-ignore
-      setContent(components.itineries);
-    }
-  }, [publications, activeItem]); // Dependencias para que se ejecute cuando cambien
 
   const handleClick = (name: string) => {
     setActiveItem(name);
-    // Esto se manejará en el useEffect, por lo que no necesitamos setContent aquí
     if (contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  if(!isAuthenticated){
-    return (<><p>User is not authenticated</p></>);
-  }
+  if (!isAuthenticated)
+    return (
+      <>
+        <p>User is not authenticated</p>
+      </>
+    );
 
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
-        <LeftCommunity vista={'publications'} />
+        <LeftCommunity
+          vista="publications"
+          categorySelected={categorySelected}
+          setCategorySelected={setCategorySelected}
+          activeItem={activeItem}
+          handleClick={handleClick}
+        />
         <div className="lg:w-[80%] w-[100%] lg:p-10 lg:pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
           {/* Portada */}
           <div className="">
@@ -201,7 +210,7 @@ const Profile = () => {
             </div>
           </div>
           {/* Publicaciones */}
-          <div className="border-b border-black grid grid-cols-2 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
+          <div className="border-b border-black grid grid-cols-3 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
             <h2
               className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`}
               onClick={() => handleClick('posts')}
@@ -214,18 +223,64 @@ const Profile = () => {
             >
               Mis itinerarios
             </h2>
+            <h2
+              className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'likes' ? 'bg-[#c0daeb]' : ''}`}
+              onClick={() => handleClick('likes')}
+            >
+              Mis likes
+            </h2>
           </div>
           <div
-            className={`rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'hidden' : ''}`}
+            className={`rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto ${activeItem === 'posts' ? 'block' : 'hidden'}`}
           >
             <CreatePost options={options} profilePicture={user?.profilePicture} />
           </div>
           {/* Content */}
           <div
-            className="grid lg:grid-cols-2 grid-cols-1 gap-6 lg:w-[100%] w-[90%] mx-auto"
+            className="lg:w-[100%] w-[90%] mx-auto grid grid-cols-2 gap-6"
             ref={contentRef}
           >
-            {content}
+              {activeItem === 'posts' && publications
+                ?.filter((publication) => {
+                  return categorySelected == null || publication.category.id == categorySelected;
+                })
+                .map((publication, index) => (
+                  <ItineraryCard
+                    key={index}
+                    profilePicture={user?.profilePicture}
+                    userId={user?.name}
+                    creationDate={publication.creationDate}
+                    description={publication.description}
+                    images={publication.images}
+                  />
+                ))}
+              {activeItem === 'itineraries' && itineraries?.map((itinerary, index) => (
+                <TravelCard
+                  key={index}
+                  imgProvince={'/assets/san-nicolas-buenos-aires.webp'}
+                  province={itinerary.name}
+                  departure={itinerary.fromDate}
+                  arrival={itinerary.toDate}
+                  participants={itinerary.participants}
+                  id={itinerary.id}
+                />
+              ))}
+
+
+              {activeItem === 'likes' && likedPublicationes
+                ?.filter((publication) => {
+                  return categorySelected == null || publication.category.id == categorySelected;
+                })
+                .map((publication, index) => (
+                  <ItineraryCard
+                    key={index}
+                    profilePicture={publication.user.profilePicture}
+                    userId={user?.name}
+                    creationDate={publication.creationDate}
+                    description={publication.description}
+                    images={publication.images}
+                  />
+                ))}
           </div>
         </div>
       </div>

@@ -27,14 +27,14 @@
         @apply sm:text-7xl text-3xl font-bold text-black
     }
     .btn-blue{
-        @apply lg:min-w-[156px] h-[54px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all;
+        @apply lg:min-w-[156px] h-[54px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all rounded-md;
     }
     .btn-drop-down-blue{
-        @apply w-full h-[60px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all;
+        @apply w-full h-[60px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all rounded-md;
     }
 
     .btn-drop-down-blue-itinerary{
-        @apply w-full h-[30px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all;
+        @apply w-full h-[30px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all rounded-md;
     }
 
     .btn-question {
