@@ -3,7 +3,7 @@ import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import { PostCard } from '../components/Destinations/PostCard';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { get } from '../utilities/http.util';
 
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
@@ -77,12 +77,17 @@ const ExpectedDestination = () => {
   const [showedCulturaTradicion, setShowedCulturaTradicion] = useState(false);
   const [showedGastronomia, setShowedGastronomia] = useState(false);
 
- 
-  const { nombreDeLaProvincia } = useParams();
-  const [provincia, setProvincia] = useState<Province>(); 
-  const [gastronomyPlace, setGastronomyPlace] = useState<PlaceCard[]>([]); 
-  const [pointsInterest, setPointsInterest] = useState<PlaceCard[]>([]); 
 
+  const { nombreDeLaProvincia } = useParams();
+  const [provincia, setProvincia] = useState<Province>();
+  const [gastronomyPlace, setGastronomyPlace] = useState<PlaceCard[]>([]);
+  const [pointsInterest, setPointsInterest] = useState<PlaceCard[]>([]);
+
+  const navigate = useNavigate();
+
+  const handleClick = (idLugar) => {
+    navigate(`/lugar-esperado/${idLugar}`);
+  }
   useEffect(() => {
     const fetchProvince = async () => {
       try {
@@ -90,43 +95,43 @@ const ExpectedDestination = () => {
           'Content-Type': 'application/json',
         });
 
-       
+
         console.log(response)
 
-          setProvincia(response);
-        
+        setProvincia(response);
+
       } catch (error) {
         console.error('Error fetching province:', error);
-      } 
+      }
     };
 
     fetchProvince();
   }, [nombreDeLaProvincia]);
 
 
-    // Gastronomy
-    useEffect(() => {
-      const fetchGastronomyPlace = async () => {
-        if (provincia) {  // Solo se ejecuta si provincia está definida
-          try {
-            const response = await get(`https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=restaurant&types=food&count=6`, {
-              'Content-Type': 'application/json',
-            });
+  // Gastronomy
+  useEffect(() => {
+    const fetchGastronomyPlace = async () => {
+      if (provincia) {  // Solo se ejecuta si provincia está definida
+        try {
+          const response = await get(`https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=restaurant&types=food&count=6`, {
+            'Content-Type': 'application/json',
+          });
 
-            setGastronomyPlace(response.data);
-          } catch (error) {
-            console.error('Error fetching GastronomyPlace:', error);
-          } 
+          setGastronomyPlace(response.data);
+        } catch (error) {
+          console.error('Error fetching GastronomyPlace:', error);
         }
-      };
-  
-      fetchGastronomyPlace();
-    }, [provincia]);
+      }
+    };
 
-    // points of interest
-    useEffect(() => {
+    fetchGastronomyPlace();
+  }, [provincia]);
+
+  // points of interest
+  useEffect(() => {
     const fetchPointsInterest = async () => {
-      if (provincia) {  
+      if (provincia) {
         try {
           const response = await get(`https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&count=6`, {
             'Content-Type': 'application/json',
@@ -141,16 +146,16 @@ const ExpectedDestination = () => {
 
     fetchPointsInterest();
   }, [provincia]);
-    
+
   if (!provincia) return <div></div>;
 
   return (
     <>
-      <Header/>
+      <Header />
 
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
-          <ImageGallery images={[provincia.images]}  height={70}></ImageGallery> 
+          <ImageGallery images={[provincia.images]} height={70}></ImageGallery>
 
           <div className="px-2 sm:px-0 flex flex-col gap-y-4">
             <h1 className="text-center">{provincia.name}
@@ -247,11 +252,11 @@ const ExpectedDestination = () => {
       {/* Puntos de interes */}
       <section>
         <div className="sm:w-10/12 m-auto mt-10">
-          <h3 
-                        onClick={() => setShowedLugares(!showedLugares)}
+          <h3
+            onClick={() => setShowedLugares(!showedLugares)}
 
             className="text-xl sm:text-4xl pl-1 sm:pl-0 font-bold btn-drop-down-blue flex items-center">Lugares
-          <div className="icons">
+            <div className="icons">
               <svg
                 className={`${!showedLugares ? 'block' : 'hidden'}`}
                 xmlns="http://www.w3.org/2000/svg"
@@ -279,7 +284,7 @@ const ExpectedDestination = () => {
               <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 spaceBetween={5}
-                slidesPerView={pointsInterest.length < 4 ? pointsInterest.length : 4}
+                slidesPerView={4}
                 navigation={{
                   nextEl: '.swiper-button-next',
                   prevEl: '.swiper-button-prev',
@@ -311,15 +316,18 @@ const ExpectedDestination = () => {
               >
                 {pointsInterest.map((article, index) => (
                   <SwiperSlide key={index}>
-                    <ArticleCard
-                       title={article.name}
-                       images={article.reviews.length>0 ? article.reviews[0].photos :[]}
-                       description={article.name}
-                       link={"article.link"}
-                       rating={article.rating}
-                       types={article.types}
-                       address={article.address}
-                    />
+                    <Link to={`/lugar-esperado/${article.id}`}>
+                      <ArticleCard
+                        title={article.name}
+                        images={article.reviews.length > 0 ? article.reviews[0].photos : []}
+                        description={article.name}
+                        link={"article.link"}
+                        rating={article.rating}
+                        types={article.types}
+                        address={article.address}
+                      />
+                    </Link>
+
                   </SwiperSlide>
                 ))}
               </Swiper>
@@ -380,7 +388,7 @@ const ExpectedDestination = () => {
                   <h1 className="mb-3 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-3xl">
                     Festival
                   </h1>
-                 {/*  <p className="mb-6 text-gray-500">{provincia.culture.festivals}</p> */}
+                  {/*  <p className="mb-6 text-gray-500">{provincia.culture.festivals}</p> */}
                 </div>
               </div>
             </div>
@@ -399,7 +407,7 @@ const ExpectedDestination = () => {
                   <h1 className="mb-3 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-3xl">
                     Comida tradicional
                   </h1>
-                 {/*  <p className="mb-6 text-gray-500">{provincia.culture.traditionalFood}</p> */}
+                  {/*  <p className="mb-6 text-gray-500">{provincia.culture.traditionalFood}</p> */}
                 </div>
               </div>
             </div>
@@ -475,15 +483,18 @@ const ExpectedDestination = () => {
               >
                 {gastronomyPlace?.map((article, index) => (
                   <SwiperSlide key={index}>
-                    <ArticleCard
+                    <Link to={`/lugar-esperado/${article.id}`}>
+                    <ArticleCard 
                       title={article.name}
-                      images={article.reviews.length>0 ? article.reviews[0].photos :[]}
+                      images={article.reviews.length > 0 ? article.reviews[0].photos : []}
                       description={article.name}
                       link={"article.link"}
                       rating={article.rating}
                       types={article.types}
                       address={article.address}
                     />
+                    </Link>
+                    
                   </SwiperSlide>
                 ))}
               </Swiper>

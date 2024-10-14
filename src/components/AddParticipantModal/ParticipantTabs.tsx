@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type User = {
   id: number;
@@ -6,6 +7,7 @@ type User = {
   name: string;
   username: string;
   profilePicture: string;
+  isOwner?: boolean;
 };
 
 interface ParticipantTabsProps {
@@ -13,22 +15,25 @@ interface ParticipantTabsProps {
   tap?: number;
   usersOldNav: User[];
   onUsersOldUpdate: (users: User[]) => void;
+  currentUser: number
 }
 const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   itinerary,
   tap,
   usersOldNav,
   onUsersOldUpdate,
+  currentUser
 }) => {
   const [openTab, setOpenTab] = useState(tap || 1);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchTermOld, setSearchTermOld] = useState('');
   const [users, setUsers] = useState<User[]>([]);
-  const [usersOld, setUsersOld] = useState<User[]>(usersOldNav||[]);
-  
-
+  const [usersOld, setUsersOld] = useState<User[]>(usersOldNav);
   const closeModal = () => setShowModal(false);
-
+  const navigate = useNavigate();
+  // Get the localStorage user
+ 
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.key === 'Escape') {
@@ -65,10 +70,13 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`https://api-turistear.koyeb.app/itinerary/participants/${itinerary}`, {
-          method: 'GET',
-          credentials: 'include',
-        });
+        const response = await fetch(
+          `https://api-turistear.koyeb.app/itinerary/participants/${itinerary}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          },
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -92,6 +100,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   //Add user
   const handleAddUser = async (participantId) => {
     try {
+      onUsersOldUpdate([...usersOldNav, users.find((user) => user.id === participantId)]);
       handleRemoveUser(participantId);
       const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-user', {
         method: 'POST',
@@ -99,6 +108,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ itineraryId: itinerary, participantId }),
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -109,10 +119,8 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
 
       if (data.status === 'success') {
         setUsersOld(data.data.participants);
-        onUsersOldUpdate(data.data.participants);
 
         console.log('Participantes actualizados:', data.data.participants);
-
       } else {
         console.error('Error al agregar el usuario:', data.message);
       }
@@ -129,8 +137,9 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   const removeParticipant = async (itineraryId: number, participantId: number) => {
     try {
       const updatedUsersOld = usersOld.filter((user) => user.id !== participantId);
-    setUsersOld(updatedUsersOld);
-    onUsersOldUpdate(updatedUsersOld);
+      const updatedUsersOldNav = usersOldNav.filter((user) => user.id !== participantId);
+      setUsersOld(updatedUsersOld);
+      onUsersOldUpdate(updatedUsersOldNav);
 
       const response = await fetch('https://api-turistear.koyeb.app/itinerary/remove-user', {
         method: 'DELETE',
@@ -143,6 +152,10 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
+
+      if (currentUser === participantId) {
+        navigate('/profile');
+      }
     } catch (error) {
       console.error('Error removing participant:', error);
     }
@@ -151,6 +164,9 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   //search userold
   const filteredUsers = usersOld.filter((user) =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+  const filteredUsersOld = usersOldNav.filter((user) =>
+    user.name.toLowerCase().includes(searchTermOld.toLowerCase()),
   );
 
   return (
@@ -202,22 +218,22 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
             <div className="px-4  pb-5 flex-auto">
               <div className="tab-content tab-space">
                 <div className={openTab === 1 ? 'block' : 'hidden'} id="link1">
-                  <div className="px-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
+                  <div className="px-4 flex items-center justify-center whitespace-nowrap space-x-6 mx-6 lg:mr-0">
                     <input
                       type="text"
                       name="email"
                       id="users-search"
                       className="bg-slate-50 border border-gray text-black sm:text-sm rounded-lg focus:ring-slate-50 focus:border-primary block w-full p-2.5"
                       placeholder="Buscar participantes"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
+                      value={searchTermOld}
+                      onChange={(e) => setSearchTermOld(e.target.value)}
                     />
                   </div>
                   <div className="max-h-52 overflow-y-auto">
-                    {filteredUsers &&
-                      filteredUsers.map((user) => (
+                    {filteredUsersOld &&
+                      filteredUsersOld.map((user) => (
                         <div className="flex justify-between" key={user.id}>
-                          <div className="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
+                          <div className="p-4 flex items-center whitespace-nowrap space-x-2 mr-12 lg:mr-0">
                             <img
                               className="h-10 w-10 rounded-full"
                               src={user.profilePicture}
@@ -230,33 +246,60 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
                             </div>
                           </div>
                           <div className="p-4 whitespace-nowrap space-x-2">
-                            <button
-                              type="button"
-                              onClick={() => removeParticipant(itinerary, user.id)}
-                              data-modal-toggle="add-user-modal"
-                              className="w-1/2 text-white bg-[#ff0000] hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-                            >
-                              <svg
-                                className="-ml-1 mr-2 h-6 w-6"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
+                            {user.isOwner ? (
+                              <div className="text-sm font-bold px-3 py-2 text-primary">
+                                Creador
+                              </div>
+                            ) : currentUser == user.id ? (
+                              <button
+                                type="button"
+                                onClick={() => removeParticipant(itinerary, user.id)}
+                                data-modal-toggle="add-user-modal"
+                                className=" text-white bg-[#ff8000] hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
                               >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                              Quitar
-                            </button>
+                                <svg
+                                  className="-ml-1 mr-2 h-6 w-6"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                Salir
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => removeParticipant(itinerary, user.id)}
+                                data-modal-toggle="add-user-modal"
+                                className=" text-white bg-[#ff0000] hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                <svg
+                                  className="-ml-1 mr-2 h-6 w-6"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                Quitar
+                              </button>
+                            )}
                           </div>
                         </div>
                       ))}
                   </div>
                 </div>
                 <div className={openTab === 2 ? 'block' : 'hidden'} id="link2">
-                  <div className="px-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
+                  <div className="px-4 flex items-center whitespace-nowrap space-x-2 mx-4 lg:mr-0">
                     <input
                       type="text"
                       name="email"
@@ -288,7 +331,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
                               type="button"
                               onClick={() => handleAddUser(user.id)}
                               data-modal-toggle="add-user-modal"
-                              className="w-1/2 text-white bg-primary hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              className=" text-white bg-primary hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
                             >
                               <svg
                                 className="-ml-1 mr-2 h-6 w-6"
