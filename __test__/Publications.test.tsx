@@ -2,7 +2,6 @@ import { act, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { LeftCommunity } from '../src/components/Community/LeftCommunity';
-import { CommunityFilters } from '../src/components/Community/CommunityFilters';
 const infoCategories = [
   {
     title: 'Filtrar por categoría',
@@ -30,12 +29,14 @@ afterEach(() => {
 
 
 describe('Publications', () => {
-  test('render menu with navigation links', () => {
-    render(
-      <BrowserRouter>
-        <LeftCommunity vista={'jobs'} />
-      </BrowserRouter>,
-    );
+  test('render menu with navigation links', async () => {
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <LeftCommunity vista={'jobs'}  activeItem={''} categorySelected={1} handleClick={null} setCategorySelected={null}/>
+        </BrowserRouter>,
+      );
+    })
 
     const publicationsLink = screen.getByText('Publicaciones');
     const forumLink = screen.getByText('Foro y preguntas');
@@ -56,12 +57,20 @@ describe('Publications', () => {
     await act(async () => {
       render(
         <BrowserRouter>
-          {infoCategories.map((item, index) => (
-            <CommunityFilters
-              key={index}
-              description={item.categories[1].user}
-              image={item.title}
-            />
+          {infoCategories.map((category, index) => (
+            <div className="space-y-4" key={index}>
+              <div className="flex justify-between items-center">
+                <button
+                  className={
+                    `flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4`
+                  }
+                >
+                  <div className="flex items-center">
+                    <p className="">{category.categories[1].user}</p>
+                  </div>
+                </button>
+              </div>
+            </div>
           ))}
         </BrowserRouter>,
       );
