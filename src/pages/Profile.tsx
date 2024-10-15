@@ -1,11 +1,9 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
-import { CreatePost } from '../components/Community/CreatePost';
+import { CreatePublications } from '../components/Community/CreatePublications';
 import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 import { TravelCard } from '../components/Community/TravelCard';
 import { useEffect, useRef, useState } from 'react';
-
-const options = ['Imagen', 'Itinerario', 'Categoría', 'Ubicación'];
 
 const Profile = () => {
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -19,11 +17,13 @@ const Profile = () => {
     coverPicture: string;
     location: string;
   };
+
   type Category = {
     id: number;
     description: string;
     image: string;
   };
+
   type Publication = {
     id: number;
     description: string;
@@ -31,7 +31,11 @@ const Profile = () => {
     creationDate: string;
     images: string[];
     user: User | null;
+    likes: User[],
+    reposts: User[],
+    saved: User[]
   };
+
   type Itinerary = {
     id: number;
     createdAt: string;
@@ -44,7 +48,8 @@ const Profile = () => {
 
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [publications, setPublications] = useState<Publication[] | null>(null);
-  const [likedPublicationes, setLikedPublications] = useState<Publication[] | null>(null);
+  const [likedPublications, setLikedPublications] = useState<Publication[] | null>(null);
+  const [savedPublications, setSavedPublications] = useState<Publication[] | null>(null);
   const [itineraries, setItineraries] = useState<Itinerary[] | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
@@ -122,6 +127,23 @@ const Profile = () => {
         const likedPublicationsData = await likedPublicationsResponse.json();
         setLikedPublications(likedPublicationsData);
         setError('');
+
+        const savedPublicationsResponse = await fetch(
+          `https://api-turistear.koyeb.app/publications/saved/${sessionData.user.id}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          },
+        );
+
+        if (!savedPublicationsResponse.ok) {
+          setError('Error al obtener las publicaciones likeadas');
+          return;
+        }
+
+        const savedPublicationsData = await savedPublicationsResponse.json();
+        setSavedPublications(savedPublicationsData);
+        setError('');
       } catch (error) {
         setError('Error en la comunicación con el servidor');
         setIsAuthenticated(false);
@@ -140,19 +162,14 @@ const Profile = () => {
     }
   };
 
-  if (!isAuthenticated)
-    return (
-      <>
-        <p>User is not authenticated</p>
-      </>
-    );
+  if (!isAuthenticated) return ( <p>User is not authenticated</p> );
 
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
       <div className="flex justify-between h-[160vh] ">
         <LeftCommunity
-          vista="publications"
+          vista=""
           categorySelected={categorySelected}
           setCategorySelected={setCategorySelected}
           activeItem={activeItem}
@@ -180,7 +197,7 @@ const Profile = () => {
                 <div className="flex gap-4 lg:text-[14px] text-[10px] mt-2 text-[#999999]">
                   <div className="flex items-center gap-x-2">
                     <img src="/assets/location.svg" alt="Ubicación" className="w-6 h-6" />
-                    <p>{user?.location}</p>
+                    <p>{user?.location}, Argentina</p>
                   </div>
                   <div className="flex items-center gap-x-2">
                     <img src="/assets/calendar.svg" alt="Calendario" className="w-6 h-6" />
@@ -200,7 +217,7 @@ const Profile = () => {
                 </div>
                 <div>
                   <a
-                    href={`/editProfile/${user?.id}`}
+                    href={`/editProfile`}
                     className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl"
                   >
                     Editar perfil
@@ -210,37 +227,43 @@ const Profile = () => {
             </div>
           </div>
           {/* Publicaciones */}
-          <div className="border-b border-black grid grid-cols-3 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
+          <div className="border-b border-black grid lg:grid-cols-4 lg:grid-rows-1 grid-cols-2 grid-rows-2 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
             <h2
               className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`}
               onClick={() => handleClick('posts')}
             >
-              Mis publicaciones
+              Publicaciones
             </h2>
             <h2
               className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'itineraries' ? 'bg-[#c0daeb]' : ''}`}
               onClick={() => handleClick('itineraries')}
             >
-              Mis itinerarios
+              Itinerarios
             </h2>
             <h2
               className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'likes' ? 'bg-[#c0daeb]' : ''}`}
               onClick={() => handleClick('likes')}
             >
-              Mis likes
+              Likes
+            </h2>
+            <h2
+              className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'saved' ? 'bg-[#c0daeb]' : ''}`}
+              onClick={() => handleClick('saved')}
+            >
+              Guardados
             </h2>
           </div>
           <div
-            className={`rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto ${activeItem === 'posts' ? 'block' : 'hidden'}`}
+            className={`rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto`}
           >
-            <CreatePost options={options} profilePicture={user?.profilePicture} />
+            <CreatePublications />
           </div>
           {/* Content */}
           <div
-            className="lg:w-[100%] w-[90%] mx-auto grid grid-cols-2 gap-6"
+            className="lg:w-[100%] w-[90%] mx-auto lg:grid lg:grid-cols-2 lg:gap-6 gap-20"
             ref={contentRef}
           >
-              {activeItem === 'posts' && publications
+            {activeItem === 'posts' && publications
                 ?.filter((publication) => {
                   return categorySelected == null || publication.category.id == categorySelected;
                 })
@@ -248,13 +271,16 @@ const Profile = () => {
                   <ItineraryCard
                     key={index}
                     profilePicture={user?.profilePicture}
-                    userId={user?.name}
+                    userId={publication.user.name}
                     creationDate={publication.creationDate}
                     description={publication.description}
                     images={publication.images}
+                    likes={publication.likes.length}
+                    reposts={publication.reposts.length}
+                    saved={publication.saved.length}
                   />
                 ))}
-              {activeItem === 'itineraries' && itineraries?.map((itinerary, index) => (
+            {activeItem === 'itineraries' && itineraries?.map((itinerary, index) => (
                 <TravelCard
                   key={index}
                   imgProvince={'/assets/san-nicolas-buenos-aires.webp'}
@@ -267,7 +293,7 @@ const Profile = () => {
               ))}
 
 
-              {activeItem === 'likes' && likedPublicationes
+            {activeItem === 'likes' && likedPublications
                 ?.filter((publication) => {
                   return categorySelected == null || publication.category.id == categorySelected;
                 })
@@ -275,10 +301,30 @@ const Profile = () => {
                   <ItineraryCard
                     key={index}
                     profilePicture={publication.user.profilePicture}
-                    userId={user?.name}
+                    userId={publication.user.name}
                     creationDate={publication.creationDate}
                     description={publication.description}
                     images={publication.images}
+                    likes={publication.likes.length}
+                    reposts={publication.reposts.length}
+                    saved={publication.saved.length}
+                  />
+                ))}
+            {activeItem === 'saved' && savedPublications
+                ?.filter((publication) => {
+                  return categorySelected == null || publication.category.id == categorySelected;
+                })
+                .map((publication, index) => (
+                  <ItineraryCard
+                    key={index}
+                    profilePicture={publication.user.profilePicture}
+                    userId={publication.user.name}
+                    creationDate={publication.creationDate}
+                    description={publication.description}
+                    images={publication.images}
+                    likes={publication.likes.length}
+                    reposts={publication.reposts.length}
+                    saved={publication.saved.length}
                   />
                 ))}
           </div>
