@@ -31,7 +31,7 @@ const itineraries = [
 ];
 
 describe('Jobs', () => {
-  test('render itineraries cards correctly', () => {
+    test('render itineraries cards correctly', () => {
     render(
       <BrowserRouter>
         {itineraries.map((item, index) => {
@@ -43,7 +43,8 @@ describe('Jobs', () => {
               description={item.descripcion}
               images={[item.img[0].src]}
               profilePicture={item.imgPerson}
-            />
+             likes={0} reposts={0} saved={0}
+            isLiked={false} isSaved={false} isRepost={false}/>
           );
         })}
       </BrowserRouter>,

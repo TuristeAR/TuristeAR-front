@@ -101,7 +101,7 @@ export const ItineraryDetail = () => {
                 return (
                   <div key={index}>
                     <button
-                      className="btn-drop-down-blue-itinerary"
+                      className="btn-drop-down-blue-itinerary my-1"
                       onClick={() => toggleInfo(index)} // Asumir que toggleInfo actualiza el estado correspondiente a este índice
                     >
                       <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md">
