@@ -164,6 +164,11 @@ const Profile = () => {
 
   if (!isAuthenticated) return ( <p>User is not authenticated</p> );
 
+  const validarQueElUsuarioEsta = (array: User[]): boolean => {
+    return array.some(item => item.id === user.id);
+  };
+
+
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
@@ -226,7 +231,7 @@ const Profile = () => {
               </div>
             </div>
           </div>
-          {/* Publicaciones */}
+
           <div className="border-b border-black grid lg:grid-cols-4 lg:grid-rows-1 grid-cols-2 grid-rows-2 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
             <h2
               className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`}
@@ -253,11 +258,9 @@ const Profile = () => {
               Guardados
             </h2>
           </div>
-          <div
-            className={`rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[100%] w-[90%] mx-auto`}
-          >
-            <CreatePublications />
-          </div>
+
+          <CreatePublications />
+
           {/* Content */}
           <div
             className="lg:w-[100%] w-[90%] mx-auto lg:grid lg:grid-cols-2 lg:gap-6 gap-20"
@@ -278,6 +281,9 @@ const Profile = () => {
                     likes={publication.likes.length}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}
+                    isLiked={publication.likes.some(item => item.id === user.id)}
+                    isRepost={publication.reposts.some(item => item.id === user.id)}
+                    isSaved={publication.saved.some(item => item.id === user.id)}
                   />
                 ))}
             {activeItem === 'itineraries' && itineraries?.map((itinerary, index) => (
@@ -308,6 +314,9 @@ const Profile = () => {
                     likes={publication.likes.length}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}
+                    isLiked={publication.likes.some(item => item.id === user.id)}
+                    isRepost={publication.reposts.some(item => item.id === user.id)}
+                    isSaved={publication.saved.some(item => item.id === user.id)}
                   />
                 ))}
             {activeItem === 'saved' && savedPublications
@@ -325,7 +334,9 @@ const Profile = () => {
                     likes={publication.likes.length}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}
-                  />
+                    isLiked={publication.likes.some(item => item.id === user.id)}
+                    isRepost={publication.reposts.some(item => item.id === user.id)}
+                    isSaved={publication.saved.some(item => item.id === user.id)}/>
                 ))}
           </div>
         </div>
