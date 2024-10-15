@@ -194,6 +194,8 @@ const FormQuestions = () => {
     company: null,
   });
   const [currentStep, setCurrentStep] = useState(1);
+  const [loading, setLoading] = useState(false); 
+
 
   const handleCloseDialogWindow = () => {
     setDialogWindowOpen(false);
@@ -332,19 +334,28 @@ const FormQuestions = () => {
   };
 
   const submitFormData = async () => {
+    setLoading(true); // Inicia el estado de carga
+
     formData.fromDate = state[0].startDate.toISOString();
     formData.toDate = state[0].endDate.toISOString();
 
-    const response = await post(
-      'https://api-turistear.koyeb.app/formQuestion',
-      {
-        'Content-Type': 'application/json',
-      },
-      formData,
-    );
-    if (response.statusCode === 201) {
-      const itineraryId = response.data.id;
-      navigate(`/itineraryCalendar/${itineraryId}`);
+try {
+      const response = await post(
+        'https://api-turistear.koyeb.app/formQuestion',
+        {
+          'Content-Type': 'application/json',
+        },
+        formData,
+      );
+
+      if (response.statusCode === 201) {
+        const itineraryId = response.data.id;
+        navigate(`/itineraryCalendar/${itineraryId}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -501,7 +512,7 @@ const FormQuestions = () => {
                   </div>
                   <div className="w-full flex justify-center my-2">
                     <button type="button" className="btn-question" onClick={submitFormData}>
-                      Finalizar
+                    {loading ? 'Cargando...' : 'Finalizar'} 
                     </button>
                   </div>
                 </>
