@@ -120,7 +120,7 @@ export const LeftCommunity = (props: {
               placeholder="Buscar"
             />
           </form>
-          <div>
+          <div className="overflow-y-scroll h-[400px] scrollbar-hidden">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <button
@@ -145,7 +145,7 @@ export const LeftCommunity = (props: {
                   c.description.toLowerCase().includes(description.toLowerCase())
                 );
               })
-              .slice(0, 10)
+              .slice(0, 24)
               .map((category, index) => (
                 <div className="space-y-4" key={index}>
                   <div className="flex justify-between items-center">

@@ -43,7 +43,7 @@ describe('Jobs', () => {
               description={item.descripcion}
               images={[item.img[0].src]}
               profilePicture={item.imgPerson}
-            />
+             likes={0} reposts={0} saved={0}/>
           );
         })}
       </BrowserRouter>,

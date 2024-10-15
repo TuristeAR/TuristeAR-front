@@ -90,9 +90,14 @@ export const Nav = () => {
             alt="Foto de perfil"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           />
-          <h2 className="text-white font-bold text-[16px]">{user.name}</h2>
+          <a href={'/profile'} className="text-white font-bold text-[16px]">{user.name}</a>
           {isDropdownOpen && (
             <div className="absolute top-[4em] right-8 bg-white shadow-lg rounded-md py-2 w-40 z-50">
+              <a href={'/profile'}
+                 className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 z-50"
+              >
+                Ver perfil
+              </a>
               <button
                 className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 z-50"
                 onClick={handleLogout}

@@ -1,7 +1,7 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 
-import { CreatePost } from '../components/Community/CreatePost';
+import { CreatePublications } from '../components/Community/CreatePublications';
 import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 const itineraries = [
   {
@@ -30,8 +30,6 @@ const itineraries = [
   },
 ];
 
-const options=[ "Imagen", "Contacto", "Enlace de postulación", "Ubicación" ]
-
 export const Jobs = () => {
   return (
     <>
@@ -40,7 +38,7 @@ export const Jobs = () => {
         <LeftCommunity vista={'jobs'} activeItem={'posts'} categorySelected={null} handleClick={null} setCategorySelected={null} />
         <div className="lg:w-[80%] pt-10 pb-10 overflow-scroll scrollbar-hidden ">
           <div className="lg:w-[80%] w-[90%] mx-auto rounded-xl mb-10 shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
-            <CreatePost options={options} profilePicture={'/assets/person.svg'} />
+            <CreatePublications />
           </div>
           <div className="flex flex-col gap-6 lg:w-[80%] w-[90%] mx-auto" >
             {itineraries.map((userPost, index) => (
@@ -51,7 +49,7 @@ export const Jobs = () => {
                 creationDate={userPost.fecha}
                 description={userPost.descripcion}
                 images={[userPost.img[0].src]}
-              />
+                likes={0} reposts={0} saved={0}/>
             ))}
           </div>
         </div>

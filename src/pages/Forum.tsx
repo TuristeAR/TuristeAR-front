@@ -1,7 +1,6 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { CreatePost } from '../components/Community/CreatePost';
 
 const infoComments = [
   {
@@ -40,7 +39,6 @@ const infoComments = [
     ],
   },
 ];
-const options = ['Imagen', 'Archivo', 'Itinerario'];
 
 const Forum = () => {
   return (
@@ -71,7 +69,7 @@ const Forum = () => {
             })}
           </div>
           <div className="bg-[#009fe3] bg-opacity-10">
-            <CreatePost options={options} profilePicture={'/assets/person.svg'}/>
+
           </div>
         </div>
       </div>
