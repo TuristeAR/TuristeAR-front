@@ -60,7 +60,7 @@ export const CreatePublications = ()   => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3001/createPublication`, {
+      const response = await fetch(`https://api-turistear.koyeb.app/createPublication`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
