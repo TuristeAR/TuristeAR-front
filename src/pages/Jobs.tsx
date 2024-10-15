@@ -49,7 +49,9 @@ export const Jobs = () => {
                 creationDate={userPost.fecha}
                 description={userPost.descripcion}
                 images={[userPost.img[0].src]}
-                likes={0} reposts={0} saved={0}/>
+                likes={0} reposts={0} saved={0}
+                isLiked={false} isRepost={false} isSaved={false}
+              />
             ))}
           </div>
         </div>
