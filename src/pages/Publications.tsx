@@ -98,9 +98,7 @@ const Publications = () => {
                          handleClick={handleClick}/>
           <div className="lg:w-[80%] w-[100%] pt-10 pb-10 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
             {/* Create posts */}
-            <div className="rounded-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:w-[80%] w-[90%] mx-auto ">
-              <CreatePublications />
-            </div>
+            <CreatePublications />
             {/* Posts */}
             <div className="flex flex-col gap-6 lg:w-[80%] w-[90%] mx-auto">
             {publications?.filter((publication) => {
@@ -116,6 +114,9 @@ const Publications = () => {
                 likes={publication.likes.length}
                 reposts={publication.reposts.length}
                 saved={publication.saved.length}
+                isLiked={publication.likes.some(item => item.id === user.id)}
+                isRepost={publication.reposts.some(item => item.id === user.id)}
+                isSaved={publication.saved.some(item => item.id === user.id)}
               />
             ))}
           </div>
