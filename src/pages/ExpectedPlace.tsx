@@ -10,6 +10,10 @@ import 'swiper/css/scrollbar';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FeaturedImageGalleryModal } from '../components/GalleryViewer/GalleryViewer';
+import Lottie from 'lottie-react';
+
+import logoAnimado from '../assets/logoAnimado.json';
+
 
 const infoHotel = {
   place: 'Hotel Awwa duites & Spa',
@@ -136,7 +140,7 @@ const ExpectedPlace = () => {
 
   useEffect(() => {
     const fetchAddress = async () => {
-      if (place && place.latitude && place.longitude) {
+      if (place.address) {
         try {
           const response = await fetch(
             `https://apis.datos.gob.ar/georef/api/ubicacion?lat=${place.latitude}&lon=${place.longitude}`,
@@ -160,7 +164,9 @@ const ExpectedPlace = () => {
       .filter((i) => i != null);
   }
   if (loading) {
-    return <div></div>;
+    return  <div className='w-screen h-screen flex'>
+    <Lottie className="w-[20rem] m-auto" animationData={logoAnimado} />
+  </div>
   }
 
   const toggleHours = () => {
