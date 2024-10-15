@@ -23,12 +23,6 @@ const swipper = [
   { id: 5, src: '/assets/san-nicolas-buenos-aires.webp' },
 ];
 
-
-
-type Image = {
-  id: number;
-  src: string;
-};
 interface Culture {
   festivals: string;
   traditionalFood: string;
@@ -45,6 +39,7 @@ type Province = {
 
 type Review = {
   id: number;
+  googleId: string;
   publishedTime: string;
   rating: number;
   text: string;
@@ -55,6 +50,7 @@ type Review = {
 
 type Place = {
   id: number;
+  googleId: string;
   name: string;
   rating: number;
   reviews: Review[];
@@ -62,6 +58,7 @@ type Place = {
 
 type PlaceCard = {
   id: number;
+  googleId: string;
   name: string;
   types: string[];
   rating: number;
@@ -76,6 +73,7 @@ const ExpectedDestination = () => {
   const [showedLugares, setShowedLugares] = useState(false);
   const [showedCulturaTradicion, setShowedCulturaTradicion] = useState(false);
   const [showedGastronomia, setShowedGastronomia] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(2); 
 
 
   const { nombreDeLaProvincia } = useParams();
@@ -83,23 +81,15 @@ const ExpectedDestination = () => {
   const [gastronomyPlace, setGastronomyPlace] = useState<PlaceCard[]>([]);
   const [pointsInterest, setPointsInterest] = useState<PlaceCard[]>([]);
 
-  const navigate = useNavigate();
 
-  const handleClick = (idLugar) => {
-    navigate(`/lugar-esperado/${idLugar}`);
-  }
   useEffect(() => {
     const fetchProvince = async () => {
       try {
-        const response = await get(`https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}/2`, {
+        const response = await get(`https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}`, {
           'Content-Type': 'application/json',
         });
 
-
-        console.log(response)
-
         setProvincia(response);
-
       } catch (error) {
         console.error('Error fetching province:', error);
       }
@@ -119,6 +109,7 @@ const ExpectedDestination = () => {
           });
 
           setGastronomyPlace(response.data);
+         
         } catch (error) {
           console.error('Error fetching GastronomyPlace:', error);
         }
@@ -146,6 +137,10 @@ const ExpectedDestination = () => {
 
     fetchPointsInterest();
   }, [provincia]);
+
+  const toggleReviews = () => {
+    setVisibleCount(prevCount => prevCount + 2);
+  };
 
   if (!provincia) return <div></div>;
 
@@ -230,7 +225,7 @@ const ExpectedDestination = () => {
           </h3>
           <hr />
           <div className="flex gap-2 mt-5 justify-around flex-wrap">
-            {provincia.places.map((userPost, index) => (
+          {provincia.places.slice(0,visibleCount).map((userPost, index) => (
               <PostCard
                 key={index}
                 imgPerson={userPost.reviews[0].authorPhoto}
@@ -240,11 +235,15 @@ const ExpectedDestination = () => {
                 place={userPost.name}
                 province={provincia.name}
                 img={userPost.reviews[0].photos}
+                rating={userPost.reviews[0].rating}
               />
             ))}
           </div>
           <div className="text-center mt-5">
-            <button className="btn-blue">Ver más publicaciones</button>
+          {provincia.places.length<=visibleCount?"":
+
+            <button             onClick={toggleReviews}
+            className="btn-blue">Ver más publicaciones</button>}
           </div>
         </div>
       </section>
@@ -255,7 +254,7 @@ const ExpectedDestination = () => {
           <h3
             onClick={() => setShowedLugares(!showedLugares)}
 
-            className="text-xl sm:text-4xl pl-1 sm:pl-0 font-bold btn-drop-down-blue flex items-center">Lugares
+            className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center">Lugares
             <div className="icons">
               <svg
                 className={`${!showedLugares ? 'block' : 'hidden'}`}
@@ -284,7 +283,7 @@ const ExpectedDestination = () => {
               <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 spaceBetween={5}
-                slidesPerView={4}
+                slidesPerView={"auto"}
                 navigation={{
                   nextEl: '.swiper-button-next',
                   prevEl: '.swiper-button-prev',
@@ -316,12 +315,12 @@ const ExpectedDestination = () => {
               >
                 {pointsInterest.map((article, index) => (
                   <SwiperSlide key={index}>
-                    <Link to={`/lugar-esperado/${article.id}`}>
+                    <Link to={`/lugar-esperado/${article.googleId}`}>
                       <ArticleCard
+                        key={article.id}
                         title={article.name}
                         images={article.reviews.length > 0 ? article.reviews[0].photos : []}
                         description={article.name}
-                        link={"article.link"}
                         rating={article.rating}
                         types={article.types}
                         address={article.address}
@@ -334,7 +333,7 @@ const ExpectedDestination = () => {
               <div className="swiper-button-prev hidden"></div>
               <div className="hidden swiper-button-next"></div>
             </div>
-            <div className="text-center mt-5">
+            <div className="text-center mt-1">
               <button className="btn-blue">Ver Puntos de interes</button>
             </div>
           </div>
@@ -346,7 +345,7 @@ const ExpectedDestination = () => {
         <div className="sm:w-10/12 m-auto mt-10">
           <h3
             onClick={() => setShowedCulturaTradicion(!showedCulturaTradicion)}
-            className="text-xl sm:text-4xl pl-1 sm:pl-0 font-bold btn-drop-down-blue flex items-center"
+            className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center"
           >
             Cultura y tradiciones
             <div className="icons">
@@ -420,7 +419,7 @@ const ExpectedDestination = () => {
         <div className="sm:w-10/12 m-auto mt-10">
           <h3
             onClick={() => setShowedGastronomia(!showedGastronomia)}
-            className="text-xl sm:text-4xl pl-1 sm:pl-0 font-bold btn-drop-down-blue flex items-center"
+            className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center"
           >
             Gastronomía
             <div className="icons">
@@ -451,7 +450,7 @@ const ExpectedDestination = () => {
               <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 spaceBetween={5}
-                slidesPerView={4}
+                slidesPerView={"auto"}
                 navigation={{
                   nextEl: '.swiper-button-next',
                   prevEl: '.swiper-button-prev',
@@ -483,12 +482,12 @@ const ExpectedDestination = () => {
               >
                 {gastronomyPlace?.map((article, index) => (
                   <SwiperSlide key={index}>
-                    <Link to={`/lugar-esperado/${article.id}`}>
+                    <Link to={`/lugar-esperado/${article.googleId}`}>
                     <ArticleCard 
+                      key={article.id}
                       title={article.name}
                       images={article.reviews.length > 0 ? article.reviews[0].photos : []}
                       description={article.name}
-                      link={"article.link"}
                       rating={article.rating}
                       types={article.types}
                       address={article.address}
@@ -501,12 +500,13 @@ const ExpectedDestination = () => {
               <div className="swiper-button-next"></div>
               <div className="swiper-button-prev"></div>
             </div>
-            <div className="text-center mt-5">
+            <div className="text-center mt-1">
               <button className="btn-blue">Ver Puntos de interes</button>
             </div>
           </div>
         </div>
-      </section>
+      </section>      <div className="h-4"></div>
+
     </>
   );
 };

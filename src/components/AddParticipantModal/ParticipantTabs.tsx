@@ -54,6 +54,10 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
         try {
           const response = await fetch(
             `https://api-turistear.koyeb.app/users/search?name=${searchTerm}&itineraryId=${itinerary}`,
+            {
+              method: 'GET',
+              credentials: 'include',
+            },
           );
           const data = await response.json();
           setUsers(data.data);
