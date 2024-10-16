@@ -254,8 +254,7 @@ const ExpectedPlace = () => {
 
                       <div className="flex sm:w-[200px]">
                         <span>
-                          {place.address} - {address.ubicacion.departamento.nombre},{' '}
-                          {address.ubicacion.provincia.nombre}
+                          {place.address? place.address:address.ubicacion.departamento.nombre},{address.ubicacion.provincia.nombre}
                         </span>
                       </div>
                     </div>
@@ -347,8 +346,7 @@ const ExpectedPlace = () => {
           </h3>
           <hr />
           <div className="flex gap-2 mt-5 justify-around flex-wrap">
-         
-            {reviews.slice(0, visibleCount).map((userPost, index) => (
+         {reviews.length>0 ? reviews.slice(0, visibleCount).map((userPost, index) => (
               <PostCard
                 key={index}
                 imgPerson={userPost.authorPhoto}
@@ -360,7 +358,8 @@ const ExpectedPlace = () => {
                 province={`${address.ubicacion.departamento.nombre} - ${address.ubicacion.provincia.nombre}`}
                 rating={userPost.rating}
               />
-            ))}
+            )):""}
+           
           </div>
 
           <div className="flex gap-2 mt-5 justify-around flex-wrap">
