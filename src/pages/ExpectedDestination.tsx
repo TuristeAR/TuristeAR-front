@@ -3,7 +3,7 @@ import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import { PostCard } from '../components/Destinations/PostCard';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { get } from '../utilities/http.util';
 
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
@@ -14,6 +14,9 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import Lottie from 'lottie-react';
+
+import logoAnimado from '../assets/logoAnimado.json';
 
 const swipper = [
   { id: 1, src: '/assets/san-nicolas-buenos-aires.webp' },
@@ -35,7 +38,7 @@ type Province = {
   description: string;
   images: string;
   places: Place[];
-}
+};
 
 type Review = {
   id: number;
@@ -46,7 +49,7 @@ type Review = {
   authorName: string;
   authorPhoto: string;
   photos: string[];
-}
+};
 
 type Place = {
   id: number;
@@ -54,7 +57,7 @@ type Place = {
   name: string;
   rating: number;
   reviews: Review[];
-}
+};
 
 type PlaceCard = {
   id: number;
@@ -67,27 +70,28 @@ type PlaceCard = {
     id: number;
     photos: string[];
   }[];
-}
+};
 
 const ExpectedDestination = () => {
   const [showedLugares, setShowedLugares] = useState(false);
   const [showedCulturaTradicion, setShowedCulturaTradicion] = useState(false);
   const [showedGastronomia, setShowedGastronomia] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(2); 
-
+  const [visibleCount, setVisibleCount] = useState(2);
 
   const { nombreDeLaProvincia } = useParams();
   const [provincia, setProvincia] = useState<Province>();
   const [gastronomyPlace, setGastronomyPlace] = useState<PlaceCard[]>([]);
   const [pointsInterest, setPointsInterest] = useState<PlaceCard[]>([]);
 
-
   useEffect(() => {
     const fetchProvince = async () => {
       try {
-        const response = await get(`https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}`, {
-          'Content-Type': 'application/json',
-        });
+        const response = await get(
+          `https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}`,
+          {
+            'Content-Type': 'application/json',
+          },
+        );
 
         setProvincia(response);
       } catch (error) {
@@ -98,18 +102,20 @@ const ExpectedDestination = () => {
     fetchProvince();
   }, [nombreDeLaProvincia]);
 
-
   // Gastronomy
   useEffect(() => {
     const fetchGastronomyPlace = async () => {
-      if (provincia) {  // Solo se ejecuta si provincia está definida
+      if (provincia) {
+        // Solo se ejecuta si provincia está definida
         try {
-          const response = await get(`https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=restaurant&types=food&count=6`, {
-            'Content-Type': 'application/json',
-          });
+          const response = await get(
+            `https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=restaurant&types=food&count=6`,
+            {
+              'Content-Type': 'application/json',
+            },
+          );
 
           setGastronomyPlace(response.data);
-         
         } catch (error) {
           console.error('Error fetching GastronomyPlace:', error);
         }
@@ -124,9 +130,12 @@ const ExpectedDestination = () => {
     const fetchPointsInterest = async () => {
       if (provincia) {
         try {
-          const response = await get(`https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&count=6`, {
-            'Content-Type': 'application/json',
-          });
+          const response = await get(
+            `https://api-turistear.koyeb.app/places/province?provinceId=${provincia.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&count=6`,
+            {
+              'Content-Type': 'application/json',
+            },
+          );
 
           setPointsInterest(response.data);
         } catch (error) {
@@ -139,22 +148,25 @@ const ExpectedDestination = () => {
   }, [provincia]);
 
   const toggleReviews = () => {
-    setVisibleCount(prevCount => prevCount + 2);
+    setVisibleCount((prevCount) => prevCount + 2);
   };
 
-  if (!provincia) return <div></div>;
+  if (!provincia)
+    return (
+      <div className='w-screen h-screen flex' >
+        <Lottie className="w-[20rem] m-auto" animationData={logoAnimado} />
+      </div>
+    );
 
   return (
     <>
       <Header />
-
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
           <ImageGallery images={[provincia.images]} height={70}></ImageGallery>
 
           <div className="px-2 sm:px-0 flex flex-col gap-y-4">
-            <h1 className="text-center">{provincia.name}
-            </h1>
+            <h1 className="text-center">{provincia.name}</h1>
             <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-center">
               {provincia.description}
             </p>
@@ -216,7 +228,6 @@ const ExpectedDestination = () => {
           </div>
         </div>
       </section>
-
       {/* Posts usuarios */}
       <section>
         <div className="sm:w-10/12 m-auto mt-20">
@@ -225,7 +236,7 @@ const ExpectedDestination = () => {
           </h3>
           <hr />
           <div className="flex gap-2 mt-5 justify-around flex-wrap">
-          {provincia.places.slice(0,visibleCount).map((userPost, index) => (
+            {provincia.places.slice(0, visibleCount).map((userPost, index) => (
               <PostCard
                 key={index}
                 imgPerson={userPost.reviews[0].authorPhoto}
@@ -240,21 +251,24 @@ const ExpectedDestination = () => {
             ))}
           </div>
           <div className="text-center mt-5">
-          {provincia.places.length<=visibleCount?"":
-
-            <button             onClick={toggleReviews}
-            className="btn-blue">Ver más publicaciones</button>}
+            {provincia.places.length <= visibleCount ? (
+              ''
+            ) : (
+              <button onClick={toggleReviews} className="btn-blue">
+                Ver más publicaciones
+              </button>
+            )}
           </div>
         </div>
       </section>
-
       {/* Puntos de interes */}
       <section>
         <div className="sm:w-10/12 m-auto mt-10">
           <h3
             onClick={() => setShowedLugares(!showedLugares)}
-
-            className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center">Lugares
+            className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center"
+          >
+            Lugares
             <div className="icons">
               <svg
                 className={`${!showedLugares ? 'block' : 'hidden'}`}
@@ -283,7 +297,7 @@ const ExpectedDestination = () => {
               <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 spaceBetween={5}
-                slidesPerView={"auto"}
+                slidesPerView={'auto'}
                 navigation={{
                   nextEl: '.swiper-button-next',
                   prevEl: '.swiper-button-prev',
@@ -326,7 +340,6 @@ const ExpectedDestination = () => {
                         address={article.address}
                       />
                     </Link>
-
                   </SwiperSlide>
                 ))}
               </Swiper>
@@ -339,7 +352,6 @@ const ExpectedDestination = () => {
           </div>
         </div>
       </section>
-
       {/* Cultura y tradiciones*/}
       <section>
         <div className="sm:w-10/12 m-auto mt-10">
@@ -413,7 +425,6 @@ const ExpectedDestination = () => {
           </div>
         </div>
       </section>
-
       {/* Gastronomía */}
       <section>
         <div className="sm:w-10/12 m-auto mt-10">
@@ -450,7 +461,7 @@ const ExpectedDestination = () => {
               <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 spaceBetween={5}
-                slidesPerView={"auto"}
+                slidesPerView={'auto'}
                 navigation={{
                   nextEl: '.swiper-button-next',
                   prevEl: '.swiper-button-prev',
@@ -483,17 +494,16 @@ const ExpectedDestination = () => {
                 {gastronomyPlace?.map((article, index) => (
                   <SwiperSlide key={index}>
                     <Link to={`/lugar-esperado/${article.googleId}`}>
-                    <ArticleCard 
-                      key={article.id}
-                      title={article.name}
-                      images={article.reviews.length > 0 ? article.reviews[0].photos : []}
-                      description={article.name}
-                      rating={article.rating}
-                      types={article.types}
-                      address={article.address}
-                    />
+                      <ArticleCard
+                        key={article.id}
+                        title={article.name}
+                        images={article.reviews.length > 0 ? article.reviews[0].photos : []}
+                        description={article.name}
+                        rating={article.rating}
+                        types={article.types}
+                        address={article.address}
+                      />
                     </Link>
-                    
                   </SwiperSlide>
                 ))}
               </Swiper>
@@ -505,8 +515,8 @@ const ExpectedDestination = () => {
             </div>
           </div>
         </div>
-      </section>      <div className="h-4"></div>
-
+      </section>{' '}
+      <div className="h-4"></div>
     </>
   );
 };
