@@ -106,6 +106,7 @@ const Publications = () => {
             }).map((publication, index) => (
               <ItineraryCard
                 key={index}
+                id={publication.id}
                 profilePicture={publication.user?.profilePicture}
                 userId={publication.user?.name}
                 creationDate={publication.creationDate}
@@ -117,7 +118,7 @@ const Publications = () => {
                 isLiked={publication.likes.some(item => item.id === user.id)}
                 isRepost={publication.reposts.some(item => item.id === user.id)}
                 isSaved={publication.saved.some(item => item.id === user.id)}
-              />
+                category={publication.category.description}/>
             ))}
           </div>
         </div>
