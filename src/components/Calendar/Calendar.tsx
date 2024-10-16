@@ -5,8 +5,8 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
-import { AddActivityCalendar } from './AddEventCalendar';
-import { ModalActivity } from './ModalEvent';
+/* import { AddActivityCalendar } from './AddEventCalendar';
+ */ import { ModalActivity } from './ModalEvent';
 
 export const Calendar = ({
   activities,
@@ -50,7 +50,6 @@ export const Calendar = ({
     }
   };
 
-
   const editEvent = (id: number, newName: string) => {
     const updatedEvents = activities.map((event: any) =>
       event.id === id ? { ...event, name: newName } : event,
@@ -63,6 +62,8 @@ export const Calendar = ({
     id: String(activity.id),
     title: activity.name,
     date: activity.fromDate.substring(0, 10),
+    start: new Date(activity.fromDate),
+    end: new Date(activity.toDate),
   }));
 
   useEffect(() => {
@@ -84,10 +85,8 @@ export const Calendar = ({
     });
   }, []);
 
-  
-
   return (
-    <div className='relative'>
+    <div className="relative">
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -104,11 +103,20 @@ export const Calendar = ({
         }}
         eventContent={(eventInfo) => (
           <>
-            <div className="flex flex-col overflow-hidden">
-              <span className="text-[11px] md:text-sm font-semibold whitespace-normal break-words">
+            <div className="flex justify-center items-center gap-x-2 overflow-hidden">
+              <span className="text-[10px] md:text-xs text-gray-500 bg-primary px-2 rounded-3xl">
+                {eventInfo.event.start
+                  ? new Date(eventInfo.event.start).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })
+                  : ''}
+              </span>
+              <span className="text-xs font-semibold whitespace-normal break-words">
                 {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
               </span>
-              {selectedEvent === eventInfo.event.id  && (
+
+              {selectedEvent === eventInfo.event.id && (
                 <ModalActivity
                   handleClose={handleClose}
                   editEvent={editEvent}
@@ -125,14 +133,14 @@ export const Calendar = ({
           right: 'dayGridMonth,dayGridWeek,dayGridDay',
         }}
       />
-      {openNewEvent && (
+      {/*       {openNewEvent && (
         <AddActivityCalendar
           eventName={eventName}
           setEventName={setEventName}
           handleClose={handleClose}
           handleSave={handleSave}
         />
-      )}
+      )} */}
     </div>
   );
 };

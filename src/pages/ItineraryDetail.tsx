@@ -1,8 +1,17 @@
 import { Link, useParams } from 'react-router-dom';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
+import { AddParticipantModal } from '../components/AddParticipantModal/AddParticipantModal';
+
+type User = {
+  id: number;
+  email: string;
+  name: string;
+  username: string;
+  profilePicture: string;
+};
 
 export const ItineraryDetail = () => {
   const { itineraryId } = useParams();
@@ -10,6 +19,8 @@ export const ItineraryDetail = () => {
   const { itinerary, activities } = useFetchItinerary(itineraryId || null);
 
   const [showedInfo, setShowedInfo] = useState<boolean[]>([]);
+
+  let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
 
   const toggleInfo = (index: number) => {
     setShowedInfo((prevState) => {
@@ -21,9 +32,9 @@ export const ItineraryDetail = () => {
   const imgs = [
     {
       img: [
-        '/assets/san-nicolas-buenos-aires.webp' ,
-        '/assets/san-nicolas-buenos-aires.webp' ,
-        '/assets/san-nicolas-buenos-aires.webp' ,
+        '/assets/san-nicolas-buenos-aires.webp',
+        '/assets/san-nicolas-buenos-aires.webp',
+        '/assets/san-nicolas-buenos-aires.webp',
       ],
     },
   ];
@@ -42,6 +53,48 @@ export const ItineraryDetail = () => {
     acc[date].push(activity);
     return acc;
   }, {});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://api-turistear.koyeb.app/itinerary/participants/${itineraryId}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.status === 'success' && data.itineraryParticipants.participants) {
+          //setUsersOldNav(data.itineraryParticipants.participants);
+          const owner = {
+            ...data.itineraryParticipants.user, // El usuario dueño del itinerario
+            isOwner: true, // Marcamos que este usuario es el owner
+          };
+
+          setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
+        } else {
+          setUsersOldNav([]);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setUsersOldNav([]);
+      }
+    };
+
+    fetchData();
+  }, [itineraryId]);
+  const handleUpdateUsersOld = (updatedUsers: User[]) => {
+    setUsersOldNav(updatedUsers);
+    usersOldNav = updatedUsers;
+    console.log('Usuarios actualizados en el padre:', updatedUsers);
+    console.log('UserNav new: ', usersOldNav);
+  };
 
   return (
     <>
@@ -65,8 +118,7 @@ export const ItineraryDetail = () => {
                   <h2 className="font-semibold text-md my-2">Información general</h2>
                   <p className="ml-4 text-sm">
                     Me quede un buen rato recorriendo las calles empedradas y mirando las ferias de
-                    antiguedades, hasta me compre un par de cosas. Me encanto la arquitectura de la
-                    iglesia y la plaza, muy lindo todo.
+                    antiguedades, hasta me compre un par de cosas, muy lindo todo.
                   </p>
                 </div>
               </div>
@@ -81,12 +133,21 @@ export const ItineraryDetail = () => {
                   </Link>
                 </div>
                 <div className="flex flex-col gap-y-2">
-                  <p className="font-semibold text-md">Participantes</p>
-                  <div className="flex gap-x-2">
-                    <div className="bg-gray rounded-full w-9 h-9"></div>
-                    <div className="bg-gray rounded-full w-9 h-9"></div>
-                    <div className="bg-gray rounded-full w-9 h-9"></div>
-                    <div className="bg-gray rounded-full w-9 h-9"></div>
+                  <div className="w-full flex  gap-2 mb-2">
+                    <div>
+                      <AddParticipantModal
+                        itinerary={Number(itineraryId)}
+                        tap={1}
+                        usersOldNav={usersOldNav}
+                        onUsersOldUpdate={handleUpdateUsersOld}
+                      />
+                      <AddParticipantModal
+                        itinerary={Number(itineraryId)}
+                        tap={2}
+                        usersOldNav={usersOldNav}
+                        onUsersOldUpdate={handleUpdateUsersOld}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -96,13 +157,14 @@ export const ItineraryDetail = () => {
               <h2 className="font-semibold text-md my-2">Itinerario de viaje</h2>
               {/* Días */}
               {activities.map((item: any, index: number) => {
-                const dateKey = new Date(item.fromDate).toISOString().split('T')[0]; // Obtener la fecha para este día
+                const dateKey = new Date(item.fromDate).toISOString().split('T')[0]; 
+                const fecha = new Date(item.fromDate);
 
                 return (
                   <div key={index}>
                     <button
                       className="btn-drop-down-blue-itinerary my-1"
-                      onClick={() => toggleInfo(index)} // Asumir que toggleInfo actualiza el estado correspondiente a este índice
+                      onClick={() => toggleInfo(index)} 
                     >
                       <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md">
                         Dia: {index + 1}
@@ -136,7 +198,7 @@ export const ItineraryDetail = () => {
                       <div className="relative px-1 sm:px-0 flex flex-col gap-2 my-2 flex-wrap">
                         {/* Título del día */}
                         <h3 className="font-semibold text-sm px-10">
-                          {new Date(dateKey).toLocaleDateString()}
+                          {new Date(fecha).toLocaleDateString()}
                         </h3>
 
                         {/* Mostrar actividades del día */}
