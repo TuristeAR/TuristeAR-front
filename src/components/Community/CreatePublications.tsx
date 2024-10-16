@@ -72,6 +72,8 @@ export const CreatePublications = ()   => {
       if (!response.ok) {
         throw new Error('Error en la solicitud');
       }
+
+      window.location.reload();
       setError('')
     } catch (err: any) {
       setError(err.message);

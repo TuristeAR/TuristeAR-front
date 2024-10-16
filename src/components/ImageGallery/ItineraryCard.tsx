@@ -22,9 +22,12 @@ export function ItineraryCard(props: {
   const [isLike, setIsLike]= useState <boolean | undefined>(isLiked);
   const [isSave, setIsSave]= useState <boolean | null>(isSaved);
   const [isReposts, setIsReposts]= useState <boolean | null>(isRepost);
+  const [amountLikes, setAmountLikes] = useState<number | null>(likes);
   const [error, setError]= useState<string | null>(null);
 
   const handleLike = async (idPublication: number)=>{
+    setAmountLikes((!isLike)? amountLikes+1 : amountLikes-1);
+    setIsLike(!isLike);
     try {
       const response = await fetch(`http://localhost:3001/handleLike/${idPublication}`, {
         method: 'POST',
@@ -37,7 +40,6 @@ export function ItineraryCard(props: {
       if (!response.ok) {
         throw new Error('Error en la solicitud');
       }
-
       setError('')
     } catch (err: any) {
       console.log('No funciona')
@@ -71,9 +73,9 @@ export function ItineraryCard(props: {
           <div className="text-gray-500 dark:text-gray-400 flex mt-3 justify-around">
             <div className="flex items-center mr-6">
               <svg
+                className='cursor-pointer'
                 onClick={() => {
                   handleLike(id);
-                  setIsLike(!isLike);
                 }}
                 width="25px"
                 height="25px"
@@ -92,7 +94,7 @@ export function ItineraryCard(props: {
                   ></path>
                 </g>
               </svg>
-              <span className="ml-3">{likes}</span>
+              <span className="ml-3">{amountLikes}</span>
             </div>
             <div className="flex items-center mr-6">
               <svg
