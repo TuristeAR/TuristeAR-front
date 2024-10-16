@@ -191,8 +191,8 @@ const ExpectedPlace = () => {
           )}
           <div className="px-2 sm:px-0 flex flex-col gap-y-4">
             <h1 className="text-center">{place.name}</h1>
-            <div className="flex flex-wrap sm:flex-nowrap gap-2">
-              <p className="w-11/12 mx-auto font-light text-gray-500 text-sm md:text-base lg:text-lg text-justify sm:text-start">
+            <div className="w-11/12 flex flex-wrap sm:flex-nowrap gap-2">
+              <p className="mx-auto font-light text-gray-500 text-sm md:text-base lg:text-lg text-justify sm:text-start">
                 {infoHotel.descripcion}
               </p>
               <div className="flex mx-auto">
@@ -217,25 +217,16 @@ const ExpectedPlace = () => {
                       {place.rating}
                     </h2>
                   </div>
-                  <div className="flex gap-2 justify-between">
+                
+                  <div className="flex flex-wrap gap-2 justify-between mb-1">
+                  {place.types && place.types.length > 0 && place.types.map(t =>
                     <a
-                      href={'link'}
-                      className="border inline-flex items-center px-1 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                    >
-                      Palermo
-                    </a>
-                    <a
-                      href={'link'}
-                      className="border inline-flex items-center px-3 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                    >
-                      CABA
-                    </a>
-                    <a
-                      href={'link'}
-                      className="border inline-flex items-center px-3 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                    >
-                      Palermo
-                    </a>
+                    href={'link'}
+                    className="border inline-flex items-center px-1 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                  >
+                    {t}
+                  </a>
+                  )}
                   </div>
                   <div className="flex flex-col gap-1 font-light text-gray-500 text-sm  lg:text-md w-full">
                     <div className="flex flex-nowrap gap-1">
