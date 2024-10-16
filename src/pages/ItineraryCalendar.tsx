@@ -34,7 +34,7 @@ export const ItineraryCalendar = () => {
   const [showPlaces, setShowPlaces] = useState(false);
 
   const handleAddActivity = () => {
-    fetch('http://localhost:3001/itinerary/add-activity', {
+    fetch('https://api-turistear.koyeb.app/itinerary/add-activity', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

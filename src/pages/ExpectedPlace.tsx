@@ -1,7 +1,8 @@
-import { ArticleCard } from '../components/Destinations/ArticleCard';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import { PostCard } from '../components/Destinations/PostCard';
+import GoogleMapComponent from '../components/GoogleMapComponent/GoogleMapComponent';
+import { FeaturedImageGalleryModal } from '../components/GalleryViewer/GalleryViewer';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -9,7 +10,11 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { FeaturedImageGalleryModal } from '../components/GalleryViewer/GalleryViewer';
+import Lottie from 'lottie-react';
+
+import logoAnimado from '../assets/logoAnimado.json';
+
+
 
 const infoHotel = {
   place: 'Hotel Awwa duites & Spa',
@@ -136,7 +141,7 @@ const ExpectedPlace = () => {
 
   useEffect(() => {
     const fetchAddress = async () => {
-      if (place && place.latitude && place.longitude) {
+      if (place && place.address) {
         try {
           const response = await fetch(
             `https://apis.datos.gob.ar/georef/api/ubicacion?lat=${place.latitude}&lon=${place.longitude}`,
@@ -160,7 +165,9 @@ const ExpectedPlace = () => {
       .filter((i) => i != null);
   }
   if (loading) {
-    return <div></div>;
+    return <div className='w-screen h-screen flex'>
+      <Lottie className="w-[20rem] m-auto" animationData={logoAnimado} />
+    </div>
   }
 
   const toggleHours = () => {
@@ -177,7 +184,7 @@ const ExpectedPlace = () => {
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
           <div onClick={() => openModal()}>
-            <ImageGallery images={photosHeader} height={70}></ImageGallery>
+            {photosHeader.length>0?<ImageGallery images={photosHeader} height={70}></ImageGallery>:""}
           </div>
           {isModalOpen && (
             <FeaturedImageGalleryModal closeModal={closeModal} photos={photosHeader} />
@@ -210,25 +217,16 @@ const ExpectedPlace = () => {
                       {place.rating}
                     </h2>
                   </div>
+                
                   <div className="flex gap-2 justify-between">
+                  {place.types && place.types.length > 0 && place.types.map(t =>
                     <a
-                      href={'link'}
-                      className="border inline-flex items-center px-1 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                    >
-                      Palermo
-                    </a>
-                    <a
-                      href={'link'}
-                      className="border inline-flex items-center px-3 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                    >
-                      CABA
-                    </a>
-                    <a
-                      href={'link'}
-                      className="border inline-flex items-center px-3 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                    >
-                      Palermo
-                    </a>
+                    href={'link'}
+                    className="border inline-flex items-center px-1 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                  >
+                    {t}
+                  </a>
+                  )}
                   </div>
                   <div className="flex flex-col gap-1 font-light text-gray-500 text-sm  lg:text-md w-full">
                     <div className="flex flex-nowrap gap-1">
@@ -286,8 +284,8 @@ const ExpectedPlace = () => {
                       </svg>
 
                       <div className="flex flex-col sm:w-[180px] justify-between">
-                        {place.openingHours.slice(0, 2).map((i) => (
-                          <span>{i}</span>
+                        {place.openingHours.slice(0, 2).map((i, index) => (
+                          <span key={index}>{i}</span>
                         ))}
                         {showHours && place.openingHours.slice(2).map((i) => <span>{i}</span>)}
                       </div>
@@ -326,19 +324,13 @@ const ExpectedPlace = () => {
         <div className="sm:w-10/12 m-auto mt-20">
           <h3 className="text-4xl pl-1 sm:pl-0 font-bold ">Ubicación</h3>
           <hr />
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13140.305655721764!2d-58.4122997!3d-34.576933!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb579fa2cfa59%3A0x296b8c9a44cd6331!2sAwwa%20Suites%20%26%20Spa!5e0!3m2!1ses-419!2sar!4v1727029785630!5m2!1ses-419!2sar"
-            className="w-full mt-5"
-            height="450"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          ></iframe>
+          <div className='"w-full mt-5'>
+            <GoogleMapComponent latitud={place.latitude} longitud={place.longitude} nombre={place.name}></GoogleMapComponent>
+          </div>
         </div>
       </section>
 
-      {/* Como Llegar */}
+      {/* Reseñas */}
       <section>
         <div className="sm:w-10/12 m-auto mt-20">
           <h3 className="text-4xl font-bold pl-1 sm:pl-0">
@@ -346,6 +338,7 @@ const ExpectedPlace = () => {
           </h3>
           <hr />
           <div className="flex gap-2 mt-5 justify-around flex-wrap">
+         
             {reviews.slice(0, visibleCount).map((userPost, index) => (
               <PostCard
                 key={index}

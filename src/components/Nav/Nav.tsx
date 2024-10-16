@@ -21,25 +21,23 @@ export const Nav = () => {
     }
   };
 
+  const fetchUser = async () => {
+    const response = await get('https://api-turistear.koyeb.app/session', {
+      'Content-Type': 'application/json',
+    });
+
+    if (response.statusCode === 200) {
+      localStorage.setItem('user', JSON.stringify(response.user));
+      setUser(response.user);
+    } else {
+      localStorage.removeItem('user');
+    }
+  };
+
   useEffect(() => {
     const cachedUser = localStorage.getItem('user');
-
-    if (cachedUser) {
-      setUser(JSON.parse(cachedUser));
-    } else {
-      const fetchUser = async () => {
-        const response = await get('https://api-turistear.koyeb.app/session', {
-          'Content-Type': 'application/json',
-        });
-
-        if (response.statusCode === 200) {
-          localStorage.setItem('user', JSON.stringify(response.user));
-          setUser(response.user);
-        }
-      };
-
-      fetchUser();
-    }
+    setUser(cachedUser ? JSON.parse(cachedUser) : null);
+    fetchUser();
   }, []);
 
   return (
