@@ -8,7 +8,7 @@ export const LandingHero = () => {
   return (
     <section className="w-full h-screen overflow-hidden text-gray-600 body-font">
       <video
-        src="https://files.catbox.moe/l071x6.mp4"
+        src="https://files.catbox.moe/o8s78p.mp4"
         data-testid="landing-hero-video"
         autoPlay
         muted
