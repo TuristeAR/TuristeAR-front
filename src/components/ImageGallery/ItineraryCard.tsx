@@ -17,16 +17,16 @@ export function ItineraryCard(props: {
   isRepost: boolean;
 }) {
 
-  const { profilePicture, userId, creationDate, description, images, likes, reposts, saved, isSaved, isLiked, isRepost, category, id } = props;
+  let { profilePicture, userId, creationDate, description, images, likes, reposts, saved, isSaved, isLiked, isRepost, category, id } = props;
 
   const [isLike, setIsLike]= useState <boolean | undefined>(isLiked);
   const [isSave, setIsSave]= useState <boolean | null>(isSaved);
   const [isReposts, setIsReposts]= useState <boolean | null>(isRepost);
   const [error, setError]= useState<string | null>(null);
 
-  const handleLike = async ()=>{
+  const handleLike = async (idPublication: number)=>{
     try {
-      const response = await fetch(`http://localhost:3001/handleLike/${id}`, {
+      const response = await fetch(`http://localhost:3001/handleLike/${idPublication}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,7 +40,8 @@ export function ItineraryCard(props: {
 
       setError('')
     } catch (err: any) {
-      setError(err.message);
+      console.log('No funciona')
+      setError('No funciona');
     }
   }
 
@@ -71,7 +72,7 @@ export function ItineraryCard(props: {
             <div className="flex items-center mr-6">
               <svg
                 onClick={() => {
-                  handleLike;
+                  handleLike(id);
                   setIsLike(!isLike);
                 }}
                 width="25px"
