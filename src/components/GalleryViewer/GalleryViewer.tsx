@@ -29,7 +29,7 @@ export function FeaturedImageGalleryModal({ photos, closeModal }) {
             </button>
 
             <div
-              className="h-[85vh] flex items-center justify-center"
+              className="h-[85vh] w-full flex items-center justify-center overflow-hidden"
               onClick={handleBackgroundClick}
             >
               <img
