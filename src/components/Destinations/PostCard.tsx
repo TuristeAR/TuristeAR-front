@@ -19,29 +19,33 @@ export function PostCard(props: {
             <div className="rounded-full  border border-1 border-black">
               <img className="w-8 h-8" src={imgPerson} alt="person" />
             </div>
-            <p className="font-semibold">{usuario}</p>
+              <div className="flex flex-col">
+                {rating ? (
+                  <div className='flex flex-nowrap max-w-fit justify-around gap-1'>
+                  {[...Array(Math.round(rating))].map((_, index) => (
+                        <svg
+                          key={index}
+                          className="items-end ml-auto size-5"
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="30px"
+                          viewBox="0 -960 960 960"
+                          width="24px"
+                          fill="#49A2EC"
+                        >
+                          <path d="m223-107 68-292L64-596l300-25 116-276 117 276 299 25-227 197 68 292-257-155-257 155Z" />
+                        </svg>
+                      ))}
+                    
+                  </div>
+                ) : (
+                  ''
+                )}
+                <p className="font-semibold">{usuario}</p>
+              </div>
           </div>
           <p>{fecha}</p>
         </div>
-        <div className="flex px-2 text-primary">
-          {rating ? (
-            <>
-              <span className="my-auto font-semibold text-xl">{rating}</span>
-              <svg
-                className="items-end "
-                xmlns="http://www.w3.org/2000/svg"
-                height="30px"
-                viewBox="0 -960 960 960"
-                width="24px"
-                fill="#49A2EC"
-              >
-                <path d="m223-107 68-292L64-596l300-25 116-276 117 276 299 25-227 197 68 292-257-155-257 155Z" />
-              </svg>
-            </>
-          ) : (
-            ''
-          )}
-        </div>
+
         <p className="font-light px-2 text-gray-500 mb-auto md:text-base lg:text-lg text-start">
           {descripcion}
         </p>

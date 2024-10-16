@@ -23,14 +23,17 @@ export function FeaturedImageGalleryModal({ photos, closeModal }) {
           <div className=" rounded-lg  w-[100vw] h-[100vh] relative">
             <button
               onClick={closeModal}
-              className="absolute top-2 right-2 text-white text-xl font-bold"
+              className="absolute top-2 right-2 text-white text-4xl font-bold"
             >
               &times;
             </button>
 
-            <div className="h-[85vh]" onClick={handleBackgroundClick}>
+            <div
+              className="h-[85vh] flex items-center justify-center"
+              onClick={handleBackgroundClick}
+            >
               <img
-                className="h-full w-auto mx-auto object-cover object-center"
+                className="my-auto w-auto h-max-full  sm:h-full object-cover object-center"
                 src={active}
                 alt="Featured"
               />
@@ -49,7 +52,9 @@ export function FeaturedImageGalleryModal({ photos, closeModal }) {
                   <img
                     onClick={() => setActive(imgelink)}
                     src={imgelink}
-                    className="h-full w-full cursor-pointer object-cover"
+                    className={`h-full p-1  w-full cursor-pointer object-cover object-center ${
+                      active === imgelink ? 'shadow-xl shadow-black p-0' : ''
+                    }`}
                     alt={`gallery-image-${index}`}
                   />
                 </SwiperSlide>

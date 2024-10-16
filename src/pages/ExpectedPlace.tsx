@@ -334,7 +334,7 @@ const ExpectedPlace = () => {
           <h3 className="text-4xl pl-1 sm:pl-0 font-bold ">Ubicación</h3>
           <hr />
           <div className='"w-full mt-5'>
-            <GoogleMapComponent latitud={place.latitude} longitud={place.longitude} nombre={place.openingHours}></GoogleMapComponent>
+            <GoogleMapComponent latitud={place.latitude} longitud={place.longitude} nombre={place.name}></GoogleMapComponent>
           </div>
         </div>
       </section>
