@@ -118,8 +118,7 @@ export const ItineraryDetail = () => {
                   <h2 className="font-semibold text-md my-2">Información general</h2>
                   <p className="ml-4 text-sm">
                     Me quede un buen rato recorriendo las calles empedradas y mirando las ferias de
-                    antiguedades, hasta me compre un par de cosas. Me encanto la arquitectura de la
-                    iglesia y la plaza, muy lindo todo.
+                    antiguedades, hasta me compre un par de cosas, muy lindo todo.
                   </p>
                 </div>
               </div>
@@ -158,13 +157,14 @@ export const ItineraryDetail = () => {
               <h2 className="font-semibold text-md my-2">Itinerario de viaje</h2>
               {/* Días */}
               {activities.map((item: any, index: number) => {
-                const dateKey = new Date(item.fromDate).toISOString().split('T')[0]; // Obtener la fecha para este día
+                const dateKey = new Date(item.fromDate).toISOString().split('T')[0]; 
+                const fecha = new Date(item.fromDate);
 
                 return (
                   <div key={index}>
                     <button
                       className="btn-drop-down-blue-itinerary my-1"
-                      onClick={() => toggleInfo(index)} // Asumir que toggleInfo actualiza el estado correspondiente a este índice
+                      onClick={() => toggleInfo(index)} 
                     >
                       <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md">
                         Dia: {index + 1}
@@ -198,7 +198,7 @@ export const ItineraryDetail = () => {
                       <div className="relative px-1 sm:px-0 flex flex-col gap-2 my-2 flex-wrap">
                         {/* Título del día */}
                         <h3 className="font-semibold text-sm px-10">
-                          {new Date(dateKey).toLocaleDateString()}
+                          {new Date(fecha).toLocaleDateString()}
                         </h3>
 
                         {/* Mostrar actividades del día */}
