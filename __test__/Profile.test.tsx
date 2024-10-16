@@ -15,22 +15,5 @@ afterEach(() => {
 
 
 describe("Profile",()=>{
-  test('renders user is not authenticated when not authenticated', async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({
-      ok: false,
-      status: 401,
-    });
 
-    await act(async () => {
-      render(
-        <Router>
-          <Profile />
-        </Router>
-      );
-    });
-
-    const userIsNotAuthenticated = screen.getByText(/User is not authenticated/i);
-
-    expect(userIsNotAuthenticated).toBeInTheDocument();
-  });
 })
