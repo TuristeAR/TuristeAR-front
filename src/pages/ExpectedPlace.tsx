@@ -184,7 +184,7 @@ const ExpectedPlace = () => {
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
           <div onClick={() => openModal()}>
-            <ImageGallery images={photosHeader} height={70}></ImageGallery>
+            {photosHeader.length>0?<ImageGallery images={photosHeader} height={70}></ImageGallery>:""}
           </div>
           {isModalOpen && (
             <FeaturedImageGalleryModal closeModal={closeModal} photos={photosHeader} />
@@ -347,6 +347,7 @@ const ExpectedPlace = () => {
           </h3>
           <hr />
           <div className="flex gap-2 mt-5 justify-around flex-wrap">
+         
             {reviews.slice(0, visibleCount).map((userPost, index) => (
               <PostCard
                 key={index}
