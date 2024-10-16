@@ -141,7 +141,7 @@ const ExpectedPlace = () => {
 
   useEffect(() => {
     const fetchAddress = async () => {
-      if (place.address) {
+      if (place && place.address) {
         try {
           const response = await fetch(
             `https://apis.datos.gob.ar/georef/api/ubicacion?lat=${place.latitude}&lon=${place.longitude}`,
@@ -293,8 +293,8 @@ const ExpectedPlace = () => {
                       </svg>
 
                       <div className="flex flex-col sm:w-[180px] justify-between">
-                        {place.openingHours.slice(0, 2).map((i) => (
-                          <span>{i}</span>
+                        {place.openingHours.slice(0, 2).map((i, index) => (
+                          <span key={index}>{i}</span>
                         ))}
                         {showHours && place.openingHours.slice(2).map((i) => <span>{i}</span>)}
                       </div>
