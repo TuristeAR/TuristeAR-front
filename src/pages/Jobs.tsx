@@ -44,6 +44,7 @@ export const Jobs = () => {
             {itineraries.map((userPost, index) => (
               <ItineraryCard
                 key={index}
+                id={1}
                 profilePicture={userPost.imgPerson}
                 userId={userPost.usuario}
                 creationDate={userPost.fecha}
@@ -51,7 +52,7 @@ export const Jobs = () => {
                 images={[userPost.img[0].src]}
                 likes={0} reposts={0} saved={0}
                 isLiked={false} isRepost={false} isSaved={false}
-              />
+               category={''}/>
             ))}
           </div>
         </div>

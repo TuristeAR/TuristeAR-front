@@ -2,6 +2,7 @@ import { ImageGallery } from './ImageGallery';
 import { useState } from 'react';
 
 export function ItineraryCard(props: {
+  id: number;
   profilePicture: string | undefined;
   userId: string | undefined;
   creationDate: string;
@@ -10,16 +11,39 @@ export function ItineraryCard(props: {
   likes: number;
   reposts: number;
   saved: number;
+  category : string;
   isLiked: boolean;
   isSaved: boolean;
   isRepost: boolean;
 }) {
 
-  const { profilePicture, userId, creationDate, description, images, likes, reposts, saved, isSaved, isLiked, isRepost } = props;
+  const { profilePicture, userId, creationDate, description, images, likes, reposts, saved, isSaved, isLiked, isRepost, category, id } = props;
 
-  const [isLikeds, setIsLikeds]= useState <boolean | undefined>(isLiked);
-  const [isSaveds, setIsSaveds]= useState <boolean | null>(isSaved);
+  const [isLike, setIsLike]= useState <boolean | undefined>(isLiked);
+  const [isSave, setIsSave]= useState <boolean | null>(isSaved);
   const [isReposts, setIsReposts]= useState <boolean | null>(isRepost);
+  const [error, setError]= useState<string | null>(null);
+
+  const handleLike = async ()=>{
+    try {
+      const response = await fetch(`http://localhost:3001/handleLike/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en la solicitud');
+      }
+
+      setError('')
+    } catch (err: any) {
+      setError(err.message);
+    }
+  }
+
 
   return (
     <>
@@ -29,7 +53,10 @@ export function ItineraryCard(props: {
             <div className="rounded-full  border border-1 border-black">
               <img className="w-8 h-8 rounded-full" src={profilePicture} alt="person" />
             </div>
-            <p>{userId}</p>
+            <div className={'flex flex-col'}>
+              <p>{userId}</p>
+              <p className={'text-[12px]'}>{category}</p>
+            </div>
           </div>
           <p>{creationDate.slice(0, -14)}</p>
         </div>
@@ -44,7 +71,8 @@ export function ItineraryCard(props: {
             <div className="flex items-center mr-6">
               <svg
                 onClick={() => {
-                  setIsLikeds(!isLikeds);
+                  handleLike;
+                  setIsLike(!isLike);
                 }}
                 width="25px"
                 height="25px"
@@ -57,7 +85,7 @@ export function ItineraryCard(props: {
                 <g id="SVGRepo_iconCarrier">
                   <path
                     d="M4.45067 13.9082L11.4033 20.4395C11.6428 20.6644 11.7625 20.7769 11.9037 20.8046C11.9673 20.8171 12.0327 20.8171 12.0963 20.8046C12.2375 20.7769 12.3572 20.6644 12.5967 20.4395L19.5493 13.9082C21.5055 12.0706 21.743 9.0466 20.0978 6.92607L19.7885 6.52734C17.8203 3.99058 13.8696 4.41601 12.4867 7.31365C12.2913 7.72296 11.7087 7.72296 11.5133 7.31365C10.1304 4.41601 6.17972 3.99058 4.21154 6.52735L3.90219 6.92607C2.25695 9.0466 2.4945 12.0706 4.45067 13.9082Z"
-                    fill={isLikeds ? '#ff9900' : '#ffffff'}
+                    fill={isLike ? '#ff9900' : '#ffffff'}
                     stroke="#000000"
                     strokeWidth="1.4"
                   ></path>
@@ -79,7 +107,9 @@ export function ItineraryCard(props: {
             </div>
             <div className="flex items-center mr-6">
               <svg
-                onClick={()=>{setIsReposts(!isReposts)}}
+                onClick={() => {
+                  setIsReposts(!isReposts);
+                }}
                 xmlns="http://www.w3.org/2000/svg"
                 height="25px"
                 viewBox="0 -960 960 960"
@@ -93,7 +123,7 @@ export function ItineraryCard(props: {
             <div className="flex items-center mr-6">
               <svg
                 onClick={() => {
-                  setIsSaveds(!isSaveds);
+                  setIsSave(!isSave);
                 }}
                 width="25px"
                 height="25px"
@@ -106,7 +136,7 @@ export function ItineraryCard(props: {
                 <g id="SVGRepo_iconCarrier">
                   <path
                     d="M18.5 18.8637V8.07579C18.5 5.99472 17.0378 4.20351 15.0077 3.7977C13.022 3.40077 10.978 3.40077 8.99225 3.7977C6.96219 4.20351 5.5 5.99472 5.5 8.07579V18.8637C5.5 20.1258 6.8627 20.9113 7.94601 20.2737L10.9053 18.5317C11.5814 18.1337 12.4186 18.1337 13.0947 18.5317L16.054 20.2737C17.1373 20.9113 18.5 20.1258 18.5 18.8637Z"
-                    fill={isSaveds ? '#ff9900' : '#ffffff'}
+                    fill={isSave ? '#ff9900' : '#ffffff'}
                     stroke="#000000"
                     strokeWidth="1.5"
                     strokeLinecap="round"

@@ -164,11 +164,6 @@ const Profile = () => {
 
   if (!isAuthenticated) return ( <p>User is not authenticated</p> );
 
-  const validarQueElUsuarioEsta = (array: User[]): boolean => {
-    return array.some(item => item.id === user.id);
-  };
-
-
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
@@ -273,12 +268,14 @@ const Profile = () => {
                 .map((publication, index) => (
                   <ItineraryCard
                     key={index}
+                    id={publication.id}
                     profilePicture={user?.profilePicture}
                     userId={publication.user.name}
                     creationDate={publication.creationDate}
                     description={publication.description}
                     images={publication.images}
                     likes={publication.likes.length}
+                    category={publication.category.description}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}
                     isLiked={publication.likes.some(item => item.id === user.id)}
@@ -306,12 +303,14 @@ const Profile = () => {
                 .map((publication, index) => (
                   <ItineraryCard
                     key={index}
+                    id={publication.id}
                     profilePicture={publication.user.profilePicture}
                     userId={publication.user.name}
                     creationDate={publication.creationDate}
                     description={publication.description}
                     images={publication.images}
                     likes={publication.likes.length}
+                    category={publication.category.description}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}
                     isLiked={publication.likes.some(item => item.id === user.id)}
@@ -326,6 +325,7 @@ const Profile = () => {
                 .map((publication, index) => (
                   <ItineraryCard
                     key={index}
+                    id={publication.id}
                     profilePicture={publication.user.profilePicture}
                     userId={publication.user.name}
                     creationDate={publication.creationDate}
@@ -334,6 +334,7 @@ const Profile = () => {
                     likes={publication.likes.length}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}
+                    category={publication.category.description}
                     isLiked={publication.likes.some(item => item.id === user.id)}
                     isRepost={publication.reposts.some(item => item.id === user.id)}
                     isSaved={publication.saved.some(item => item.id === user.id)}/>
