@@ -29,7 +29,7 @@ export function ItineraryCard(props: {
     setAmountLikes((!isLike)? amountLikes+1 : amountLikes-1);
     setIsLike(!isLike);
     try {
-      const response = await fetch(`http://localhost:3001/handleLike/${idPublication}`, {
+      const response = await fetch(`https://api-turistear.koyeb.app/handleLike/${idPublication}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,13 +51,13 @@ export function ItineraryCard(props: {
   return (
     <>
       <div className="w-[100%] p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
-        <div className="flex justify-between items-center px-2 text-gray">
+        <div className="flex justify-between items-center px-2 ">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
               <img className="w-8 h-8 rounded-full" src={profilePicture} alt="person" />
             </div>
             <div className={'flex flex-col'}>
-              <p>{userId}</p>
+              <p className={'font-semibold '}>{userId}</p>
               <p className={'text-[12px]'}>{category}</p>
             </div>
           </div>
