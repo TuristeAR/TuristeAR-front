@@ -1,8 +1,17 @@
 import { Link, useParams } from 'react-router-dom';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
+import { AddParticipantModal } from '../components/AddParticipantModal/AddParticipantModal';
+
+type User = {
+  id: number;
+  email: string;
+  name: string;
+  username: string;
+  profilePicture: string;
+};
 
 export const ItineraryDetail = () => {
   const { itineraryId } = useParams();
@@ -10,6 +19,8 @@ export const ItineraryDetail = () => {
   const { itinerary, activities } = useFetchItinerary(itineraryId || null);
 
   const [showedInfo, setShowedInfo] = useState<boolean[]>([]);
+
+  let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
 
   const toggleInfo = (index: number) => {
     setShowedInfo((prevState) => {
@@ -21,9 +32,9 @@ export const ItineraryDetail = () => {
   const imgs = [
     {
       img: [
-        '/assets/san-nicolas-buenos-aires.webp' ,
-        '/assets/san-nicolas-buenos-aires.webp' ,
-        '/assets/san-nicolas-buenos-aires.webp' ,
+        '/assets/san-nicolas-buenos-aires.webp',
+        '/assets/san-nicolas-buenos-aires.webp',
+        '/assets/san-nicolas-buenos-aires.webp',
       ],
     },
   ];
@@ -42,6 +53,48 @@ export const ItineraryDetail = () => {
     acc[date].push(activity);
     return acc;
   }, {});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://api-turistear.koyeb.app/itinerary/participants/${itineraryId}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.status === 'success' && data.itineraryParticipants.participants) {
+          //setUsersOldNav(data.itineraryParticipants.participants);
+          const owner = {
+            ...data.itineraryParticipants.user, // El usuario dueño del itinerario
+            isOwner: true, // Marcamos que este usuario es el owner
+          };
+
+          setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
+        } else {
+          setUsersOldNav([]);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setUsersOldNav([]);
+      }
+    };
+
+    fetchData();
+  }, [itineraryId]);
+  const handleUpdateUsersOld = (updatedUsers: User[]) => {
+    setUsersOldNav(updatedUsers);
+    usersOldNav = updatedUsers;
+    console.log('Usuarios actualizados en el padre:', updatedUsers);
+    console.log('UserNav new: ', usersOldNav);
+  };
 
   return (
     <>
@@ -81,12 +134,21 @@ export const ItineraryDetail = () => {
                   </Link>
                 </div>
                 <div className="flex flex-col gap-y-2">
-                  <p className="font-semibold text-md">Participantes</p>
-                  <div className="flex gap-x-2">
-                    <div className="bg-gray rounded-full w-9 h-9"></div>
-                    <div className="bg-gray rounded-full w-9 h-9"></div>
-                    <div className="bg-gray rounded-full w-9 h-9"></div>
-                    <div className="bg-gray rounded-full w-9 h-9"></div>
+                  <div className="w-full flex  gap-2 mb-2">
+                    <div>
+                      <AddParticipantModal
+                        itinerary={Number(itineraryId)}
+                        tap={1}
+                        usersOldNav={usersOldNav}
+                        onUsersOldUpdate={handleUpdateUsersOld}
+                      />
+                      <AddParticipantModal
+                        itinerary={Number(itineraryId)}
+                        tap={2}
+                        usersOldNav={usersOldNav}
+                        onUsersOldUpdate={handleUpdateUsersOld}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
