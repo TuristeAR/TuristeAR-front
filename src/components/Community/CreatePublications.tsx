@@ -16,6 +16,7 @@ export const CreatePublications = () => {
     imagesUploaded: null as File | null,
     categoryId: undefined
   });
+  
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
