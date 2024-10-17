@@ -23,6 +23,7 @@ export function ItineraryCard(props: {
   const [isSave, setIsSave]= useState <boolean | null>(isSaved);
   const [isReposts, setIsReposts]= useState <boolean | null>(isRepost);
   const [amountLikes, setAmountLikes] = useState<number | null>(likes);
+  const [amountSaved, setAmountSaved] = useState<number | null>(saved);
   const [error, setError]= useState<string | null>(null);
 
   const handleLike = async (idPublication: number)=>{
@@ -30,6 +31,28 @@ export function ItineraryCard(props: {
     setIsLike(!isLike);
     try {
       const response = await fetch(`https://api-turistear.koyeb.app/handleLike/${idPublication}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en la solicitud');
+      }
+      setError('')
+    } catch (err: any) {
+      console.log('No funciona')
+      setError('No funciona');
+    }
+  }
+  const handleSaved = async (idPublication: number)=>{
+    console.log(isSave);
+    setAmountSaved((!isSave)? amountSaved+1 : amountSaved-1);
+    setIsSave(!isSave);
+    try {
+      const response = await fetch(`https://api-turistear.koyeb.app/handleSaved/${idPublication}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,8 +148,9 @@ export function ItineraryCard(props: {
             </div>
             <div className="flex items-center mr-6">
               <svg
+                className='cursor-pointer'
                 onClick={() => {
-                  setIsSave(!isSave);
+                  handleSaved(id);
                 }}
                 width="25px"
                 height="25px"
@@ -147,7 +171,7 @@ export function ItineraryCard(props: {
                   ></path>
                 </g>
               </svg>
-              <span className="ml-3">{saved}</span>
+              <span className="ml-3">{amountSaved}</span>
             </div>
           </div>
         </div>
