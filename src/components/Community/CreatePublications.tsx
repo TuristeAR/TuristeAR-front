@@ -13,7 +13,7 @@ export const CreatePublications = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     description: '',
-    images: null as File | null,
+    imagesUploaded: null as File | null,
     categoryId: undefined
   });
   const [error, setError] = useState<string | null>(null);
@@ -76,10 +76,10 @@ export const CreatePublications = () => {
       }
       const result = await response.json();
       console.log('Imagen subida:', result);
-      return result.data.link; // Retorna el enlace de la imagen
+      return result.data.link;
     } catch (error) {
       console.error('Error en la carga de la imagen:', error);
-      throw error; // Lanza el error para manejarlo en createPublications
+      throw error;
     }
   };
 
@@ -97,14 +97,14 @@ export const CreatePublications = () => {
       return;
     }
 
-    if (!formData.images) {
+    if (!formData.imagesUploaded) {
       setError("Seleccione una imagen!");
       return;
     }
 
     setIsLoading(true);
     try {
-      const imageUrl = await uploadImage(formData.images); // Espera el resultado de la carga de la imagen
+      const imageUrl = await uploadImage(formData.imagesUploaded);
       const response = await fetch('https://api-turistear.koyeb.app/createPublication', {
         method: 'POST',
         headers: {
@@ -112,7 +112,7 @@ export const CreatePublications = () => {
         },
         body: JSON.stringify({
           ...formData,
-          imageUrl: imageUrl // Usa la URL de la imagen subida
+          images: imageUrl
         }),
         credentials: 'include',
       });
@@ -123,7 +123,7 @@ export const CreatePublications = () => {
       setError(err.message);
     } finally {
       setIsLoading(false);
-      setIsOpen(false); // Cierra el modal después de la creación
+      setIsOpen(false);
     }
   };
 
