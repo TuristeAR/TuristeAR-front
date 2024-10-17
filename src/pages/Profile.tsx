@@ -113,22 +113,6 @@ const Profile = () => {
         setItineraries(itinerariesData.participants);
         setError('');
 
-        const savedPublicationsResponse = await fetch(
-          `https://api-turistear.koyeb.app/publications/saved/${sessionData.user.id}`,
-          {
-            method: 'GET',
-            credentials: 'include',
-          },
-        );
-
-        if (!savedPublicationsResponse.ok) {
-          setError('Error al obtener las publicaciones guardadas');
-          return;
-        }
-
-        const savedPublicationsData = await savedPublicationsResponse.json();
-        setSavedPublications(savedPublicationsData);
-        setError('');
       } catch (error) {
         setError('Error en la comunicación con el servidor');
         setIsAuthenticated(false);
@@ -167,6 +151,35 @@ const Profile = () => {
       };
 
       fetchLikedPublications();
+    }
+  }, [activeItem, user]);
+
+  useEffect(() => {
+    if (activeItem === 'saved' && user?.id) {
+      const fetchSavedPublications = async () => {
+        try {
+          const savedPublicationsResponse = await fetch(
+            `https://api-turistear.koyeb.app/publications/saved/${user.id}`,
+            {
+              method: 'GET',
+              credentials: 'include',
+            },
+          );
+
+          if (!savedPublicationsResponse.ok) {
+            setError('Error al obtener las publicaciones guardadas');
+            return;
+          }
+
+          const savedPublicationsData = await savedPublicationsResponse.json();
+          setSavedPublications(savedPublicationsData);
+          setError('');
+        } catch (err) {
+          setError('Error al obtener las publicaciones likeadas');
+        }
+      };
+
+      fetchSavedPublications();
     }
   }, [activeItem, user]);
 

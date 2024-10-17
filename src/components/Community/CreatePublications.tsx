@@ -120,6 +120,7 @@ export const CreatePublications = () => {
 
       if (!response.ok) throw new Error('Error en la solicitud');
       setError('');
+      window.location.reload();
     } catch (err: any) {
       setError(err.message);
     } finally {
