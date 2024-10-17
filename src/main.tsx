@@ -24,12 +24,12 @@ root.render(
       <Route path="*" element={<Home />} />
       <Route path="/destinations" element={<Destinations />} />
       <Route path="/formQuestions" element={<FormQuestions />} />
-      <Route path="/expectedPlace" element={<ExpectedPlace />} />
+      <Route path="/lugar-esperado/:googleId" element={<ExpectedPlace />} />
       <Route path="/destino-esperado/:nombreDeLaProvincia" element={<ExpectedDestination />} />
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/editProfile" element={<EditProfile />} />
-      <Route path="/community" element={<Profile />} />
+      <Route path="/community" element={<Publications />} />
       <Route path="/publications" element={<Publications />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/itineraryCalendar/:itineraryId" element={<ItineraryCalendar />} />

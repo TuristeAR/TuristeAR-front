@@ -21,25 +21,23 @@ export const Nav = () => {
     }
   };
 
+  const fetchUser = async () => {
+    const response = await get('https://api-turistear.koyeb.app/session', {
+      'Content-Type': 'application/json',
+    });
+
+    if (response.statusCode === 200) {
+      localStorage.setItem('user', JSON.stringify(response.user));
+      setUser(response.user);
+    } else {
+      localStorage.removeItem('user');
+    }
+  };
+
   useEffect(() => {
     const cachedUser = localStorage.getItem('user');
-
-    if (cachedUser) {
-      setUser(JSON.parse(cachedUser));
-    } else {
-      const fetchUser = async () => {
-        const response = await get('https://api-turistear.koyeb.app/session', {
-          'Content-Type': 'application/json',
-        });
-
-        if (response.statusCode === 200) {
-          localStorage.setItem('user', JSON.stringify(response.user));
-          setUser(response.user);
-        }
-      };
-
-      fetchUser();
-    }
+    setUser(cachedUser ? JSON.parse(cachedUser) : null);
+    fetchUser();
   }, []);
 
   return (
@@ -92,9 +90,15 @@ export const Nav = () => {
           />
           <h2 className="text-white font-bold text-[16px]">{user.name}</h2>
           {isDropdownOpen && (
-            <div className="absolute top-[4em] right-8 bg-white shadow-lg rounded-md py-2 w-40 z-50">
+            <div className="absolute top-16 right-8 text-sm bg-white shadow-lg rounded-md my-2  w-40 z-50">
+              <Link
+                to={'/profile'}
+                className="block w-full text-left px-4 py-1 border-b border-gray-50 text-gray-800 hover:bg-gray-50 hover:rounded-md"
+              >
+                Mi perfil
+              </Link>
               <button
-                className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 z-50"
+                className="block w-full text-left px-4 py-1 text-gray-800 hover:bg-gray-50 hover:rounded-md "
                 onClick={handleLogout}
               >
                 Cerrar sesión

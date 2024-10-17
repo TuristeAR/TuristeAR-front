@@ -8,7 +8,7 @@ export const LandingHero = () => {
   return (
     <section className="w-full h-screen overflow-hidden text-gray-600 body-font">
       <video
-        src="https://d1lrjy0kkf9pj7.cloudfront.net/app/media/346043eb/075257f4-b0de-4ba3-b8c9-45e01f6eb676/HD.mp4?Policy=eyJTdGF0ZW1lbnQiOiBbeyJSZXNvdXJjZSI6Imh0dHBzOi8vZDFscmp5MGtrZjlwajcuY2xvdWRmcm9udC5uZXQvYXBwL21lZGlhLzM0NjA0M2ViLzA3NTI1N2Y0LWIwZGUtNGJhMy1iOGM5LTQ1ZTAxZjZlYjY3Ni9IRC5tcDQiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3Mjg3ODczNTl9fX1dfQ__&Signature=jHu6io0eds0K4toLWBaaBM7Xw~bQ6kSv6I3ZvsaAPHRIZbt2hVvFijecvXz4XYKhBCb3DZbSCNX9H~rFhxrAL7De4ub5L93begSYGJClkE7Ei6SMbI4OuDwj3YYN5i4WTDDJ0UmyGWJBvWvgx1mWjlfnhw1ukuRAQpUruHt87XYtypl3aJxn4IFsgmwEr~H5z1kWyoeUGlzibJ0xwt8JMFGo4t5gUQR5qci3N5cJaSzS3-W4s9gDJ7MwBo32ENCicMbQ-FxHUIoks~p6V3gPMviaUtXiSm~O89GJENY5XW9DFaDAR1o-sHLyKKO1~atQeGN8HOYe-1DOy7mU30l0Hw__&Key-Pair-Id=K2PIQ58NFTSVKU"
+        src="https://files.catbox.moe/o8s78p.mp4"
         data-testid="landing-hero-video"
         autoPlay
         muted

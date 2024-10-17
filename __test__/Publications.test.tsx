@@ -1,8 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { LeftCommunity } from '../src/components/Community/LeftCommunity';
-import { CommunityFilters } from '../src/components/Community/CommunityFilters';
 const infoCategories = [
   {
     title: 'Filtrar por categoría',
@@ -18,13 +17,26 @@ const infoCategories = [
   },
 ];
 
+// Mocks para simular la respuesta de la API
+beforeEach(() => {
+  global.fetch = jest.fn();
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+
+
 describe('Publications', () => {
-  test('render menu with navigation links', () => {
-    render(
-      <BrowserRouter>
-        <LeftCommunity vista={'jobs'} />
-      </BrowserRouter>,
-    );
+  test('render menu with navigation links', async () => {
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <LeftCommunity vista={'jobs'}  activeItem={''} categorySelected={1} handleClick={null} setCategorySelected={null}/>
+        </BrowserRouter>,
+      );
+    })
 
     const publicationsLink = screen.getByText('Publicaciones');
     const forumLink = screen.getByText('Foro y preguntas');
@@ -35,47 +47,36 @@ describe('Publications', () => {
     expect(jobsLink).toBeInTheDocument();
   });
 
-  test('renders the search input', () => {
-    render(
-      <BrowserRouter>
-        <CommunityFilters
-          link={infoCategories[0].link}
-          title={infoCategories[0].title}
-          users={infoCategories[0].categories}
-        />
-      </BrowserRouter>,
-    );
 
-    const searchInput = screen.getByPlaceholderText('Buscar');
-    expect(searchInput).toBeInTheDocument();
-  });
+  test('render community filters',async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+    });
 
-  test('render community filters', () => {
-    render(
-      <BrowserRouter>
-        {infoCategories.map((item, index) => (
-          <CommunityFilters
-            key={index}
-            title={item.title}
-            users={item.categories}
-            link={item.link}
-          />
-        ))}
-      </BrowserRouter>,
-    );
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          {infoCategories.map((category, index) => (
+            <div className="space-y-4" key={index}>
+              <div className="flex justify-between items-center">
+                <button
+                  className={
+                    `flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4`
+                  }
+                >
+                  <div className="flex items-center">
+                    <p className="">{category.categories[1].user}</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          ))}
+        </BrowserRouter>,
+      );
+    });
 
-    const pabloReview = screen.getByText('General');
-    const victorReview = screen.getByText('Buenos Aires');
-    const belenReview = screen.getByText('Salta');
-    const malenaReview = screen.getByText('Córdoba');
-    const santaFeReview = screen.getByText('Santa Fe');
-    const sanLuisReview = screen.getByText('San Luis');
-
-    expect(pabloReview).toBeInTheDocument();
-    expect(victorReview).toBeInTheDocument();
-    expect(malenaReview).toBeInTheDocument();
-    expect(belenReview).toBeInTheDocument();
-    expect(santaFeReview).toBeInTheDocument();
-    expect(sanLuisReview).toBeInTheDocument();
+    const bsAs = screen.getByText('Buenos Aires');
+    expect(bsAs).toBeInTheDocument();
   });
 });

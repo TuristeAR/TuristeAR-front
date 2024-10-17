@@ -1,8 +1,6 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
-import { RightCommunity } from '../components/Community/RightCommunity';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { CreatePost } from '../components/Community/CreatePost';
 
 const infoComments = [
   {
@@ -41,14 +39,13 @@ const infoComments = [
     ],
   },
 ];
-const options = ['Imagen', 'Archivo', 'Itinerario'];
 
 const Forum = () => {
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
       <div className="flex justify-between lg:h-[160vh] ">
-        <LeftCommunity vista={'forum'} />
+        <LeftCommunity vista={'forum'} activeItem={'posts'} categorySelected={null} handleClick={null} setCategorySelected={null}/>
         <div className="lg:w-[80%] w-[100%] pt-10 overflow-scroll scrollbar-hidden">
           <div className="flex flex-col gap-y-6 lg:w-[80%] w-[100%] mx-auto  overflow-scroll scrollbar-hidden">
             {infoComments.map((info, index) => {
@@ -72,7 +69,7 @@ const Forum = () => {
             })}
           </div>
           <div className="bg-[#009fe3] bg-opacity-10">
-            <CreatePost options={options} profilePicture={'/assets/person.svg'}/>
+
           </div>
         </div>
       </div>
