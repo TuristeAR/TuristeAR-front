@@ -114,13 +114,10 @@ export const ItineraryDetail = () => {
                 <div className="border-b pb-2 border-gray-50 ">
                   <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
                 </div>
-                <div>
-                  <h2 className="font-semibold text-md my-2">Información general</h2>
-                  <p className="ml-4 text-sm">
-                    Me quede un buen rato recorriendo las calles empedradas y mirando las ferias de
-                    antiguedades, hasta me compre un par de cosas, muy lindo todo.
-                  </p>
-                </div>
+                {/*<div>*/}
+                {/*  <h2 className="font-semibold text-md my-2">Información general</h2>*/}
+                {/*  <p className="ml-4 text-sm"></p>*/}
+                {/*</div>*/}
               </div>
               {/* Calendario, Participantes */}
               <div className="flex flex-col gap-y-4">
@@ -157,14 +154,14 @@ export const ItineraryDetail = () => {
               <h2 className="font-semibold text-md my-2">Itinerario de viaje</h2>
               {/* Días */}
               {activities.map((item: any, index: number) => {
-                const dateKey = new Date(item.fromDate).toISOString().split('T')[0]; 
+                const dateKey = new Date(item.fromDate).toISOString().split('T')[0];
                 const fecha = new Date(item.fromDate);
 
                 return (
                   <div key={index}>
                     <button
                       className="btn-drop-down-blue-itinerary my-1"
-                      onClick={() => toggleInfo(index)} 
+                      onClick={() => toggleInfo(index)}
                     >
                       <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md">
                         Dia: {index + 1}

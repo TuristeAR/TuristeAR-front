@@ -16,14 +16,19 @@ type User = {
   profilePicture: string;
 };
 
-export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({ itinerary, tap, usersOldNav, onUsersOldUpdate }) => {
+export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({
+  itinerary,
+  tap,
+  usersOldNav,
+  onUsersOldUpdate,
+}) => {
   const [showModal, setShowModal] = useState(false);
   const closeModal = () => setShowModal(false);
   const openModal = () => setShowModal(true);
-  const [currentUser, setCurrentUser] = useState<User | undefined>(undefined)
+  const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
 
   useEffect(() => {
-    console.log("Entro", localStorage.getItem('user'))
+    console.log('Entro', localStorage.getItem('user'));
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
@@ -55,7 +60,7 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({ itinerary,
           type="button"
           onClick={openModal}
         >
-          <img src={userPlus} alt="" /> Agrergar amigos
+          <img src={userPlus} alt="" /> Agregar amigos
         </button>
       )}
 
@@ -84,11 +89,11 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({ itinerary,
                 </div>
                 {/* buttons */}
                 <ParticipantTabs
-                 itinerary={itinerary}
-                 usersOldNav={usersOldNav}
-                 onUsersOldUpdate={onUsersOldUpdate}
-                 tap={tap}
-                 currentUser={currentUser.id}
+                  itinerary={itinerary}
+                  usersOldNav={usersOldNav}
+                  onUsersOldUpdate={onUsersOldUpdate}
+                  tap={tap}
+                  currentUser={currentUser.id}
                 />
               </div>
             </div>
