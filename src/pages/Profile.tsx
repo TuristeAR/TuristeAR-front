@@ -190,6 +190,15 @@ const Profile = () => {
     }
   };
 
+  const reorderDate = (dateString : string ) => {
+    const formatDate = (date) => {
+      const [year, month, day] = date.split('-'); // Divide la fecha en año, mes, día
+      return `${day}-${month}-${year}`; // Reordena en formato 'dd-mm-yyyy'
+    };
+
+    return formatDate(dateString)
+  };
+
   if (!isAuthenticated) return <p>User is not authenticated</p>;
 
   return (
@@ -231,7 +240,7 @@ const Profile = () => {
                     <img src="/assets/calendar.svg" alt="Calendario" className="w-6 h-6" />
                     <p>
                       {user?.birthdate && typeof user.birthdate === 'string'
-                        ? user.birthdate.slice(0, -14)
+                        ? reorderDate(user.birthdate.slice(0, -14))
                         : ''}
                     </p>
                   </div>
@@ -302,7 +311,7 @@ const Profile = () => {
                   <ItineraryCard
                     key={index}
                     id={publication.id}
-                    profilePicture={user?.profilePicture}
+                    profilePicture={publication.user.profilePicture}
                     userId={publication.user.name}
                     creationDate={publication.creationDate}
                     description={publication.description}
@@ -347,7 +356,7 @@ const Profile = () => {
                     category={publication.category.description}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}
-                    isLiked={publication.likes.some((item) => item.id === user.id)}
+                    isLiked={true}
                     isRepost={publication.reposts.some((item) => item.id === user.id)}
                     isSaved={publication.saved.some((item) => item.id === user.id)}
                   />
@@ -372,7 +381,7 @@ const Profile = () => {
                     category={publication.category.description}
                     isLiked={publication.likes.some((item) => item.id === user.id)}
                     isRepost={publication.reposts.some((item) => item.id === user.id)}
-                    isSaved={publication.saved.some((item) => item.id === user.id)}
+                    isSaved={true}
                   />
                 ))}
           </div>
