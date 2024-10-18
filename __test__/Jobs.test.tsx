@@ -38,13 +38,14 @@ describe('Jobs', () => {
           return (
             <ItineraryCard
               key={index}
+              id={1}
               userId={item.usuario}
               creationDate={item.fecha}
               description={item.descripcion}
               images={[item.img[0].src]}
               profilePicture={item.imgPerson}
              likes={0} reposts={0} saved={0}
-            isLiked={false} isSaved={false} isRepost={false}/>
+            isLiked={false} isSaved={false} isRepost={false} category={''}/>
           );
         })}
       </BrowserRouter>,

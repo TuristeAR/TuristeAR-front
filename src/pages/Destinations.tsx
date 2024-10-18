@@ -94,16 +94,16 @@ const Destinations = () => {
     <>
       <Header />
       <section>
-        <div className="bg-custom-whiteBlue15 w-full h-[120px] ">
+        <div className="bg-custom-whiteBlue15 w-full h-[120px]">
           <div className="container mx-auto h-full flex flex-col items-center justify-center gap-y-4 ">
-            <p className="px-8 lg:px-0 max-w-[600px] text-center font-semibold tracking-tight   ">
+            <p className="px-8 lg:px-0 max-w-[600px] text-center font-semibold tracking-tight">
               Si ya sabés cuál es tu destino, seleccionalo para descubrir los mejores lugares y
               actividades
             </p>
             <div>
-              <form action="" className="flex items-center relative ">
+              <form action="" className="flex items-center relative">
                 <input
-                  className=" w-[250px] md:w-[400px]  rounded outline-none text-sm p-1  pr-10"
+                  className=" w-[350px] md:w-[400px] rounded outline-none text-sm md:text-md p-1 pr-10"
                   type="text"
                   placeholder="Buscar por provincia, localidad o tipo de lugar..."
                 />
@@ -112,25 +112,22 @@ const Destinations = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap my-6 container mx-auto gap-1 p-4">
+        <div className="md:flex flex-wrap my-6 container mx-auto gap-1 p-4">
           <div className="flex-1 md:w-[400px] xl:w-auto">
             <div className="flex justify-center items-center" onClick={scrollToSection}>
               <MapaArg onProvinceClick={handleProvinceClick} />
             </div>
           </div>
           <div className="w-px bg-custom-orange m-10 "></div>
-          <div ref={sectionRef} className="flex-1  max-w-[600px] w-full flex flex-col gap-y-6 ">
+          <div ref={sectionRef} className="flex-1 max-w-[600px] w-full flex flex-col gap-y-6 ">
             <div className="flex flex-col gap-y-4">
-              <h1 className="text-center">{selectedProvince?.name} </h1>
-              <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
+              <h1 className="text-3xl text-center">{selectedProvince?.name} </h1>
+              <p className="font-light text-gray-500 text-xl text-start">
                 {selectedProvince?.description}
               </p>
               <div className="flex justify-start gap-2 overflow-hidden">
                 {selectedProvince?.images.map((image, index) => (
-                  <div
-                    key={index}
-                    className="w-[150px] h-[100px] md:w-[300px] md:h-[300px] overflow-hidden"
-                  >
+                  <div key={index} className="w-[300px] h-[300px] overflow-hidden">
                     <img
                       key={image}
                       src={image}
@@ -167,22 +164,19 @@ const Destinations = () => {
                               alt="person"
                             />
                           </div>
-                          <p>{item.reviews[0].authorName}</p>
+                          <p className="text-lg">{item.reviews[0].authorName}</p>
                         </div>
-                        <p>{item.reviews[0].publishedTime}</p>
+                        <p className="text-lg">{item.reviews[0].publishedTime}</p>
                       </div>
-                      <p className="font-light text-gray-500 text-sm md:text-base lg:text-lg text-start">
+                      <p className="font-light text-gray-500 text-base lg:text-lg text-start">
                         {item.reviews[0].text}
                       </p>
-                      <p className="italic text-sm">
+                      <p className="italic text-md">
                         {item.name}, {selectedProvince?.name}
                       </p>
                       <div className="flex justify-start gap-2">
                         {item.reviews[0].photos.map((image, imgIndex) => (
-                          <div
-                            key={imgIndex}
-                            className="w-[150px] h-[100px] md:w-[200px] md:h-[170px] overflow-hidden"
-                          >
+                          <div key={imgIndex} className="w-[200px] h-[170px] overflow-hidden">
                             <img
                               src={image}
                               className="w-full h-full object-cover"

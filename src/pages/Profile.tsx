@@ -4,9 +4,11 @@ import { CreatePublications } from '../components/Community/CreatePublications';
 import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 import { TravelCard } from '../components/Community/TravelCard';
 import { useEffect, useRef, useState } from 'react';
+import logoAnimado from '../assets/logoAnimado.json';
 
 const Profile = () => {
   const contentRef = useRef<HTMLDivElement | null>(null);
+
   type User = {
     id: number;
     username: string;
@@ -31,9 +33,9 @@ const Profile = () => {
     creationDate: string;
     images: string[];
     user: User | null;
-    likes: User[],
-    reposts: User[],
-    saved: User[]
+    likes: User[];
+    reposts: User[];
+    saved: User[];
   };
 
   type Itinerary = {
@@ -111,39 +113,6 @@ const Profile = () => {
         setItineraries(itinerariesData.participants);
         setError('');
 
-        const likedPublicationsResponse = await fetch(
-          `https://api-turistear.koyeb.app/publications/likes/${sessionData.user.id}`,
-          {
-            method: 'GET',
-            credentials: 'include',
-          },
-        );
-
-        if (!likedPublicationsResponse.ok) {
-          setError('Error al obtener las publicaciones likeadas');
-          return;
-        }
-
-        const likedPublicationsData = await likedPublicationsResponse.json();
-        setLikedPublications(likedPublicationsData);
-        setError('');
-
-        const savedPublicationsResponse = await fetch(
-          `https://api-turistear.koyeb.app/publications/saved/${sessionData.user.id}`,
-          {
-            method: 'GET',
-            credentials: 'include',
-          },
-        );
-
-        if (!savedPublicationsResponse.ok) {
-          setError('Error al obtener las publicaciones likeadas');
-          return;
-        }
-
-        const savedPublicationsData = await savedPublicationsResponse.json();
-        setSavedPublications(savedPublicationsData);
-        setError('');
       } catch (error) {
         setError('Error en la comunicación con el servidor');
         setIsAuthenticated(false);
@@ -155,6 +124,65 @@ const Profile = () => {
 
   const [activeItem, setActiveItem] = useState('posts');
 
+  // Agrega este useEffect para obtener los likes cuando el usuario seleccione la pestaña de "likes"
+  useEffect(() => {
+    if (activeItem === 'likes' && user?.id) {
+      const fetchLikedPublications = async () => {
+        try {
+          const likedPublicationsResponse = await fetch(
+            `https://api-turistear.koyeb.app/publications/likes/${user.id}`,
+            {
+              method: 'GET',
+              credentials: 'include',
+            },
+          );
+
+          if (!likedPublicationsResponse.ok) {
+            setError('Error al obtener las publicaciones likeadas');
+            return;
+          }
+
+          const likedPublicationsData = await likedPublicationsResponse.json();
+          setLikedPublications(likedPublicationsData);
+          setError('');
+        } catch (err) {
+          setError('Error al obtener las publicaciones likeadas');
+        }
+      };
+
+      fetchLikedPublications();
+    }
+  }, [activeItem, user]);
+
+  useEffect(() => {
+    if (activeItem === 'saved' && user?.id) {
+      const fetchSavedPublications = async () => {
+        try {
+          const savedPublicationsResponse = await fetch(
+            `https://api-turistear.koyeb.app/publications/saved/${user.id}`,
+            {
+              method: 'GET',
+              credentials: 'include',
+            },
+          );
+
+          if (!savedPublicationsResponse.ok) {
+            setError('Error al obtener las publicaciones guardadas');
+            return;
+          }
+
+          const savedPublicationsData = await savedPublicationsResponse.json();
+          setSavedPublications(savedPublicationsData);
+          setError('');
+        } catch (err) {
+          setError('Error al obtener las publicaciones likeadas');
+        }
+      };
+
+      fetchSavedPublications();
+    }
+  }, [activeItem, user]);
+
   const handleClick = (name: string) => {
     setActiveItem(name);
     if (contentRef.current) {
@@ -162,12 +190,7 @@ const Profile = () => {
     }
   };
 
-  if (!isAuthenticated) return ( <p>User is not authenticated</p> );
-
-  const validarQueElUsuarioEsta = (array: User[]): boolean => {
-    return array.some(item => item.id === user.id);
-  };
-
+  if (!isAuthenticated) return <p>User is not authenticated</p>;
 
   return (
     <>
@@ -235,7 +258,9 @@ const Profile = () => {
           <div className="border-b border-black grid lg:grid-cols-4 lg:grid-rows-1 grid-cols-2 grid-rows-2 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
             <h2
               className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`}
-              onClick={() => handleClick('posts')}
+              onClick={() => {
+                handleClick('posts');
+              }}
             >
               Publicaciones
             </h2>
@@ -247,7 +272,9 @@ const Profile = () => {
             </h2>
             <h2
               className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'likes' ? 'bg-[#c0daeb]' : ''}`}
-              onClick={() => handleClick('likes')}
+              onClick={() => {
+                handleClick('likes');
+              }}
             >
               Likes
             </h2>
@@ -266,27 +293,31 @@ const Profile = () => {
             className="lg:w-[100%] w-[90%] mx-auto lg:grid lg:grid-cols-2 lg:gap-6 gap-20"
             ref={contentRef}
           >
-            {activeItem === 'posts' && publications
+            {activeItem === 'posts' &&
+              publications
                 ?.filter((publication) => {
                   return categorySelected == null || publication.category.id == categorySelected;
                 })
                 .map((publication, index) => (
                   <ItineraryCard
                     key={index}
+                    id={publication.id}
                     profilePicture={user?.profilePicture}
                     userId={publication.user.name}
                     creationDate={publication.creationDate}
                     description={publication.description}
                     images={publication.images}
                     likes={publication.likes.length}
+                    category={publication.category.description}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}
-                    isLiked={publication.likes.some(item => item.id === user.id)}
-                    isRepost={publication.reposts.some(item => item.id === user.id)}
-                    isSaved={publication.saved.some(item => item.id === user.id)}
+                    isLiked={publication.likes.some((item) => item.id === user.id)}
+                    isRepost={publication.reposts.some((item) => item.id === user.id)}
+                    isSaved={publication.saved.some((item) => item.id === user.id)}
                   />
                 ))}
-            {activeItem === 'itineraries' && itineraries?.map((itinerary, index) => (
+            {activeItem === 'itineraries' &&
+              itineraries?.map((itinerary, index) => (
                 <TravelCard
                   key={index}
                   imgProvince={'/assets/san-nicolas-buenos-aires.webp'}
@@ -298,34 +329,38 @@ const Profile = () => {
                 />
               ))}
 
-
-            {activeItem === 'likes' && likedPublications
+            {activeItem === 'likes' &&
+              likedPublications
                 ?.filter((publication) => {
                   return categorySelected == null || publication.category.id == categorySelected;
                 })
                 .map((publication, index) => (
                   <ItineraryCard
                     key={index}
+                    id={publication.id}
                     profilePicture={publication.user.profilePicture}
                     userId={publication.user.name}
                     creationDate={publication.creationDate}
                     description={publication.description}
                     images={publication.images}
                     likes={publication.likes.length}
+                    category={publication.category.description}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}
-                    isLiked={publication.likes.some(item => item.id === user.id)}
-                    isRepost={publication.reposts.some(item => item.id === user.id)}
-                    isSaved={publication.saved.some(item => item.id === user.id)}
+                    isLiked={publication.likes.some((item) => item.id === user.id)}
+                    isRepost={publication.reposts.some((item) => item.id === user.id)}
+                    isSaved={publication.saved.some((item) => item.id === user.id)}
                   />
                 ))}
-            {activeItem === 'saved' && savedPublications
+            {activeItem === 'saved' &&
+              savedPublications
                 ?.filter((publication) => {
                   return categorySelected == null || publication.category.id == categorySelected;
                 })
                 .map((publication, index) => (
                   <ItineraryCard
                     key={index}
+                    id={publication.id}
                     profilePicture={publication.user.profilePicture}
                     userId={publication.user.name}
                     creationDate={publication.creationDate}
@@ -334,9 +369,11 @@ const Profile = () => {
                     likes={publication.likes.length}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}
-                    isLiked={publication.likes.some(item => item.id === user.id)}
-                    isRepost={publication.reposts.some(item => item.id === user.id)}
-                    isSaved={publication.saved.some(item => item.id === user.id)}/>
+                    category={publication.category.description}
+                    isLiked={publication.likes.some((item) => item.id === user.id)}
+                    isRepost={publication.reposts.some((item) => item.id === user.id)}
+                    isSaved={publication.saved.some((item) => item.id === user.id)}
+                  />
                 ))}
           </div>
         </div>

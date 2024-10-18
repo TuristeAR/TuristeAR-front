@@ -14,12 +14,9 @@ import Lottie from 'lottie-react';
 
 import logoAnimado from '../assets/logoAnimado.json';
 
-
-
 const infoHotel = {
   place: 'Hotel Awwa duites & Spa',
-  descripcion:
-    'Conocido a menudo como el Microcentro, San Nicolás es el centro neurálgico comercial y aras del mundo, bordea el elevado Obelisco, un punto de referencia nacional y un popular lugar de selfies. Venerada por su acústica, la fastuosa ópera del Teatro Colón también ofrece visitas guiadas por sus bastidores. En la avenida Corrientes, se pueden encontrar teatros de estilo art déco iluminados con neón, restaurantes de pizza informales y librerías nocturnas.',
+  descripcion: '',
 };
 
 type Departamento = {
@@ -165,9 +162,11 @@ const ExpectedPlace = () => {
       .filter((i) => i != null);
   }
   if (loading) {
-    return <div className='w-screen h-screen flex'>
-      <Lottie className="w-[20rem] m-auto" animationData={logoAnimado} />
-    </div>
+    return (
+      <div className="w-screen h-screen flex">
+        <Lottie className="w-[20rem] m-auto" animationData={logoAnimado} />
+      </div>
+    );
   }
 
   const toggleHours = () => {
@@ -184,7 +183,11 @@ const ExpectedPlace = () => {
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
           <div onClick={() => openModal()}>
-            {photosHeader.length>0?<ImageGallery images={photosHeader} height={70}></ImageGallery>:""}
+            {photosHeader.length > 0 ? (
+              <ImageGallery images={photosHeader} height={70}></ImageGallery>
+            ) : (
+              ''
+            )}
           </div>
           {isModalOpen && (
             <FeaturedImageGalleryModal closeModal={closeModal} photos={photosHeader} />
@@ -217,16 +220,18 @@ const ExpectedPlace = () => {
                       {place.rating}
                     </h2>
                   </div>
-                
+
                   <div className="flex flex-wrap gap-2 justify-between mb-1">
-                  {place.types && place.types.length > 0 && place.types.map(t =>
-                    <a
-                    href={'link'}
-                    className="border inline-flex items-center px-1 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                  >
-                    {t}
-                  </a>
-                  )}
+                    {place.types &&
+                      place.types.length > 0 &&
+                      place.types.map((t) => (
+                        <a
+                          href={'link'}
+                          className="border inline-flex items-center px-1 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                        >
+                          {t}
+                        </a>
+                      ))}
                   </div>
                   <div className="flex flex-col gap-1 font-light text-gray-500 text-sm  lg:text-md w-full">
                     <div className="flex flex-nowrap gap-1">
@@ -324,7 +329,11 @@ const ExpectedPlace = () => {
           <h3 className="text-4xl pl-1 sm:pl-0 font-bold ">Ubicación</h3>
           <hr />
           <div className='"w-full mt-5'>
-            <GoogleMapComponent latitud={place.latitude} longitud={place.longitude} nombre={place.name}></GoogleMapComponent>
+            <GoogleMapComponent
+              latitud={place.latitude}
+              longitud={place.longitude}
+              nombre={place.name}
+            ></GoogleMapComponent>
           </div>
         </div>
       </section>
@@ -338,6 +347,7 @@ const ExpectedPlace = () => {
           <hr />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
          {reviews.length>0 ? reviews.slice(0, visibleCount).map((userPost, index) => (
+
               <PostCard
                 key={index}
                 imgPerson={userPost.authorPhoto}
