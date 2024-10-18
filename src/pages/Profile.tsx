@@ -311,7 +311,7 @@ const Profile = () => {
                   <ItineraryCard
                     key={index}
                     id={publication.id}
-                    profilePicture={user?.profilePicture}
+                    profilePicture={publication.user.profilePicture}
                     userId={publication.user.name}
                     creationDate={publication.creationDate}
                     description={publication.description}
