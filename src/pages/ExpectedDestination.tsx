@@ -76,7 +76,7 @@ const ExpectedDestination = () => {
   const [showedLugares, setShowedLugares] = useState(false);
   const [showedCulturaTradicion, setShowedCulturaTradicion] = useState(false);
   const [showedGastronomia, setShowedGastronomia] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(2);
+  const [visibleCount, setVisibleCount] = useState(3);
 
   const { nombreDeLaProvincia } = useParams();
   const [provincia, setProvincia] = useState<Province>();
@@ -148,7 +148,7 @@ const ExpectedDestination = () => {
   }, [provincia]);
 
   const toggleReviews = () => {
-    setVisibleCount((prevCount) => prevCount + 2);
+    setVisibleCount((prevCount) => prevCount + 3);
   };
 
   if (!provincia)
