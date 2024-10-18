@@ -72,7 +72,7 @@ type Place = {
 
 const ExpectedPlace = () => {
   const { googleId } = useParams();
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<Review[]>(null);
   const [place, setPlace] = useState<Place>(null);
   const [loading, setLoading] = useState(true);
   const [showHours, setShowHours] = useState(false);
@@ -155,12 +155,13 @@ const ExpectedPlace = () => {
 
     fetchAddress();
   }, [place]);
-  if (place) {
+  if (reviews && reviews.length > 0) {
     photosHeader = reviews
       .map((i) => i.photos)
       .flat()
       .filter((i) => i != null);
   }
+  
   if (loading) {
     return (
       <div className="w-screen h-screen flex">
@@ -195,9 +196,6 @@ const ExpectedPlace = () => {
           <div className="px-2 sm:px-0 flex flex-col gap-y-4">
             <h1 className="text-center">{place.name}</h1>
             <div className="w-11/12 flex flex-wrap sm:flex-nowrap gap-2">
-              <p className="mx-auto font-light text-gray-500 text-sm md:text-base lg:text-lg text-justify sm:text-start">
-                {infoHotel.descripcion}
-              </p>
               <div className="flex mx-auto">
                 <div className="flex flex-col items-center max-lg:justify-center w-full h-full">
                   <div className="flex flex-row items-center  ">
@@ -224,8 +222,9 @@ const ExpectedPlace = () => {
                   <div className="flex flex-wrap gap-2 justify-between mb-1">
                     {place.types &&
                       place.types.length > 0 &&
-                      place.types.map((t) => (
+                      place.types.map((t, index) => (
                         <a
+                          key={index}
                           href={'link'}
                           className="border inline-flex items-center px-1 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                         >
