@@ -76,7 +76,7 @@ export function ItineraryCard(props: {
     setIsReposts(!isReposts);
 
     try {
-      const response = await fetch(`http://localhost:3001/handleReposts/${idPublication}`, {
+      const response = await fetch(`https://api-turistear.koyeb.app/handleReposts/${idPublication}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ export function ItineraryCard(props: {
           {description}
         </p>
 
-        <ImageGallery images={images}></ImageGallery>
+        <ImageGallery images={images} />
 
         <div>
           <div className="text-gray-500 dark:text-gray-400 flex mt-3 justify-around">
