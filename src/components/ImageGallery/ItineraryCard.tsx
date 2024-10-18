@@ -47,8 +47,8 @@ export function ItineraryCard(props: {
       setError('No funciona');
     }
   }
+
   const handleSaved = async (idPublication: number)=>{
-    console.log(isSave);
     setAmountSaved((!isSave)? amountSaved+1 : amountSaved-1);
     setIsSave(!isSave);
     try {
@@ -70,11 +70,18 @@ export function ItineraryCard(props: {
     }
   }
 
+  const reorderDate = (dateString : string ) => {
+    const formatDate = (date) => {
+      const [year, month, day] = date.split('-'); // Divide la fecha en año, mes, día
+      return `${day}-${month}-${year}`; // Reordena en formato 'dd-mm-yyyy'
+    };
 
+    return formatDate(dateString)
+  };
   return (
     <>
       <div className="w-[100%] p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
-        <div className="flex justify-between items-center px-2 ">
+        <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
               <img className="w-8 h-8 rounded-full" src={profilePicture} alt="person" />
@@ -84,9 +91,9 @@ export function ItineraryCard(props: {
               <p className={'text-[12px]'}>{category}</p>
             </div>
           </div>
-          <p>{creationDate.slice(0, -14)}</p>
+          <p>{reorderDate(creationDate.slice(0, -14))}</p>
         </div>
-        <p className="font-light p-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
+        <p className="font-light py-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
           {description}
         </p>
 
