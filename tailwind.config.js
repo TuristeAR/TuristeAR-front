@@ -6,6 +6,7 @@ module.exports = {
       'primary-2': '#0F254C',
       'primary-3': '#235A90',
       'primary-4': '#4F94CD',
+      'primary-5': '#6699C0',
       white: '#fff',
       pink: '#db2777',
       'pink-50': '#fdf2f8',

@@ -72,11 +72,11 @@ type Place = {
 
 const ExpectedPlace = () => {
   const { googleId } = useParams();
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<Review[]>(null);
   const [place, setPlace] = useState<Place>(null);
   const [loading, setLoading] = useState(true);
   const [showHours, setShowHours] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(2);
+  const [visibleCount, setVisibleCount] = useState(3);
   const [address, setAddress] = useState<RespuestaGeoref>();
   let photosHeader: string[] = [];
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -155,12 +155,13 @@ const ExpectedPlace = () => {
 
     fetchAddress();
   }, [place]);
-  if (place) {
+  if (reviews && reviews.length > 0) {
     photosHeader = reviews
       .map((i) => i.photos)
       .flat()
       .filter((i) => i != null);
   }
+  
   if (loading) {
     return (
       <div className="w-screen h-screen flex">
@@ -173,7 +174,7 @@ const ExpectedPlace = () => {
     setShowHours(!showHours);
   };
   const toggleReviews = () => {
-    setVisibleCount((prevCount) => prevCount + 2);
+    setVisibleCount((prevCount) => prevCount + 3);
   };
 
   return (
@@ -195,9 +196,6 @@ const ExpectedPlace = () => {
           <div className="px-2 sm:px-0 flex flex-col gap-y-4">
             <h1 className="text-center">{place.name}</h1>
             <div className="w-11/12 flex flex-wrap sm:flex-nowrap gap-2">
-              <p className="mx-auto font-light text-gray-500 text-sm md:text-base lg:text-lg text-justify sm:text-start">
-                {infoHotel.descripcion}
-              </p>
               <div className="flex mx-auto">
                 <div className="flex flex-col items-center max-lg:justify-center w-full h-full">
                   <div className="flex flex-row items-center  ">
@@ -224,8 +222,9 @@ const ExpectedPlace = () => {
                   <div className="flex flex-wrap gap-2 justify-between mb-1">
                     {place.types &&
                       place.types.length > 0 &&
-                      place.types.map((t) => (
+                      place.types.map((t, index) => (
                         <a
+                          key={index}
                           href={'link'}
                           className="border inline-flex items-center px-1 py-1 text-[10px] font-medium text-center text-primary bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                         >
@@ -250,8 +249,7 @@ const ExpectedPlace = () => {
 
                       <div className="flex sm:w-[200px]">
                         <span>
-                          {place.address} - {address.ubicacion.departamento.nombre},{' '}
-                          {address.ubicacion.provincia.nombre}
+                          {place.address? place.address:address.ubicacion.departamento.nombre},{address.ubicacion.provincia.nombre}
                         </span>
                       </div>
                     </div>
@@ -346,8 +344,9 @@ const ExpectedPlace = () => {
             Descubre lo que cuentan nuestros usuarios
           </h3>
           <hr />
-          <div className="flex gap-2 mt-5 justify-around flex-wrap">
-            {reviews.slice(0, visibleCount).map((userPost, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+         {reviews.length>0 ? reviews.slice(0, visibleCount).map((userPost, index) => (
+
               <PostCard
                 key={index}
                 imgPerson={userPost.authorPhoto}
@@ -359,12 +358,15 @@ const ExpectedPlace = () => {
                 province={`${address.ubicacion.departamento.nombre} - ${address.ubicacion.provincia.nombre}`}
                 rating={userPost.rating}
               />
-            ))}
+            )):""}
+           
           </div>
 
           <div className="flex gap-2 mt-5 justify-around flex-wrap">
-            {reviews.length < visibleCount ? (
-              ''
+            {reviews.length < visibleCount || !(reviews.length > 0) ? (
+              <div onClick={toggleReviews} className="text-gray font-semibold">
+              No hay publicaciones
+            </div>
             ) : (
               <button onClick={toggleReviews} className="btn-blue">
                 Ver más publicaciones
