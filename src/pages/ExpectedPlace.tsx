@@ -174,7 +174,7 @@ const ExpectedPlace = () => {
     setShowHours(!showHours);
   };
   const toggleReviews = () => {
-    setVisibleCount((prevCount) => prevCount + 2);
+    setVisibleCount((prevCount) => prevCount + 3);
   };
 
   return (
