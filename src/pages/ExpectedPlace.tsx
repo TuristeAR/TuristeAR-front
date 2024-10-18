@@ -76,7 +76,7 @@ const ExpectedPlace = () => {
   const [place, setPlace] = useState<Place>(null);
   const [loading, setLoading] = useState(true);
   const [showHours, setShowHours] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(2);
+  const [visibleCount, setVisibleCount] = useState(3);
   const [address, setAddress] = useState<RespuestaGeoref>();
   let photosHeader: string[] = [];
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -173,7 +173,7 @@ const ExpectedPlace = () => {
     setShowHours(!showHours);
   };
   const toggleReviews = () => {
-    setVisibleCount((prevCount) => prevCount + 2);
+    setVisibleCount((prevCount) => prevCount + 3);
   };
 
   return (
@@ -250,8 +250,7 @@ const ExpectedPlace = () => {
 
                       <div className="flex sm:w-[200px]">
                         <span>
-                          {place.address} - {address.ubicacion.departamento.nombre},{' '}
-                          {address.ubicacion.provincia.nombre}
+                          {place.address? place.address:address.ubicacion.departamento.nombre},{address.ubicacion.provincia.nombre}
                         </span>
                       </div>
                     </div>
@@ -346,8 +345,9 @@ const ExpectedPlace = () => {
             Descubre lo que cuentan nuestros usuarios
           </h3>
           <hr />
-          <div className="flex gap-2 mt-5 justify-around flex-wrap">
-            {reviews.slice(0, visibleCount).map((userPost, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+         {reviews.length>0 ? reviews.slice(0, visibleCount).map((userPost, index) => (
+
               <PostCard
                 key={index}
                 imgPerson={userPost.authorPhoto}
@@ -359,7 +359,8 @@ const ExpectedPlace = () => {
                 province={`${address.ubicacion.departamento.nombre} - ${address.ubicacion.provincia.nombre}`}
                 rating={userPost.rating}
               />
-            ))}
+            )):""}
+           
           </div>
 
           <div className="flex gap-2 mt-5 justify-around flex-wrap">
