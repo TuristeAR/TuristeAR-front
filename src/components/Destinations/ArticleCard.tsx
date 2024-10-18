@@ -42,7 +42,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         </div>
         <p className="mb-3 font-normal text-gray-700  group-hover:text-white ">{address}</p>
         <div className="flex flex-wrap gap-1">
-          <div className="flex">
+          <div className="flex gap-1">
             {types.slice(0, 3).map((type) => (
               <div
                 key={type}
