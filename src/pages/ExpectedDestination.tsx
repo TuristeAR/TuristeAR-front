@@ -235,7 +235,7 @@ const ExpectedDestination = () => {
             Descubre lo que cuentan nuestros usuarios
           </h3>
           <hr />
-          <div className="flex gap-2 mt-5 justify-around flex-wrap">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {provincia.places.slice(0, visibleCount).map((userPost, index) => (
               <PostCard
                 key={index}
