@@ -17,13 +17,13 @@ export const get = async (url: string, headers: any): Promise<any> => {
   }
 };
 
-export const post = async (url: string, headers: any, body: any): Promise<any> => {
+export const post = async (url: string, headers: any, body?: any): Promise<any> => {
   try {
     const response = await fetch(url, {
       method: 'POST',
       headers: headers,
       credentials: 'include',
-      body: JSON.stringify(body),
+      body: body ? JSON.stringify(body) : undefined,
     });
 
     return await response.json();
