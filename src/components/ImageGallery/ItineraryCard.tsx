@@ -1,5 +1,6 @@
 import { ImageGallery } from './ImageGallery';
 import { useState } from 'react';
+import { post } from '../../utilities/http.util';
 
 export function ItineraryCard(props: {
   id: number;
@@ -11,70 +12,71 @@ export function ItineraryCard(props: {
   likes: number;
   reposts: number;
   saved: number;
-  category : string;
+  category: string;
   isLiked: boolean;
   isSaved: boolean;
   isRepost: boolean;
 }) {
+  let {
+    profilePicture,
+    userId,
+    creationDate,
+    description,
+    images,
+    likes,
+    reposts,
+    saved,
+    isSaved,
+    isLiked,
+    isRepost,
+    category,
+    id,
+  } = props;
 
-  let { profilePicture, userId, creationDate, description, images, likes, reposts, saved, isSaved, isLiked, isRepost, category, id } = props;
-
-  const [isLike, setIsLike]= useState <boolean | undefined>(isLiked);
-  const [isSave, setIsSave]= useState <boolean | null>(isSaved);
-  const [isReposts, setIsReposts]= useState <boolean | null>(isRepost);
+  const [isLike, setIsLike] = useState<boolean | undefined>(isLiked);
+  const [isSave, setIsSave] = useState<boolean | null>(isSaved);
+  const [isReposts, setIsReposts] = useState<boolean | null>(isRepost);
   const [amountLikes, setAmountLikes] = useState<number | null>(likes);
   const [amountSaved, setAmountSaved] = useState<number | null>(saved);
-  const [error, setError]= useState<string | null>(null);
+  const [amountRepost, setAmountRepost] = useState<number | null>(reposts);
 
-  const handleLike = async (idPublication: number)=>{
-    setAmountLikes((!isLike)? amountLikes+1 : amountLikes-1);
+  const handleLike = async (idPublication: number) => {
+    setAmountLikes(!isLike ? amountLikes + 1 : amountLikes - 1);
     setIsLike(!isLike);
-    try {
-      const response = await fetch(`https://api-turistear.koyeb.app/handleLike/${idPublication}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
+    await post(`https://api-turistear.koyeb.app/handleLike/${idPublication}`, {
+      'Content-Type': 'application/json',
+    });
+  };
 
-      if (!response.ok) {
-        throw new Error('Error en la solicitud');
-      }
-      setError('')
-    } catch (err: any) {
-      console.log('No funciona')
-      setError('No funciona');
-    }
-  }
-  const handleSaved = async (idPublication: number)=>{
-    console.log(isSave);
-    setAmountSaved((!isSave)? amountSaved+1 : amountSaved-1);
+  const handleSaved = async (idPublication: number) => {
+    setAmountSaved(!isSave ? amountSaved + 1 : amountSaved - 1);
     setIsSave(!isSave);
-    try {
-      const response = await fetch(`https://api-turistear.koyeb.app/handleSaved/${idPublication}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
+    await post(`https://api-turistear.koyeb.app/handleSaved/${idPublication}`, {
+      'Content-Type': 'application/json',
+    });
+  };
 
-      if (!response.ok) {
-        throw new Error('Error en la solicitud');
-      }
-      setError('')
-    } catch (err: any) {
-      console.log('No funciona')
-      setError('No funciona');
-    }
-  }
+  const handleRepost = async (idPublication: number) => {
+    setAmountRepost(!isRepost ? amountRepost + 1 : amountRepost - 1);
+    setIsReposts(!isReposts);
+    await post(`https://api-turistear.koyeb.app/handleReposts/${idPublication}`, {
+      'Content-Type': 'application/json',
+    });
+  };
 
+  const reorderDate = (dateString: string) => {
+    const formatDate = (date) => {
+      const [year, month, day] = date.split('-');
+      return `${day}-${month}-${year}`;
+    };
+
+    return formatDate(dateString);
+  };
 
   return (
     <>
-      <div className="w-[100%] p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
-        <div className="flex justify-between items-center px-2 ">
+      <div className="w-full h-fit p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
+        <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
               <img className="w-8 h-8 rounded-full" src={profilePicture} alt="person" />
@@ -84,19 +86,17 @@ export function ItineraryCard(props: {
               <p className={'text-[12px]'}>{category}</p>
             </div>
           </div>
-          <p>{creationDate.slice(0, -14)}</p>
+          <p>{reorderDate(creationDate.slice(0, -14))}</p>
         </div>
-        <p className="font-light p-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
+        <p className="font-light py-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
           {description}
         </p>
-
-        <ImageGallery images={images}></ImageGallery>
-
+        <ImageGallery images={images} />
         <div>
           <div className="text-gray-500 dark:text-gray-400 flex mt-3 justify-around">
             <div className="flex items-center mr-6">
               <svg
-                className='cursor-pointer'
+                className="cursor-pointer"
                 onClick={() => {
                   handleLike(id);
                 }}
@@ -134,7 +134,7 @@ export function ItineraryCard(props: {
             <div className="flex items-center mr-6">
               <svg
                 onClick={() => {
-                  setIsReposts(!isReposts);
+                  handleRepost(id);
                 }}
                 xmlns="http://www.w3.org/2000/svg"
                 height="25px"
@@ -144,11 +144,11 @@ export function ItineraryCard(props: {
               >
                 <path d="M686-80q-47.5 0-80.75-33.25T572-194q0-8 5-34L278-403q-16.28 17.34-37.64 27.17Q219-366 194-366q-47.5 0-80.75-33.25T80-480q0-47.5 33.25-80.75T194-594q24 0 45 9.3 21 9.29 37 25.7l301-173q-2-8-3.5-16.5T572-766q0-47.5 33.25-80.75T686-880q47.5 0 80.75 33.25T800-766q0 47.5-33.25 80.75T686-652q-23.27 0-43.64-9Q622-670 606-685L302-516q3 8 4.5 17.5t1.5 18q0 8.5-1 16t-3 15.5l303 173q16-15 36.09-23.5 20.1-8.5 43.07-8.5Q734-308 767-274.75T800-194q0 47.5-33.25 80.75T686-80Zm.04-60q22.96 0 38.46-15.54 15.5-15.53 15.5-38.5 0-22.96-15.54-38.46-15.53-15.5-38.5-15.5-22.96 0-38.46 15.54-15.5 15.53-15.5 38.5 0 22.96 15.54 38.46 15.53 15.5 38.5 15.5Zm-492-286q22.96 0 38.46-15.54 15.5-15.53 15.5-38.5 0-22.96-15.54-38.46-15.53-15.5-38.5-15.5-22.96 0-38.46 15.54-15.5 15.53-15.5 38.5 0 22.96 15.54 38.46 15.53 15.5 38.5 15.5Zm492-286q22.96 0 38.46-15.54 15.5-15.53 15.5-38.5 0-22.96-15.54-38.46-15.53-15.5-38.5-15.5-22.96 0-38.46 15.54-15.5 15.53-15.5 38.5 0 22.96 15.54 38.46 15.53 15.5 38.5 15.5ZM686-194ZM194-480Zm492-286Z" />
               </svg>
-              <span className="ml-3">{reposts}</span>
+              <span className="ml-3">{amountRepost}</span>
             </div>
             <div className="flex items-center mr-6">
               <svg
-                className='cursor-pointer'
+                className="cursor-pointer"
                 onClick={() => {
                   handleSaved(id);
                 }}
