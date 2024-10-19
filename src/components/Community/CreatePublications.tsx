@@ -97,11 +97,6 @@ export const CreatePublications = () => {
       return;
     }
 
-    if (!formData.images) {
-      setError("Seleccione una imagen!");
-      return;
-    }
-
     setIsLoading(true);
     try {
       const imageUrl = await uploadImage(formData.images); // Espera el resultado de la carga de la imagen
