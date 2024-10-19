@@ -2,7 +2,7 @@ import Carousel from '../components/Destinations/Carousel';
 import { Header } from '../components/Header/Header';
 import { MapaArg } from '../components/Destinations/MapaArg';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { get } from '../utilities/http.util';
 
 type Province = {
@@ -174,9 +174,9 @@ const Destinations = () => {
                       <p className="italic text-md">
                         {item.name}, {selectedProvince?.name}
                       </p>
-                      <div className="flex justify-start gap-2">
+                      <div className="flex justify-start gap-2 w-full">
                         {item.reviews[0].photos.map((image, imgIndex) => (
-                          <div key={imgIndex} className="w-[200px] h-[170px] overflow-hidden">
+                          <div key={imgIndex} className="w-3/4 h-[170px] overflow-hidden">
                             <img
                               src={image}
                               className="w-full h-full object-cover"
@@ -186,7 +186,9 @@ const Destinations = () => {
                         ))}
                       </div>
                       <div>
+                        <Link to={`/lugar-esperado/${item.googleId}`}>
                         <button className="btn-blue">Ver más publicaciones</button>
+                        </Link>
                       </div>
                     </div>
                   );
