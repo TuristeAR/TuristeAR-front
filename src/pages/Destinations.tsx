@@ -127,7 +127,7 @@ const Destinations = () => {
               </p>
               <div className="flex justify-start gap-2 overflow-hidden">
                 {selectedProvince?.images.map((image, index) => (
-                  <div key={index} className="w-[300px] h-[300px] overflow-hidden">
+                  <div key={index} className="w-full h-[300px] overflow-hidden">
                     <img
                       key={image}
                       src={image}
