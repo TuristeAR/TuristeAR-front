@@ -99,7 +99,7 @@ export const CreatePublications = () => {
 
     setIsLoading(true);
     try {
-      const imageUrl = await uploadImage(formData.images); // Espera el resultado de la carga de la imagen
+      const imageUrl = formData.images ? await uploadImage(formData.images) : null;
       const response = await fetch('https://api-turistear.koyeb.app/createPublication', {
         method: 'POST',
         headers: {
@@ -201,6 +201,7 @@ export const CreatePublications = () => {
                           name={'images'}
                           onChange={handleChange}
                           type={'file'}
+                          accept={'image/*'}
                         />
                       </div>
                     </div>
