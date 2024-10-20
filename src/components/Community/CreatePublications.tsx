@@ -99,7 +99,7 @@ export const CreatePublications = () => {
 
     setIsLoading(true);
     try {
-      const imageUrl = formData.images ? await uploadImage(formData.images) : null;
+      const imageUrl = formData.images ? await uploadImage(formData.images) : "";
       const response = await fetch('https://api-turistear.koyeb.app/createPublication', {
         method: 'POST',
         headers: {
@@ -108,7 +108,7 @@ export const CreatePublications = () => {
         body: JSON.stringify({
           description : formData.description,
           images: imageUrl,
-          categoryId: formData.categoryId // Cambia el nombre de imageUrl a images
+          categoryId: formData.categoryId
         }),
         credentials: 'include',
       });
