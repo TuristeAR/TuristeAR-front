@@ -2,6 +2,9 @@ import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import io from 'socket.io-client';
+
+const socket = io('https://api-turistear.koyeb.app'); // URL del servidor con socket.io
 
 type Place = {
   name: string;
@@ -39,7 +42,26 @@ const ForumDetail = () => {
   const [forum, setForum] = useState<Forum | null>(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [message, setMessage]=useState<string | null>(null);
+
   const [user, setUser] = useState<User | null>(null);
+  useEffect(() => {
+    socket.on('receiveMessage', (newMessage) => {
+      setForum((prevForum) => {
+        if (!prevForum) return null;
+
+        return {
+          ...prevForum,
+          messages: [...prevForum.messages, newMessage as Message],
+        };
+      });
+    });
+
+    return () => {
+      socket.off('receiveMessage');
+    };
+  }, []);
+
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -50,28 +72,17 @@ const ForumDetail = () => {
       reader.readAsDataURL(file);
     }
   };
-  const createMessage = async (forumId: number)=>{
-    try {
-      const response = await fetch(`http://localhost:3001/createMessage/${forumId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body:JSON.stringify({
-          content: message,
-          images: selectedImage
-        }),
-        credentials: 'include',
+  const createMessage = (forumId : number) => {
+    if (message && forumId && user) {
+      socket.emit('createMessage', {
+        content: message,
+        images: selectedImage,
+        userId: user.id,
+        forumId: forumId,
       });
-
-      if (!response.ok) {
-        throw new Error('Error en la solicitud');
-      }
-    } catch (err: any) {
-      console.log('No funciona')
+      setMessage('');
     }
-  }
-
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -93,7 +104,7 @@ const ForumDetail = () => {
           return;
         }
 
-        const forumResponse = await fetch(`http://localhost:3001/forum/${id}`, {
+        const forumResponse = await fetch(`https://api-turistear.koyeb.app/forum/${id}`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -115,7 +126,7 @@ const ForumDetail = () => {
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
-      <div className="flex">
+      <div className="flex h-[120vh]">
         <LeftCommunity
           vista={'forum'}
           activeItem={'posts'}
@@ -123,11 +134,11 @@ const ForumDetail = () => {
           handleClick={null}
           setCategorySelected={setCategorySelected}
         />
-        <div className="lg:w-[80%] w-[100%] flex flex-col gap-10 overflow-scroll scrollbar-hidden">
+        <div className="lg:w-[80%] w-[100%] flex flex-col overflow-scroll scrollbar-hidden">
           <div className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] h-[8%] flex items-center p-4'}>
             <h1 className="text-3xl">{forum?.name}</h1>
           </div>
-          <div className="overflow-scroll scrollbar-hidden h-[75%] px-4 flex flex-col gap-6">
+          <div className="overflow-scroll scrollbar-hidden h-[90%] px-4 py-6 flex flex-col gap-6">
             {forum?.messages.map((message, index) => (
               <div className={`flex ${user.id == message.user.id ? 'justify-end' : 'justify-start'}`} key={index}>
                 <div
@@ -148,7 +159,7 @@ const ForumDetail = () => {
                         <p className={'font-semibold '}>{message.user.name}</p>
                       </div>
                     </div>
-                    <p>{message.createdAt.slice(14).slice(0, 5)}</p>
+                    <p>{message.createdAt.slice(11).slice(0,5)}</p>
                   </div>
                   <div>
                     <p>{message.content}</p>
@@ -180,6 +191,7 @@ const ForumDetail = () => {
                   setMessage(e.target.value);
                 }}
                 type={'text'}
+                value={message}
                 className={'border border-[#999999] w-[90%] h-[40px] rounded-2xl pl-2'}
                 placeholder={'Escribe tu mensaje...'}
               />
