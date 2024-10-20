@@ -39,7 +39,7 @@ const ForumDetail = () => {
   const [forum, setForum] = useState<Forum | null>(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [message, setMessage]=useState<string | null>(null);
-
+  const [user, setUser] = useState<User | null>(null);
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -50,13 +50,17 @@ const ForumDetail = () => {
       reader.readAsDataURL(file);
     }
   };
-  const createMessage = async ()=>{
+  const createMessage = async (forumId: number)=>{
     try {
-      const response = await fetch(`https://api-turistear.koyeb.app/createMessage/${id}`, {
+      const response = await fetch(`http://localhost:3001/createMessage/${forumId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body:JSON.stringify({
+          content: message,
+          images: selectedImage
+        }),
         credentials: 'include',
       });
 
@@ -69,13 +73,26 @@ const ForumDetail = () => {
   }
 
   useEffect(() => {
-    if (!id || id === 'undefined') {
-      console.error('forumId is undefined or invalid');
-      return;
-    }
-
     const fetchData = async () => {
       try {
+        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!sessionResponse.ok) {
+          window.location.href = '/login';
+          return;
+        }
+
+        const sessionData = await sessionResponse.json();
+        setUser(sessionData.user);
+
+        if (!id || id === 'undefined') {
+          console.error('forumId is undefined or invalid');
+          return;
+        }
+
         const forumResponse = await fetch(`http://localhost:3001/forum/${id}`, {
           method: 'GET',
           credentials: 'include',
@@ -87,20 +104,13 @@ const ForumDetail = () => {
           const forumData = await forumResponse.json();
           setForum(forumData);
         }
-      } catch (error) {}
-    };
 
+      } catch (error) {
+
+      }
+    };
     fetchData();
   }, []);
-
-  const reorderDate = (dateString: string) => {
-    const formatDate = (date) => {
-      const [year, month, day] = date.split('-'); // Divide la fecha en año, mes, día
-      return `${day}-${month}-${year}`; // Reordena en formato 'dd-mm-yyyy'
-    };
-
-    return formatDate(dateString);
-  };
 
   return (
     <>
@@ -117,9 +127,9 @@ const ForumDetail = () => {
           <div className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] h-[8%] flex items-center p-4'}>
             <h1 className="text-3xl">{forum?.name}</h1>
           </div>
-          <div className="overflow-scroll scrollbar-hidden h-[75%] pl-4">
+          <div className="overflow-scroll scrollbar-hidden h-[75%] px-4 flex flex-col gap-6">
             {forum?.messages.map((message, index) => (
-              <div className={'flex justify-start'} key={index}>
+              <div className={`flex ${user.id == message.user.id ? 'justify-end' : 'justify-start'}`} key={index}>
                 <div
                   className={
                     'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] p-6 rounded-2xl gap-4 flex flex-col w-auto'
@@ -174,8 +184,8 @@ const ForumDetail = () => {
                 placeholder={'Escribe tu mensaje...'}
               />
               <img onClick={()=>{
-                createMessage
-              }} src={'/assets/send.svg'} className={'w-[60px]'}  alt={'Enviar'}/>
+                createMessage(Number(id))
+              }} src={'/assets/send.svg'} className={'w-[60px] cursor-pointer'}  alt={'Enviar'}/>
             </div>
           </div>
         </div>
