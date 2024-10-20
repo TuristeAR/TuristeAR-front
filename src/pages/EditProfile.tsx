@@ -113,8 +113,8 @@ const EditProfile = () => {
     e.preventDefault();
     setIsLoading(true)
     try {
-      const profilePictureUrl = formData.profilePicture ? await uploadImage(formData.profilePicture) : null;
-      const coverPictureUrl = formData.coverPicture ? await uploadImage(formData.coverPicture) : null;
+      const profilePictureUrl = formData.profilePicture ? await uploadImage(formData.profilePicture) : "";
+      const coverPictureUrl = formData.coverPicture ? await uploadImage(formData.coverPicture) : "";
       
       const response = await fetch(`https://api-turistear.koyeb.app/editProfile`, {
         method: 'PUT',
