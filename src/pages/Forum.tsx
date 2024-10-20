@@ -47,6 +47,7 @@ const Forum = () => {
   };
 
   type Forum = {
+    id: number;
     name: string;
     description: string;
     place: Place | null;
@@ -98,10 +99,11 @@ const Forum = () => {
                 <h1 className={'text-2xl'}>{forum.name}</h1>
                 <p>{forum.description}</p>
                 <div className={'flex justify-end'}>
-                  <button onClick={enterTheForum}
-                          className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl">
-                    Ingresar
-                  </button>
+                  <div className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center">
+                    <a href={`/forum/${forum.id}`} onClick={enterTheForum}>
+                      Ingresar
+                    </a>
+                  </div>
                 </div>
               </div>
             ))}
