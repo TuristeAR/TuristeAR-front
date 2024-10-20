@@ -200,7 +200,7 @@ const Profile = () => {
                   <div
                     className={`lg:w-[150px] w-[100px] lg:h-[150px] h-[100px] bg-gray border-white border-4`}
                   >
-                    <img src={user?.profilePicture} alt={user?.name} className="w-[100%]" />
+                    <img src={user?.profilePicture} alt={user?.name} className="w-[100%] h-[100%]" />
                   </div>
                   <div>
                     <a
