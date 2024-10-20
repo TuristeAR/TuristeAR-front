@@ -32,7 +32,7 @@ export const TravelCard : React.FC<TravelData> = ({imgProvince,province,departur
 
   return (
     <>
-      <div className="lg:w-[100%] mx-auto rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex lg:flex-row flex-col">
+      <div className="lg:w-[100%] lg:mb-0 mb-6 mx-auto rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex lg:flex-row flex-col">
         <div className="lg:w-[40%]">
           <img
             src={imgProvince}

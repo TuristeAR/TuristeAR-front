@@ -75,7 +75,7 @@ export function ItineraryCard(props: {
 
   return (
     <>
-      <div className="w-full h-fit p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
+      <div className="w-full h-fit p-4 lg:mb-0 mb-6 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">

@@ -89,8 +89,8 @@ const Forum = () => {
           handleClick={null}
           setCategorySelected={setCategorySelected}
         />
-        <div className="lg:w-[80%] w-[100%] p-10 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
-          <div className={'grid grid-cols-2 gap-6'}>
+        <div className="lg:w-[80%] w-[100%] lg:p-10 p-4 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
+          <div className={'grid lg:grid-cols-2 grid-cols-1 gap-6'}>
             {forums?.map((forum, index) => (
               <div
                 key={index}

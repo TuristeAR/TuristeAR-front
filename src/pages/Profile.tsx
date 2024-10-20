@@ -249,7 +249,7 @@ const Profile = () => {
 
             {/* Content */}
             <div
-              className="lg:w-[100%] w-[90%] mx-auto lg:grid lg:grid-cols-2 lg:gap-6 gap-20"
+              className="lg:w-[100%] w-[90%] mx-auto lg:grid lg:grid-cols-2 lg:gap-6"
               ref={contentRef}
             >
               {activeItem === 'posts' &&
