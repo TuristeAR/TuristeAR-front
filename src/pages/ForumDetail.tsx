@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 
-const socket = io('https://api-turistear.koyeb.app'); // URL del servidor con socket.io
+const socket = io('https://api-turistear.koyeb.app');
 
 type Place = {
   name: string;
@@ -215,11 +215,17 @@ const ForumDetail = () => {
                       <div>
                         <p className={'lg:text-[16px] text-sm'}>{message.content}</p>
                       </div>
-                      <div>
-                        {message.images.map((image, index) => (
-                          <img key={index} src={image} alt="Imagen" />
-                        ))}
-                      </div>
+                      {message.images ?
+                        <div>
+                          {Array.isArray(message.images) ?
+                            message.images.map((image, index) => (
+                            <img key={index} src={image} alt="Imagen" />
+                            ))
+                            : <img src={message.images} alt={'Imagen'} />
+                          }
+                        </div>
+                        : <></>
+                      }
                     </div>
                   </div>
                 ))}
