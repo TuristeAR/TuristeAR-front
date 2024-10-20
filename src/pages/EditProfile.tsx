@@ -128,6 +128,7 @@ const EditProfile = () => {
           profilePicture: profilePictureUrl,
           coverPicture: coverPictureUrl
         }),
+        credentials: 'include'
       });
 
       if (!response.ok) {
