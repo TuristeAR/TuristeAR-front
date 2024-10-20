@@ -42,7 +42,7 @@ const ForumDetail = () => {
 
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [forum, setForum] = useState<Forum | null>(null);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null as File);
   const [message, setMessage]=useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -112,7 +112,7 @@ const ForumDetail = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setSelectedImage(reader.result);
+        setSelectedImage(file);
       };
       reader.readAsDataURL(file);
     }
@@ -149,6 +149,7 @@ const ForumDetail = () => {
 
   const createMessage = async (forumId : number) => {
     if (message && forumId && user) {
+      console.log(selectedImage)
       const imageUrl = await uploadImage(selectedImage);
       socket.emit('createMessage', {
         content: message,
@@ -215,7 +216,7 @@ const ForumDetail = () => {
                 <div className="flex flex-col items-center w-[6%]">
                   <label className="cursor-pointer">
                     <img
-                      src={selectedImage || '/assets/addImage.svg'}
+                      src={'/assets/addImage.svg'}
                       alt="Agregar imagen"
                       className={`object-cover ${selectedImage ? 'rounded-full w-[50px] h-[50px]' : 'w-[40px] h-[40px]'}`}
                     />
