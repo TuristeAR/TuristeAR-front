@@ -181,7 +181,7 @@ const ExpectedPlace = () => {
     <>
       <Header />
 
-      <section className="w-full mb-5">
+      <section className="w-full mb-5 mt-12">
         <div className="sm:w-10/12 m-auto">
           <div onClick={() => openModal()}>
             {photosHeader.length > 0 ? (
