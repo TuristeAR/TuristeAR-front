@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 import { ItineraryCalendar } from './pages/ItineraryCalendar';
 import { ItineraryDetail } from './pages/ItineraryDetail';
 import EditProfile from './pages/EditProfile';
+import ForumDetail from './pages/ForumDetail';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -33,7 +34,8 @@ root.render(
       <Route path="/publications" element={<Publications />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/itineraryCalendar/:itineraryId" element={<ItineraryCalendar />} />
-      <Route path="/forum" element={<Forum />} />
+      <Route path="/forums" element={<Forum />} />
+      <Route path="/forum/:id" element={<ForumDetail />} />
       <Route path="/jobs" element={<Jobs />} />
       <Route path="/itineraryDetail/:itineraryId" element={<ItineraryDetail />} />
     </Routes>

@@ -124,7 +124,6 @@ const Profile = () => {
 
   const [activeItem, setActiveItem] = useState('posts');
 
-  // Agrega este useEffect para obtener los likes cuando el usuario seleccione la pestaña de "likes"
   useEffect(() => {
     if (activeItem === 'likes' && user?.id) {
       const fetchLikedPublications = async () => {
@@ -207,10 +206,10 @@ const Profile = () => {
       <div className="flex justify-between h-[160vh] ">
         <LeftCommunity
           vista=""
-          categorySelected={categorySelected}
-          setCategorySelected={setCategorySelected}
           activeItem={activeItem}
+          categorySelected={categorySelected}
           handleClick={handleClick}
+          setCategorySelected={setCategorySelected}
         />
         <div className="lg:w-[80%] w-[100%] lg:p-10 lg:pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
           {/* Portada */}
