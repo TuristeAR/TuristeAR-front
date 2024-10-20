@@ -113,10 +113,10 @@ const EditProfile = () => {
     e.preventDefault();
     setIsLoading(true)
     try {
-      const profilePictureUrl = await uploadImage(formData.profilePicture); // Espera el resultado de la carga de la imagen
-      const coverPictureUrl = await uploadImage(formData.coverPicture); // Espera el resultado de la carga de la imagen
+      const profilePictureUrl = formData.profilePicture ? await uploadImage(formData.profilePicture) : null;
+      const coverPictureUrl = formData.coverPicture ? await uploadImage(formData.coverPicture) : null;
       
-      const response = await fetch(`https://api-turistear.koyeb.app/editProfile/${user.id}`, {
+      const response = await fetch(`https://api-turistear.koyeb.app/editProfile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -206,13 +206,13 @@ const EditProfile = () => {
                   <label htmlFor={'profilePicture'} className="text-lg font-semibold">
                     Foto de perfil
                   </label>
-                  <input name={'profilePicture'} onChange={handleChange} type={'file'} />
+                  <input name={'profilePicture'} onChange={handleChange} type={'file'} accept={'image/*'} />
                 </div>
                 <div className={'flex flex-col gap-y-2'}>
                   <label htmlFor={'coverPicture'} className="text-lg font-semibold">
                     Foto de portada
                   </label>
-                  <input name={'coverPicture'} onChange={handleChange} type={'file'} />
+                  <input name={'coverPicture'} onChange={handleChange} type={'file'} accept={'image/*'} />
                 </div>
               </div>
               <div className={'flex justify-center mt-4'}>

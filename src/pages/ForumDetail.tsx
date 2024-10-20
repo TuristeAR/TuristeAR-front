@@ -151,7 +151,7 @@ const ForumDetail = () => {
   const createMessage = async (forumId : number) => {
     if (message && forumId && user) {
       setWasSent(true)
-      const imageUrl = await uploadImage(selectedImage);
+      const imageUrl = selectedImage ? await uploadImage(selectedImage) : null;
       socket.emit('createMessage', {
         content: message,
         images: imageUrl,
@@ -159,6 +159,7 @@ const ForumDetail = () => {
         forumId: forumId,
       });
       setWasSent(false)
+      setSelectedImage(null)
       setMessage('');
     }
   };

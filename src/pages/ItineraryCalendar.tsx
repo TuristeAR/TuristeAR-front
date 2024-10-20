@@ -308,9 +308,6 @@ export const ItineraryCalendar = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="p-2">
-                    <p className="text-gray">Descubrir más</p>
-                  </div>
                 </>
               )}
             </div>
