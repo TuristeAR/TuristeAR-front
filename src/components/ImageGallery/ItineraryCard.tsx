@@ -1,5 +1,6 @@
 import { ImageGallery } from './ImageGallery';
 import { useState } from 'react';
+import { post } from '../../utilities/http.util';
 
 export function ItineraryCard(props: {
   id: number;
@@ -11,101 +12,70 @@ export function ItineraryCard(props: {
   likes: number;
   reposts: number;
   saved: number;
-  category : string;
+  category: string;
   isLiked: boolean;
   isSaved: boolean;
   isRepost: boolean;
 }) {
+  let {
+    profilePicture,
+    userId,
+    creationDate,
+    description,
+    images,
+    likes,
+    reposts,
+    saved,
+    isSaved,
+    isLiked,
+    isRepost,
+    category,
+    id,
+  } = props;
 
-  let { profilePicture, userId, creationDate, description, images, likes, reposts, saved, isSaved, isLiked, isRepost, category, id } = props;
-
-  const [isLike, setIsLike]= useState <boolean | undefined>(isLiked);
-  const [isSave, setIsSave]= useState <boolean | null>(isSaved);
-  const [isReposts, setIsReposts]= useState <boolean | null>(isRepost);
+  const [isLike, setIsLike] = useState<boolean | undefined>(isLiked);
+  const [isSave, setIsSave] = useState<boolean | null>(isSaved);
+  const [isReposts, setIsReposts] = useState<boolean | null>(isRepost);
   const [amountLikes, setAmountLikes] = useState<number | null>(likes);
   const [amountSaved, setAmountSaved] = useState<number | null>(saved);
-  const [amountRepost, setAmountRepost] = useState<number | null>(saved);
-  const [error, setError]= useState<string | null>(null);
+  const [amountRepost, setAmountRepost] = useState<number | null>(reposts);
 
-  const handleLike = async (idPublication: number)=>{
-    setAmountLikes((!isLike)? amountLikes+1 : amountLikes-1);
+  const handleLike = async (idPublication: number) => {
+    setAmountLikes(!isLike ? amountLikes + 1 : amountLikes - 1);
     setIsLike(!isLike);
-    try {
-      const response = await fetch(`https://api-turistear.koyeb.app/handleLike/${idPublication}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
+    await post(`https://api-turistear.koyeb.app/handleLike/${idPublication}`, {
+      'Content-Type': 'application/json',
+    });
+  };
 
-      if (!response.ok) {
-        throw new Error('Error en la solicitud');
-      }
-      setError('')
-    } catch (err: any) {
-      console.log('No funciona')
-      setError('No funciona');
-    }
-  }
-
-  const handleSaved = async (idPublication: number)=>{
-    setAmountSaved((!isSave)? amountSaved+1 : amountSaved-1);
+  const handleSaved = async (idPublication: number) => {
+    setAmountSaved(!isSave ? amountSaved + 1 : amountSaved - 1);
     setIsSave(!isSave);
-    try {
-      const response = await fetch(`https://api-turistear.koyeb.app/handleSaved/${idPublication}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
+    await post(`https://api-turistear.koyeb.app/handleSaved/${idPublication}`, {
+      'Content-Type': 'application/json',
+    });
+  };
 
-      if (!response.ok) {
-        throw new Error('Error en la solicitud');
-      }
-      setError('')
-    } catch (err: any) {
-      console.log('No funciona')
-      setError('No funciona');
-    }
-  }
-
-  const handleRepost = async (idPublication: number)=>{
-    setAmountRepost((!isRepost)? amountRepost+1 : amountRepost-1);
+  const handleRepost = async (idPublication: number) => {
+    setAmountRepost(!isRepost ? amountRepost + 1 : amountRepost - 1);
     setIsReposts(!isReposts);
+    await post(`https://api-turistear.koyeb.app/handleReposts/${idPublication}`, {
+      'Content-Type': 'application/json',
+    });
+  };
 
-    try {
-      const response = await fetch(`https://api-turistear.koyeb.app/handleReposts/${idPublication}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Error en la solicitud');
-      }
-      setError('')
-    } catch (err: any) {
-      console.log('No funciona')
-      setError('No funciona');
-    }
-  }
-
-  const reorderDate = (dateString : string ) => {
+  const reorderDate = (dateString: string) => {
     const formatDate = (date) => {
-      const [year, month, day] = date.split('-'); // Divide la fecha en año, mes, día
-      return `${day}-${month}-${year}`; // Reordena en formato 'dd-mm-yyyy'
+      const [year, month, day] = date.split('-');
+      return `${day}-${month}-${year}`;
     };
 
-    return formatDate(dateString)
+    return formatDate(dateString);
   };
 
   return (
     <>
-      <div className="w-[100%] p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
+      <div className="w-full h-fit p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
@@ -121,14 +91,12 @@ export function ItineraryCard(props: {
         <p className="font-light py-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
           {description}
         </p>
-
         <ImageGallery images={images} />
-
         <div>
           <div className="text-gray-500 dark:text-gray-400 flex mt-3 justify-around">
             <div className="flex items-center mr-6">
               <svg
-                className='cursor-pointer'
+                className="cursor-pointer"
                 onClick={() => {
                   handleLike(id);
                 }}
@@ -166,7 +134,7 @@ export function ItineraryCard(props: {
             <div className="flex items-center mr-6">
               <svg
                 onClick={() => {
-                  handleRepost(id)
+                  handleRepost(id);
                 }}
                 xmlns="http://www.w3.org/2000/svg"
                 height="25px"
@@ -180,7 +148,7 @@ export function ItineraryCard(props: {
             </div>
             <div className="flex items-center mr-6">
               <svg
-                className='cursor-pointer'
+                className="cursor-pointer"
                 onClick={() => {
                   handleSaved(id);
                 }}

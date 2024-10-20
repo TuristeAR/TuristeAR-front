@@ -6,7 +6,7 @@ import React from 'react';
 describe('ScrollingText', () => {
   test('renders the scrolling text component', () => {
     render(<ScrollingText />);
-    const textElements = screen.queryAllByText(/VIAJÁ INTELIGENTE VIVÍ LA ARGENTINA/);
+    const textElements = screen.queryAllByText(/VIAJÁ INTELIGENTE VIVÍ ARGENTINA/);
     textElements.forEach((element) => {
       expect(element).toBeInTheDocument();
     });

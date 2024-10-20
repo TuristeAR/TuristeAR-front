@@ -364,9 +364,7 @@ const ExpectedPlace = () => {
 
           <div className="flex gap-2 mt-5 justify-around flex-wrap">
             {reviews.length < visibleCount || !(reviews.length > 0) ? (
-              <div onClick={toggleReviews} className="text-gray font-semibold">
-              No hay publicaciones
-            </div>
+              <></>
             ) : (
               <button onClick={toggleReviews} className="btn-blue">
                 Ver más publicaciones
