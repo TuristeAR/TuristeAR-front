@@ -39,7 +39,7 @@ root.render(
       <Route path="/forum/:id" element={<ForumDetail />} />
       <Route path="/jobs" element={<Jobs />} />
       <Route path="/itineraryDetail/:itineraryId" element={<ItineraryDetail />} />
-      <Route path="lugares/:provinceId/" element={<Places/>} />
+      <Route path="lugares/:provinceName/" element={<Places/>} />
     </Routes>
   </BrowserRouter>,
 );

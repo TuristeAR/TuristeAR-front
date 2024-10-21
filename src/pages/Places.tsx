@@ -51,34 +51,52 @@ type PlaceCard = {
 };
 const Places = () => {
   const [placesFound, setPlacesFound] = useState<Place[]>([]);
-  const { provinceId } = useParams();
-  const [offset, setOffset] = useState(0); 
+  const [province, setProvince] = useState<Province>(null);
+  const { provinceName } = useParams();
+  const [offset, setOffset] = useState(0);
   const [count] = useState(15);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   useEffect(() => {
+    if (!provinceName) return;
+
+    const fetchProvinces = async () => {
+      try {
+        const response = await get(`https://api-turistear.koyeb.app/provinces/${provinceName}/0`, {
+          'Content-Type': 'application/json',
+        });
+        setProvince(response);
+      } catch (error) {
+        console.error('Error fetching provinces:', error);
+      }
+    };
+
+    fetchProvinces();
+  }, []);
+
+  useEffect(() => {
     const fetchPlaces = async () => {
-      if (provinceId) {
-       
+      if (province) {
         try {
           const response = await get(
-            `http://localhost:3001/places/province?provinceId=${provinceId}&count=${count}&offset=${offset}`,
+            `http://localhost:3001/places/province?provinceId=${province.id}&count=${count}&offset=${offset}`,
             { 'Content-Type': 'application/json' },
           );
-          setPlacesFound((prevPlaces) => [...prevPlaces, ...response.data]); 
+          setPlacesFound((prevPlaces) => [...prevPlaces, ...response.data]);
           setIsLoadingMore(false);
         } catch (error) {
           console.error('Error fetching places:', error);
+        }
       }
-    }
     };
 
     fetchPlaces();
-  }, [provinceId, offset]);
+  }, [province, offset]);
 
-  const handleSearch = (searchValue: string) => {
-    setSearchTerm(searchValue);
+  const handleSearch = ({ localidad, provincia }) => {
+    console.log('Localidad seleccionada:', localidad);
+    console.log('Provincia seleccionada:', provincia);
   };
 
   const handleLoadMore = () => {
@@ -86,6 +104,11 @@ const Places = () => {
     setOffset((prevOffset) => prevOffset + count);
   };
 
+  if (!province) {
+    return <div className="w-screen h-screen flex">
+    <Lottie className="w-[20rem] m-auto" animationData={logoAnimado} />
+  </div>;
+  }
 
   return (
     <>
@@ -93,11 +116,11 @@ const Places = () => {
 
       <SearchHeroSection
         onSearch={handleSearch}
-        title={`Puntos de interés de ${provinceId}`}
+        title={`Puntos de interés de ${province.name}`}
       ></SearchHeroSection>
-      {/*    <section>
-        <div className="sm:w-10/12 mx-auto">
-          <div className='"w-full'>
+      {/* <section>
+        <div className=" mx-auto">
+          <div className="w-full">
             <GoogleMapComponent
               latitud={'place.latitude'}
               longitud={'place.longitude'}
@@ -105,12 +128,12 @@ const Places = () => {
             ></GoogleMapComponent>
           </div>
         </div>
-      </section> */}
-
+      </section>
+ */}
       <section className="py-5 relative">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
           <div className="grid grid-cols-12">
-            <CategoryFilter></CategoryFilter>
+            <CategoryFilter provinceName={province.name}></CategoryFilter>
             <div className="col-span-12 md:col-span-9">
               <PlaceList places={placesFound}></PlaceList>
 
