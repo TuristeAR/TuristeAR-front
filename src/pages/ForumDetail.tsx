@@ -8,8 +8,9 @@ import logoAnimado from '../assets/logoAnimado.json';
 
 const socket = io('https://api-turistear.koyeb.app');
 
-type Place = {
-  name: string;
+type Category = {
+  id: number,
+  description: string
 };
 
 type User = {
@@ -33,7 +34,7 @@ type Message = {
 type Forum = {
   name: string;
   description: string;
-  place: Place | null;
+  category: Category | null;
   messages: Message[];
 };
 
@@ -183,9 +184,10 @@ const ForumDetail = () => {
             />
             <div className="lg:w-[80%] w-[100%] flex flex-col overflow-scroll scrollbar-hidden">
               <div
-                className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] h-[8%] flex items-center p-4'}
+                className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex flex-col p-4'}
               >
                 <h1 className="text-3xl">{forum?.name}</h1>
+                <h3>{forum.category.description}</h3>
               </div>
               <div className="overflow-scroll scrollbar-hidden h-[90%] lg:px-4 px-2 py-6  flex flex-col gap-y-6">
                 {forum?.messages.map((message, index) => (
