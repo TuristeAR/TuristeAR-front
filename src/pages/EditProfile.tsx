@@ -59,21 +59,23 @@ const EditProfile = () => {
         location: user.location,
         birthdate: user.birthdate.slice(0, 10),
         profilePicture: null,
-        coverPicture: null
+        coverPicture: null,
       });
     }
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
     const { name, value, type, files } = e.target as HTMLInputElement;
 
     if (type === 'file' && files) {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
-        [name]: files[0],  // Asigna el archivo al campo correspondiente (profilePicture o coverPicture)
+        [name]: files[0], // Asigna el archivo al campo correspondiente (profilePicture o coverPicture)
       }));
     } else {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
@@ -111,12 +113,13 @@ const EditProfile = () => {
 
   const editProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setIsLoading(true)
     try {
-      const profilePictureUrl = await uploadImage(formData.profilePicture); // Espera el resultado de la carga de la imagen
-      const coverPictureUrl = await uploadImage(formData.coverPicture); // Espera el resultado de la carga de la imagen
+      const profilePictureUrl = formData.profilePicture ? await uploadImage(formData.profilePicture) : "";
+      const coverPictureUrl = formData.coverPicture ? await uploadImage(formData.coverPicture) : "";
       
-      const response = await fetch(`https://api-turistear.koyeb.app/editProfile/${user.id}`, {
+      const response = await fetch(`https://api-turistear.koyeb.app/editProfile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -126,8 +129,9 @@ const EditProfile = () => {
           location: formData.location,
           birthdate: formData.birthdate,
           profilePicture: profilePictureUrl,
-          coverPicture: coverPictureUrl
+          coverPicture: coverPictureUrl,
         }),
+        credentials: 'include'
       });
 
       if (!response.ok) {
@@ -206,13 +210,13 @@ const EditProfile = () => {
                   <label htmlFor={'profilePicture'} className="text-lg font-semibold">
                     Foto de perfil
                   </label>
-                  <input name={'profilePicture'} onChange={handleChange} type={'file'} />
+                  <input name={'profilePicture'} onChange={handleChange} type={'file'} accept={'image/*'} />
                 </div>
                 <div className={'flex flex-col gap-y-2'}>
                   <label htmlFor={'coverPicture'} className="text-lg font-semibold">
                     Foto de portada
                   </label>
-                  <input name={'coverPicture'} onChange={handleChange} type={'file'} />
+                  <input name={'coverPicture'} onChange={handleChange} type={'file'} accept={'image/*'} />
                 </div>
               </div>
               <div className={'flex justify-center mt-4'}>
