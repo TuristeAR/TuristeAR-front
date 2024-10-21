@@ -56,27 +56,28 @@ const EditProfile = () => {
         location: user.location,
         birthdate: user.birthdate.slice(0, 10),
         profilePicture: null,
-        coverPicture: null
+        coverPicture: null,
       });
     }
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
     const { name, value, type, files } = e.target as HTMLInputElement;
 
     if (type === 'file' && files) {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
-        [name]: files[0],  // Asigna el archivo al campo correspondiente (profilePicture o coverPicture)
+        [name]: files[0], // Asigna el archivo al campo correspondiente (profilePicture o coverPicture)
       }));
     } else {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
     }
   };
-
 
   const uploadImage = async (image: File) => {
     const formData = new FormData();
@@ -111,10 +112,9 @@ const EditProfile = () => {
     e.preventDefault();
 
     try {
-
       const profilePictureUrl = await uploadImage(formData.profilePicture); // Espera el resultado de la carga de la imagen
       const coverPictureUrl = await uploadImage(formData.coverPicture); // Espera el resultado de la carga de la imagen
-      
+
       const response = await fetch(`https://api-turistear.koyeb.app/editProfile/${user.id}`, {
         method: 'PUT',
         headers: {
@@ -125,7 +125,7 @@ const EditProfile = () => {
           location: formData.location,
           birthdate: formData.birthdate,
           profilePicture: profilePictureUrl,
-          coverPicture: coverPictureUrl
+          coverPicture: coverPictureUrl,
         }),
       });
 
@@ -138,8 +138,7 @@ const EditProfile = () => {
       setError(err.message);
     }
   };
-  
-  
+
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
@@ -151,17 +150,21 @@ const EditProfile = () => {
         <h1 className={'text-center text-5xl'}>Editar perfil</h1>
         <form className={'flex flex-col gap-y-4'} onSubmit={editProfile}>
           <div>
-            <label htmlFor="description" className={'font-semibold'}>Descripción</label>
+            <label htmlFor="description" className={'font-semibold'}>
+              Descripción
+            </label>
             <textarea
               name={'description'}
-              className={'border border-[#999999] text-black rounded-xl px-4 py-2 w-[100%]'}
+              className={'border border-[#999999] text-black rounded-xl px-4 py-2 w-full'}
               value={formData.description}
               onChange={handleChange}
             />
           </div>
           <div className={'grid grid-cols-2 gap-y-4'}>
             <div className={'flex flex-col gap-y-2'}>
-              <label htmlFor="location" className={'font-semibold'}>Ubicación</label>
+              <label htmlFor="location" className={'font-semibold'}>
+                Ubicación
+              </label>
               <select
                 name={'location'}
                 className={'border border-[#999999] text-black rounded-xl px-4 py-2 w-[90%]'}
@@ -176,21 +179,27 @@ const EditProfile = () => {
               </select>
             </div>
             <div className={'flex flex-col gap-y-2'}>
-              <label htmlFor="birthdate" className={'font-semibold'}>Fecha de nacimiento</label>
+              <label htmlFor="birthdate" className={'font-semibold'}>
+                Fecha de nacimiento
+              </label>
               <input
                 type={'date'}
                 name={'birthdate'}
-                className={'border border-[#999999] text-black rounded-xl px-4 py-2 w-[100%]'}
+                className={'border border-[#999999] text-black rounded-xl px-4 py-2 w-full'}
                 value={formData.birthdate}
                 onChange={handleChange}
               />
             </div>
             <div className={'flex flex-col gap-y-2'}>
-              <label htmlFor={'profilePicture'} className="text-lg font-semibold">Foto de perfil</label>
+              <label htmlFor={'profilePicture'} className="text-lg font-semibold">
+                Foto de perfil
+              </label>
               <input name={'profilePicture'} onChange={handleChange} type={'file'} />
             </div>
             <div className={'flex flex-col gap-y-2'}>
-              <label htmlFor={'coverPicture'} className="text-lg font-semibold">Foto de portada</label>
+              <label htmlFor={'coverPicture'} className="text-lg font-semibold">
+                Foto de portada
+              </label>
               <input name={'coverPicture'} onChange={handleChange} type={'file'} />
             </div>
           </div>
