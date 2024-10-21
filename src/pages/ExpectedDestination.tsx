@@ -247,25 +247,17 @@ const ExpectedDestination = () => {
                 onSwiper={(swiper) => console.log(swiper)}
                 onSlideChange={() => console.log('slide change')}
                 breakpoints={{
-                  // cuando el ancho de la ventana es >= 320px
-                  320: {
-                    slidesPerView: 1, // Mostrar 1 diapositiva
-                    spaceBetween: 10,
+                  300: {
+                    slidesPerView: 1,
                   },
-                  // cuando el ancho de la ventana es >= 480px
                   480: {
-                    slidesPerView: 2, // Mostrar 2 diapositivas
-                    spaceBetween: 10,
+                    slidesPerView: 2,
                   },
-                  // cuando el ancho de la ventana es >= 768px
                   768: {
-                    slidesPerView: 3, // Mostrar 3 diapositivas
-                    spaceBetween: 10,
+                    slidesPerView: 3,
                   },
-                  // cuando el ancho de la ventana es >= 1024px
                   1024: {
-                    slidesPerView: 4, // Mostrar 4 diapositivas
-                    spaceBetween: 10,
+                    slidesPerView: 4,
                   },
                 }}
               >
