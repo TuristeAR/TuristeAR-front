@@ -261,19 +261,25 @@ const ExpectedDestination = () => {
                   },
                 }}
               >
-                {pointsInterest.map((article, index) => (
-                  <SwiperSlide key={index}>
-                    <Link to={`/lugar-esperado/${article.googleId}`}>
-                      <ArticleCard
-                        key={article.id}
-                        title={article.name}
-                        images={article.reviews.length > 0 ? article.reviews[0].photos : []}
-                        rating={article.rating}
-                        address={article.address}
-                      />
-                    </Link>
-                  </SwiperSlide>
-                ))}
+                {pointsInterest.map(
+                  (article, index) =>
+                    article.reviews.length > 0 &&
+                    article.reviews[0].photos.length > 0 && (
+                      <div className="w-80" key={index}>
+                        <SwiperSlide>
+                          <Link to={`/lugar-esperado/${article.googleId}`}>
+                            <ArticleCard
+                              key={article.id}
+                              title={article.name}
+                              image={article.reviews[0].photos[0]}
+                              rating={article.rating}
+                              address={article.address}
+                            />
+                          </Link>
+                        </SwiperSlide>
+                      </div>
+                    ),
+                )}
               </Swiper>
               <div className="swiper-button-prev hidden"></div>
               <div className="hidden swiper-button-next"></div>
@@ -341,21 +347,25 @@ const ExpectedDestination = () => {
                   },
                 }}
               >
-                {gastronomyPlace?.map((article, index) => (
-                  <div className="w-80">
-                    <SwiperSlide key={index}>
-                      <Link to={`/lugar-esperado/${article.googleId}`}>
-                        <ArticleCard
-                          key={article.id}
-                          title={article.name}
-                          images={article.reviews.length > 0 ? article.reviews[0].photos : []}
-                          rating={article.rating}
-                          address={article.address}
-                        />
-                      </Link>
-                    </SwiperSlide>
-                  </div>
-                ))}
+                {gastronomyPlace.map(
+                  (article, index) =>
+                    article.reviews.length > 0 &&
+                    article.reviews[0].photos.length > 0 && (
+                      <div className="w-80" key={index}>
+                        <SwiperSlide>
+                          <Link to={`/lugar-esperado/${article.googleId}`}>
+                            <ArticleCard
+                              key={article.id}
+                              title={article.name}
+                              image={article.reviews[0].photos[0]}
+                              rating={article.rating}
+                              address={article.address}
+                            />
+                          </Link>
+                        </SwiperSlide>
+                      </div>
+                    ),
+                )}
               </Swiper>
               <div className="swiper-button-next"></div>
               <div className="swiper-button-prev"></div>
