@@ -3,7 +3,7 @@ import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
 import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 import { TravelCard } from '../components/Community/TravelCard';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import logoAnimado from '../assets/logoAnimado.json';
 import Lottie from 'lottie-react';
 import { get } from '../utilities/http.util';
@@ -200,7 +200,7 @@ const Profile = () => {
                   <div
                     className={`lg:w-[150px] w-[100px] lg:h-[150px] h-[100px] bg-gray border-white border-4`}
                   >
-                    <img src={user?.profilePicture} alt={user?.name} className="w-[100%]" />
+                    <img src={user?.profilePicture} alt={user?.name} className="w-[100%] h-[100%]" />
                   </div>
                   <div>
                     <a
@@ -249,7 +249,7 @@ const Profile = () => {
 
             {/* Content */}
             <div
-              className="lg:w-[100%] w-[90%] mx-auto lg:grid lg:grid-cols-2 lg:gap-6 gap-20"
+              className="lg:w-[100%] w-[90%] mx-auto lg:grid lg:grid-cols-2 lg:gap-6"
               ref={contentRef}
             >
               {activeItem === 'posts' &&

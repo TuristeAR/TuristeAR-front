@@ -141,7 +141,7 @@ const ExpectedDestination = () => {
   return (
     <>
       <Header />
-      <section className="w-full mb-5">
+      <section className="w-full mb-5 mt-12">
         <div className="sm:w-10/12 m-auto">
           <ImageGallery images={[province.images]} height={70}></ImageGallery>
           <div className="my-8 px-2 sm:px-0 flex flex-col gap-y-4">
