@@ -12,9 +12,7 @@ const PlaceList = ({places}) => {
               key={index}
               title={place.name}
               images={place.reviews.length > 0 ? place.reviews[0].photos : []}
-              description={place.name}
               rating={place.rating}
-              types={place.types}
               address={place.address}
             />
           ))}
