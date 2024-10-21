@@ -7,10 +7,7 @@ import React from 'react';
 describe('ArticleCard', () => {
   const mockProps = {
     title: 'Test Title',
-    images: [
-      'https://example.com/image1.jpg',
-      'https://example.com/image2.jpg',
-    ],
+    image: 'https://example.com/image1.jpg',
     description: 'This is a test description.',
     rating: 0,
     types: [],
@@ -28,13 +25,9 @@ describe('ArticleCard', () => {
 
     expect(screen.getByText(mockProps.address)).toBeInTheDocument();
 
-    const images = screen.getAllByRole('img');
-    expect(images.length).toBe(mockProps.images.length);
+    const image = screen.getAllByRole('img')[0];
 
-    mockProps.images.forEach((image, index) => {
-      expect(images[index]).toHaveAttribute('src', image);
-      expect(images[index]).toHaveAttribute('alt', mockProps.title);
-    });
-
+    expect(image).toHaveAttribute('src', mockProps.image);
+    expect(image).toHaveAttribute('alt', mockProps.title);
   });
 });
