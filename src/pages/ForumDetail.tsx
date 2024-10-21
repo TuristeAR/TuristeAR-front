@@ -6,8 +6,6 @@ import io from 'socket.io-client';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 
-const socket = io('https://api-turistear.koyeb.app');
-
 type Category = {
   id: number,
   description: string
@@ -43,11 +41,10 @@ const ForumDetail = () => {
 
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [forum, setForum] = useState<Forum | null>(null);
-  const [selectedImage, setSelectedImage] = useState(null as File);
-  const [message, setMessage]=useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [wasSent, setWasSent] = useState<boolean>(false);
-
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -82,20 +79,20 @@ const ForumDetail = () => {
           const forumData = await forumResponse.json();
           setForum(forumData);
         }
-        setLoading(false)
+        setLoading(false);
       } catch (error) {
-
+        console.error('Error fetching forum data:', error);
       }
     };
     fetchData();
-  }, []);
-
+  }, [id]);
 
   useEffect(() => {
+    const socket = io('https://api-turistear.koyeb.app');
+
     socket.on('receiveMessage', (newMessage) => {
       setForum((prevForum) => {
         if (!prevForum) return null;
-
         return {
           ...prevForum,
           messages: [...prevForum.messages, newMessage as Message],
@@ -104,13 +101,12 @@ const ForumDetail = () => {
     });
 
     return () => {
-      socket.off('receiveMessage');
+      socket.disconnect();
     };
   }, []);
 
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -141,26 +137,26 @@ const ForumDetail = () => {
         throw new Error(errorData.data.error || 'Error al cargar la imagen');
       }
       const result = await response.json();
-      console.log('Imagen subida:', result);
       return result.data.link; // Retorna el enlace de la imagen
     } catch (error) {
       console.error('Error en la carga de la imagen:', error);
-      throw error; // Lanza el error para manejarlo en createPublications
+      throw error; // Lanza el error para manejarlo en createMessage
     }
   };
 
-  const createMessage = async (forumId : number) => {
+  const createMessage = async (forumId: number) => {
     if (message && forumId && user) {
-      setWasSent(true)
+      setWasSent(true);
       const imageUrl = selectedImage ? await uploadImage(selectedImage) : null;
+      const socket = io('https://api-turistear.koyeb.app');
       socket.emit('createMessage', {
         content: message,
         images: imageUrl,
         userId: user.id,
         forumId: forumId,
       });
-      setWasSent(false)
-      setSelectedImage(null)
+      setWasSent(false);
+      setSelectedImage(null);
       setMessage('');
     }
   };
@@ -187,7 +183,7 @@ const ForumDetail = () => {
                 className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex flex-col p-4'}
               >
                 <h1 className="text-3xl">{forum?.name}</h1>
-                <h3>{forum.category.description}</h3>
+                <h3 className={'text-[#999999]'}>{forum.category.description}</h3>
               </div>
               <div className="overflow-scroll scrollbar-hidden h-[90%] lg:px-4 px-2 py-6  flex flex-col gap-y-6">
                 {forum?.messages.map((message, index) => (
