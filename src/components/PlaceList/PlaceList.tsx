@@ -11,7 +11,7 @@ const PlaceList = ({places}) => {
             <ArticleCard
               key={index}
               title={place.name}
-              images={place.reviews.length > 0 ? place.reviews[0].photos : []}
+              image={place.image}
               rating={place.rating}
               address={place.address}
             />
