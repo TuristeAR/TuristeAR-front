@@ -1,4 +1,3 @@
-import { CodeSquare } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const SearchHeroSection = ({
