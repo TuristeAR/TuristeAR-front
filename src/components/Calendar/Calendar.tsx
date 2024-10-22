@@ -92,7 +92,7 @@ export const Calendar = ({
   }, []);
 
   return (
-    <div className="relative">
+    <div className="">
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
