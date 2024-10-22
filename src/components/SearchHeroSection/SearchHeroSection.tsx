@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SearchHeroSection = ({
   onSearch,
@@ -7,6 +8,7 @@ const SearchHeroSection = ({
   onSearch: (value: { localidad: string; provincia: string }) => void;
   title: string;
 }) => {
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [provincias, setProvincias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
@@ -41,26 +43,30 @@ const SearchHeroSection = ({
   const handleInputChange = (e) => {
     const value = e.target.value;
     setQuery(value);
+    if (value == '') {
+      setProvinciasFiltradas([]);
+      setLocalidadesFiltradas([]);
+    } else {
+      // Filtrar provincias
+      const filteredProvincias = provincias.filter((provincia) =>
+        provincia.nombre
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .includes(value.toLowerCase()),
+      );
+      setProvinciasFiltradas(filteredProvincias);
 
-    // Filtrar provincias
-    const filteredProvincias = provincias.filter((provincia) =>
-      provincia.nombre
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .includes(value.toLowerCase()),
-    );
-    setProvinciasFiltradas(filteredProvincias);
-
-    // Filtrar localidades
-    const filteredLocalidades = localidades.filter((localidad) =>
-      localidad.nombre
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .includes(value.toLowerCase()),
-    );
-    setLocalidadesFiltradas(filteredLocalidades);
+      // Filtrar localidades
+      const filteredLocalidades = localidades.filter((localidad) =>
+        localidad.nombre
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .includes(value.toLowerCase()),
+      );
+      setLocalidadesFiltradas(filteredLocalidades);
+    }
   };
 
   // Manejar provincia
@@ -69,6 +75,7 @@ const SearchHeroSection = ({
     setProvinciasFiltradas([]);
     setLocalidadesFiltradas([]);
     onSearch({ localidad: '', provincia: provincia.nombre });
+    navigate(`/lugares/${provincia.nombre}`);
   };
 
   // Manejar localidad
@@ -79,6 +86,9 @@ const SearchHeroSection = ({
     setProvinciasFiltradas([]);
     setLocalidadesFiltradas([]);
     onSearch({ localidad: localidad.nombre, provincia: localidad.provincia.nombre });
+    const lat = localidad.centroide.lat || '';
+    const lon = localidad.centroide.lon || '';
+    navigate(`/lugares/${localidad.provincia.nombre}/${lat}/${lon}`);
   };
 
   return (
