@@ -17,6 +17,7 @@ export const Calendar = ({
   setActivities: any;
   deleteActivity: any;
 }) => {
+  console.log(activities)
   const [openNewEvent, setOpenNewEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null); // Cambia a null en lugar de false
 
@@ -64,6 +65,11 @@ export const Calendar = ({
     date: activity.fromDate.substring(0, 10),
     start: new Date(activity.fromDate),
     end: new Date(activity.toDate),
+    googleId: activity.place.googleId,
+    phoneNumber: activity.place.phoneNumber,
+    address: activity.place.address,
+    rating: activity.place.rating,
+    hours: activity.place.openingHours ? activity.place.openingHours : [],
   }));
 
   useEffect(() => {
