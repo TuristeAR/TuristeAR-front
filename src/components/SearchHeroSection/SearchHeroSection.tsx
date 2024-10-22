@@ -9,8 +9,9 @@ const SearchHeroSection = ({
 }) => {
   const [query, setQuery] = useState('');
   const [provincias, setProvincias] = useState([]);
+  const [localidades, setLocalidades] = useState([]);
   const [provinciasFiltradas, setProvinciasFiltradas] = useState([]);
-  const [localidadesSugerencias, setLocalidadesSugerencias] = useState([]);
+  const [localidadesFiltradas, setLocalidadesFiltradas] = useState([]);
 
   useEffect(() => {
     const fetchProvincias = async () => {
@@ -23,53 +24,60 @@ const SearchHeroSection = ({
       }
     };
 
+    const fetchLocalidades = async () => {
+      try {
+        const response = await fetch('https://apis.datos.gob.ar/georef/api/localidades?max=5000'); // Puedes ajustar el 'max' según tus necesidades
+        const data = await response.json();
+        setLocalidades(data.localidades);
+      } catch (error) {
+        console.error('Error al obtener las localidades:', error);
+      }
+    };
+
     fetchProvincias();
+    fetchLocalidades();
   }, []);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
     setQuery(value);
 
+    // Filtrar provincias
     const filteredProvincias = provincias.filter((provincia) =>
-      provincia.nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(value.toLowerCase()),
+      provincia.nombre
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .includes(value.toLowerCase()),
     );
     setProvinciasFiltradas(filteredProvincias);
 
-    if (value.length >= 1) {
-      fetchLocalidades(value);
-    } else {
-      setLocalidadesSugerencias([]);
-      setProvinciasFiltradas([])
-    }
+    // Filtrar localidades
+    const filteredLocalidades = localidades.filter((localidad) =>
+      localidad.nombre
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .includes(value.toLowerCase()),
+    );
+    setLocalidadesFiltradas(filteredLocalidades);
   };
 
-  const fetchLocalidades = async (value) => {
-    try {
-      const localidadesResponse = await fetch(
-        `https://apis.datos.gob.ar/georef/api/localidades?nombre=${value}&max=14`,
-      );
-      const localidadesData = await localidadesResponse.json();
-      setLocalidadesSugerencias(localidadesData.localidades);
-    } catch (error) {
-      console.error('Error al obtener las localidades:', error);
-    }
-  };
-
-  // Manejar selección de una provincia
+  // Manejar provincia
   const handleSelectProvincia = (provincia) => {
     setQuery(provincia.nombre);
     setProvinciasFiltradas([]);
-    setLocalidadesSugerencias([]);
+    setLocalidadesFiltradas([]);
     onSearch({ localidad: '', provincia: provincia.nombre });
   };
 
-  // Manejar selección de una localidad
+  // Manejar localidad
   const handleSelectLocalidad = (localidad) => {
     setQuery(
       `${localidad.nombre} - ${localidad.provincia.nombre} - ${localidad.departamento.nombre}`,
     );
-    setProvinciasFiltradas([]); // Oculta las sugerencias de provincias
-    setLocalidadesSugerencias([]); // Limpia las sugerencias de localidades
+    setProvinciasFiltradas([]);
+    setLocalidadesFiltradas([]);
     onSearch({ localidad: localidad.nombre, provincia: localidad.provincia.nombre });
   };
 
@@ -95,33 +103,44 @@ const SearchHeroSection = ({
           <div className="absolute z-20">
             {/* Lista de sugerencias de provincias */}
             {provinciasFiltradas.length > 0 && (
-              <ul className="bg-white overflow-y-auto w-[350px] md:w-[400px]">
-                {provinciasFiltradas.map((provincia) => (
-                  <li
-                    key={provincia.id}
-                    onClick={() => handleSelectProvincia(provincia)}
-                    className="mb-3 mx-2  cursor-pointer hover:bg-slate-50 h-[2rem]"
-                  >
-                    {provincia.nombre}
-                  </li>
-                ))}
-              </ul>
+              <>
+                <div className="bg-slate-50 overflow-y-auto w-[350px] md:w-[400px] italic font-light">
+                  Provincia
+                </div>
+                <ul className="bg-slate-50 overflow-y-auto w-[350px] md:w-[400px]">
+                  {provinciasFiltradas.map((provincia) => (
+                    <li
+                      key={provincia.id}
+                      onClick={() => handleSelectProvincia(provincia)}
+                      className="mb-3 mx-2 cursor-pointer hover:bg-orange hover:text-white"
+                    >
+                      {provincia.nombre}
+                    </li>
+                  ))}
+                </ul>
+              </>
             )}
 
             {/* Lista de sugerencias de localidades */}
-            {localidadesSugerencias.length > 0 && (
-              <ul className="bg-white overflow-y-auto w-[350px] md:w-[400px]">
-                {localidadesSugerencias.map((localidad) => (
-                  <li
-                    key={localidad.id}
-                    onClick={() => handleSelectLocalidad(localidad)}
-                    className="mb-3 mx-2 cursor-pointer hover:bg-slate-50"
-                  >
-                    {localidad.nombre} - {localidad.provincia.nombre} -{' '}
-                    {localidad.departamento.nombre}
-                  </li>
-                ))}
-              </ul>
+            {localidadesFiltradas.length > 0 && (
+              <>
+                <div className="bg-slate-50 overflow-y-auto w-[350px] md:w-[400px] italic font-light">
+                  Localidad
+                </div>
+
+                <ul className="bg-slate-50 overflow-y-auto w-[350px] md:w-[400px]">
+                  {localidadesFiltradas.map((localidad) => (
+                    <li
+                      key={localidad.id}
+                      onClick={() => handleSelectLocalidad(localidad)}
+                      className="mb-3 mx-2 cursor-pointer hover:bg-orange hover:text-white"
+                    >
+                      {localidad.nombre} - {localidad.provincia.nombre} -{' '}
+                      {localidad.departamento.nombre}
+                    </li>
+                  ))}
+                </ul>
+              </>
             )}
           </div>
         </div>
