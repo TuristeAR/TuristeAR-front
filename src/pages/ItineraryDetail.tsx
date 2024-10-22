@@ -1,10 +1,11 @@
 import { Link, useParams } from 'react-router-dom';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
 import { AddParticipantModal } from '../components/AddParticipantModal/AddParticipantModal';
 import { get } from '../utilities/http.util';
+import { Countdown } from '../components/Calendar/Countdown';
 
 type User = {
   id: number;
@@ -27,27 +28,36 @@ export const ItineraryDetail = () => {
 
   useEffect(() => {
     if (activities.length > 0) {
-      const fetchReviews = () => {
-        return get(
-          `https://api-turistear.koyeb.app/reviews/place/${activities[0].place.googleId}`,
-          {
-            'Content-Type': 'application/json',
-          },
-        );
+      const fetchReviewsForActivity = (googleId: string) => {
+        return get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
+          'Content-Type': 'application/json',
+        });
       };
 
       const fetchData = async () => {
         try {
-          const [reviewsData] = await Promise.all([fetchReviews()]);
-          setReviews(reviewsData);
+          const reviewsPromises = activities.map((activity) =>
+            fetchReviewsForActivity(activity.place.googleId),
+          );
+          const allReviews = await Promise.all(reviewsPromises);
+          setReviews(allReviews.flat());
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       };
-
       fetchData();
     }
   }, [activities]);
+
+  const randomImages = useMemo(() => {
+    const getRandomImages = () => {
+      const allPhotos = reviews.flatMap((review) => review.photos);
+      const shuffledPhotos = allPhotos.sort(() => 0.5 - Math.random());
+      return shuffledPhotos.slice(0, 3);
+    };
+
+    return getRandomImages();
+  }, [reviews]);
 
   const toggleInfo = (index: number) => {
     setShowedInfo((prevState) => {
@@ -55,21 +65,6 @@ export const ItineraryDetail = () => {
       newState[index] = !newState[index];
       return newState;
     });
-  };
-  const imgs = [
-    {
-      img: [
-        '/assets/san-nicolas-buenos-aires.webp',
-        '/assets/san-nicolas-buenos-aires.webp',
-        '/assets/san-nicolas-buenos-aires.webp',
-      ],
-    },
-  ];
-
-  const getRandomImages = () => {
-    const allPhotos = reviews.flatMap((review) => review.photos);
-    const shuffledPhotos = allPhotos.sort(() => 0.5 - Math.random());
-    return shuffledPhotos.slice(0, 3);
   };
 
   const formatTime = (dateString: string) => {
@@ -130,7 +125,6 @@ export const ItineraryDetail = () => {
     console.log('UserNav new: ', usersOldNav);
   };
 
-  const randomImages = getRandomImages();
 
   return (
     <>
@@ -148,10 +142,9 @@ export const ItineraryDetail = () => {
                 <div className="border-b pb-2 border-gray-50 ">
                   <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
                 </div>
-                {/*<div>*/}
-                {/*  <h2 className="font-semibold text-md my-2">Información general</h2>*/}
-                {/*  <p className="ml-4 text-sm"></p>*/}
-                {/*</div>*/}
+                <div>
+                  <Countdown fromDate={itinerary?.fromDate} />
+                </div>
               </div>
               {/* Calendario, Participantes */}
               <div className="flex flex-col gap-y-4">
