@@ -4,6 +4,7 @@ import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import { useState, useEffect } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
 import { AddParticipantModal } from '../components/AddParticipantModal/AddParticipantModal';
+import { get } from '../utilities/http.util';
 
 type User = {
   id: number;
@@ -20,7 +21,33 @@ export const ItineraryDetail = () => {
 
   const [showedInfo, setShowedInfo] = useState<boolean[]>([]);
 
+  const [reviews, setReviews] = useState<any[]>([]);
+
   let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
+
+  useEffect(() => {
+    if (activities.length > 0) {
+      const fetchReviews = () => {
+        return get(
+          `https://api-turistear.koyeb.app/reviews/place/${activities[0].place.googleId}`,
+          {
+            'Content-Type': 'application/json',
+          },
+        );
+      };
+
+      const fetchData = async () => {
+        try {
+          const [reviewsData] = await Promise.all([fetchReviews()]);
+          setReviews(reviewsData);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [activities]);
 
   const toggleInfo = (index: number) => {
     setShowedInfo((prevState) => {
@@ -38,6 +65,12 @@ export const ItineraryDetail = () => {
       ],
     },
   ];
+
+  const getRandomImages = () => {
+    const allPhotos = reviews.flatMap((review) => review.photos);
+    const shuffledPhotos = allPhotos.sort(() => 0.5 - Math.random());
+    return shuffledPhotos.slice(0, 3);
+  };
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -89,6 +122,7 @@ export const ItineraryDetail = () => {
 
     fetchData();
   }, [itineraryId]);
+
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
     usersOldNav = updatedUsers;
@@ -96,15 +130,15 @@ export const ItineraryDetail = () => {
     console.log('UserNav new: ', usersOldNav);
   };
 
+  const randomImages = getRandomImages();
+
   return (
     <>
       <Header />
       <section>
         <div className="container mx-auto max-w-[980px] flex flex-col justify-center z-30 relative p-4">
           <div className="w-full my-8">
-            {imgs.map((img, index) => {
-              return <ImageGallery key={index} images={img.img} height={70} />;
-            })}
+            <ImageGallery images={randomImages} height={70} />
           </div>
 
           <div className="w-full  my-2">
