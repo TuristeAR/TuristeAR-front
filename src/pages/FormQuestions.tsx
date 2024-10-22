@@ -7,7 +7,7 @@ import 'react-date-range/dist/theme/default.css';
 import { DateRangePicker } from 'react-date-range';
 import { es } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
-import { get, post } from '../utilities/http.util';
+import { get, getWithoutCredentials, post } from '../utilities/http.util';
 import {
   Baby,
   Banknote,
@@ -45,9 +45,14 @@ interface FormData {
 interface Province {
   id: number;
   name: string;
+  georefId: string;
 }
 
 const questions = [
+  {
+    question: 'Destino',
+    type: 'map',
+  },
   {
     question: 'Fecha del viaje y Duración del viaje',
     type: 'calendar',
@@ -184,6 +189,9 @@ const FormQuestions = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [dialogWindowOpen, setDialogWindowOpen] = useState(false);
   const [selectedProvince, setSelectedProvince] = useState<Province>();
+  const [localities, setLocalities] = useState<any[]>([]);
+  const [selectedLocality, setSelectedLocality] = useState<string>('');
+  const [searchLocality, setSearchLocality] = useState('');
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [formData, setFormData] = useState<FormData>({
@@ -233,6 +241,14 @@ const FormQuestions = () => {
     const province = provinces.find((p) => p.id === id);
     setSelectedProvince(province);
     formData.provinceId = province.id;
+    getWithoutCredentials(
+      `https://apis.datos.gob.ar/georef/api/asentamientos?provincia=${province.georefId}&max=5000`,
+      {
+        'Content-Type': 'application/json',
+      },
+    ).then((r) => {
+      setLocalities(r.asentamientos);
+    });
   };
 
   const handleSingleSelection = (name: keyof FormData, value: number) => {
@@ -257,6 +273,18 @@ const FormQuestions = () => {
   const handleNextQuestion = async () => {
     switch (currentQuestion) {
       case 0:
+        if (!formData.provinceId) {
+          setErrorMessage('Tenés que seleccionar una provincia');
+          return;
+        }
+
+        if (!selectedLocality) {
+          setErrorMessage('Tenés que seleccionar un lugar para visitar');
+          return;
+        }
+
+        break;
+      case 1:
         const fromDate = new Date(formData.fromDate);
 
         const toDate = new Date(formData.toDate);
@@ -278,7 +306,7 @@ const FormQuestions = () => {
         setErrorMessage('');
 
         break;
-      case 1:
+      case 2:
         if (!formData.economy) {
           setErrorMessage('Tenés que seleccionar una opción');
           return;
@@ -287,7 +315,7 @@ const FormQuestions = () => {
         setErrorMessage('');
 
         break;
-      case 2:
+      case 3:
         if (!formData.weather) {
           setErrorMessage('Tenés que seleccionar una opción');
           return;
@@ -296,7 +324,7 @@ const FormQuestions = () => {
         setErrorMessage('');
 
         break;
-      case 3:
+      case 4:
         if (formData.types.length === 0) {
           setErrorMessage('Tenés que seleccionar al menos una opción');
           return;
@@ -305,7 +333,7 @@ const FormQuestions = () => {
         setErrorMessage('');
 
         break;
-      case 4:
+      case 5:
         if (!formData.company) {
           setErrorMessage('Tenés que seleccionar una opción');
           return;
@@ -558,16 +586,13 @@ const FormQuestions = () => {
             ) : (
               <form className="flex flex-col w-full max-w-full items-center justify-center bg-white p-4 gap-y-6 md:gap-y-4 min-h-[500px]">
                 <ProgressBar currentStep={currentStep} />
-                <div>
-                  {questions[currentQuestion].type === 'calendar' ? (
-                    <div className="flex flex-col md:flex-row w-full">
-                      <div className="flex flex-col items-center relative">
-                        <MapaArg onProvinceClick={handleProvinceClick} />
-                      </div>
-                      <div className="flex flex-col gap-y-4 justify-center items-center w-full">
-                        <h2 className="text-2xl sm:text-3xl font-semibold text-primary-4">
-                          Armemos tu próxima aventura
-                        </h2>
+                {questions[currentQuestion].type === 'map' ? (
+                  <div className="flex flex-col gap-y-4 justify-center items-center w-full">
+                    <h2 className="text-2xl sm:text-3xl font-semibold text-primary-4">
+                      Armemos tu próxima aventura
+                    </h2>
+                    <div className="w-full flex flex-col md:flex-row justify-start">
+                      <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:justify-end md:items-end">
                         <div className="h-10 text-center">
                           {selectedProvince ? (
                             <span className="text-2xl font-bold text-primary-2">
@@ -575,123 +600,79 @@ const FormQuestions = () => {
                             </span>
                           ) : null}
                         </div>
-                        <div>
-                          <span className="block text-lg font-medium leading-6 text-gray-900 my-2">
-                            Fecha del viaje
-                          </span>
-                          <DateRangePicker
-                            editableDateInputs={true}
-                            onChange={handleDateSelect}
-                            moveRangeOnFirstSelection={false}
-                            ranges={state}
-                            locale={es}
-                            retainEndDateOnFirstSelection={false}
-                            staticRanges={[]}
-                            inputRanges={[]}
-                          />
-                        </div>
-                        <div>
-                          <span>
-                            {state[0].endDate && state[0].startDate && (
-                              <p className="text-xl">
-                                Tu viaje va a durar
-                                <strong>
-                                  {' '}
-                                  {state[0].endDate && state[0].startDate
-                                    ? Math.ceil(
-                                        (state[0].endDate.getTime() -
-                                          state[0].startDate.getTime()) /
-                                          (1000 * 60 * 60 * 24),
-                                      )
-                                    : 0}{' '}
-                                  días
-                                </strong>
-                              </p>
-                            )}
-                          </span>
-                        </div>
-                        <div className="flex flex-col items-center gap-x-4">
-                          <button
-                            type="button"
-                            className="btn-question"
-                            onClick={handleNextQuestion}
-                          >
-                            Siguiente pregunta
-                          </button>
-                          {errorMessage && (
-                            <div className="error-message" role="alert">
-                              {errorMessage}
-                            </div>
-                          )}
-                        </div>
+                        <MapaArg onProvinceClick={handleProvinceClick} />
                       </div>
-                    </div>
-                  ) : questions[currentQuestion].type === 'icon' ? (
-                    <div className="flex flex-col items-center gap-4">
-                      <h3 className="text-primary-4 font-bold text-xl text-center">
-                        {questions[currentQuestion].question}
-                      </h3>
-                      <div className="flex flex-wrap justify-center gap-5">
-                        {questions[currentQuestion].options?.map((option: any, index: number) => (
-                          <div key={index}>
-                            <div
-                              className={`w-40 h-40 flex flex-col justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300 ${
-                                questions[currentQuestion].multipleSelection
-                                  ? formData.types.includes(option.data as string)
-                                    ? 'bg-primary bg-opacity-80'
-                                    : ''
-                                  : formData[questions[currentQuestion].name as keyof FormData] ===
-                                      option.data
-                                    ? 'bg-primary bg-opacity-80'
-                                    : ''
-                              }`}
-                              onClick={() =>
-                                questions[currentQuestion].multipleSelection
-                                  ? handleMultipleSelection(option.data as string)
-                                  : handleSingleSelection(
-                                      questions[currentQuestion].name as keyof FormData,
-                                      option.data as number,
-                                    )
-                              }
-                            >
+                      <div className="w-full md:w-1/2 flex flex-col items-center gap-x-4">
+                        {localities.length > 0 && (
+                          <div className="w-72">
+                            <span className="block text-lg font-medium leading-6 text-gray-900 my-2">
+                              ¿Qué lugar querés visitar?
+                            </span>
+                            <div className="flex flex-col items-center">
                               <input
-                                type={
-                                  questions[currentQuestion].multipleSelection
-                                    ? 'checkbox'
-                                    : 'radio'
-                                }
-                                id={`option-${index}`}
-                                checked={
-                                  questions[currentQuestion].multipleSelection
-                                    ? formData.types.includes(option.data as string)
-                                    : formData[
-                                        questions[currentQuestion].name as keyof FormData
-                                      ] === option.data
-                                }
-                                onChange={() =>
-                                  questions[currentQuestion].multipleSelection
-                                    ? handleMultipleSelection(option.data as string)
-                                    : handleSingleSelection(
-                                        questions[currentQuestion].name as keyof FormData,
-                                        option.data as number,
-                                      )
-                                }
-                                className="hidden"
+                                type="text"
+                                placeholder="Buscar localidad..."
+                                className="w-72 h-10 border border-gray-300 rounded-md px-2 mb-2"
+                                value={searchLocality}
+                                onChange={(e) => setSearchLocality(e.target.value)}
                               />
-                              <div className="mx-auto">{option.src}</div>
+                              {searchLocality && (
+                                <div className="z-20 w-72">
+                                  {localities.length > 0 && (
+                                    <ul className="bg-slate-50 overflow-y-auto w-72 max-h-[200px] mb-4">
+                                      {[
+                                        ...new Map(
+                                          localities.map((item) => [item.nombre, item]),
+                                        ).values(),
+                                      ]
+                                        .filter((locality) =>
+                                          locality.nombre
+                                            .toLowerCase()
+                                            .includes(searchLocality.toLowerCase()),
+                                        )
+                                        .map((locality) => (
+                                          <li
+                                            key={locality.id}
+                                            onClick={() => {
+                                              setSelectedLocality(locality.nombre);
+                                              setSearchLocality('');
+                                            }}
+                                            className="mx-1 p-1 cursor-pointer hover:bg-orange hover:text-white"
+                                          >
+                                            {locality.nombre}
+                                          </li>
+                                        ))}
+                                    </ul>
+                                  )}
+                                </div>
+                              )}
+                              <select
+                                className="w-72 h-10 border border-gray rounded-md px-2"
+                                onChange={(e) => {
+                                  setSelectedLocality(e.target.value);
+                                }}
+                              >
+                                <option value="">Seleccioná una localidad</option>
+                                {localities.map((locality) => (
+                                  <option
+                                    key={locality.id}
+                                    defaultValue={locality.nombre}
+                                    selected={locality.nombre === selectedLocality}
+                                  >
+                                    {locality.nombre}
+                                  </option>
+                                ))}
+                              </select>
                             </div>
-                            <div className="w-40 p-2 border border-gray text-center">
-                              {option.alt}
-                            </div>
+                            <button
+                              type="button"
+                              className="btn-question w-full my-4"
+                              onClick={handleNextQuestion}
+                            >
+                              Continuar
+                            </button>
                           </div>
-                        ))}
-                      </div>
-                      <div className="flex flex-col items-center gap-x-4">
-                        <button type="button" className="btn-question" onClick={handleNextQuestion}>
-                          {currentQuestion < questions.length - 1
-                            ? 'Siguiente pregunta'
-                            : 'Finalizar'}
-                        </button>
+                        )}
                         {errorMessage && (
                           <div className="error-message" role="alert">
                             {errorMessage}
@@ -699,8 +680,127 @@ const FormQuestions = () => {
                         )}
                       </div>
                     </div>
-                  ) : null}
-                </div>
+                  </div>
+                ) : questions[currentQuestion].type === 'calendar' ? (
+                  <div className="flex flex-col gap-y-4 justify-center items-center w-full">
+                    <h2 className="w-full md:w-[700px] text-center text-2xl sm:text-3xl font-semibold text-primary-4">
+                      Elegí la fecha para tu viaje a {selectedProvince?.name}
+                    </h2>
+                    <DateRangePicker
+                      editableDateInputs={true}
+                      onChange={handleDateSelect}
+                      moveRangeOnFirstSelection={false}
+                      ranges={state}
+                      locale={es}
+                      retainEndDateOnFirstSelection={false}
+                      staticRanges={[]}
+                      inputRanges={[]}
+                    />
+                    <div>
+                      <span>
+                        {state[0].endDate && state[0].startDate && (
+                          <p className="text-xl">
+                            Tu viaje va a durar
+                            <strong>
+                              {' '}
+                              {state[0].endDate && state[0].startDate
+                                ? Math.ceil(
+                                    (state[0].endDate.getTime() - state[0].startDate.getTime()) /
+                                      (1000 * 60 * 60 * 24),
+                                  )
+                                : 0}{' '}
+                              días
+                            </strong>
+                          </p>
+                        )}
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center gap-x-4">
+                      <button
+                        type="button"
+                        className="btn-question w-48 text-[14px]"
+                        onClick={handleNextQuestion}
+                      >
+                        Continuar
+                      </button>
+                      {errorMessage && (
+                        <div className="error-message" role="alert">
+                          {errorMessage}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : questions[currentQuestion].type === 'icon' ? (
+                  <div className="flex flex-col items-center gap-4">
+                    <h3 className="text-primary-4 font-bold text-xl text-center">
+                      {questions[currentQuestion].question}
+                    </h3>
+                    <div className="flex flex-wrap justify-center gap-5">
+                      {questions[currentQuestion].options?.map((option: any, index: number) => (
+                        <div key={index}>
+                          <div
+                            className={`w-40 h-40 flex flex-col justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300 ${
+                              questions[currentQuestion].multipleSelection
+                                ? formData.types.includes(option.data as string)
+                                  ? 'bg-primary bg-opacity-80'
+                                  : ''
+                                : formData[questions[currentQuestion].name as keyof FormData] ===
+                                    option.data
+                                  ? 'bg-primary bg-opacity-80'
+                                  : ''
+                            }`}
+                            onClick={() =>
+                              questions[currentQuestion].multipleSelection
+                                ? handleMultipleSelection(option.data as string)
+                                : handleSingleSelection(
+                                    questions[currentQuestion].name as keyof FormData,
+                                    option.data as number,
+                                  )
+                            }
+                          >
+                            <input
+                              type={
+                                questions[currentQuestion].multipleSelection ? 'checkbox' : 'radio'
+                              }
+                              id={`option-${index}`}
+                              checked={
+                                questions[currentQuestion].multipleSelection
+                                  ? formData.types.includes(option.data as string)
+                                  : formData[questions[currentQuestion].name as keyof FormData] ===
+                                    option.data
+                              }
+                              onChange={() =>
+                                questions[currentQuestion].multipleSelection
+                                  ? handleMultipleSelection(option.data as string)
+                                  : handleSingleSelection(
+                                      questions[currentQuestion].name as keyof FormData,
+                                      option.data as number,
+                                    )
+                              }
+                              className="hidden"
+                            />
+                            <div className="mx-auto">{option.src}</div>
+                          </div>
+                          <div className="w-40 p-2 border border-gray text-center">
+                            {option.alt}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex flex-col items-center gap-x-4">
+                      <button type="button" className="btn-question" onClick={handleNextQuestion}>
+                        {currentQuestion < questions.length - 1
+                          ? 'Siguiente pregunta'
+                          : 'Finalizar'}
+                      </button>
+                      {errorMessage && (
+                        <div className="error-message" role="alert">
+                          {errorMessage}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : null}
               </form>
             )}
           </div>
