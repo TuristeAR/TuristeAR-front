@@ -4,6 +4,7 @@ import { MapaArg } from '../components/Destinations/MapaArg';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { get } from '../utilities/http.util';
+import SearchHeroSection from '../components/SearchHeroSection/SearchHeroSection';
 
 type Province = {
   id: number;
@@ -94,24 +95,11 @@ const Destinations = () => {
     <>
       <Header />
       <section>
-        <div className="bg-custom-whiteBlue15 w-full h-[120px]">
-          <div className="container mx-auto h-full flex flex-col items-center justify-center gap-y-4 ">
-            <p className="px-8 lg:px-0 max-w-[600px] text-center font-semibold tracking-tight">
-              Si ya sabés cuál es tu destino, seleccionalo para descubrir los mejores lugares y
-              actividades
-            </p>
-            <div>
-              <form action="" className="flex items-center relative">
-                <input
-                  className=" w-[350px] md:w-[400px] rounded outline-none text-sm md:text-md p-1 pr-10"
-                  type="text"
-                  placeholder="Buscar por provincia, localidad o tipo de lugar..."
-                />
-                <img src="/assets/search.svg" className="absolute right-2" alt="" />
-              </form>
-            </div>
-          </div>
-        </div>
+        <SearchHeroSection
+          title={`Si ya sabés cuál es tu destino, seleccionalo para descubrir los mejores lugares y
+              actividades`}
+          onSearch={() => {}}
+        ></SearchHeroSection>
         <div className="md:flex flex-wrap my-6 container mx-auto gap-1 p-4">
           <div className="flex-1 md:w-[400px] xl:w-auto">
             <div className="flex justify-center items-center" onClick={scrollToSection}>
@@ -187,7 +175,7 @@ const Destinations = () => {
                       </div>
                       <div>
                         <Link to={`/lugar-esperado/${item.googleId}`}>
-                        <button className="btn-blue">Ver más publicaciones</button>
+                          <button className="btn-blue">Ver más publicaciones</button>
                         </Link>
                       </div>
                     </div>

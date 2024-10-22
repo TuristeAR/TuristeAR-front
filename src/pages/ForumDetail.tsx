@@ -88,6 +88,7 @@ const ForumDetail = () => {
   }, [id]);
 
   useEffect(() => {
+
     const socket = io('https://api-turistear.koyeb.app');
 
     socket.on('receiveMessage', (newMessage) => {
@@ -137,10 +138,10 @@ const ForumDetail = () => {
         throw new Error(errorData.data.error || 'Error al cargar la imagen');
       }
       const result = await response.json();
-      return result.data.link; // Retorna el enlace de la imagen
+      return result.data.link;
     } catch (error) {
       console.error('Error en la carga de la imagen:', error);
-      throw error; // Lanza el error para manejarlo en createMessage
+      throw error;
     }
   };
 
@@ -158,6 +159,10 @@ const ForumDetail = () => {
       setWasSent(false);
       setSelectedImage(null);
       setMessage('');
+
+      return () => {
+        socket.disconnect();
+      };
     }
   };
 

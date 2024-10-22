@@ -59,21 +59,23 @@ const EditProfile = () => {
         location: user.location,
         birthdate: user.birthdate.slice(0, 10),
         profilePicture: null,
-        coverPicture: null
+        coverPicture: null,
       });
     }
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
     const { name, value, type, files } = e.target as HTMLInputElement;
 
     if (type === 'file' && files) {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
-        [name]: files[0],  // Asigna el archivo al campo correspondiente (profilePicture o coverPicture)
+        [name]: files[0], // Asigna el archivo al campo correspondiente (profilePicture o coverPicture)
       }));
     } else {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
@@ -111,6 +113,7 @@ const EditProfile = () => {
 
   const editProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setIsLoading(true)
     try {
       const profilePictureUrl = formData.profilePicture ? await uploadImage(formData.profilePicture) : "";
@@ -126,7 +129,7 @@ const EditProfile = () => {
           location: formData.location,
           birthdate: formData.birthdate,
           profilePicture: profilePictureUrl,
-          coverPicture: coverPictureUrl
+          coverPicture: coverPictureUrl,
         }),
         credentials: 'include'
       });
