@@ -37,18 +37,6 @@ type Place = {
   reviews: Review[];
 };
 
-type PlaceCard = {
-  id: number;
-  googleId: string;
-  name: string;
-  types: string[];
-  rating: number;
-  address: string;
-  reviews: {
-    id: number;
-    photos: string[];
-  }[];
-};
 const Places = () => {
   const [placesFound, setPlacesFound] = useState<Place[]>([]);
   const [province, setProvince] = useState<Province>(null);
@@ -57,13 +45,14 @@ const Places = () => {
   const [count] = useState(15);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [displayedPlaces, setDisplayedPlaces] = useState<Place[]>([]);
 
   useEffect(() => {
     if (!provinceName) return;
 
     const fetchProvinces = async () => {
       try {
-        const response = await get(`https://api-turistear.koyeb.app/provinces/${provinceName}/0`, {
+        const response = await get(`https://api-turistear.koyeb.app/provinces/${provinceName}`, {
           'Content-Type': 'application/json',
         });
         setProvince(response);
@@ -79,12 +68,10 @@ const Places = () => {
     const fetchPlaces = async () => {
       if (province) {
         try {
-          const response = await get(
-            `http://localhost:3001/places/province?provinceId=${province.id}&count=${count}&offset=${offset}`,
-            { 'Content-Type': 'application/json' },
-          );
-          setPlacesFound((prevPlaces) => [...prevPlaces, ...response.data]);
-          setIsLoadingMore(false);
+          const response = await fetch(`http://localhost:3001/province/places/${province.id}`);
+          const data = await response.json();
+          setPlacesFound(data);
+          setDisplayedPlaces(data.slice(0, count));
         } catch (error) {
           console.error('Error fetching places:', error);
         }
@@ -92,7 +79,7 @@ const Places = () => {
     };
 
     fetchPlaces();
-  }, [province, offset]);
+  }, [province, count]);
 
   const handleSearch = ({ localidad, provincia }) => {
     console.log('Localidad seleccionada:', localidad);
@@ -101,13 +88,19 @@ const Places = () => {
 
   const handleLoadMore = () => {
     setIsLoadingMore(true);
-    setOffset((prevOffset) => prevOffset + count);
+    const newOffset = offset + count;
+    const newPlaces = placesFound.slice(0, newOffset);
+    setDisplayedPlaces(newPlaces);
+    setOffset(newOffset);
+    setIsLoadingMore(false);
   };
 
   if (!province) {
-    return <div className="w-screen h-screen flex">
-    <Lottie className="w-[20rem] m-auto" animationData={logoAnimado} />
-  </div>;
+    return (
+      <div className="w-screen h-screen flex">
+        <Lottie className="w-[20rem] m-auto" animationData={logoAnimado} />
+      </div>
+    );
   }
 
   return (
@@ -118,7 +111,7 @@ const Places = () => {
         onSearch={handleSearch}
         title={`Puntos de interés de ${province.name}`}
       ></SearchHeroSection>
-      {/* <section>
+      {/*  <section>
         <div className=" mx-auto">
           <div className="w-full">
             <GoogleMapComponent
@@ -135,13 +128,11 @@ const Places = () => {
           <div className="grid grid-cols-12">
             <CategoryFilter provinceName={province.name}></CategoryFilter>
             <div className="col-span-12 md:col-span-9">
-              <PlaceList places={placesFound}></PlaceList>
+              <PlaceList places={displayedPlaces}></PlaceList>
 
               <div className="w-full text-center">
-                {placesFound.length < count || !(placesFound.length > 0) ? (
-                  <></>
-                ) : (
-                  <button onClick={handleLoadMore} className="btn-blue mr-3">
+                {displayedPlaces.length < placesFound.length && (
+                  <button onClick={handleLoadMore} className="btn-blue mr-3 mt-5">
                     {isLoadingMore ? 'Cargando más...' : 'Ver más publicaciones'}
                   </button>
                 )}
