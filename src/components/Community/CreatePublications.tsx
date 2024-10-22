@@ -46,7 +46,7 @@ export const CreatePublications = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await fetch('http://localhost:3001/user-itineraries', {
+        const categoriesResponse = await fetch('https://api-turistear.koyeb.app/user-itineraries', {
           method: 'GET',
           credentials: 'include',
         });
@@ -125,6 +125,7 @@ export const CreatePublications = () => {
     setIsLoading(true);
     try {
       const imageUrl = formData.images ? await uploadImage(formData.images) : "";
+
       const response = await fetch('https://api-turistear.koyeb.app/createPublication', {
         method: 'POST',
         headers: {
@@ -133,7 +134,7 @@ export const CreatePublications = () => {
         body: JSON.stringify({
           description : formData.description,
           images: imageUrl,
-          categoryId: formData.categoryId
+          itineraryId: formData.categoryId
         }),
         credentials: 'include',
       });
@@ -205,7 +206,7 @@ export const CreatePublications = () => {
                     </div>
                     <div className={'grid grid-cols-2 gap-x-6'}>
                       <div className={'flex flex-col'}>
-                        <label className="text-lg font-semibold">Categoría</label>
+                        <label className="text-lg font-semibold">Itinerario</label>
                         <select
                           className={'border border-[#999999] pl-2 rounded-xl'}
                           name={'categoryId'}
