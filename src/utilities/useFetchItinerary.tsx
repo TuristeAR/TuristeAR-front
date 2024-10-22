@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 
 const useFetchItinerary = (itineraryId: string | null) => {
   const [itinerary, setItinerary] = useState(null);
-  const [activities, setActivities] = useState<{ id: number; name: string }[]>([]);
+  const [activities, setActivities] = useState<{
+    place: any; id: number; name: string 
+}[]>([]);
 
   useEffect(() => {
     const fetchItinerary = async () => {
