@@ -227,7 +227,7 @@
     margin: 20px 0;
     position: relative;
     flex-wrap: wrap;
-    width: 800px;
+    width: 900px;
 }
 
 .progress-bar::before {
@@ -294,6 +294,10 @@
         align-items: center;
     }
 
+    .step {
+        min-width: 50px;
+    }
+
     .step span {
         display: none;
     }
@@ -302,10 +306,6 @@
 @media (max-width: 400px) {
     .progress-bar::before {
         top: 40%;
-    }
-
-    .step {
-        min-width: 20px;
     }
 
     .step::before {
