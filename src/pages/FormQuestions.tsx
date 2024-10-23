@@ -452,6 +452,15 @@ const FormQuestions = () => {
                         </span>
                       )}
                       <span className="text-center text-xl my-1">
+                        Lugares a visitar:{' '}
+                        {formData.localities.map((locality, index) => (
+                          <strong key={locality}>
+                            {locality}
+                            {index < formData.localities.length - 1 && ', '}
+                          </strong>
+                        ))}
+                      </span>
+                      <span className="text-center text-xl my-1">
                         Fecha de inicio:{' '}
                         <strong>{new Date(formData.fromDate).toLocaleDateString('es-ES')}</strong>
                       </span>
@@ -476,11 +485,11 @@ const FormQuestions = () => {
                           className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 p-2 border border-gray"
                         >
                           {
-                            questions[1].options.find((option) => option.data === formData.economy)
+                            questions[2].options.find((option) => option.data === formData.economy)
                               ?.src
                           }
                           {
-                            questions[1].options.find((option) => option.data === formData.economy)
+                            questions[2].options.find((option) => option.data === formData.economy)
                               ?.alt
                           }
                         </div>
