@@ -269,6 +269,8 @@ const FormQuestions = () => {
           return;
         }
 
+        setErrorMessage('');
+
         break;
       case 1:
         const fromDate = new Date(formData.fromDate);
