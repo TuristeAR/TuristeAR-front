@@ -34,7 +34,7 @@ const CategoryFilter = ({ provinceName, types, selectedTypes, onTypeChange }) =>
   const fetchLocalidades = async (municipioId) => {
     try {
       const response = await fetch(
-        `https://apis.datos.gob.ar/georef/api/localidades?municipi=${municipioId}&campos=id,nombre&formato=json`,
+        `https://apis.datos.gob.ar/georef/api/localidades?departamento=${municipioId}&campos=id,nombre&formato=json`
       );
       if (!response.ok) {
         throw new Error('Error fetching data');
@@ -45,6 +45,7 @@ const CategoryFilter = ({ provinceName, types, selectedTypes, onTypeChange }) =>
       console.log(err.message);
     }
   };
+  
 
   const handleMunicipioClick = (municipioId) => {
     fetchLocalidades(municipioId);
