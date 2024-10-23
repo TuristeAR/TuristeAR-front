@@ -74,10 +74,13 @@ export const ItineraryDetail = () => {
   };
 
   const activitiesByDay = activities.reduce((acc: any, activity: any) => {
-    const date = new Date(activity.fromDate).toISOString().split('T')[0]; // Obtener solo la fecha
+    // Usar toLocaleDateString para obtener solo la fecha sin zona horaria
+    const date = new Date(activity.fromDate).toLocaleDateString();
+
     if (!acc[date]) {
       acc[date] = [];
     }
+
     acc[date].push(activity);
     return acc;
   }, {});
@@ -124,7 +127,6 @@ export const ItineraryDetail = () => {
     console.log('Usuarios actualizados en el padre:', updatedUsers);
     console.log('UserNav new: ', usersOldNav);
   };
-
 
   return (
     <>
@@ -179,10 +181,11 @@ export const ItineraryDetail = () => {
             {/*Itinerario */}
             <div className="mb-10">
               <h2 className="font-semibold text-md my-2">Itinerario de viaje</h2>
-              {/* Días */}
-              {activities.map((item: any, index: number) => {
-                const dateKey = new Date(item.fromDate).toISOString().split('T')[0];
-                const fecha = new Date(item.fromDate);
+
+              {/* Recorre los días en lugar de las actividades */}
+              {Object.keys(activitiesByDay).map((dateKey, index) => {
+                const activitiesForDay = activitiesByDay[dateKey];
+                const fecha = new Date(dateKey); // Ya tienes la clave como la fecha
 
                 return (
                   <div key={index}>
@@ -191,7 +194,8 @@ export const ItineraryDetail = () => {
                       onClick={() => toggleInfo(index)}
                     >
                       <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md">
-                        Dia: {index + 1}
+                        {/* Mostrar el número de día en función del índice */}
+                        Día: {index + 1}
                         <div className="icons">
                           <svg
                             className={`${!showedInfo[index] ? 'block' : 'hidden'}`}
@@ -220,13 +224,12 @@ export const ItineraryDetail = () => {
                     {/* Info */}
                     <div className={`${showedInfo[index] ? 'block' : 'hidden'}`}>
                       <div className="relative px-1 sm:px-0 flex flex-col gap-2 my-2 flex-wrap">
-                        {/* Título del día */}
                         <h3 className="font-semibold text-sm px-10">
-                          {new Date(fecha).toLocaleDateString()}
+                          {fecha.toLocaleDateString()} {/* Mostrar fecha del día */}
                         </h3>
 
                         {/* Mostrar actividades del día */}
-                        {activitiesByDay[dateKey]?.map((activity: any, idx: number) => (
+                        {activitiesForDay.map((activity: any, idx: number) => (
                           <div
                             key={idx}
                             className="flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 sm:px-8"
