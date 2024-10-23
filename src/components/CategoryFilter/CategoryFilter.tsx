@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const CategoryFilter = ({ provinceName }) => {
+const CategoryFilter = ({ provinceName, types, selectedTypes, onTypeChange }) => {
   const [municipios, setMunicipios] = useState([]);
   const [localidades, setLocalidades] = useState([]);
   useEffect(() => {
@@ -13,7 +13,7 @@ const CategoryFilter = ({ provinceName }) => {
           throw new Error('Error fetching data');
         }
         const dataTotal = await responseTotal.json();
-  
+
         const totalDepartamentos = dataTotal.total;
         const response = await fetch(
           `https://apis.datos.gob.ar/georef/api/departamentos?provincia=${provinceName}&campos=id,nombre&formato=json&max=${totalDepartamentos}`,
@@ -104,6 +104,26 @@ const CategoryFilter = ({ provinceName }) => {
           <h6 className="font-medium text-base leading-7 text-black mb-5">
             Tipos de puntos de interés
           </h6>
+          <div className="box flex flex-col gap-2">
+            {types.map((t, index) => (
+              <div key={index} className="flex items-center">
+                <input
+                  id="checkbox-default-1"
+                  type="checkbox"
+                  value=""
+                  className="w-5 h-5 appearance-none border border-gray-300  rounded-md mr-2 hover:border-indigo-500 hover:bg-indigo-100 checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 checked:bg-[url('https://pagedone.io/asset/uploads/1689406942.svg')]"
+                  checked={selectedTypes.includes(t)}
+                  onChange={() => onTypeChange(t)}
+                />
+                <label
+                  htmlFor="checkbox-default-1"
+                  className="text-xs font-normal text-gray-600 leading-4 cursor-pointer"
+                >
+                  {t}
+                </label>{' '}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="mt-7 box rounded-xl border border-gray-300 bg-white p-6 w-full md:max-w-sm">
