@@ -40,7 +40,9 @@ type Place = {
 };
 const getLocationDetails = async (lat, lng) => {
   try {
-    const response = await fetch(`https://apis.datos.gob.ar/georef/api/ubicaciones?lat=${lat}&lon=${lng}`);
+    const response = await fetch(
+      `https://apis.datos.gob.ar/georef/api/ubicaciones?lat=${lat}&lon=${lng}`,
+    );
     const data = await response.json();
 
     if (data && data.ubicaciones && data.ubicaciones.length > 0) {
@@ -54,7 +56,7 @@ const getLocationDetails = async (lat, lng) => {
   } catch (error) {
     console.error('Error fetching location details:', error);
   }
-  
+
   return null;
 };
 
@@ -63,8 +65,8 @@ const Places = () => {
   const [placesFoundType, setPlacesFoundType] = useState<Place[]>([]);
   const [province, setProvince] = useState<Province>(null);
   const { provinceName } = useParams();
-  const { departamento } = useParams();
-  const { localidad } = useParams();
+  let departamento;
+  let localidad;
   const [offset, setOffset] = useState(0);
   const [count] = useState(15);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -73,6 +75,15 @@ const Places = () => {
   const [uniqueTypes, setUniqueTypes] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
+  try {
+    const storedLocalidad = localStorage.getItem('selectedLocalidad');
+    if (storedLocalidad) {
+      localidad = JSON.parse(storedLocalidad).localidad;
+      departamento = JSON.parse(storedLocalidad).departamento;
+    }
+  } catch (error) {
+    console.error('Error al analizar selectedLocalidad:', error);
+  }
   useEffect(() => {
     if (!provinceName) return;
 
@@ -88,7 +99,7 @@ const Places = () => {
     };
 
     fetchProvinces();
-  }, []);
+  }, [provinceName]);
 
   useEffect(() => {
     const fetchPlaces = async () => {
@@ -114,8 +125,8 @@ const Places = () => {
   }, [province, count]);
 
   const handleSearch = ({ localidad, provincia }) => {
-    console.log('Localidad seleccionada:', localidad);
-    console.log('Provincia seleccionada:', provincia);
+    localidad=localidad;
+    provincia=provincia
   };
 
   const handleLoadMore = () => {
@@ -141,7 +152,7 @@ const Places = () => {
       );
       setPlacesFoundType(filteredPlaces);
       setDisplayedPlacesForTypes(filteredPlaces.slice(0, count));
-      setOffset(count); 
+      setOffset(count);
     } else {
       setDisplayedPlaces(placesFound.slice(0, count));
       setOffset(count);
@@ -168,8 +179,8 @@ const Places = () => {
     <>
       <Header />
 
-      <SearchHeroSection onSearch={handleSearch} title={`Puntos de interés de ${province.name}`} />
-      
+      <SearchHeroSection onSearch={handleSearch} title={`Puntos de interés de ${province.name} - ${departamento} - ${localidad}`} />
+
       <section className="py-5 relative">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
           <div className="grid grid-cols-12">
