@@ -1,12 +1,5 @@
 export const ProgressBar = ({ currentStep }: { currentStep: number }) => {
-  const steps = [
-    'Destino',
-    'Fecha',
-    'Presupuesto',
-    'Clima',
-    'Tipo de actividades',
-    'Compañeros de viaje',
-  ];
+  const steps = ['Destino', 'Fecha', 'Presupuesto', 'Tipo de actividades', 'Compañeros de viaje'];
 
   return (
     <div className="progress-bar">

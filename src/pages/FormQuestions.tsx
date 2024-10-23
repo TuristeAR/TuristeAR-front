@@ -13,8 +13,6 @@ import {
   Banknote,
   Binoculars,
   Book,
-  CloudSun,
-  Flame,
   Gem,
   HandCoins,
   Handshake,
@@ -22,8 +20,6 @@ import {
   Mountain,
   PartyPopper,
   PersonStanding,
-  Snowflake,
-  Sun,
   TreePine,
   Trophy,
   Utensils,
@@ -78,34 +74,6 @@ const questions = [
     ],
     type: 'icon',
     name: 'economy',
-    multipleSelection: false,
-  },
-  {
-    question: '¿Qué tipo de clima preferís?',
-    options: [
-      {
-        src: <Flame width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Árido',
-        data: 1,
-      },
-      {
-        src: <Snowflake width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Frío',
-        data: 2,
-      },
-      {
-        src: <CloudSun width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Templado',
-        data: 3,
-      },
-      {
-        src: <Sun width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Cálido',
-        data: 4,
-      },
-    ],
-    type: 'icon',
-    name: 'weather',
     multipleSelection: false,
   },
   {
@@ -190,7 +158,7 @@ const FormQuestions = () => {
   const [dialogWindowOpen, setDialogWindowOpen] = useState(false);
   const [selectedProvince, setSelectedProvince] = useState<Province>();
   const [localities, setLocalities] = useState<any[]>([]);
-  const [selectedLocality, setSelectedLocality] = useState<string>('');
+  const [selectedLocalities, setSelectedLocalities] = useState<string[]>([]);
   const [searchLocality, setSearchLocality] = useState('');
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -205,6 +173,7 @@ const FormQuestions = () => {
   });
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [loadingLocalities, setLoadingLocalities] = useState(false);
 
   const handleCloseDialogWindow = () => {
     setDialogWindowOpen(false);
@@ -217,6 +186,16 @@ const FormQuestions = () => {
       key: 'selection',
     },
   ]);
+
+  const handleLocalitySelection = (locality: string) => {
+    setSelectedLocalities((prev) => {
+      if (prev.includes(locality)) {
+        return prev.filter((loc) => loc !== locality);
+      } else {
+        return [...prev, locality];
+      }
+    });
+  };
 
   const handleDateSelect = (rangesByKey: any) => {
     const selection = rangesByKey.selection;
@@ -238,6 +217,7 @@ const FormQuestions = () => {
   };
 
   const handleProvinceClick = (id: number) => {
+    setLoadingLocalities(true);
     const province = provinces.find((p) => p.id === id);
     setSelectedProvince(province);
     formData.provinceId = province.id;
@@ -248,6 +228,7 @@ const FormQuestions = () => {
       },
     ).then((r) => {
       setLocalities(r.asentamientos);
+      setLoadingLocalities(false);
     });
   };
 
@@ -278,7 +259,7 @@ const FormQuestions = () => {
           return;
         }
 
-        if (!selectedLocality) {
+        if (selectedLocalities.length === 0) {
           setErrorMessage('Tenés que seleccionar un lugar para visitar');
           return;
         }
@@ -357,7 +338,7 @@ const FormQuestions = () => {
         saveFormDataToLocalStorage(formData);
         setDialogWindowOpen(true);
       } else {
-        submitFormData();
+        await submitFormData();
       }
     }
   };
@@ -603,10 +584,11 @@ const FormQuestions = () => {
                         <MapaArg onProvinceClick={handleProvinceClick} />
                       </div>
                       <div className="w-full md:w-1/2 flex flex-col items-center gap-x-4">
-                        {localities.length > 0 && (
+                        <div className="h-10 text-center"></div>
+                        {localities.length > 0 ? (
                           <div className="w-72">
                             <span className="block text-lg font-medium leading-6 text-gray-900 my-2">
-                              ¿Qué lugar querés visitar?
+                              ¿Qué lugares querés visitar?
                             </span>
                             <div className="flex flex-col items-center">
                               <input
@@ -634,7 +616,7 @@ const FormQuestions = () => {
                                           <li
                                             key={locality.id}
                                             onClick={() => {
-                                              setSelectedLocality(locality.nombre);
+                                              handleLocalitySelection(locality.nombre);
                                               setSearchLocality('');
                                             }}
                                             className="mx-1 p-1 cursor-pointer hover:bg-orange hover:text-white"
@@ -649,16 +631,13 @@ const FormQuestions = () => {
                               <select
                                 className="w-72 h-10 border border-gray rounded-md px-2"
                                 onChange={(e) => {
-                                  setSelectedLocality(e.target.value);
+                                  handleLocalitySelection(e.target.value);
+                                  e.target.value = '';
                                 }}
                               >
                                 <option value="">Seleccioná una localidad</option>
                                 {localities.map((locality) => (
-                                  <option
-                                    key={locality.id}
-                                    defaultValue={locality.nombre}
-                                    selected={locality.nombre === selectedLocality}
-                                  >
+                                  <option key={locality.id} value={locality.nombre}>
                                     {locality.nombre}
                                   </option>
                                 ))}
@@ -671,6 +650,33 @@ const FormQuestions = () => {
                             >
                               Continuar
                             </button>
+                            <div className="flex flex-wrap gap-2">
+                              {selectedLocalities.map((locality) => (
+                                <div
+                                  key={locality}
+                                  className="w-fit px-3 py-1 bg-primary-2 text-white rounded flex items-center justify-between"
+                                >
+                                  {locality}
+                                  <button
+                                    type="button"
+                                    className="ml-2 text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center"
+                                    onClick={() => handleLocalitySelection(locality)}
+                                  >
+                                    x
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="w-72">
+                            {loadingLocalities ? (
+                              <Lottie animationData={logoAnimado} />
+                            ) : (
+                              <span className="text-lg font-medium leading-6 text-gray-900 my-2">
+                                Seleccioná una provincia para ver las localidades
+                              </span>
+                            )}
                           </div>
                         )}
                         {errorMessage && (
