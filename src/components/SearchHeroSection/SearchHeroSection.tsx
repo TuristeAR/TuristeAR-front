@@ -28,7 +28,7 @@ const SearchHeroSection = ({
 
     const fetchLocalidades = async () => {
       try {
-        const response = await fetch('https://apis.datos.gob.ar/georef/api/localidades?max=5000'); // Puedes ajustar el 'max' según tus necesidades
+        const response = await fetch('https://apis.datos.gob.ar/georef/api/localidades?max=5000'); 
         const data = await response.json();
         setLocalidades(data.localidades);
       } catch (error) {
@@ -86,9 +86,7 @@ const SearchHeroSection = ({
     setProvinciasFiltradas([]);
     setLocalidadesFiltradas([]);
     onSearch({ localidad: localidad.nombre, provincia: localidad.provincia.nombre });
-    const lat = localidad.centroide.lat || '';
-    const lon = localidad.centroide.lon || '';
-    navigate(`/lugares/${localidad.provincia.nombre}/${lat}/${lon}`);
+    navigate(`/lugares/${localidad.provincia.nombre}/${localidad.departamento.nombre}/${localidad.nombre}`);
   };
 
   return (

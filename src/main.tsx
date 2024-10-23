@@ -40,7 +40,6 @@ root.render(
       <Route path="/jobs" element={<Jobs />} />
       <Route path="/itineraryDetail/:itineraryId" element={<ItineraryDetail />} />
       <Route path="lugares/:provinceName" element={<Places/>} />
-      <Route path="lugares/:provinceName/:lat/:lon" element={<Places />} />
     </Routes>
   </BrowserRouter>,
 );
