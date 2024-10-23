@@ -29,12 +29,12 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 
 interface FormData {
-  provinceId?: number | null;
+  provinceId: number;
+  localities: string[];
   fromDate: string;
   toDate: string;
   economy: number | null;
   types: string[];
-  weather: number | null;
   company: number | null;
 }
 
@@ -164,11 +164,11 @@ const FormQuestions = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     provinceId: null,
+    localities: [],
     fromDate: '',
     toDate: '',
     economy: null,
     types: [],
-    weather: null,
     company: null,
   });
   const [currentStep, setCurrentStep] = useState(1);
@@ -189,11 +189,16 @@ const FormQuestions = () => {
 
   const handleLocalitySelection = (locality: string) => {
     setSelectedLocalities((prev) => {
-      if (prev.includes(locality)) {
-        return prev.filter((loc) => loc !== locality);
-      } else {
-        return [...prev, locality];
-      }
+      const updatedLocalities = prev.includes(locality)
+        ? prev.filter((loc) => loc !== locality)
+        : [...prev, locality];
+
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        localities: updatedLocalities,
+      }));
+
+      return updatedLocalities;
     });
   };
 
@@ -297,15 +302,6 @@ const FormQuestions = () => {
 
         break;
       case 3:
-        if (!formData.weather) {
-          setErrorMessage('Tenés que seleccionar una opción');
-          return;
-        }
-
-        setErrorMessage('');
-
-        break;
-      case 4:
         if (formData.types.length === 0) {
           setErrorMessage('Tenés que seleccionar al menos una opción');
           return;
@@ -314,7 +310,7 @@ const FormQuestions = () => {
         setErrorMessage('');
 
         break;
-      case 5:
+      case 4:
         if (!formData.company) {
           setErrorMessage('Tenés que seleccionar una opción');
           return;
@@ -485,19 +481,6 @@ const FormQuestions = () => {
                           }
                           {
                             questions[1].options.find((option) => option.data === formData.economy)
-                              ?.alt
-                          }
-                        </div>
-                        <div
-                          key="weather"
-                          className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 p-2 border border-gray"
-                        >
-                          {
-                            questions[2].options.find((option) => option.data === formData.weather)
-                              ?.src
-                          }
-                          {
-                            questions[2].options.find((option) => option.data === formData.weather)
                               ?.alt
                           }
                         </div>
