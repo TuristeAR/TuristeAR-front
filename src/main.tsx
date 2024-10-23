@@ -16,6 +16,7 @@ import { ItineraryDetail } from './pages/ItineraryDetail';
 import EditProfile from './pages/EditProfile';
 import ForumDetail from './pages/ForumDetail';
 import Places from './pages/Places';
+import { ItineraryMap } from './pages/ItineraryMap';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -39,7 +40,8 @@ root.render(
       <Route path="/forum/:id" element={<ForumDetail />} />
       <Route path="/jobs" element={<Jobs />} />
       <Route path="/itineraryDetail/:itineraryId" element={<ItineraryDetail />} />
-      <Route path="lugares/:provinceName/" element={<Places/>} />
+      <Route path="/itineraryMap/:itineraryId" element={<ItineraryMap />} />
+      <Route path="lugares/:provinceName/" element={<Places />} />
     </Routes>
   </BrowserRouter>,
 );

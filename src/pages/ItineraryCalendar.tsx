@@ -4,6 +4,7 @@ import chatIcon from '/assets/chat.svg';
 import galleryIcon from '/assets/gallery.svg';
 import alignIcon from '/assets/align.svg';
 import deleteIcon from '/assets/delete.svg';
+import mapIcon from '/assets/map-icon.svg';
 
 /* Components */
 import { Calendar } from '../components/Calendar/Calendar';
@@ -183,11 +184,19 @@ export const ItineraryCalendar = () => {
               <div className="flex flex-col p-2 gap-y-2">
                 <div className="flex items-center gap-x-2 cursor-pointer">
                   <img src={plusIcon} alt="" />
-                  <button onClick={() => setIsAddingActivity(true)}>Agregar actividad</button>
+                  <button className="text-sm" onClick={() => setIsAddingActivity(true)}>
+                    Agregar actividad
+                  </button>
+                </div>
+                <div className="flex items-center gap-x-2 cursor-pointer">
+                  <img src={mapIcon} alt="" />
+                  <Link to={`/itineraryMap/${itineraryId}`}>
+                    <p className="text-sm">Mapa</p>
+                  </Link>
                 </div>
                 <div className="flex items-center gap-x-2 cursor-pointer">
                   <img src={chatIcon} alt="" />
-                  <p className="text-sm">Chat de viaje</p>
+                  <p className="text-sm">Chat</p>
                 </div>
                 <div className="flex items-center gap-x-2 cursor-pointer">
                   <img src={galleryIcon} alt="" />
@@ -196,7 +205,7 @@ export const ItineraryCalendar = () => {
                 <div className="flex items-center gap-x-2 cursor-pointer">
                   <img src={alignIcon} alt="" />
                   <Link to={`/itineraryDetail/${itineraryId}`}>
-                    <p className="text-sm">Resumen del viaje</p>
+                    <p className="text-sm">Resumen</p>
                   </Link>
                 </div>
               </div>
