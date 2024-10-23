@@ -9,6 +9,7 @@ import CategoryFilter from '../components/CategoryFilter/CategoryFilter';
 import Lottie from 'lottie-react';
 
 import logoAnimado from '../assets/logoAnimado.json';
+import { co } from '@fullcalendar/core/internal-common';
 
 type Province = {
   id: number;
@@ -35,17 +36,21 @@ type Place = {
   name: string;
   rating: number;
   reviews: Review[];
+  types: String[];
 };
 
 const Places = () => {
   const [placesFound, setPlacesFound] = useState<Place[]>([]);
+  const [placesFoundType, setPlacesFoundType] = useState<Place[]>([]);
   const [province, setProvince] = useState<Province>(null);
   const { provinceName } = useParams();
   const [offset, setOffset] = useState(0);
   const [count] = useState(15);
-  const [searchTerm, setSearchTerm] = useState<string>('');
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [displayedPlaces, setDisplayedPlaces] = useState<Place[]>([]);
+  const [displayedPlacesForTypes, setDisplayedPlacesForTypes] = useState<Place[]>([]);
+  const [uniqueTypes, setUniqueTypes] = useState<string[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
   useEffect(() => {
     if (!provinceName) return;
@@ -72,6 +77,10 @@ const Places = () => {
           const data = await response.json();
           setPlacesFound(data);
           setDisplayedPlaces(data.slice(0, count));
+
+          const types = data.flatMap((place) => place.types);
+          const unique = Array.from(new Set(types));
+          setUniqueTypes(unique as string[]);
         } catch (error) {
           console.error('Error fetching places:', error);
         }
@@ -89,10 +98,39 @@ const Places = () => {
   const handleLoadMore = () => {
     setIsLoadingMore(true);
     const newOffset = offset + count;
-    const newPlaces = placesFound.slice(0, newOffset);
-    setDisplayedPlaces(newPlaces);
+
+    if (selectedTypes.length > 0) {
+      const newPlacesForTypes = placesFoundType.slice(0, newOffset);
+      setDisplayedPlacesForTypes(newPlacesForTypes);
+    } else {
+      const newPlaces = placesFound.slice(0, newOffset);
+      setDisplayedPlaces(newPlaces);
+    }
+
     setOffset(newOffset);
     setIsLoadingMore(false);
+  };
+
+  useEffect(() => {
+    if (selectedTypes.length > 0) {
+      const filteredPlaces = placesFound.filter((place) =>
+        place.types.some((type) => selectedTypes.includes(type as string)),
+      );
+      setPlacesFoundType(filteredPlaces);
+      setDisplayedPlacesForTypes(filteredPlaces.slice(0, count));
+      setOffset(count); // Resetea el offset cuando cambian los filtros
+    } else {
+      setDisplayedPlaces(placesFound.slice(0, count));
+      setOffset(count); // Resetea el offset cuando cambian los filtros
+    }
+  }, [selectedTypes, placesFound, count]);
+
+  const handleTypeChange = (type: string) => {
+    setSelectedTypes((prevSelected) =>
+      prevSelected.includes(type)
+        ? prevSelected.filter((t) => t !== type)
+        : [...prevSelected, type],
+    );
   };
 
   if (!province) {
@@ -105,43 +143,49 @@ const Places = () => {
 
   return (
     <>
-      <Header></Header>
+    <Header />
 
-      <SearchHeroSection
-        onSearch={handleSearch}
-        title={`Puntos de interés de ${province.name}`}
-      ></SearchHeroSection>
-      {/*  <section>
-        <div className=" mx-auto">
-          <div className="w-full">
-            <GoogleMapComponent
-              latitud={'place.latitude'}
-              longitud={'place.longitude'}
-              nombre={'place.name'}
-            ></GoogleMapComponent>
-          </div>
-        </div>
-      </section>
- */}
-      <section className="py-5 relative">
-        <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-12">
-            <CategoryFilter provinceName={province.name}></CategoryFilter>
-            <div className="col-span-12 md:col-span-9">
-              <PlaceList places={displayedPlaces}></PlaceList>
+    <SearchHeroSection
+      onSearch={handleSearch}
+      title={`Puntos de interés de ${province.name}`}
+    />
+    
+    <section className="py-5 relative">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
+        <div className="grid grid-cols-12">
+          <CategoryFilter
+            provinceName={province.name}
+            types={uniqueTypes}
+            selectedTypes={selectedTypes}
+            onTypeChange={handleTypeChange}
+          />
+          <div className="col-span-12 md:col-span-9">
+            {selectedTypes.length > 0 ? (
+              <PlaceList places={displayedPlacesForTypes} />
+            ) : (
+              <PlaceList places={displayedPlaces} />
+            )}
 
-              <div className="w-full text-center">
-                {displayedPlaces.length < placesFound.length && (
+            <div className="w-full text-center">
+              {selectedTypes.length > 0 ? (
+                displayedPlacesForTypes.length < placesFoundType.length && (
                   <button onClick={handleLoadMore} className="btn-blue mr-3 mt-5">
                     {isLoadingMore ? 'Cargando más...' : 'Ver más publicaciones'}
                   </button>
-                )}
-              </div>
+                )
+              ) : (
+                displayedPlaces.length < placesFound.length && (
+                  <button onClick={handleLoadMore} className="btn-blue mr-3 mt-5">
+                    {isLoadingMore ? 'Cargando más...' : 'Ver más publicaciones'}
+                  </button>
+                )
+              )}
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
+  </>
   );
 };
 
