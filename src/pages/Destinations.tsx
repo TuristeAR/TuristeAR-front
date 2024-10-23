@@ -65,7 +65,7 @@ const Destinations = () => {
         const response = await get('https://api-turistear.koyeb.app/province', {
           'Content-Type': 'application/json',
         });
-        setProvinces(response.data);
+        setProvinces(response.json.data);
       } catch (error) {
         console.error('Error fetching provinces:', error);
       }
