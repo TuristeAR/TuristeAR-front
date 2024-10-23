@@ -127,6 +127,7 @@ export const ItineraryDetail = () => {
     console.log('Usuarios actualizados en el padre:', updatedUsers);
     console.log('UserNav new: ', usersOldNav);
   };
+  console.log(activities);
 
   return (
     <>
@@ -224,25 +225,23 @@ export const ItineraryDetail = () => {
                     {/* Info */}
                     <div className={`${showedInfo[index] ? 'block' : 'hidden'}`}>
                       <div className="relative px-1 sm:px-0 flex flex-col gap-2 my-2 flex-wrap">
-                        <h3 className="font-semibold text-sm px-10">
-                          {fecha.toLocaleDateString()} {/* Mostrar fecha del día */}
-                        </h3>
-
                         {/* Mostrar actividades del día */}
                         {activitiesForDay.map((activity: any, idx: number) => (
-                          <div
-                            key={idx}
-                            className="flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 sm:px-8"
-                          >
-                            <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
-                              <span className="text-sm">
-                                {formatTime(activity.fromDate)} - {formatTime(activity.toDate)}
-                              </span>
-                            </div>
-                            <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
-                              <p className="font-semibold text-sm sm:text-base">
-                                {activity.name?.split(' - ')[0]}
-                              </p>
+                          <div key={idx}>
+                            <h3 className="font-semibold text-sm  px-4 py-1">
+                              {activity.fromDate.split('T')[0]}
+                            </h3>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 ">
+                              <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
+                                <span className="text-sm">
+                                  {formatTime(activity.fromDate)} - {formatTime(activity.toDate)}
+                                </span>
+                              </div>
+                              <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
+                                <p className="font-semibold text-sm sm:text-base">
+                                  {activity.name?.split(' - ')[0]}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         ))}
