@@ -129,56 +129,64 @@ export const ItineraryDetail = () => {
   };
   console.log(activities);
 
+  const reorderDate = (dateString : string ) => {
+    const formatDate = (date) => {
+      const [year, month, day] = date.split('-'); // Divide la fecha en año, mes, día
+      return `${day}-${month}-${year}`; // Reordena en formato 'dd-mm-yyyy'
+    };
+
+    return formatDate(dateString)
+  };
+
   return (
     <>
       <Header />
       <section>
-        <div className="container mx-auto max-w-[980px] flex flex-col justify-center z-30 relative p-4">
-          <div className="w-full my-8">
+        <div className="container mx-auto flex flex-col justify-center z-30 relative p-4">
+          <div className="lg:hidden block md:w-[45%]">
             <ImageGallery images={randomImages} height={70} />
           </div>
-
-          <div className="w-full  my-2">
-            <div className="flex flex-col md:flex-row gap-y-3 md:gap-x-12 border-b pb-4 border-gray-50 ">
-              {/* Informacion general */}
-              <div className="md:max-w-[650px] flex-1">
-                <div className="border-b pb-2 border-gray-50 ">
-                  <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
-                </div>
-                <div>
-                  <Countdown fromDate={itinerary?.fromDate} />
-                </div>
+          <div className={'flex md:flex-row flex-col justify-between my-8 lg:gap-0 gap-6'}>
+            <div className="md:w-[55%] md:max-w-[650px] flex flex-col justify-between ">
+              <div className="border-b pb-2 border-gray-50 ">
+                <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
               </div>
-              {/* Calendario, Participantes */}
-              <div className="flex flex-col gap-y-4">
-                <div className="bg-primary/40 rounded-sm flex justify-center py-1">
-                  <Link
-                    to={`/ItineraryCalendar/${itineraryId}`}
-                    className="text-primary-4 text-sm font-semibold"
-                  >
-                    Ir a calendario
-                  </Link>
-                </div>
-                <div className="flex flex-col gap-y-2">
-                  <div className="w-full flex  gap-2 mb-2">
-                    <div>
-                      <AddParticipantModal
-                        itinerary={Number(itineraryId)}
-                        tap={1}
-                        usersOldNav={usersOldNav}
-                        onUsersOldUpdate={handleUpdateUsersOld}
-                      />
-                      <AddParticipantModal
-                        itinerary={Number(itineraryId)}
-                        tap={2}
-                        usersOldNav={usersOldNav}
-                        onUsersOldUpdate={handleUpdateUsersOld}
-                      />
-                    </div>
+              <div>
+                <Countdown fromDate={itinerary?.fromDate} />
+              </div>
+              <div className="flex flex-col gap-y-2">
+                <div className="w-full flex  gap-2 mb-2">
+                  <div>
+                    <AddParticipantModal
+                      itinerary={Number(itineraryId)}
+                      tap={1}
+                      usersOldNav={usersOldNav}
+                      onUsersOldUpdate={handleUpdateUsersOld}
+                    />
+                    <AddParticipantModal
+                      itinerary={Number(itineraryId)}
+                      tap={2}
+                      usersOldNav={usersOldNav}
+                      onUsersOldUpdate={handleUpdateUsersOld}
+                    />
                   </div>
                 </div>
               </div>
+              <div className="bg-primary/40 rounded-sm flex justify-center py-1">
+                <Link
+                  to={`/ItineraryCalendar/${itineraryId}`}
+                  className="text-primary-4 text-sm font-semibold"
+                >
+                  Ir a calendario
+                </Link>
+              </div>
             </div>
+            <div className="lg:block hidden md:w-[45%]">
+              <ImageGallery images={randomImages} height={70} />
+            </div>
+          </div>
+
+          <div className="w-full  my-2">
             {/*Itinerario */}
             <div className="mb-10">
               <h2 className="font-semibold text-md my-2">Itinerario de viaje</h2>
@@ -229,7 +237,7 @@ export const ItineraryDetail = () => {
                         {activitiesForDay.map((activity: any, idx: number) => (
                           <div key={idx}>
                             <h3 className="font-semibold text-sm  px-4 py-1">
-                              {activity.fromDate.split('T')[0]}
+                              {reorderDate(activity.fromDate.split('T')[0])}
                             </h3>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 ">
                               <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
