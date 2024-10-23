@@ -3,12 +3,37 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../../assets/logoAnimado.json';
 
 export const CreatePublications = () => {
+
+
   type Category = {
     id: number,
-    description: string
+    name: string,
+  };
+  type Province = {
+    id: number,
+    name: string,
+    categories: Category[]
   };
 
-  const [categories, setCategories] = useState<Category[]>([]);
+  type Place = {
+    id: number,
+    name: string,
+    place: Province
+  };
+
+  type Activity = {
+    id: number,
+    name: string,
+    place: Place
+  };
+
+  type Itinerary = {
+    id: number,
+    name: string,
+    activities: Activity[]
+  };
+
+  const [itineraries, setItineraries] = useState<Itinerary[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
@@ -21,7 +46,7 @@ export const CreatePublications = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await fetch('https://api-turistear.koyeb.app/categories', {
+        const categoriesResponse = await fetch('https://api-turistear.koyeb.app/user-itineraries', {
           method: 'GET',
           credentials: 'include',
         });
@@ -29,7 +54,7 @@ export const CreatePublications = () => {
         if (!categoriesResponse.ok) throw new Error('Error al obtener categorías');
 
         const categoriesData = await categoriesResponse.json();
-        setCategories(categoriesData);
+        setItineraries(categoriesData.data);
       } catch (error) {
         setError('Error en la comunicación con el servidor');
       }
@@ -100,6 +125,7 @@ export const CreatePublications = () => {
     setIsLoading(true);
     try {
       const imageUrl = formData.images ? await uploadImage(formData.images) : "";
+
       const response = await fetch('https://api-turistear.koyeb.app/createPublication', {
         method: 'POST',
         headers: {
@@ -108,7 +134,7 @@ export const CreatePublications = () => {
         body: JSON.stringify({
           description : formData.description,
           images: imageUrl,
-          categoryId: formData.categoryId
+          itineraryId: formData.categoryId
         }),
         credentials: 'include',
       });
@@ -120,7 +146,7 @@ export const CreatePublications = () => {
       setError(err.message);
     } finally {
       setIsLoading(false);
-      setIsOpen(false); // Cierra el modal después de la creación
+      setIsOpen(false);
     }
   };
 
@@ -180,7 +206,7 @@ export const CreatePublications = () => {
                     </div>
                     <div className={'grid grid-cols-2 gap-x-6'}>
                       <div className={'flex flex-col'}>
-                        <label className="text-lg font-semibold">Categoría</label>
+                        <label className="text-lg font-semibold">Itinerario</label>
                         <select
                           className={'border border-[#999999] pl-2 rounded-xl'}
                           name={'categoryId'}
@@ -188,9 +214,9 @@ export const CreatePublications = () => {
                           onChange={handleChange}
                         >
                           <option value={'0'}>Seleccionar</option>
-                          {categories.map((category) => (
-                            <option value={category.id} key={category.id}>
-                              {category.description}
+                          {itineraries?.map((itinerary) => (
+                            <option value={itinerary.id} key={itinerary.id}>
+                              {itinerary.name}
                             </option>
                           ))}
                         </select>

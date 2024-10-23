@@ -1,10 +1,11 @@
 import { Link, useParams } from 'react-router-dom';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
 import { AddParticipantModal } from '../components/AddParticipantModal/AddParticipantModal';
 import { get } from '../utilities/http.util';
+import { Countdown } from '../components/Calendar/Countdown';
 
 type User = {
   id: number;
@@ -27,27 +28,36 @@ export const ItineraryDetail = () => {
 
   useEffect(() => {
     if (activities.length > 0) {
-      const fetchReviews = () => {
-        return get(
-          `https://api-turistear.koyeb.app/reviews/place/${activities[0].place.googleId}`,
-          {
-            'Content-Type': 'application/json',
-          },
-        );
+      const fetchReviewsForActivity = (googleId: string) => {
+        return get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
+          'Content-Type': 'application/json',
+        });
       };
 
       const fetchData = async () => {
         try {
-          const [reviewsData] = await Promise.all([fetchReviews()]);
-          setReviews(reviewsData);
+          const reviewsPromises = activities.map((activity) =>
+            fetchReviewsForActivity(activity.place.googleId),
+          );
+          const allReviews = await Promise.all(reviewsPromises);
+          setReviews(allReviews.flat());
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       };
-
       fetchData();
     }
   }, [activities]);
+
+  const randomImages = useMemo(() => {
+    const getRandomImages = () => {
+      const allPhotos = reviews.flatMap((review) => review.photos);
+      const shuffledPhotos = allPhotos.sort(() => 0.5 - Math.random());
+      return shuffledPhotos.slice(0, 3);
+    };
+
+    return getRandomImages();
+  }, [reviews]);
 
   const toggleInfo = (index: number) => {
     setShowedInfo((prevState) => {
@@ -55,21 +65,6 @@ export const ItineraryDetail = () => {
       newState[index] = !newState[index];
       return newState;
     });
-  };
-  const imgs = [
-    {
-      img: [
-        '/assets/san-nicolas-buenos-aires.webp',
-        '/assets/san-nicolas-buenos-aires.webp',
-        '/assets/san-nicolas-buenos-aires.webp',
-      ],
-    },
-  ];
-
-  const getRandomImages = () => {
-    const allPhotos = reviews.flatMap((review) => review.photos);
-    const shuffledPhotos = allPhotos.sort(() => 0.5 - Math.random());
-    return shuffledPhotos.slice(0, 3);
   };
 
   const formatTime = (dateString: string) => {
@@ -79,10 +74,13 @@ export const ItineraryDetail = () => {
   };
 
   const activitiesByDay = activities.reduce((acc: any, activity: any) => {
-    const date = new Date(activity.fromDate).toISOString().split('T')[0]; // Obtener solo la fecha
+    // Usar toLocaleDateString para obtener solo la fecha sin zona horaria
+    const date = new Date(activity.fromDate).toLocaleDateString();
+
     if (!acc[date]) {
       acc[date] = [];
     }
+
     acc[date].push(activity);
     return acc;
   }, {});
@@ -129,8 +127,7 @@ export const ItineraryDetail = () => {
     console.log('Usuarios actualizados en el padre:', updatedUsers);
     console.log('UserNav new: ', usersOldNav);
   };
-
-  const randomImages = getRandomImages();
+  console.log(activities);
 
   return (
     <>
@@ -148,10 +145,9 @@ export const ItineraryDetail = () => {
                 <div className="border-b pb-2 border-gray-50 ">
                   <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
                 </div>
-                {/*<div>*/}
-                {/*  <h2 className="font-semibold text-md my-2">Información general</h2>*/}
-                {/*  <p className="ml-4 text-sm"></p>*/}
-                {/*</div>*/}
+                <div>
+                  <Countdown fromDate={itinerary?.fromDate} />
+                </div>
               </div>
               {/* Calendario, Participantes */}
               <div className="flex flex-col gap-y-4">
@@ -186,10 +182,11 @@ export const ItineraryDetail = () => {
             {/*Itinerario */}
             <div className="mb-10">
               <h2 className="font-semibold text-md my-2">Itinerario de viaje</h2>
-              {/* Días */}
-              {activities.map((item: any, index: number) => {
-                const dateKey = new Date(item.fromDate).toISOString().split('T')[0];
-                const fecha = new Date(item.fromDate);
+
+              {/* Recorre los días en lugar de las actividades */}
+              {Object.keys(activitiesByDay).map((dateKey, index) => {
+                const activitiesForDay = activitiesByDay[dateKey];
+                const fecha = new Date(dateKey); // Ya tienes la clave como la fecha
 
                 return (
                   <div key={index}>
@@ -198,7 +195,8 @@ export const ItineraryDetail = () => {
                       onClick={() => toggleInfo(index)}
                     >
                       <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md">
-                        Dia: {index + 1}
+                        {/* Mostrar el número de día en función del índice */}
+                        Día: {index + 1}
                         <div className="icons">
                           <svg
                             className={`${!showedInfo[index] ? 'block' : 'hidden'}`}
@@ -227,26 +225,23 @@ export const ItineraryDetail = () => {
                     {/* Info */}
                     <div className={`${showedInfo[index] ? 'block' : 'hidden'}`}>
                       <div className="relative px-1 sm:px-0 flex flex-col gap-2 my-2 flex-wrap">
-                        {/* Título del día */}
-                        <h3 className="font-semibold text-sm px-10">
-                          {new Date(fecha).toLocaleDateString()}
-                        </h3>
-
                         {/* Mostrar actividades del día */}
-                        {activitiesByDay[dateKey]?.map((activity: any, idx: number) => (
-                          <div
-                            key={idx}
-                            className="flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 sm:px-8"
-                          >
-                            <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
-                              <span className="text-sm">
-                                {formatTime(activity.fromDate)} - {formatTime(activity.toDate)}
-                              </span>
-                            </div>
-                            <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
-                              <p className="font-semibold text-sm sm:text-base">
-                                {activity.name?.split(' - ')[0]}
-                              </p>
+                        {activitiesForDay.map((activity: any, idx: number) => (
+                          <div key={idx}>
+                            <h3 className="font-semibold text-sm  px-4 py-1">
+                              {activity.fromDate.split('T')[0]}
+                            </h3>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 ">
+                              <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
+                                <span className="text-sm">
+                                  {formatTime(activity.fromDate)} - {formatTime(activity.toDate)}
+                                </span>
+                              </div>
+                              <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
+                                <p className="font-semibold text-sm sm:text-base">
+                                  {activity.name?.split(' - ')[0]}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         ))}
