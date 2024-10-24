@@ -37,28 +37,31 @@ type Place = {
   rating: number;
   reviews: Review[];
   types: String[];
+  localidad?: String;
+  departamento?: String
 };
 const getLocationDetails = async (lat, lng) => {
   try {
     const response = await fetch(
-      `https://apis.datos.gob.ar/georef/api/ubicaciones?lat=${lat}&lon=${lng}`,
+      `https://apis.datos.gob.ar/georef/api/ubicacion?lat=${lat}&lon=${lng}`,
     );
     const data = await response.json();
 
     if (data && data.ubicaciones && data.ubicaciones.length > 0) {
-      const { localidad, departamento } = data.ubicaciones[0]; // Asegúrate de que el objeto tenga las propiedades correctas
+      const { localidad, departamento } = data.ubicaciones[0];
 
       return {
-        localidad: localidad.nombre || null,
-        departamento: departamento.nombre || null,
+        localidad: localidad ? localidad.nombre : null,
+        departamento: departamento ? departamento.nombre : null,
       };
     }
   } catch (error) {
     console.error('Error fetching location details:', error);
   }
 
-  return null;
+  return { localidad: null, departamento: null };
 };
+
 
 const Places = () => {
   const [placesFound, setPlacesFound] = useState<Place[]>([]);
@@ -109,8 +112,23 @@ const Places = () => {
             `https://api-turistear.koyeb.app/province/places/${province.id}`,
           );
           const data = await response.json();
-          setPlacesFound(data);
-          setDisplayedPlaces(data.slice(0, count));
+
+          const dataPlaceDepartamentoLocalidad = data.map(async p =>{
+            const locationDetails = await getLocationDetails(p.latitude, p.longitude)
+
+            p.departamento = locationDetails.departamento; 
+            p.localidad = locationDetails.localidad;
+          })
+          console.log("Location",dataPlaceDepartamentoLocalidad)
+          setPlacesFound(dataPlaceDepartamentoLocalidad);
+          console.log(localidad)
+          if(localidad){
+            const dataFoundLocalidad = dataPlaceDepartamentoLocalidad
+            .filter((place) => place.localidad == localidad); 
+            setDisplayedPlaces(dataFoundLocalidad.slice(0, count));
+          }else{
+            setDisplayedPlaces(data.slice(0, count));
+          }
 
           const types = data.flatMap((place) => place.types);
           const unique = Array.from(new Set(types));

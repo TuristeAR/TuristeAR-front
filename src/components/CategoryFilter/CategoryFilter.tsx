@@ -34,7 +34,8 @@ const CategoryFilter = ({
         const data = await response.json();
         setMunicipios(data.departamentos);
         if (departamento) {
-          fetchLocalidades(departamento);
+          handleDepartamentClick(departamento);
+          setSelectedLocalidad(localidad)
         }
       } catch (err) {
         console.log(err.message);
@@ -42,7 +43,7 @@ const CategoryFilter = ({
     };
 
     fetchMunicipios();
-  }, []);
+  }, [provinceName,localidad, departamento]);
 
   const fetchLocalidades = async (departamentoNombre) => {
     try {
