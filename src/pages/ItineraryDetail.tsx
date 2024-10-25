@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
 import { AddParticipantModal } from '../components/AddParticipantModal/AddParticipantModal';
 import { get } from '../utilities/http.util';
+import calendarIcon from '/assets/calendar-blue.svg';
+import mapIcon from '/assets/map-icon.svg';
 
 type User = {
   id: number;
@@ -56,15 +58,6 @@ export const ItineraryDetail = () => {
       return newState;
     });
   };
-  const imgs = [
-    {
-      img: [
-        '/assets/san-nicolas-buenos-aires.webp',
-        '/assets/san-nicolas-buenos-aires.webp',
-        '/assets/san-nicolas-buenos-aires.webp',
-      ],
-    },
-  ];
 
   const getRandomImages = () => {
     const allPhotos = reviews.flatMap((review) => review.photos);
@@ -143,24 +136,22 @@ export const ItineraryDetail = () => {
 
           <div className="w-full  my-2">
             <div className="flex flex-col md:flex-row gap-y-3 md:gap-x-12 border-b pb-4 border-gray-50 ">
-              {/* Informacion general */}
               <div className="md:max-w-[650px] flex-1">
                 <div className="border-b pb-2 border-gray-50 ">
                   <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
                 </div>
-                {/*<div>*/}
-                {/*  <h2 className="font-semibold text-md my-2">Información general</h2>*/}
-                {/*  <p className="ml-4 text-sm"></p>*/}
-                {/*</div>*/}
               </div>
-              {/* Calendario, Participantes */}
-              <div className="flex flex-col gap-y-4">
-                <div className="bg-primary/40 rounded-sm flex justify-center py-1">
-                  <Link
-                    to={`/ItineraryCalendar/${itineraryId}`}
-                    className="text-primary-4 text-sm font-semibold"
-                  >
-                    Ir a calendario
+              <div className="flex flex-col">
+                <div className="flex items-center p-1 gap-x-2 cursor-pointer">
+                  <img src={calendarIcon} alt="" />
+                  <Link to={`/itineraryCalendar/${itineraryId}`}>
+                    <p className="text-sm">Calendario</p>
+                  </Link>
+                </div>
+                <div className="flex items-center p-1 gap-x-2 cursor-pointer">
+                  <img src={mapIcon} alt="" />
+                  <Link to={`/itineraryMap/${itineraryId}`}>
+                    <p className="text-sm">Mapa</p>
                   </Link>
                 </div>
                 <div className="flex flex-col gap-y-2">
