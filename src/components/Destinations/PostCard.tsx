@@ -13,7 +13,7 @@ export function PostCard(props: {
 
   return (
     <>
-      <div className="flex flex-col mx-auto gap-y-4 h-fi bg-gray-2 border-primary-3  p-4 rounded-xl border-b max-w-xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
+      <div className="w-full h-fit p-4 lg:mb-0 mb-6 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col gap-y-4">
         <div className="flex justify-between items-center px-2 text-gray">
           <div className="flex items-center gap-2">
             <div className="rounded-full  border border-1 border-black">
