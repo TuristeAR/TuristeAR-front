@@ -2,11 +2,15 @@ import { Link } from 'react-router-dom';
 import { ArticleCard } from '../Destinations/ArticleCard';
 
 const PlaceList = ({ places }) => {
+  console.log(places)
+  if (!places || places.length === 0) {
+    return <div>No se encontraron lugares</div>;
+  }
   return (
     <section className="">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {Array.isArray(places) &&
+          {(Array.isArray(places)&&places.length>0) &&
             places.map((place, index) => (
               <Link to={`/lugar-esperado/${place.googleId}`}>
                 <ArticleCard

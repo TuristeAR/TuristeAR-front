@@ -1,8 +1,18 @@
 import { useEffect, useState } from 'react';
 
-const CategoryFilter = ({ provinceName, types, selectedTypes, onTypeChange }) => {
-  const [municipios, setMunicipios] = useState([]);
+const CategoryFilter = ({
+  provinceName,
+  types,
+  selectedTypes,
+  onTypeChange,
+  localidad,
+  departamento,
+}) => {
+  const [departamentos, setMunicipios] = useState([]);
   const [localidades, setLocalidades] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState(departamento);
+  const [selectedLocalidad, setSelectedLocalidad] = useState(localidad);
+
   useEffect(() => {
     const fetchMunicipios = async () => {
       try {
@@ -23,18 +33,29 @@ const CategoryFilter = ({ provinceName, types, selectedTypes, onTypeChange }) =>
         }
         const data = await response.json();
         setMunicipios(data.departamentos);
+        if (departamento) {
+          handleDepartamentClick(departamento);
+          setSelectedLocalidad(localidad)
+        }
       } catch (err) {
         console.log(err.message);
       }
     };
 
     fetchMunicipios();
-  }, []);
+  }, [provinceName,localidad, departamento]);
 
-  const fetchLocalidades = async (municipioId) => {
+  const fetchLocalidades = async (departamentoNombre) => {
     try {
+      const responseTotal = await fetch(
+        `https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinceName}&departamento=${departamentoNombre}&campos=id&formato=json`,
+      );
+      const dataTotal = await responseTotal.json();
+
+      const totalLocalidades = dataTotal.total;
+
       const response = await fetch(
-        `https://apis.datos.gob.ar/georef/api/localidades?municipi=${municipioId}&campos=id,nombre&formato=json`,
+        `https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinceName}&departamento=${departamentoNombre}&formato=json&max=${totalLocalidades}`,
       );
       if (!response.ok) {
         throw new Error('Error fetching data');
@@ -46,11 +67,13 @@ const CategoryFilter = ({ provinceName, types, selectedTypes, onTypeChange }) =>
     }
   };
 
-  const handleMunicipioClick = (municipioId) => {
-    fetchLocalidades(municipioId);
+  const handleDepartamentClick = (departamentoNombre) => {
+    fetchLocalidades(departamentoNombre);
+    setSelectedLocalidad(null);
+    setSelectedDepartment(departamentoNombre);
   };
 
-  if (!municipios) {
+  if (!departamentos) {
     return <p>...</p>;
   }
   return (
@@ -110,7 +133,7 @@ const CategoryFilter = ({ provinceName, types, selectedTypes, onTypeChange }) =>
                 <input
                   id="checkbox-default-1"
                   type="checkbox"
-                  value=""
+                  value={t.nombre}
                   className="w-5 h-5 appearance-none border border-gray-300  rounded-md mr-2 hover:border-indigo-500 hover:bg-indigo-100 checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 checked:bg-[url('https://pagedone.io/asset/uploads/1689406942.svg')]"
                   checked={selectedTypes.includes(t)}
                   onChange={() => onTypeChange(t)}
@@ -129,20 +152,21 @@ const CategoryFilter = ({ provinceName, types, selectedTypes, onTypeChange }) =>
         <div className="mt-7 box rounded-xl border border-gray-300 bg-white p-6 w-full md:max-w-sm">
           <h6 className="font-medium text-base leading-7 text-black mb-5">Municipio</h6>
           <div className="box flex flex-col gap-2">
-            {municipios.map((m, index) => (
-              <div key={index} className="flex items-center">
+            {departamentos.map((d, index) => (
+              <div
+                key={index}
+                className="flex items-center"
+                onClick={() => handleDepartamentClick(d.nombre)}
+              >
                 <input
                   id="checkbox-default-1"
                   type="checkbox"
-                  value=""
+                  value={d.nombre}
                   className="w-5 h-5 appearance-none border border-gray-300  rounded-md mr-2 hover:border-indigo-500 hover:bg-indigo-100 checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 checked:bg-[url('https://pagedone.io/asset/uploads/1689406942.svg')]"
-                  onClick={() => handleMunicipioClick(m.nombre)}
+                  checked={selectedDepartment === d.nombre}
                 />
-                <label
-                  htmlFor="checkbox-default-1"
-                  className="text-xs font-normal text-gray-600 leading-4 cursor-pointer"
-                >
-                  {m.nombre}
+                <label className="text-xs font-normal text-gray-600 leading-4 cursor-pointer">
+                  {d.nombre}
                 </label>{' '}
               </div>
             ))}
@@ -156,17 +180,19 @@ const CategoryFilter = ({ provinceName, types, selectedTypes, onTypeChange }) =>
               <p></p>
             ) : (
               localidades.map((l) => (
-                <div key={l.id} className="flex items-center">
+                <div
+                  key={l.id}
+                  className="flex items-center"
+                  onClick={() => setSelectedLocalidad(l.nombre)}
+                >
                   <input
                     id={`checkbox-localidad-${l.id}`}
                     type="checkbox"
-                    value=""
+                    value={l.nombre}
+                    checked={selectedLocalidad === l.nombre}
                     className="w-5 h-5 appearance-none border border-gray-300 rounded-md mr-2 hover:border-indigo-500 hover:bg-indigo-100 checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 checked:bg-[url('https://pagedone.io/asset/uploads/1689406942.svg')]"
                   />
-                  <label
-                    htmlFor={`checkbox-localidad-${l.id}`}
-                    className="text-xs font-normal text-gray-600 leading-4 cursor-pointer"
-                  >
+                  <label className="text-xs font-normal text-gray-600 leading-4 cursor-pointer">
                     {l.nombre}
                   </label>
                 </div>
