@@ -100,8 +100,8 @@
 /*  Full calendar */
 
 
-.fc .fc-daygrid-event{
-    z-index: unset!important;
+.fc .fc-daygrid-event {
+    z-index: unset !important;
 }
 
 .fc-daygrid-day-events {
@@ -316,8 +316,8 @@
 
 
 
-  /* Tarjetas de opción con efecto 3D */
-  .option-card {
+/* Tarjetas de opción con efecto 3D */
+.option-card {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -326,24 +326,12 @@
     border-radius: 8px;
     transition: transform 0.3s, box-shadow 0.3s;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  }
+}
 
-  .option-card-participants {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px;
-    border-radius: 8px;
-    transition: transform 0.3s, box-shadow 0.3s;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  } 
 
-  .option-card-participants:hover {
+.option-card:hover {
     transform: translateY(-5px);
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  }
+}
 
-  .option-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  }
+
