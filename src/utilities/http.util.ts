@@ -17,6 +17,22 @@ export const get = async (url: string, headers: any): Promise<any> => {
   }
 };
 
+export const getWithoutCredentials = async (url: string, headers: any): Promise<any> => {
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: headers,
+    });
+
+    return await response.json();
+  } catch (error) {
+    return {
+      error: error,
+      status: status.INTERNAL_SERVER_ERROR,
+    };
+  }
+};
+
 export const post = async (url: string, headers: any, body?: any): Promise<any> => {
   try {
     const response = await fetch(url, {

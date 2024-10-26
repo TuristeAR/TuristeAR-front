@@ -1,7 +1,14 @@
+/* Icons */
+import plusIcon from '/assets/add.svg';
+import chatIcon from '/assets/chat.svg';
+import galleryIcon from '/assets/gallery.svg';
+import alignIcon from '/assets/align.svg';
+import deleteIcon from '/assets/delete.svg';
+
 /* Components */
 import { Calendar } from '../components/Calendar/Calendar';
 import { Header } from '../components/Header/Header';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
 import { LeftColumn } from '../components/ItineraryCalendar/LeftColumn';
