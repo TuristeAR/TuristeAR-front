@@ -39,17 +39,6 @@ export const Calendar = ({
     setSelectedEvent(null);
   };
 
-  const handleSave = () => {
-    if (eventName) {
-      const newId = String(Date.now());
-      setActivities([
-        ...activities,
-        { id: newId, name: eventName, fromDate: selectedDate, toDate: selectedDate },
-      ]);
-      setOpenNewEvent(false);
-      setEventName('');
-    }
-  };
 
   const editEvent = (id: number, newName: string) => {
     const updatedEvents = activities.map((event: any) =>
@@ -139,14 +128,6 @@ export const Calendar = ({
           right: 'dayGridMonth,dayGridWeek,dayGridDay',
         }}
       />
-      {/*       {openNewEvent && (
-        <AddActivityCalendar
-          eventName={eventName}
-          setEventName={setEventName}
-          handleClose={handleClose}
-          handleSave={handleSave}
-        />
-      )} */}
     </div>
   );
 };

@@ -56,7 +56,7 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({
         </div>
       ) : (
         <button
-          className="flex items-center gap-x-2 cursor-pointer text-sm hover:underline px-2"
+          className="flex items-center gap-x-2 cursor-pointer text-sm hover:underline px-2 option-card w-full"
           type="button"
           onClick={openModal}
         >
