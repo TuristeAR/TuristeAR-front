@@ -49,7 +49,7 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({
                 <p>{user.name}</p>
               </div>
             ))}
-            {usersOldNav.length > 3 && (
+            {Array.isArray(usersOldNav) && usersOldNav.length > 3 && (
               <div className="text-gray">+ {usersOldNav.length - 3} más</div>
             )}
           </div>
