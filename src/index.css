@@ -321,17 +321,12 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px;
+    padding: 8px;
     background-color: white;
     border-radius: 8px;
     transition: transform 0.3s, box-shadow 0.3s;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-.option-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-}
 
 

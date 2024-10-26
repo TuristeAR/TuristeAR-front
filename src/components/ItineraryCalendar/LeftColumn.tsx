@@ -137,20 +137,20 @@ export const LeftColumn = ({
       <div className="flex flex-col h-full w-full">
         <div className="flex flex-col justify-center  border-gray">
           <h2 className="font-medium tracking-[-0.5px] leading-none">{(itinerary as any)?.name}</h2>
-          <div className="flex flex-col p-2 gap-y-2">
-            <div className="option-card cursor-pointer">
+          <div className="flex flex-col p-2 gap-4">
+            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg ">
               <img src={plusIcon} alt="" />
               <button onClick={() => setIsAddingActivity(true)}>Agregar actividad</button>
             </div>
-            <div className="option-card cursor-pointer">
+            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg  ">
               <img src={chatIcon} alt="" />
               <p className="text-sm">Chat de viaje</p>
             </div>
-            <div className="option-card cursor-pointer">
+            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg  ">
               <img src={galleryIcon} alt="" />
               <p className="text-sm">Galeria compartida</p>
             </div>
-            <div className="option-card cursor-pointer">
+            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg  ">
               <img src={alignIcon} alt="" />
               <Link to={`/itineraryDetail/${itineraryId}`}>
                 <p className="text-sm">Resumen del viaje</p>
@@ -251,11 +251,11 @@ export const LeftColumn = ({
             <p>No hay actividades para eliminar</p>
           ) : (
             <>
-              <div className="w-full flex flex-col gap-2 mb-2">
+              <div className="w-full flex flex-col gap-4 mb-2">
                 {activities.map((activity, index) => (
                   <div
                     key={index}
-                    className="flex justify-between items-center w-full p-2 bg-white rounded-lg shadow-md option-card"
+                    className="flex justify-between items-center w-full p-2 bg-white rounded-lg shadow-md option-card hover:-translate-y-1.5 hover:shadow-lg hover:bg-[#d9d9d9]"
                   >
                     <p className="text-sm w-[90%]">{activity.name}</p>
                     <button onClick={() => deleteActivity(activity.id)}>
