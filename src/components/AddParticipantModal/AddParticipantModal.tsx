@@ -42,7 +42,7 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({
           <h2 className="font-semibold tracking-[-0.5px] leading-none">Participantes</h2>
           <div className="w-full flex lg:flex-row flex-col gap-2 mb-2 px-2">
             {Array.isArray(usersOldNav) && usersOldNav.length > 0 && usersOldNav.slice(0, 3).map((user) => (
-              <div key={user.name} className="flex items-center gap-2">
+              <div key={user.name} className="flex flex-col items-center gap-2">
                 <div className="bg-gray-50 w-8 h-8 rounded-full overflow-hidden">
                   <img src={user.profilePicture} alt="" className="w-full h-full object-cover" />
                 </div>
@@ -56,7 +56,7 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({
         </div>
       ) : (
         <button
-          className="flex items-center gap-x-2 cursor-pointer text-sm hover:underline px-2"
+          className="flex items-center gap-x-2 cursor-pointer text-sm  hover:underline px-2 option-card w-full hover:-translate-y-1.5 hover:shadow-lg"
           type="button"
           onClick={openModal}
         >

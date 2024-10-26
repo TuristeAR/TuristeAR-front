@@ -90,15 +90,15 @@ export const Nav = () => {
           />
           <h2 className="text-white font-bold text-[16px]">{user.name}</h2>
           {isDropdownOpen && (
-            <div className="absolute top-16 right-8 text-sm bg-white shadow-lg rounded-md my-2  w-40 z-50">
+            <div className="absolute top-16 right-8 bg-white shadow-lg rounded-lg my-3 w-44 z-50">
               <Link
                 to={'/profile'}
-                className="block w-full text-left px-4 py-1 border-b border-gray-50 text-gray-800 hover:bg-gray-50 hover:rounded-md"
+                className="block w-full text-left px-4 py-2 text-gray-700 font-medium hover:bg-primary rounded-md transition duration-200 ease-in-out"
               >
                 Mi perfil
               </Link>
               <button
-                className="block w-full text-left px-4 py-1 text-gray-800 hover:bg-gray-50 hover:rounded-md "
+                className="block w-full text-left px-4 py-2 text-gray-700 font-medium hover:bg-primary rounded-md transition duration-200 ease-in-out"
                 onClick={handleLogout}
               >
                 Cerrar sesión
