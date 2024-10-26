@@ -36,20 +36,7 @@ export const ItineraryCalendar = () => {
 
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
 
-  const socket = io('https://api-turistear.koyeb.app', { withCredentials: true });
 
-  useEffect(() => {
-    socket.on('itineraryParticipants', (data) => {
-      if (data.status === 'success') {
-        setUsersOldNav(data.data);
-      }
-    });
-
-    return () => {
-      socket.off('userSearchResults');
-      socket.disconnect();
-    };
-  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
