@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import io from 'socket.io-client';
 
 /* Icons */
 import plusIcon from '/assets/add.svg';
@@ -9,22 +10,45 @@ import { Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import useFetchPlacesByProvince from '../../utilities/useFetchPlacesByProvince';
+import useFetchParticipants from '../../utilities/useFetchParticipants';
 
 import { AddParticipantModal } from '../AddParticipantModal/AddParticipantModal';
+
+type User = {
+  id: number;
+  email: string;
+  name: string;
+  username: string;
+  profilePicture: string;
+};
 
 export const LeftColumn = ({
   itinerary,
   itineraryId,
-  usersOldNav,
-  handleUpdateUsersOld,
   isAddingActivity,
   setIsAddingActivity,
   activities,
   setActivities,
 }) => {
+  const socket = io('https://api-turistear.koyeb.app', { withCredentials: true });
+
+  useEffect(() => {
+    socket.on('itineraryParticipants', (data) => {
+      if (data.status === 'success') {
+        setUsersOldNav(data.data);
+      }
+    });
+
+    return () => {
+      socket.off('userSearchResults');
+      socket.disconnect();
+    };
+  }, []);
+
   const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
   const [selectedPlace, setSelectedPlace] = useState('');
   const [showPlaces, setShowPlaces] = useState(false);
+  const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
@@ -101,6 +125,11 @@ export const LeftColumn = ({
       .catch((error) => {
         console.error('Error al eliminar la actividad:', error);
       });
+  };
+
+  //users updated in parent
+  const handleUpdateUsersOld = (updatedUsers: User[]) => {
+    setUsersOldNav(updatedUsers);
   };
 
   return (

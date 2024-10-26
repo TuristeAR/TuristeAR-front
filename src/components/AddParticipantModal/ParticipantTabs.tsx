@@ -15,14 +15,14 @@ interface ParticipantTabsProps {
   tap?: number;
   usersOldNav: User[];
   onUsersOldUpdate: (users: User[]) => void;
-  currentUser: number
+  currentUser: number;
 }
 const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   itinerary,
   tap,
   usersOldNav,
   onUsersOldUpdate,
-  currentUser
+  currentUser,
 }) => {
   const [openTab, setOpenTab] = useState(tap || 1);
   const [showModal, setShowModal] = useState(false);
@@ -33,7 +33,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   const closeModal = () => setShowModal(false);
   const navigate = useNavigate();
   // Get the localStorage user
- 
+
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.key === 'Escape') {

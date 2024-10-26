@@ -89,7 +89,6 @@ const Destinations = () => {
 
   const handleProvinceClick = (id: number) => {
     console.log(provinces)
-
     const province = provinces.find((p) => p.id === id) || null;
     fetchReviews(province.name);
     setSelectedProvince(province);

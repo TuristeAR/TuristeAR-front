@@ -4,21 +4,11 @@ import { Header } from '../components/Header/Header';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
-import useFetchParticipants from '../utilities/useFetchParticipants';
 import { LeftColumn } from '../components/ItineraryCalendar/LeftColumn';
-
-type User = {
-  id: number;
-  email: string;
-  name: string;
-  username: string;
-  profilePicture: string;
-};
 
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
   const { itinerary, activities, setActivities } = useFetchItinerary(itineraryId || null);
-  const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
 
   const [isAddingActivity, setIsAddingActivity] = useState(false);
 
@@ -45,11 +35,6 @@ export const ItineraryCalendar = () => {
       });
   };
 
-  //users updated in parent
-  const handleUpdateUsersOld = (updatedUsers: User[]) => {
-    setUsersOldNav(updatedUsers);
-  };
-
   return (
     <section
       className={`${isAddingActivity ? 'h-screen overflow-hidden' : ''} h-screen xl:h-auto overflow-x-clip relative`}
@@ -60,8 +45,6 @@ export const ItineraryCalendar = () => {
         <LeftColumn
           itinerary={itinerary}
           itineraryId={itineraryId}
-          usersOldNav={usersOldNav}
-          handleUpdateUsersOld={handleUpdateUsersOld}
           isAddingActivity={isAddingActivity}
           setIsAddingActivity={setIsAddingActivity}
           activities={activities}
