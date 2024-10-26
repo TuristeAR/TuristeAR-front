@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import io from 'socket.io-client';
 
 type User = {
   id: number;
@@ -15,14 +16,14 @@ interface ParticipantTabsProps {
   tap?: number;
   usersOldNav: User[];
   onUsersOldUpdate: (users: User[]) => void;
-  currentUser: number
+  currentUser: number;
 }
 const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   itinerary,
   tap,
   usersOldNav,
   onUsersOldUpdate,
-  currentUser
+  currentUser,
 }) => {
   const [openTab, setOpenTab] = useState(tap || 1);
   const [showModal, setShowModal] = useState(false);
@@ -33,7 +34,22 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   const closeModal = () => setShowModal(false);
   const navigate = useNavigate();
   // Get the localStorage user
- 
+
+  const socket = io('https://api-turistear.koyeb.app', { withCredentials: true });
+
+  useEffect(() => {
+    socket.on('userSearchResults', (data) => {
+      if (data.status === 'success') {
+        setUsers(data.data);
+      }
+    });
+
+    return () => {
+      socket.off('userSearchResults');
+      socket.disconnect();
+    };
+  }, []);
+
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.key === 'Escape') {
