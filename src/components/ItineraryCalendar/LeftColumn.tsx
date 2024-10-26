@@ -7,6 +7,8 @@ import chatIcon from '/assets/chat.svg';
 import galleryIcon from '/assets/gallery.svg';
 import alignIcon from '/assets/align.svg';
 import { Trash2 } from 'lucide-react';
+import mapIcon from '/assets/map-icon.svg';
+
 import { Link } from 'react-router-dom';
 
 import useFetchPlacesByProvince from '../../utilities/useFetchPlacesByProvince';
@@ -136,21 +138,31 @@ export const LeftColumn = ({
     <aside className="order-2 lg:order-1 col-span-1 p-4 flex">
       <div className="flex flex-col h-full w-full">
         <div className="flex flex-col justify-center  border-gray">
-          <h2 className="font-medium tracking-[-0.5px] leading-none mb-2">{(itinerary as any)?.name}</h2>
+          <h2 className="font-medium tracking-[-0.5px] leading-none mb-2">
+            {(itinerary as any)?.name}
+          </h2>
           <div className="flex flex-col p-2 gap-4">
-            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg ">
+            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
               <img src={plusIcon} alt="" />
-              <button onClick={() => setIsAddingActivity(true)}>Agregar actividad</button>
+              <button className="text-sm" onClick={() => setIsAddingActivity(true)}>
+                Agregar actividad
+              </button>
             </div>
-            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg  ">
+            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
+              <img src={mapIcon} alt="" />
+              <Link to={`/itineraryMap/${itineraryId}`}>
+                <p className="text-sm">Mapa</p>
+              </Link>
+            </div>
+            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
               <img src={chatIcon} alt="" />
-              <p className="text-sm">Chat de viaje</p>
+              <p className="text-sm">Chat</p>
             </div>
-            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg  ">
+            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
               <img src={galleryIcon} alt="" />
               <p className="text-sm">Galeria compartida</p>
             </div>
-            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg  ">
+            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
               <img src={alignIcon} alt="" />
               <Link to={`/itineraryDetail/${itineraryId}`}>
                 <p className="text-sm">Resumen del viaje</p>
