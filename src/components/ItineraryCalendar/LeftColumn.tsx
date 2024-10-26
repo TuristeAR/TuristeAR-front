@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import { useState } from 'react';
 
 /* Icons */
 import plusIcon from '/assets/add.svg';
@@ -32,20 +31,7 @@ export const LeftColumn = ({
   activities,
   setActivities,
 }) => {
-  const socket = io('https://api-turistear.koyeb.app', { withCredentials: true });
 
-  useEffect(() => {
-    socket.on('itineraryParticipants', (data) => {
-      if (data.status === 'success') {
-        setUsersOldNav(data.data);
-      }
-    });
-
-    return () => {
-      socket.off('userSearchResults');
-      socket.disconnect();
-    };
-  }, []);
 
   const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
   const [selectedPlace, setSelectedPlace] = useState('');

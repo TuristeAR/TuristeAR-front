@@ -151,55 +151,53 @@ export const ItineraryDetail = () => {
       <Header />
       <section>
         <div className="container mx-auto flex flex-col justify-center z-30 relative p-4">
-          <div className="lg:hidden block md:w-[45%]">
-            <ImageGallery images={randomImages} height={70} />
-          </div>
-
           <div className="w-full  my-2">
             <div className="flex flex-col md:flex-row gap-y-3 md:gap-x-12 border-b pb-4 border-gray-50 ">
               <div className="md:max-w-[650px] flex-1">
-                <div className="border-b pb-2 border-gray-50 ">
-                  <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
-                </div>
-                <div>
-                  <Countdown fromDate={itinerary?.fromDate} />
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center p-1 gap-x-2 cursor-pointer">
-                  <img src={calendarIcon} alt="" />
-                  <Link to={`/itineraryCalendar/${itineraryId}`}>
-                    <p className="text-sm">Calendario</p>
-                  </Link>
-                </div>
-                <div className="flex items-center p-1 gap-x-2 cursor-pointer">
-                  <img src={mapIcon} alt="" />
-                  <Link to={`/itineraryMap/${itineraryId}`}>
-                    <p className="text-sm">Mapa</p>
-                  </Link>
-                </div>
-                <div className="flex flex-col gap-y-2">
-                  <div className="w-full flex  gap-2 mb-2">
-                    <div>
-                      <AddParticipantModal
-                        itinerary={Number(itineraryId)}
-                        tap={1}
-                        usersOldNav={usersOldNav}
-                        onUsersOldUpdate={handleUpdateUsersOld}
-                      />
-                      <AddParticipantModal
-                        itinerary={Number(itineraryId)}
-                        tap={2}
-                        usersOldNav={usersOldNav}
-                        onUsersOldUpdate={handleUpdateUsersOld}
-                      />
+                <div className="">
+                  <div className="border-b pb-2 border-gray-50 ">
+                    <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
+                  </div>
+                  <div>
+                    <Countdown fromDate={itinerary?.fromDate} />
+                  </div>
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <div className="w-full flex   gap-2 mb-2">
+                      <div className="">
+                        <AddParticipantModal
+                          itinerary={Number(itineraryId)}
+                          tap={1}
+                          usersOldNav={usersOldNav}
+                          onUsersOldUpdate={handleUpdateUsersOld}
+                        />
+                        <AddParticipantModal
+                          itinerary={Number(itineraryId)}
+                          tap={2}
+                          usersOldNav={usersOldNav}
+                          onUsersOldUpdate={handleUpdateUsersOld}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col w-full justify-center">
+                      <div className="flex items-center p-1 gap-x-2 cursor-pointer">
+                        <img src={calendarIcon} alt="" />
+                        <Link to={`/itineraryCalendar/${itineraryId}`}>
+                          <p className="text-sm">Calendario</p>
+                        </Link>
+                      </div>
+                      <div className="flex items-center p-1 gap-x-2 cursor-pointer">
+                        <img src={mapIcon} alt="" />
+                        <Link to={`/itineraryMap/${itineraryId}`}>
+                          <p className="text-sm">Mapa</p>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="lg:block hidden md:w-[45%]">
-              <ImageGallery images={randomImages} height={70} />
+              <div className="hidden lg:block md:w-[45%]">
+                <ImageGallery images={randomImages} height={70} />
+              </div>
             </div>
           </div>
 
