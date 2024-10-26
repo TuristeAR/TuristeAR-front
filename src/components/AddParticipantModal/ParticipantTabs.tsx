@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import io from 'socket.io-client';
 
 type User = {
   id: number;
@@ -34,21 +33,6 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   const closeModal = () => setShowModal(false);
   const navigate = useNavigate();
   // Get the localStorage user
-
-  const socket = io('https://api-turistear.koyeb.app', { withCredentials: true });
-
-  useEffect(() => {
-    socket.on('userSearchResults', (data) => {
-      if (data.status === 'success') {
-        setUsers(data.data);
-      }
-    });
-
-    return () => {
-      socket.off('userSearchResults');
-      socket.disconnect();
-    };
-  }, []);
 
   useEffect(() => {
     const handleEsc = (event) => {
