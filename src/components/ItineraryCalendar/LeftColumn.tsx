@@ -136,7 +136,7 @@ export const LeftColumn = ({
     <aside className="order-2 lg:order-1 col-span-1 p-4 flex">
       <div className="flex flex-col h-full w-full">
         <div className="flex flex-col justify-center  border-gray">
-          <h2 className="font-medium tracking-[-0.5px] leading-none">{(itinerary as any)?.name}</h2>
+          <h2 className="font-medium tracking-[-0.5px] leading-none mb-2">{(itinerary as any)?.name}</h2>
           <div className="flex flex-col p-2 gap-4">
             <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg ">
               <img src={plusIcon} alt="" />
