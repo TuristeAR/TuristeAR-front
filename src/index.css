@@ -4,7 +4,7 @@
 
 .bg-custom-gray {
     background-color: #545454;
-  }
+}
 
 .bg-custom-orange {
     background-color: #ff8c00;
@@ -14,7 +14,7 @@
     background-color: hsla(0, 0%, 0%, 0.85);
 }
 
-.bg-custom-whiteBlue15{
+.bg-custom-whiteBlue15 {
     background-color: hsla(198, 100%, 45%, 0.15);
 }
 
@@ -26,14 +26,16 @@
     h1 {
         @apply sm:text-7xl text-3xl font-bold text-black
     }
-    .btn-blue{
+
+    .btn-blue {
         @apply lg:min-w-[156px] h-[54px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all rounded-md;
     }
-    .btn-drop-down-blue{
+
+    .btn-drop-down-blue {
         @apply w-full h-[60px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all rounded-md;
     }
 
-    .btn-drop-down-blue-itinerary{
+    .btn-drop-down-blue-itinerary {
         @apply w-full h-[30px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all rounded-md;
     }
 
@@ -56,14 +58,6 @@
 
 .swiper-button-next,
 .swiper-button-prev {
-    background-color: rgba(31, 113, 214, 0.7);
-    /* Fondo semi-transparente */
-    border-radius: 50% !important;
-    /* Esquinas redondeadas */
-    width: 40px !important;
-    /* Ancho de la flecha */
-    height: 40px !important;
-    /* Alto de la flecha */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -71,13 +65,53 @@
 
 .swiper-button-next:after,
 .swiper-button-prev:after {
-    color: white !important;
-    /* Color de las flechas */
-    font-size: 40px !important;
-    /* Tamaño de las flechas */
+    color: #0F254C !important;
+    font-size: 50px !important;
+}
+
+@media (max-width: 480px) {
+    .swiper-button-prev:after {
+        margin-right: 1rem;
+    }
+
+    .swiper-button-next:after {
+        margin-left: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .swiper-button-prev:after {
+        margin-right: 8rem;
+    }
+
+    .swiper-button-next:after {
+        margin-left: 8rem;
+    }
+}
+
+.swiper-button-prev:after {
+    margin-right: 10rem;
+}
+
+.swiper-button-next:after {
+    margin-left: 10rem;
 }
 
 /*  Full calendar */
+
+
+.fc .fc-daygrid-event{
+    z-index: unset!important;
+}
+
+.fc-daygrid-day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+}
+
+
 
 .fc-today-button {
     background-color: #007bff !important;
@@ -124,49 +158,56 @@
 
 /* Responsividad para pantallas pequeñas (dispositivos móviles) */
 @media (max-width: 768px) {
+
     /* Ajustar el tamaño del título para pantallas pequeñas */
     .fc-toolbar-title {
-        font-size: 1.2rem;  /* Reduce el tamaño del título */
+        font-size: 1.2rem;
+        /* Reduce el tamaño del título */
     }
 
     /* Botones del calendario (mes, semana, día) */
     .fc-dayGridMonth-button,
     .fc-dayGridWeek-button,
     .fc-dayGridDay-button {
-        padding: 8px;  /* Reduce el padding de los botones */
-        font-size: 0.9rem; /* Ajusta el tamaño de fuente de los botones */
+        padding: 8px;
+        /* Reduce el padding de los botones */
+        font-size: 0.9rem;
+        /* Ajusta el tamaño de fuente de los botones */
     }
 
     /* Cambia la disposición de los botones de navegación */
     .fc-toolbar-chunk {
         display: flex;
         justify-content: space-between;
-        flex-wrap: wrap; /* Ajusta los botones a una nueva línea si es necesario */
+        flex-wrap: wrap;
+        /* Ajusta los botones a una nueva línea si es necesario */
     }
 
     /* Cambia el tamaño de los botones de navegación (previo, siguiente) */
     .fc-next-button,
     .fc-prev-button {
         padding: 8px;
-        font-size: 0.8rem; /* Tamaño más pequeño para dispositivos móviles */
+        font-size: 0.8rem;
+        /* Tamaño más pequeño para dispositivos móviles */
     }
-    
+
     /* Botón de 'Hoy' más pequeño */
     .fc-today-button {
         padding: 8px;
         font-size: 0.9rem;
     }
-    
+
     /* Ajustes generales de tamaños y márgenes */
     .fc-toolbar {
         flex-direction: column;
         align-items: center;
         text-align: center;
     }
-    
+
     /* Calendario en sí, ajustando el tamaño */
     .fc {
-        font-size: 0.9rem; /* Reduce el tamaño de fuente del calendario */
+        font-size: 0.9rem;
+        /* Reduce el tamaño de fuente del calendario */
     }
 }
 

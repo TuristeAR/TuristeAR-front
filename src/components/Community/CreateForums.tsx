@@ -2,43 +2,18 @@ import React, { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import logoAnimado from '../../assets/logoAnimado.json';
 
-export const CreatePublications = () => {
-
-
+export const CreateForums = () => {
   type Category = {
     id: number,
-    name: string,
-  };
-  type Province = {
-    id: number,
-    name: string,
-    categories: Category[]
+    description: string
   };
 
-  type Place = {
-    id: number,
-    name: string,
-    place: Province
-  };
-
-  type Activity = {
-    id: number,
-    name: string,
-    place: Place
-  };
-
-  type Itinerary = {
-    id: number,
-    name: string,
-    activities: Activity[]
-  };
-
-  const [itineraries, setItineraries] = useState<Itinerary[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
+    name: '',
     description: '',
-    images: null as File | null,
     categoryId: undefined
   });
   const [error, setError] = useState<string | null>(null);
@@ -46,15 +21,16 @@ export const CreatePublications = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await fetch('https://api-turistear.koyeb.app/user-itineraries', {
+        const categoriesResponse = await fetch('https://api-turistear.koyeb.app/categories', {
           method: 'GET',
-          credentials: 'include',
+          credentials:
+            'include',
         });
 
         if (!categoriesResponse.ok) throw new Error('Error al obtener categorías');
 
         const categoriesData = await categoriesResponse.json();
-        setItineraries(categoriesData.data);
+        setCategories(categoriesData);
       } catch (error) {
         setError('Error en la comunicación con el servidor');
       }
@@ -64,53 +40,21 @@ export const CreatePublications = () => {
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    // @ts-ignore
-    const { name, value, type, files } = e.target;
-    if (type === 'file') {
-      setFormData(prevData => ({
-        ...prevData,
-        images: files ? files[0] : null,
-      }));
-    } else {
+    const { name, value } = e.target;
       setFormData(prevData => ({
         ...prevData,
         [name]: value,
       }));
-    }
   };
 
-  const uploadImage = async (image: File) => {
-    const formData = new FormData();
-    formData.append('image', image);
-
-    const url = 'https://api.imgur.com/3/image';
-    const options = {
-      method: 'POST',
-      headers: {
-        Authorization: 'Client-ID 523c9b5cf859dce',
-      },
-      body: formData,
-    };
-
-    try {
-      const response = await fetch(url, options);
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error de respuesta:', errorData);
-        throw new Error(errorData.data.error || 'Error al cargar la imagen');
-      }
-      const result = await response.json();
-      console.log('Imagen subida:', result);
-      return result.data.link; // Retorna el enlace de la imagen
-    } catch (error) {
-      console.error('Error en la carga de la imagen:', error);
-      throw error; // Lanza el error para manejarlo en createPublications
-    }
-  };
-
-  const createPublications = async (e: React.FormEvent) => {
+  const createForums = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Reinicia errores
+    setError(null);
+
+    if (!formData.name) {
+      setError("Ingrese una descripción!");
+      return;
+    }
 
     if (!formData.description) {
       setError("Ingrese una descripción!");
@@ -124,28 +68,28 @@ export const CreatePublications = () => {
 
     setIsLoading(true);
     try {
-      const imageUrl = formData.images ? await uploadImage(formData.images) : "";
-
-      const response = await fetch('https://api-turistear.koyeb.app/createPublication', {
+      const response = await fetch('https://api-turistear.koyeb.app/createForum', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          name : formData.name,
           description : formData.description,
-          images: imageUrl,
-          itineraryId: formData.categoryId
+          categoryId: formData.categoryId
         }),
         credentials: 'include',
       });
 
       if (!response.ok) throw new Error('Error en la solicitud');
       setError('');
-      window.location.reload();
+      const idRedirect=response.json();
+      idRedirect.then((data) =>{
+        window.location.href = `/forum/${data.data.id}`;
+      })
     } catch (err: any) {
       setError(err.message);
     } finally {
-      setIsLoading(false);
       setIsOpen(false);
     }
   };
@@ -154,7 +98,9 @@ export const CreatePublications = () => {
     <>
       {isLoading ? (
         <div className="fixed inset-0 flex items-center justify-center bg-white z-50 border border-gray-50 rounded-lg">
-          <h2 className="text-4xl text-center text-primary-4 mx-auto mb-6 md:mb-8">Creando publicación...</h2>
+          <h2 className="text-4xl text-center text-primary-4 mx-auto mb-6 md:mb-8">
+            Creando foro...
+          </h2>
           <Lottie className="w-[16rem] md:w-[18rem] mx-auto" animationData={logoAnimado} />
         </div>
       ) : (
@@ -163,11 +109,7 @@ export const CreatePublications = () => {
             onClick={() => setIsOpen(true)}
             className="fixed bottom-4 right-4 bg-[#49a2ec] rounded-full flex flex-col justify-evenly"
           >
-            <img
-              src={'/assets/createPublications.svg'}
-              className={'w-[70px] m-6'}
-              alt={'Crear post'}
-            />
+            <img src={'/assets/createForum.svg'} className={'w-[70px] m-6'} alt={'Crear post'} />
           </div>
           {isOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 border border-gray-50 rounded-lg">
@@ -191,22 +133,22 @@ export const CreatePublications = () => {
                     />
                   </svg>
                 </button>
-                <h2 className="text-2xl text-center font-bold mb-4">Crear publicación</h2>
-                <form onSubmit={createPublications}>
+                <h2 className="text-2xl text-center font-bold mb-4">Crear foro</h2>
+                <form onSubmit={createForums}>
                   <div className={'flex flex-col gap-6'}>
-                    <div className={'flex flex-col'}>
-                      <label className="text-lg font-semibold">Descripción</label>
-                      <textarea
-                        className={'border border-[#999999] pl-2 rounded-xl min-w-[500px] min-h-[100px]'}
-                        placeholder={'Ingrese la descripción'}
-                        name={'description'}
-                        value={formData.description}
-                        onChange={handleChange}
-                      ></textarea>
-                    </div>
                     <div className={'grid grid-cols-2 gap-x-6'}>
                       <div className={'flex flex-col'}>
-                        <label className="text-lg font-semibold">Itinerario</label>
+                        <label className="text-lg font-semibold">Nombre</label>
+                        <input
+                          name={'name'}
+                          onChange={handleChange}
+                          type={'text'}
+                          className={'border border-[#999999] rounded-xl pl-2'}
+                          placeholder={'Ingrese el nombre'}
+                        />
+                      </div>
+                      <div className={'flex flex-col'}>
+                        <label className="text-lg font-semibold">Categoría</label>
                         <select
                           className={'border border-[#999999] pl-2 rounded-xl'}
                           name={'categoryId'}
@@ -214,27 +156,31 @@ export const CreatePublications = () => {
                           onChange={handleChange}
                         >
                           <option value={'0'}>Seleccionar</option>
-                          {itineraries?.map((itinerary) => (
-                            <option value={itinerary.id} key={itinerary.id}>
-                              {itinerary.name}
+                          {categories.map((category) => (
+                            <option value={category.id} key={category.id}>
+                              {category.description}
                             </option>
                           ))}
                         </select>
                       </div>
-                      <div className={'flex flex-col'}>
-                        <label className="text-lg font-semibold">Imágenes</label>
-                        <input
-                          name={'images'}
-                          onChange={handleChange}
-                          type={'file'}
-                          accept={'image/*'}
-                        />
-                      </div>
+                    </div>
+
+                    <div className={'flex flex-col'}>
+                      <label className="text-lg font-semibold">Descripción</label>
+                      <textarea
+                        className={
+                          'border border-[#999999] pl-2 rounded-xl min-w-[500px] min-h-[100px]'
+                        }
+                        placeholder={'Ingrese la descripción'}
+                        name={'description'}
+                        value={formData.description}
+                        onChange={handleChange}
+                      ></textarea>
                     </div>
                   </div>
                   <div className={'flex justify-center mt-8'}>
                     <button type={'submit'} className={'btn-blue'}>
-                      Crear publicación
+                      Crear foro
                     </button>
                   </div>
                 </form>

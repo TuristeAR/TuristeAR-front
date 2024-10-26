@@ -2,8 +2,9 @@ import Carousel from '../components/Destinations/Carousel';
 import { Header } from '../components/Header/Header';
 import { MapaArg } from '../components/Destinations/MapaArg';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { get } from '../utilities/http.util';
+import SearchHeroSection from '../components/SearchHeroSection/SearchHeroSection';
 
 type Province = {
   id: number;
@@ -65,6 +66,8 @@ const Destinations = () => {
           'Content-Type': 'application/json',
         });
         setProvinces(response.data);
+        setSelectedProvince(response.data[0]);
+        fetchReviews(response.data[0].name);
       } catch (error) {
         console.error('Error fetching provinces:', error);
       }
@@ -85,6 +88,8 @@ const Destinations = () => {
   };
 
   const handleProvinceClick = (id: number) => {
+    console.log(provinces)
+
     const province = provinces.find((p) => p.id === id) || null;
     fetchReviews(province.name);
     setSelectedProvince(province);
@@ -94,24 +99,11 @@ const Destinations = () => {
     <>
       <Header />
       <section>
-        <div className="bg-custom-whiteBlue15 w-full h-[120px]">
-          <div className="container mx-auto h-full flex flex-col items-center justify-center gap-y-4 ">
-            <p className="px-8 lg:px-0 max-w-[600px] text-center font-semibold tracking-tight">
-              Si ya sabés cuál es tu destino, seleccionalo para descubrir los mejores lugares y
-              actividades
-            </p>
-            <div>
-              <form action="" className="flex items-center relative">
-                <input
-                  className=" w-[350px] md:w-[400px] rounded outline-none text-sm md:text-md p-1 pr-10"
-                  type="text"
-                  placeholder="Buscar por provincia, localidad o tipo de lugar..."
-                />
-                <img src="/assets/search.svg" className="absolute right-2" alt="" />
-              </form>
-            </div>
-          </div>
-        </div>
+        <SearchHeroSection
+          title={`Si ya sabés cuál es tu destino, seleccionalo para descubrir los mejores lugares y
+              actividades`}
+          onSearch={() => {}}
+        ></SearchHeroSection>
         <div className="md:flex flex-wrap my-6 container mx-auto gap-1 p-4">
           <div className="flex-1 md:w-[400px] xl:w-auto">
             <div className="flex justify-center items-center" onClick={scrollToSection}>
@@ -120,14 +112,14 @@ const Destinations = () => {
           </div>
           <div className="w-px bg-custom-orange m-10 "></div>
           <div ref={sectionRef} className="flex-1 max-w-[600px] w-full flex flex-col gap-y-6 ">
-            <div className="flex flex-col gap-y-4">
-              <h1 className="text-3xl text-center">{selectedProvince?.name} </h1>
+            <div className="flex flex-col gap-y-4 p-4 mx-6">
+              <h1 className="text-3xl text-left">{selectedProvince?.name} </h1>
               <p className="font-light text-gray-500 text-xl text-start">
                 {selectedProvince?.description}
               </p>
               <div className="flex justify-start gap-2 overflow-hidden">
                 {selectedProvince?.images.map((image, index) => (
-                  <div key={index} className="w-[300px] h-[300px] overflow-hidden">
+                  <div key={index} className="w-full h-[300px] overflow-hidden">
                     <img
                       key={image}
                       src={image}
@@ -138,9 +130,9 @@ const Destinations = () => {
                 ))}
               </div>
               {selectedProvince ? (
-                <div>
+                <div className={'flex justify-end'}>
                   <button className="btn-blue" onClick={handleRedirect}>
-                    Descubrí más de {selectedProvince?.name}
+                    Descubrir más de {selectedProvince?.name}
                   </button>
                 </div>
               ) : (
@@ -154,41 +146,48 @@ const Destinations = () => {
               {selectedProvince &&
                 reviews?.map((item, index) => {
                   return (
-                    <div className="flex flex-col gap-y-4" key={index}>
-                      <div className="flex justify-between items-center px-2 text-gray">
-                        <div className="flex items-center gap-4">
-                          <div className="rounded-full p-2 border border-1 border-black">
-                            <img
-                              className="w-8 h-8"
-                              src={item.reviews[0].authorPhoto}
-                              alt="person"
-                            />
+                    <>
+                      <div
+                        className="flex flex-col gap-y-4 p-4 mx-6 mb-6 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)]"
+                        key={index}>
+                        <div className="flex justify-between items-center px-2 text-gray">
+                          <div className="flex items-center gap-4">
+                            <div className="rounded-full p-2 border border-1 border-black">
+                              <img
+                                className="w-8 h-8"
+                                src={item.reviews[0].authorPhoto}
+                                alt="person"
+                              />
+                            </div>
+                            <p className="text-lg">{item.reviews[0].authorName}</p>
                           </div>
-                          <p className="text-lg">{item.reviews[0].authorName}</p>
+                          <p className="text-lg">{item.reviews[0].publishedTime}</p>
                         </div>
-                        <p className="text-lg">{item.reviews[0].publishedTime}</p>
+                        <p className="font-light text-gray-500 text-base lg:text-lg text-start">
+                          {item.reviews[0].text}
+                        </p>
+                        <p className="italic text-md">
+                          {item.name}, {selectedProvince?.name}
+                        </p>
+                        <div className="flex justify-start gap-2 w-full">
+                          {item.reviews[0].photos.map((image, imgIndex) => (
+                            <div key={imgIndex} className="w-3/4 h-[170px] overflow-hidden">
+                              <img
+                                src={image}
+                                className="w-full h-full object-cover"
+                                alt={selectedProvince?.name}
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <p className="font-light text-gray-500 text-base lg:text-lg text-start">
-                        {item.reviews[0].text}
-                      </p>
-                      <p className="italic text-md">
-                        {item.name}, {selectedProvince?.name}
-                      </p>
-                      <div className="flex justify-start gap-2">
-                        {item.reviews[0].photos.map((image, imgIndex) => (
-                          <div key={imgIndex} className="w-[200px] h-[170px] overflow-hidden">
-                            <img
-                              src={image}
-                              className="w-full h-full object-cover"
-                              alt={selectedProvince?.name}
-                            />
-                          </div>
-                        ))}
+                      <div className={'flex justify-end mx-6'}>
+                        <Link to={`/lugar-esperado/${item.googleId}`}>
+                          <button className="btn-blue">Ver más publicaciones</button>
+                        </Link>
                       </div>
-                      <div>
-                        <button className="btn-blue">Ver más publicaciones</button>
-                      </div>
-                    </div>
+                    </>
+
                   );
                 })}
             </Carousel>

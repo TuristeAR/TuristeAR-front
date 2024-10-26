@@ -1,9 +1,11 @@
 import { Link, useParams } from 'react-router-dom';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
 import { AddParticipantModal } from '../components/AddParticipantModal/AddParticipantModal';
+import { get } from '../utilities/http.util';
+import { Countdown } from '../components/Calendar/Countdown';
 
 type User = {
   id: number;
@@ -20,7 +22,42 @@ export const ItineraryDetail = () => {
 
   const [showedInfo, setShowedInfo] = useState<boolean[]>([]);
 
+  const [reviews, setReviews] = useState<any[]>([]);
+
   let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
+
+  useEffect(() => {
+    if (activities.length > 0) {
+      const fetchReviewsForActivity = (googleId: string) => {
+        return get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
+          'Content-Type': 'application/json',
+        });
+      };
+
+      const fetchData = async () => {
+        try {
+          const reviewsPromises = activities.map((activity) =>
+            fetchReviewsForActivity(activity.place.googleId),
+          );
+          const allReviews = await Promise.all(reviewsPromises);
+          setReviews(allReviews.flat());
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+      fetchData();
+    }
+  }, [activities]);
+
+  const randomImages = useMemo(() => {
+    const getRandomImages = () => {
+      const allPhotos = reviews.flatMap((review) => review.photos);
+      const shuffledPhotos = allPhotos.sort(() => 0.5 - Math.random());
+      return shuffledPhotos.slice(0, 3);
+    };
+
+    return getRandomImages();
+  }, [reviews]);
 
   const toggleInfo = (index: number) => {
     setShowedInfo((prevState) => {
@@ -29,15 +66,6 @@ export const ItineraryDetail = () => {
       return newState;
     });
   };
-  const imgs = [
-    {
-      img: [
-        '/assets/san-nicolas-buenos-aires.webp',
-        '/assets/san-nicolas-buenos-aires.webp',
-        '/assets/san-nicolas-buenos-aires.webp',
-      ],
-    },
-  ];
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -46,10 +74,13 @@ export const ItineraryDetail = () => {
   };
 
   const activitiesByDay = activities.reduce((acc: any, activity: any) => {
-    const date = new Date(activity.fromDate).toISOString().split('T')[0]; // Obtener solo la fecha
+    // Usar toLocaleDateString para obtener solo la fecha sin zona horaria
+    const date = new Date(activity.fromDate).toLocaleDateString();
+
     if (!acc[date]) {
       acc[date] = [];
     }
+
     acc[date].push(activity);
     return acc;
   }, {});
@@ -89,73 +120,81 @@ export const ItineraryDetail = () => {
 
     fetchData();
   }, [itineraryId]);
+
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
     usersOldNav = updatedUsers;
     console.log('Usuarios actualizados en el padre:', updatedUsers);
     console.log('UserNav new: ', usersOldNav);
   };
+  console.log(activities);
+
+  const reorderDate = (dateString : string ) => {
+    const formatDate = (date) => {
+      const [year, month, day] = date.split('-'); // Divide la fecha en año, mes, día
+      return `${day}-${month}-${year}`; // Reordena en formato 'dd-mm-yyyy'
+    };
+
+    return formatDate(dateString)
+  };
 
   return (
     <>
       <Header />
       <section>
-        <div className="container mx-auto max-w-[980px] flex flex-col justify-center z-30 relative p-4">
-          <div className="w-full my-8">
-            {imgs.map((img, index) => {
-              return <ImageGallery key={index} images={img.img} height={70} />;
-            })}
+        <div className="container mx-auto flex flex-col justify-center z-30 relative p-4">
+          <div className="lg:hidden block md:w-[45%]">
+            <ImageGallery images={randomImages} height={70} />
           </div>
-
-          <div className="w-full  my-2">
-            <div className="flex flex-col md:flex-row gap-y-3 md:gap-x-12 border-b pb-4 border-gray-50 ">
-              {/* Informacion general */}
-              <div className="md:max-w-[650px] flex-1">
-                <div className="border-b pb-2 border-gray-50 ">
-                  <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
-                </div>
-                {/*<div>*/}
-                {/*  <h2 className="font-semibold text-md my-2">Información general</h2>*/}
-                {/*  <p className="ml-4 text-sm"></p>*/}
-                {/*</div>*/}
+          <div className={'flex md:flex-row flex-col justify-between my-8 lg:gap-0 gap-6'}>
+            <div className="md:w-[55%] md:max-w-[650px] flex flex-col justify-between ">
+              <div className="border-b pb-2 border-gray-50 ">
+                <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
               </div>
-              {/* Calendario, Participantes */}
-              <div className="flex flex-col gap-y-4">
-                <div className="bg-primary/40 rounded-sm flex justify-center py-1">
-                  <Link
-                    to={`/ItineraryCalendar/${itineraryId}`}
-                    className="text-primary-4 text-sm font-semibold"
-                  >
-                    Ir a calendario
-                  </Link>
-                </div>
-                <div className="flex flex-col gap-y-2">
-                  <div className="w-full flex  gap-2 mb-2">
-                    <div>
-                      <AddParticipantModal
-                        itinerary={Number(itineraryId)}
-                        tap={1}
-                        usersOldNav={usersOldNav}
-                        onUsersOldUpdate={handleUpdateUsersOld}
-                      />
-                      <AddParticipantModal
-                        itinerary={Number(itineraryId)}
-                        tap={2}
-                        usersOldNav={usersOldNav}
-                        onUsersOldUpdate={handleUpdateUsersOld}
-                      />
-                    </div>
+              <div>
+                <Countdown fromDate={itinerary?.fromDate} />
+              </div>
+              <div className="flex flex-col gap-y-2">
+                <div className="w-full flex  gap-2 mb-2">
+                  <div>
+                    <AddParticipantModal
+                      itinerary={Number(itineraryId)}
+                      tap={1}
+                      usersOldNav={usersOldNav}
+                      onUsersOldUpdate={handleUpdateUsersOld}
+                    />
+                    <AddParticipantModal
+                      itinerary={Number(itineraryId)}
+                      tap={2}
+                      usersOldNav={usersOldNav}
+                      onUsersOldUpdate={handleUpdateUsersOld}
+                    />
                   </div>
                 </div>
               </div>
+              <div className="bg-primary/40 rounded-sm flex justify-center py-1">
+                <Link
+                  to={`/ItineraryCalendar/${itineraryId}`}
+                  className="text-primary-4 text-sm font-semibold"
+                >
+                  Ir a calendario
+                </Link>
+              </div>
             </div>
+            <div className="lg:block hidden md:w-[45%]">
+              <ImageGallery images={randomImages} height={70} />
+            </div>
+          </div>
+
+          <div className="w-full  my-2">
             {/*Itinerario */}
             <div className="mb-10">
               <h2 className="font-semibold text-md my-2">Itinerario de viaje</h2>
-              {/* Días */}
-              {activities.map((item: any, index: number) => {
-                const dateKey = new Date(item.fromDate).toISOString().split('T')[0];
-                const fecha = new Date(item.fromDate);
+
+              {/* Recorre los días en lugar de las actividades */}
+              {Object.keys(activitiesByDay).map((dateKey, index) => {
+                const activitiesForDay = activitiesByDay[dateKey];
+                const fecha = new Date(dateKey); // Ya tienes la clave como la fecha
 
                 return (
                   <div key={index}>
@@ -164,7 +203,8 @@ export const ItineraryDetail = () => {
                       onClick={() => toggleInfo(index)}
                     >
                       <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md">
-                        Dia: {index + 1}
+                        {/* Mostrar el número de día en función del índice */}
+                        Día: {index + 1}
                         <div className="icons">
                           <svg
                             className={`${!showedInfo[index] ? 'block' : 'hidden'}`}
@@ -193,26 +233,23 @@ export const ItineraryDetail = () => {
                     {/* Info */}
                     <div className={`${showedInfo[index] ? 'block' : 'hidden'}`}>
                       <div className="relative px-1 sm:px-0 flex flex-col gap-2 my-2 flex-wrap">
-                        {/* Título del día */}
-                        <h3 className="font-semibold text-sm px-10">
-                          {new Date(fecha).toLocaleDateString()}
-                        </h3>
-
                         {/* Mostrar actividades del día */}
-                        {activitiesByDay[dateKey]?.map((activity: any, idx: number) => (
-                          <div
-                            key={idx}
-                            className="flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 sm:px-8"
-                          >
-                            <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
-                              <span className="text-sm">
-                                {formatTime(activity.fromDate)} - {formatTime(activity.toDate)}
-                              </span>
-                            </div>
-                            <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
-                              <p className="font-semibold text-sm sm:text-base">
-                                {activity.name?.split(' - ')[0]}
-                              </p>
+                        {activitiesForDay.map((activity: any, idx: number) => (
+                          <div key={idx}>
+                            <h3 className="font-semibold text-sm  px-4 py-1">
+                              {reorderDate(activity.fromDate.split('T')[0])}
+                            </h3>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 ">
+                              <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
+                                <span className="text-sm">
+                                  {formatTime(activity.fromDate)} - {formatTime(activity.toDate)}
+                                </span>
+                              </div>
+                              <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
+                                <p className="font-semibold text-sm sm:text-base">
+                                  {activity.name?.split(' - ')[0]}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         ))}

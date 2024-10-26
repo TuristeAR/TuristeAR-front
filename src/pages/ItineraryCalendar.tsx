@@ -33,6 +33,27 @@ export const ItineraryCalendar = () => {
   const [isAddingActivity, setIsAddingActivity] = useState(false);
   const [showPlaces, setShowPlaces] = useState(false);
 
+  const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    setSelectedPlace(inputValue);
+
+    // Filtra los lugares basados en el valor del input
+    const filtered = activityByProvince.filter((place) =>
+      place.name.toLowerCase().includes(inputValue.toLowerCase()),
+    );
+
+    setFilteredPlaces(filtered);
+    setShowPlaces(true); // Muestra la lista sin importar si hay coincidencias
+  };
+
+  const handlePlaceSelect = (placeName: string, placeId: string) => {
+    setSelectedPlace(placeName);
+    setNewActivity({ ...newActivity, place: placeId });
+    setShowPlaces(false); // Cierra la lista al seleccionar un lugar
+  };
+
   const handleAddActivity = () => {
     fetch('https://api-turistear.koyeb.app/itinerary/add-activity', {
       method: 'POST',
@@ -253,26 +274,24 @@ export const ItineraryCalendar = () => {
                         type="text"
                         placeholder="Lugar"
                         value={selectedPlace || newActivity.place}
-                        onChange={(e) => setSelectedPlace(e.target.value)}
+                        onChange={handleInputChange}
                         onFocus={() => setShowPlaces(true)}
                         className="w-full p-2 border border-primary rounded mb-2 outline-none"
                       />
 
                       {showPlaces && (
-                        <div className="absolute left-0 right-0 max-h-48 bg-white  rounded z-50 overflow-y-auto">
-                          {activityByProvince.map((place, index) => (
-                            <div
-                              key={index}
-                              className="p-2 hover:bg-gray-200 cursor-pointer"
-                              onClick={() => {
-                                setSelectedPlace(place.name);
-                                setNewActivity({ ...newActivity, place: place.id });
-                                setShowPlaces(false);
-                              }}
-                            >
-                              {place.name}
-                            </div>
-                          ))}
+                        <div className="absolute left-0 right-0 max-h-48 bg-white rounded z-50 overflow-y-auto">
+                          {filteredPlaces.length > 0 && (
+                            filteredPlaces.map((place, index) => (
+                              <div
+                                key={index}
+                                className="p-2 hover:bg-gray-200 cursor-pointer"
+                                onClick={() => handlePlaceSelect(place.name, place.id)}
+                              >
+                                {place.name}
+                              </div>
+                            ))
+                          ) }
                         </div>
                       )}
                     </div>
@@ -307,9 +326,6 @@ export const ItineraryCalendar = () => {
                         </button>
                       </div>
                     ))}
-                  </div>
-                  <div className="p-2">
-                    <p className="text-gray">Descubrir más</p>
                   </div>
                 </>
               )}
