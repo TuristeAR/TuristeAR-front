@@ -39,7 +39,7 @@ export const LeftColumn = ({
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
-  const socket = io('http://localhost:3001');
+  const socket = io('https://api-turistear.koyeb.app');
 
   useEffect(() => {
     // Aquí puedes agregar la escucha de eventos
