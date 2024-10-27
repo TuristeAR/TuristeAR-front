@@ -62,15 +62,21 @@ export const LeftColumn = ({
 
     socket.on('userRemoved', ({ participantId }) => {
       setUsersOldNav((prevUsersOldNav) =>
-        prevUsersOldNav.filter((user) => user.id !== participantId)
+        prevUsersOldNav.filter((user) => user.id !== participantId),
       );
     });
-    
+
+    socket.on('activityRemoved', ({ itineraryId, activityId }) => {
+      setActivities((prevActivities) =>
+        prevActivities.filter((activity) => activity.id !== activityId),
+      );
+    });
 
     return () => {
       socket.off('usersUpdated');
       socket.off('userRemoved');
       socket.off('usersAdddItinerary');
+      socket.off('activityRemoved');
     };
   }, []);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
