@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /* Icons */
 import plusIcon from '/assets/add.svg';
@@ -14,6 +14,7 @@ import useFetchPlacesByProvince from '../../utilities/useFetchPlacesByProvince';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
 
 import { AddParticipantModal } from '../AddParticipantModal/AddParticipantModal';
+import { io } from 'socket.io-client';
 
 type User = {
   id: number;
@@ -31,8 +32,6 @@ export const LeftColumn = ({
   activities,
   setActivities,
 }) => {
-
-
   const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
   const [selectedPlace, setSelectedPlace] = useState('');
   const [showPlaces, setShowPlaces] = useState(false);
@@ -40,7 +39,38 @@ export const LeftColumn = ({
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
+  const socket = io('http://localhost:3001');
 
+  useEffect(() => {
+    // Aquí puedes agregar la escucha de eventos
+    socket.on('usersUpdated', (data) => {
+      console.log('socket', data);
+      const owner = {
+        ...data.itineraryParticipants.user,
+        isOwner: true,
+      };
+
+      setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
+    });
+    socket.on('usersAdddItinerary', (data) => {
+      console.log('socket add', data.updatedItinerary);
+      const owner = {
+        ...data.updatedItinerary.user,
+        isOwner: true,
+      };
+      setUsersOldNav([owner, ...data.updatedItinerary.participants]);
+    });
+
+    socket.on('userRemoved', ({ participantId }) => {
+      const updatedUsersOld = usersOldNav.filter((user) => user.id !== participantId);
+      setUsersOldNav(updatedUsersOld);
+    });
+
+    return () => {
+      socket.off('usersUpdated');
+      socket.off('usersAdddItinerary');
+    };
+  }, []);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setSelectedPlace(inputValue);
