@@ -42,7 +42,6 @@ export const LeftColumn = ({
   const socket = io('https://api-turistear.koyeb.app');
 
   useEffect(() => {
-    // Aquí puedes agregar la escucha de eventos
     socket.on('usersUpdated', (data) => {
       console.log('socket', data);
       const owner = {
@@ -61,10 +60,6 @@ export const LeftColumn = ({
       setUsersOldNav([owner, ...data.updatedItinerary.participants]);
     });
 
-    socket.on('userRemoved', ({ participantId }) => {
-      const updatedUsersOld = usersOldNav.filter((user) => user.id !== participantId);
-      setUsersOldNav(updatedUsersOld);
-    });
 
     return () => {
       socket.off('usersUpdated');
