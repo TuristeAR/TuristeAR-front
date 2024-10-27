@@ -32,7 +32,6 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   const [usersOld, setUsersOld] = useState<User[]>(usersOldNav);
   const closeModal = () => setShowModal(false);
   const navigate = useNavigate();
-  // Get the localStorage user
 
   useEffect(() => {
     const handleEsc = (event) => {
@@ -123,7 +122,6 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
 
       if (data.status === 'success') {
         setUsersOld(data.data.participants);
-
         console.log('Participantes actualizados:', data.data.participants);
       } else {
         console.error('Error al agregar el usuario:', data.message);

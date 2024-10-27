@@ -42,6 +42,7 @@ export const ItineraryCalendar = () => {
       });
   };
 
+
   return (
     <section
       className={`${isAddingActivity ? 'h-screen overflow-hidden' : ''} h-screen xl:h-auto overflow-x-clip relative`}
