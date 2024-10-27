@@ -45,11 +45,10 @@ export const ModalActivity = ({ handleClose, editEvent, deleteActivity, eventInf
     fetchData();
   }, [eventInfo.event.extendedProps.googleId]);
 
-  console.log(reviews);
   return (
     <>
-      <div className="flex justify-center items-center fixed top-0 left-0 w-[100%] h-[100%] z-50 bg-black/80 cursor-default">
-        <div className="flex flex-col gap-y-2  bg-white p-2 rounded-lg shadow-md text-center w-[350px] md:w-full md:max-w-[500px] h-[45vh] md:h-[70vh] relative overflow-y-auto ">
+      <div className="flex justify-center items-center fixed top-0 left-0 w-screen h-screen z-50 bg-black/80 cursor-default">
+        <div className="flex flex-col gap-y-2 bg-white p-4 rounded-lg shadow-md text-center w-[90%] max-w-[500px] h-[75vh] overflow-y-auto relative">
           <div className="flex justify-end gap-x-2 w-full">
             <button onClick={() => setIsEditing(true)}>
               <Edit2Icon size={20} color="#49A2EC" />
@@ -120,7 +119,9 @@ export const ModalActivity = ({ handleClose, editEvent, deleteActivity, eventInf
                   <span className="flex flex-col gap-y-2 text-start text-[11px] md:text-sm font-semibold whitespace-normal break-words text-gray/95 md:ml-7">
                     Horarios:
                     {eventInfo.event.extendedProps.hours.map((hour, index) => (
-                      <span  className='whitespace-normal break-words' key={index}>{hour}</span>
+                      <span className="whitespace-normal break-words" key={index}>
+                        {hour}
+                      </span>
                     ))}
                   </span>
                 </div>
@@ -164,14 +165,6 @@ export const ModalActivity = ({ handleClose, editEvent, deleteActivity, eventInf
               ))}
             </div>
           )}
-
-          {/* {isEditing && (
-            <div className="flex gap-x-2 justify-center mt-1 overflow-hidden">
-              <button onClick={handleSave} className="btn-question">
-                Guardar
-              </button>
-            </div>
-          )} */}
         </div>
       </div>
     </>
