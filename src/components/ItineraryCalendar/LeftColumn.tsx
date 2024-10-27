@@ -194,7 +194,7 @@ export const LeftColumn = ({
             </div>
             <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
               <img src={chatIcon} alt="" />
-              <p className="text-sm">Chat</p>
+              <a href={`/itineraryChat/${itineraryId}`} className="text-sm">Chat</a>
             </div>
             <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
               <img src={galleryIcon} alt="" />
