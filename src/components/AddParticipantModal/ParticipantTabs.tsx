@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { io } from 'socket.io-client';
 
 type User = {
   id: number;
@@ -32,7 +33,23 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   const [usersOld, setUsersOld] = useState<User[]>(usersOldNav);
   const closeModal = () => setShowModal(false);
   const navigate = useNavigate();
+  const socket = io('https://api-turistear.koyeb.app');
 
+  useEffect(() => {
+    socket.on('userRemoved', ({ participantId }) => {
+      console.log("spcket pid",participantId)
+      console.log(usersOldNav)
+      const updatedUsersOld = usersOldNav.filter((user) => user.id !== participantId);
+      console.log(updatedUsersOld)
+      setUsersOld(usersOldNav);
+    });
+
+    return () => {
+      socket.off('userRemoved');
+      socket.off('usersAdddItinerary');
+    };
+  }, []);
+  
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.key === 'Escape') {
