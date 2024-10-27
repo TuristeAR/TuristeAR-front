@@ -106,7 +106,7 @@ export const Calendar = ({
                     })
                   : ''}
               </span>
-              <span className=" text-[7px] md:text-xs font-semibold whitespace-normal break-words">
+              <span className="text-[7px] md:text-xs font-semibold truncate max-w-[80px]">
                 {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
               </span>
 
