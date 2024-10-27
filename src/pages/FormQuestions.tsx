@@ -33,7 +33,7 @@ interface FormData {
   localities: string[];
   fromDate: string;
   toDate: string;
-  economy: number | null;
+  priceLevel: string[];
   types: string[];
   company: number | null;
 }
@@ -59,21 +59,21 @@ const questions = [
       {
         src: <HandCoins width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
         alt: 'Económico',
-        data: 1,
+        data: ['PRICE_LEVEL_FREE', 'PRICE_LEVEL_INEXPENSIVE'],
       },
       {
         src: <Banknote width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
         alt: 'Moderado',
-        data: 2,
+        data: ['PRICE_LEVEL_MODERATE'],
       },
       {
         src: <Gem width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
         alt: 'Lujoso',
-        data: 3,
+        data: ['PRICE_LEVEL_EXPENSIVE', 'PRICE_LEVEL_VERY_EXPENSIVE'],
       },
     ],
     type: 'icon',
-    name: 'economy',
+    name: 'priceLevel',
     multipleSelection: false,
   },
   {
@@ -167,7 +167,7 @@ const FormQuestions = () => {
     localities: [],
     fromDate: '',
     toDate: '',
-    economy: null,
+    priceLevel: [],
     types: [],
     company: null,
   });
@@ -295,7 +295,7 @@ const FormQuestions = () => {
 
         break;
       case 2:
-        if (!formData.economy) {
+        if (formData.priceLevel.length === 0) {
           setErrorMessage('Tenés que seleccionar una opción');
           return;
         }
@@ -482,19 +482,20 @@ const FormQuestions = () => {
                         </strong>
                       </span>
                       <div className="flex flex-wrap justify-center gap-5 my-2">
-                        <div
-                          key="economy"
-                          className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 p-2 border border-gray"
-                        >
-                          {
-                            questions[2].options.find((option) => option.data === formData.economy)
-                              ?.src
-                          }
-                          {
-                            questions[2].options.find((option) => option.data === formData.economy)
-                              ?.alt
-                          }
-                        </div>
+                        {formData.priceLevel.map((type) => {
+                          const option = questions[3].options.find(
+                            (option) => option.data.toString() === type,
+                          );
+                          return (
+                            <div
+                              key={type}
+                              className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 border border-gray"
+                            >
+                              {option?.src}
+                              {option?.alt}
+                            </div>
+                          );
+                        })}
                         {formData.types.map((type) => {
                           const option = questions[3].options.find(
                             (option) => option.data.toString() === type,
