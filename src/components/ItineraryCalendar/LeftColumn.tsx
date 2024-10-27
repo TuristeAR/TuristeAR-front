@@ -60,9 +60,16 @@ export const LeftColumn = ({
       setUsersOldNav([owner, ...data.updatedItinerary.participants]);
     });
 
+    socket.on('userRemoved', ({ participantId }) => {
+      setUsersOldNav((prevUsersOldNav) =>
+        prevUsersOldNav.filter((user) => user.id !== participantId)
+      );
+    });
+    
 
     return () => {
       socket.off('usersUpdated');
+      socket.off('userRemoved');
       socket.off('usersAdddItinerary');
     };
   }, []);
