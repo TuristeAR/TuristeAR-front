@@ -1,23 +1,29 @@
-/* Icons */
-import plusIcon from '/assets/add.svg';
-import chatIcon from '/assets/chat.svg';
-import galleryIcon from '/assets/gallery.svg';
-import alignIcon from '/assets/align.svg';
-import deleteIcon from '/assets/delete.svg';
-
 /* Components */
 import { Calendar } from '../components/Calendar/Calendar';
 import { Header } from '../components/Header/Header';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
 import { LeftColumn } from '../components/ItineraryCalendar/LeftColumn';
+import { ModalActivity } from '../components/Calendar/ModalEvent';
 
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
   const { itinerary, activities, setActivities } = useFetchItinerary(itineraryId || null);
 
   const [isAddingActivity, setIsAddingActivity] = useState(false);
+  const [selectedEventInfo, setSelectedEventInfo] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleEventClick = (eventInfo) => {
+    setSelectedEventInfo(eventInfo);
+    setIsModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setSelectedEventInfo(null);
+    setIsModalOpen(false);
+  };
 
   const deleteActivity = (activityId: number) => {
     fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
@@ -42,7 +48,6 @@ export const ItineraryCalendar = () => {
       });
   };
 
-
   return (
     <section
       className={`${isAddingActivity ? 'h-screen overflow-hidden' : ''} h-screen xl:h-auto overflow-x-clip relative`}
@@ -63,10 +68,18 @@ export const ItineraryCalendar = () => {
         <main className="order-1 lg:order-2 col-span-1 container mx-auto">
           <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-full md:p-4">
             <Calendar
+              onEventClick={handleEventClick}
               activities={activities}
               setActivities={setActivities}
               deleteActivity={deleteActivity}
             />
+            {isModalOpen && selectedEventInfo && (
+              <ModalActivity
+                handleClose={handleClose}
+                deleteActivity={deleteActivity}
+                eventInfo={selectedEventInfo}
+              />
+            )}
           </div>
         </main>
       </div>
