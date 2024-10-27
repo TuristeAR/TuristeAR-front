@@ -71,12 +71,26 @@ export const LeftColumn = ({
         prevActivities.filter((activity) => activity.id !== activityId),
       );
     });
+    socket.on('addActivity', ({ itinerary }) => {
+      console.log(itinerary)
+      const updatedItinerary = itinerary;
+          const activitiesList = updatedItinerary?.activities || [];
+          const lastActivity = activitiesList[activitiesList.length - 1];
+
+          if (lastActivity) {
+            setActivities((prevActivities) => [...prevActivities, lastActivity]);
+          }
+
+          setNewActivity({ name: '', fromDate: '', toDate: '', place: '' }); // Resetear el formulario
+          setIsAddingActivity(false); // Cerrar el formulario
+    });
 
     return () => {
       socket.off('usersUpdated');
       socket.off('userRemoved');
       socket.off('usersAdddItinerary');
       socket.off('activityRemoved');
+      socket.off('addActivity');
     };
   }, []);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,7 +113,7 @@ export const LeftColumn = ({
   };
 
   const handleAddActivity = () => {
-    fetch('https://api-turistear.koyeb.app/itinerary/add-activity', {
+    fetch('http://localhost:3001/itinerary/add-activity', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
