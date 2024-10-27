@@ -2,10 +2,11 @@
 import { Calendar } from '../components/Calendar/Calendar';
 import { Header } from '../components/Header/Header';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useFetchItinerary from '../utilities/useFetchItinerary';
 import { LeftColumn } from '../components/ItineraryCalendar/LeftColumn';
 import { ModalActivity } from '../components/Calendar/ModalEvent';
+import { io } from 'socket.io-client';
 
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
@@ -14,6 +15,8 @@ export const ItineraryCalendar = () => {
   const [isAddingActivity, setIsAddingActivity] = useState(false);
   const [selectedEventInfo, setSelectedEventInfo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const socket = io('https://api-turistear.koyeb.app'); 
 
   const handleEventClick = (eventInfo) => {
     setSelectedEventInfo(eventInfo);
@@ -24,6 +27,15 @@ export const ItineraryCalendar = () => {
     setSelectedEventInfo(null);
     setIsModalOpen(false);
   };
+  useEffect(() => {
+    socket.on('activityRemoved', ({ itineraryId, activityId }) => {
+      console.log(`Activity with ID ${activityId} removed from itinerary ${itineraryId}`);
+    });
+
+    return () => {
+      socket.off('activityRemoved'); 
+    };
+  }, []);
 
   const deleteActivity = (activityId: number) => {
     fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
