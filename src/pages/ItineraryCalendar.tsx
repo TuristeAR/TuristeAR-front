@@ -35,9 +35,42 @@ export const ItineraryCalendar = () => {
   const [showPlaces, setShowPlaces] = useState(false);
 
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
+  const socket = io('http://localhost:3001');
 
+  useEffect(() => {
+  
+    // Aquí puedes agregar la escucha de eventos
+    socket.on('usersUpdated', (data) => {
+      console.log("socket", data);
+      const owner = {
+        ...data.itineraryParticipants.user,
+        isOwner: true,
+      };
+  
+      usersOldNav = ([owner, ...data.itineraryParticipants.participants]);
+    });
+    socket.on('usersAdddItinerary', (data) => {
+      console.log("socket add", data.updatedItinerary);
+      const owner = {
+        ...data.updatedItinerary.user,
+        isOwner: true,
+      };
+  setUsersOldNav([owner, ...data.updatedItinerary.participants])
+      usersOldNav = ([owner, ...data.updatedItinerary.participants]); 
+    });
 
+    socket.on('userRemoved', ({ participantId }) => {
+      const updatedUsersOld = usersOldNav.filter((user) => user.id !== participantId);
+      setUsersOldNav(updatedUsersOld);
+    });
 
+  
+    return () => {
+      socket.off('usersUpdated');
+      socket.off('usersAdddItinerary');
+    };
+  }, []);
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setSelectedPlace(inputValue);
@@ -58,7 +91,7 @@ export const ItineraryCalendar = () => {
   };
 
   const handleAddActivity = () => {
-    fetch('https://api-turistear.koyeb.app/itinerary/add-activity', {
+    fetch('http://localhost:3001/itinerary/add-activity', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -92,7 +125,7 @@ export const ItineraryCalendar = () => {
   };
 
   const deleteActivity = (activityId: number) => {
-    fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
+    fetch('http://localhost:3001/itinerary/remove-activity', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -118,7 +151,7 @@ export const ItineraryCalendar = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://api-turistear.koyeb.app/itinerary/participants/${itineraryId}`,
+          `http://localhost:3001/itinerary/participants/${itineraryId}`,
           {
             method: 'GET',
             credentials: 'include',
@@ -165,7 +198,7 @@ export const ItineraryCalendar = () => {
         if (itinerary && itinerary.name) {
           const province = itinerary.name.split(' a ')[1];
           const response = await fetch(
-            `https://api-turistear.koyeb.app/fetch-activities-places/${province}`,
+            `http://localhost:3001/fetch-activities-places/${province}`,
             {
               method: 'GET',
               credentials: 'include',
