@@ -111,7 +111,32 @@
 
 }
 
+.fc-button {
+    background-color: #4285f4;
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
 
+.fc-button:hover {
+    background-color: #357ae8;
+}
+
+.fc-event {
+    background-color: #e8f0fe;
+    color: #1a73e8;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 6px;
+}
+
+/* Días */
+.fc-daygrid-day-number {
+    color: #5f6368 !important;
+    font-weight: 500 !important;
+}
 
 .fc-today-button {
     background-color: #007bff !important;
@@ -161,8 +186,8 @@
 
     /* Ajustar el tamaño del título para pantallas pequeñas */
     .fc-toolbar-title {
-        font-size: 1.2rem;
-        /* Reduce el tamaño del título */
+        font-size: 1.25rem !important;
+        font-weight: bold !important;
     }
 
     /* Botones del calendario (mes, semana, día) */
@@ -206,7 +231,7 @@
 
     /* Calendario en sí, ajustando el tamaño */
     .fc {
-        font-size: 0.9rem;
+        font-size: 0.6rem;
         /* Reduce el tamaño de fuente del calendario */
     }
 }
@@ -327,6 +352,3 @@
     transition: transform 0.3s, box-shadow 0.3s;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-
-

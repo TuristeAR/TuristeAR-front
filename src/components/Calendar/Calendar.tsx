@@ -17,7 +17,7 @@ export const Calendar = ({
   setActivities: any;
   deleteActivity: any;
 }) => {
-  console.log(activities)
+  console.log(activities);
   const [openNewEvent, setOpenNewEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null); // Cambia a null en lugar de false
 
@@ -38,7 +38,6 @@ export const Calendar = ({
     setOpenNewEvent(false);
     setSelectedEvent(null);
   };
-
 
   const editEvent = (id: number, newName: string) => {
     const updatedEvents = activities.map((event: any) =>
@@ -81,7 +80,7 @@ export const Calendar = ({
   }, []);
 
   return (
-    <div className="">
+    <div className="w-full p-4 bg-white rounded-lg shadow-md">
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -99,7 +98,7 @@ export const Calendar = ({
         eventContent={(eventInfo) => (
           <>
             <div className="flex justify-center items-center gap-x-2 overflow-hidden">
-              <span className="text-[10px] md:text-xs text-gray-500 bg-primary px-2 rounded-3xl">
+              <span className="hidden md:block text-[10px] md:text-xs text-gray-500 bg-primary text-white px-2 rounded-3xl">
                 {eventInfo.event.start
                   ? new Date(eventInfo.event.start).toLocaleTimeString([], {
                       hour: '2-digit',
@@ -107,7 +106,7 @@ export const Calendar = ({
                     })
                   : ''}
               </span>
-              <span className="text-xs font-semibold whitespace-normal break-words">
+              <span className=" text-[7px] md:text-xs font-semibold whitespace-normal break-words">
                 {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
               </span>
 
@@ -123,9 +122,11 @@ export const Calendar = ({
           </>
         )}
         headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,dayGridWeek,dayGridDay',
+          ...(window.innerWidth > 768 && {
+            right: 'dayGridMonth,dayGridWeek,dayGridDay',
+            left: 'prev,next',
+            center: 'title',
+          }),
         }}
       />
     </div>
