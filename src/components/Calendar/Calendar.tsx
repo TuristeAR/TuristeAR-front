@@ -1,52 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 /* Full Calendar */
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
-/* import { AddActivityCalendar } from './AddEventCalendar';
- */ import { ModalActivity } from './ModalEvent';
 
 export const Calendar = ({
+  onEventClick,
   activities,
   setActivities,
   deleteActivity,
 }: {
+  onEventClick: any;
   activities: any;
   setActivities: any;
   deleteActivity: any;
 }) => {
-  console.log(activities)
-  const [openNewEvent, setOpenNewEvent] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null); // Cambia a null en lugar de false
-
-  const [selectedDate, setSelectedDate] = useState('');
-  const [eventName, setEventName] = useState('');
-
-  const handleDateClick = (arg: { dateStr: string }) => {
-    setSelectedDate(arg.dateStr); // Guardar la fecha seleccionada
-    setOpenNewEvent(true);
-  };
-
-  const handleEventClick = (info: any) => {
-    setSelectedDate(info.event);
-    setSelectedEvent(info.event.id);
-  };
-
-  const handleClose = () => {
-    setOpenNewEvent(false);
-    setSelectedEvent(null);
-  };
-
-
-  const editEvent = (id: number, newName: string) => {
-    const updatedEvents = activities.map((event: any) =>
-      event.id === id ? { ...event, name: newName } : event,
-    );
-    setActivities(updatedEvents);
-  };
-
   // Formatear actividades para FullCalendar
   const formattedActivities = activities.map((activity: any) => ({
     id: String(activity.id),
@@ -81,14 +51,13 @@ export const Calendar = ({
   }, []);
 
   return (
-    <div className="">
+    <div className="w-full p-4 bg-white rounded-lg shadow-md">
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         locale={esLocale}
         events={formattedActivities}
-        dateClick={handleDateClick}
-        eventClick={handleEventClick}
+        eventClick={({ event }) => onEventClick(event)}
         editable={true}
         eventDrop={(info) => {
           const updatedEvents = activities.map((event: any) =>
@@ -99,7 +68,7 @@ export const Calendar = ({
         eventContent={(eventInfo) => (
           <>
             <div className="flex justify-center items-center gap-x-2 overflow-hidden">
-              <span className="text-[10px] md:text-xs text-gray-500 bg-primary px-2 rounded-3xl">
+              <span className="hidden md:block text-[10px] md:text-xs text-gray-500 bg-primary text-white px-2 rounded-3xl">
                 {eventInfo.event.start
                   ? new Date(eventInfo.event.start).toLocaleTimeString([], {
                       hour: '2-digit',
@@ -107,25 +76,18 @@ export const Calendar = ({
                     })
                   : ''}
               </span>
-              <span className="text-xs font-semibold whitespace-normal break-words">
+              <span className="text-[7px] md:text-xs font-semibold truncate max-w-[80px]">
                 {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
               </span>
-
-              {selectedEvent === eventInfo.event.id && (
-                <ModalActivity
-                  handleClose={handleClose}
-                  editEvent={editEvent}
-                  deleteActivity={deleteActivity}
-                  eventInfo={eventInfo}
-                />
-              )}
             </div>
           </>
         )}
         headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,dayGridWeek,dayGridDay',
+          ...(window.innerWidth > 768 && {
+            right: 'dayGridMonth,dayGridWeek,dayGridDay',
+            left: 'prev,next',
+            center: 'title',
+          }),
         }}
       />
     </div>

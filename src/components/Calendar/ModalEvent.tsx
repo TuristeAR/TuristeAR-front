@@ -8,25 +8,15 @@ import { MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { get } from '../../utilities/http.util';
 
-export const ModalActivity = ({ handleClose, editEvent, deleteActivity, eventInfo }) => {
+export const ModalActivity = ({ handleClose, deleteActivity, eventInfo }) => {
   const [isEditing, setIsEditing] = useState(false); // Estado para controlar si estamos editando
-  const [newName, setNewName] = useState(eventInfo.event.title); // Estado para el nuevo nombre del evento
   const [reviews, setReviews] = useState([]);
   const [selectedTab, setSelectedTab] = useState('info'); // Estado para alternar entre las secciones
-
-  const handleSave = () => {
-    editEvent(Number(eventInfo.event.id), newName); // Llama a la función `editEvent` con el nuevo nombre
-    setIsEditing(false); // Salir del modo de edición
-  };
-
-  const handleEvent = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewName(e.target.value);
-  };
 
   useEffect(() => {
     const fetchReviews = () => {
       return get(
-        `https://api-turistear.koyeb.app/reviews/place/${eventInfo.event.extendedProps.googleId}`,
+        `https://api-turistear.koyeb.app/reviews/place/${eventInfo.extendedProps.googleId}`,
         {
           'Content-Type': 'application/json',
         },
@@ -43,24 +33,23 @@ export const ModalActivity = ({ handleClose, editEvent, deleteActivity, eventInf
     };
 
     fetchData();
-  }, [eventInfo.event.extendedProps.googleId]);
+  }, [eventInfo.extendedProps.googleId]);
 
-  console.log(reviews);
   return (
     <>
-      <div className="flex justify-center items-center fixed top-0 left-0 w-[100%] h-[100%] z-50 bg-black/80 cursor-default">
-        <div className="flex flex-col gap-y-2  bg-white p-2 rounded-lg shadow-md text-center w-[350px] md:w-full md:max-w-[500px] h-[45vh] md:h-[70vh] relative overflow-y-auto ">
+      <div className="flex justify-center items-center fixed top-0 left-0 w-screen h-screen z-50 bg-black/80 cursor-default">
+        <div className="flex flex-col gap-y-2 bg-white p-4 rounded-lg shadow-md text-center w-[90%] max-w-[500px] h-[75vh] overflow-y-auto relative">
           <div className="flex justify-end gap-x-2 w-full">
             <button onClick={() => setIsEditing(true)}>
               <Edit2Icon size={20} color="#49A2EC" />
             </button>
 
-            <button onClick={() => deleteActivity(Number(eventInfo.event.id))}>
+            <button onClick={() => deleteActivity(Number(eventInfo.id))}>
               <Trash2Icon size={20} color="#49A2EC" />
             </button>
             <div className="relative bg-gray-50 hover:bg-gray/25 rounded-full w-10 h-10  flex justify-center items-center">
               <span
-                className="absolute top-0 right-0 left-0 text-[26px] text-center text-gray font-bold"
+                className="absolute top-0 right-0 left-0 text-[26px] text-center text-gray font-bold cursor-pointer"
                 onClick={handleClose}
               >
                 &times;
@@ -71,11 +60,11 @@ export const ModalActivity = ({ handleClose, editEvent, deleteActivity, eventInf
           <div className="flex gap-x-2 items-center">
             <div className="bg-primary w-5 h-5 rounded-sm"></div>
             <span className="text-[11px] md:text-xl font-semibold whitespace-normal break-words text-black">
-              {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
+              {eventInfo.title.replace(/ - \d{1,2} \w+\./, '')}
             </span>
             <span className="flex gap-x-2 text-[11px] md:text-sm font-semibold whitespace-normal break-words text-gray/95 md:ml-7">
               <StarIcon size={20} color="#49A2EC" fill="#49A2EC" />
-              {eventInfo.event.extendedProps.rating}
+              {eventInfo.extendedProps.rating}
             </span>
           </div>
 
@@ -101,11 +90,11 @@ export const ModalActivity = ({ handleClose, editEvent, deleteActivity, eventInf
             <div className="flex flex-col  md:flex-row">
               <div className="flex flex-1 flex-col items-start gap-y-2">
                 <span className="text-[11px] md:text-sm font-semibold whitespace-normal break-words text-black/90 md:ml-7">
-                  {eventInfo.event.start && eventInfo.event.start.toLocaleDateString()}{' '}
-                  {eventInfo.event.start && eventInfo.event.start.toLocaleTimeString()}{' '}
+                  {eventInfo.start && eventInfo.start.toLocaleDateString()}{' '}
+                  {eventInfo.start && eventInfo.start.toLocaleTimeString()}{' '}
                 </span>
                 <Link
-                  to={`/lugar-esperado/${eventInfo.event.extendedProps.googleId}`}
+                  to={`/lugar-esperado/${eventInfo.extendedProps.googleId}`}
                   className="flex gap-x-2 text-[11px] md:text-sm font-semibold whitespace-normal break-words text-gray/95 hover:text-gray/70 md:ml-7 cursor-pointer"
                 >
                   Sobre este lugar <InfoIcon size={20} color="#49A2EC" />
@@ -114,13 +103,15 @@ export const ModalActivity = ({ handleClose, editEvent, deleteActivity, eventInf
                   <span className="flex text-[11px] md:text-sm font-semibold whitespace-normal break-words text-gray/95 md:ml-6">
                     <MapPin size={20} color="#49A2EC" />
 
-                    {eventInfo.event.extendedProps.address}
+                    {eventInfo.extendedProps.address}
                   </span>
 
                   <span className="flex flex-col gap-y-2 text-start text-[11px] md:text-sm font-semibold whitespace-normal break-words text-gray/95 md:ml-7">
                     Horarios:
-                    {eventInfo.event.extendedProps.hours.map((hour, index) => (
-                      <span  className='whitespace-normal break-words' key={index}>{hour}</span>
+                    {eventInfo.extendedProps.hours.map((hour, index) => (
+                      <span className="whitespace-normal break-words" key={index}>
+                        {hour}
+                      </span>
                     ))}
                   </span>
                 </div>
@@ -164,14 +155,6 @@ export const ModalActivity = ({ handleClose, editEvent, deleteActivity, eventInf
               ))}
             </div>
           )}
-
-          {/* {isEditing && (
-            <div className="flex gap-x-2 justify-center mt-1 overflow-hidden">
-              <button onClick={handleSave} className="btn-question">
-                Guardar
-              </button>
-            </div>
-          )} */}
         </div>
       </div>
     </>
