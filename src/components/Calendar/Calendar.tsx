@@ -28,17 +28,17 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
 
     socket.on('activityUpdated', (data) => {
       console.log('Activity updated socket:', data);
-      
+
       // Actualiza el estado de las actividades en función de los datos recibidos
-      setActivities((prevActivities) => 
+      setActivities((prevActivities) =>
         prevActivities.map((activity) =>
           activity.id == data.activityId
             ? { ...activity, fromDate: data.start, toDate: data.end }
-            : activity
-        )
+            : activity,
+        ),
       );
     });
-    
+
     if (activities.length > 0) {
       const calculatedDate = new Date(activities[0].fromDate.substring(0, 10))
         .toISOString()
@@ -46,7 +46,7 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
       setInitialDate(calculatedDate);
     }
     setTimeout(() => setLoading(false), 3000);
-    
+
     // Limpiar el socket al desmontar el componente
     return () => {
       socket.off('activityUpdated');
@@ -75,14 +75,11 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
       console.error('Error al actualizar la actividad:', error);
     }
   };
-  
+
   return (
     <>
       {loading ? (
-        <Lottie
-          className="w-[16rem] md:w-[18rem] mx-auto"
-          animationData={logoAnimado}
-        />
+        <Lottie className="w-[16rem] md:w-[18rem] mx-auto" animationData={logoAnimado} />
       ) : (
         <div className="w-full p-4 bg-white rounded-lg shadow-md">
           <FullCalendar
@@ -122,21 +119,21 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
                 <span className="hidden md:block text-[10px] md:text-xs text-gray-500 bg-primary text-white px-2 rounded-3xl">
                   {eventInfo.event.start
                     ? new Date(eventInfo.event.start).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
+                        hour: '2-digit',
+                        minute: '2-digit',
                       })
-                    : ""}
+                    : ''}
                 </span>
                 <span className="text-[7px] md:text-xs font-semibold truncate max-w-[80px]">
-                  {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, "")}
+                  {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
                 </span>
               </div>
             )}
             headerToolbar={{
               ...(window.innerWidth > 768 && {
-                right: "dayGridMonth,dayGridWeek,dayGridDay",
-                left: "prev,next",
-                center: "title",
+                right: 'dayGridMonth,dayGridWeek,dayGridDay',
+                left: 'prev,next',
+                center: 'title',
               }),
             }}
           />
@@ -144,3 +141,4 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
       )}
     </>
   );
+};
