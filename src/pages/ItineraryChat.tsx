@@ -11,16 +11,16 @@ type Category = {
   description: string
 };
 
-type User = {
-  id: number;
-  username: string;
-  name: string;
-  profilePicture: string;
-  description: string;
-  birthdate: string;
-  coverPicture: string;
-  location: string;
-};
+  type User = {
+    id: number;
+    username: string;
+    name: string;
+    profilePicture: string;
+    description: string;
+    birthdate: string;
+    coverPicture: string;
+    location: string;
+  };
 
 type Message = {
   content: string;
@@ -42,7 +42,6 @@ type Forum = {
   messages: Message[];
   itinerary: Itinerary;
 };
-
 
 const ItineraryChat = () => {
   const { itineraryId } = useParams();
@@ -76,7 +75,7 @@ const ItineraryChat = () => {
           return;
         }
 
-        const itineraryResponse = await fetch(`http://localhost:3001/itinerary/${itineraryId}`, {
+        const itineraryResponse = await fetch(`https://api-turistear.koyeb.app/itinerary/${itineraryId}`, {
           method: 'GET',
           credentials: 'include',
         });
