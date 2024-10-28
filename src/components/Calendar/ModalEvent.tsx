@@ -146,19 +146,20 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo }) => {
                     </span>
                   </div>
                   <span className="text-md md:text-lg font-semibold whitespace-normal break-words text-gray/95 md:my-3 md:ml-7">
-                    {review.text}
+                    {review.text || 'No review text available'}
                   </span>
                   <div className="flex items-center justify-center w-full flex-wrap md:flex-nowrap my-2 gap-2">
-                    {review.photos.map((photo: any, index: Key) => (
-                      <img
-                        key={index}
-                        src={photo}
-                        alt={review.authorName}
-                        className="w-full h-auto max-h-[200px] object-cover rounded-md"
-                      />
-                    ))}
+                    {review.photos &&
+                      review.photos.map((photo: any, index: Key) => (
+                        <img
+                          key={index}
+                          src={photo}
+                          alt={review.authorName}
+                          className="w-full h-auto max-h-[200px] object-cover rounded-md"
+                        />
+                      ))}
                   </div>
-                  <hr className="my-2 border-gray w-full" />
+                  <hr className="my-2 border-[#aaaaaa] w-full" />
                 </div>
               ))}
             </div>
