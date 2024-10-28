@@ -1,4 +1,3 @@
-/* Components */
 import { Calendar } from '../components/Calendar/Calendar';
 import { Header } from '../components/Header/Header';
 import { useParams } from 'react-router-dom';
@@ -11,12 +10,11 @@ import { io } from 'socket.io-client';
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
   const { itinerary, activities, setActivities } = useFetchItinerary(itineraryId || null);
-
   const [isAddingActivity, setIsAddingActivity] = useState(false);
   const [selectedEventInfo, setSelectedEventInfo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const socket = io('https://api-turistear.koyeb.app'); 
+  const socket = io('https://api-turistear.koyeb.app');
 
   const handleEventClick = (eventInfo) => {
     setSelectedEventInfo(eventInfo);
@@ -33,7 +31,7 @@ export const ItineraryCalendar = () => {
     });
 
     return () => {
-      socket.off('activityRemoved'); 
+      socket.off('activityRemoved');
     };
   }, []);
 
@@ -43,7 +41,7 @@ export const ItineraryCalendar = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ itineraryId: itineraryId, activityId }), // Asegúrate de usar el itineraryId correcto
+      body: JSON.stringify({ itineraryId: itineraryId, activityId }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -66,7 +64,6 @@ export const ItineraryCalendar = () => {
     >
       <Header containerStyles="fixed top-0 left-0 right-0 z-[60]" />
       <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-4 h-full mt-20 py-4">
-        {/* Left Column */}
         <LeftColumn
           itinerary={itinerary}
           itineraryId={itineraryId}
@@ -75,8 +72,6 @@ export const ItineraryCalendar = () => {
           activities={activities}
           setActivities={setActivities}
         />
-
-        {/* Main Column */}
         <main className="order-1 lg:order-2 col-span-1 container mx-auto">
           <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-full md:p-4">
             <Calendar
