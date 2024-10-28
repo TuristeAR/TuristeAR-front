@@ -45,6 +45,7 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
         .split('T')[0];
       setInitialDate(calculatedDate);
     }
+
     setTimeout(() => setLoading(false), 3000);
 
     // Limpiar el socket al desmontar el componente
