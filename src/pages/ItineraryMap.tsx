@@ -85,9 +85,9 @@ console.log(activities)
                 }
 
                 return (
-                  <div key={index} className="my-2 lg:my-4 flex items-center">
+                  <div key={index} className="my-2 lg:my-4 flex items-center option-card hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
                     <p className="w-[10%] text-md">{index + 1}.</p>
-                    <Link to={`/lugar-esperado/${activity.place.googleId}`} className="w-[65%] text-md hover:text-primary">
+                    <Link to={`/lugar-esperado/${activity.place.googleId}`} className="w-[65%] text-md ">
                       {activity.name.replace(/ - \d{1,2} \w+\./, '')}
                     </Link>
                     {distance && <p className="w-1/4 text-md text-end">{distance} km</p>}
