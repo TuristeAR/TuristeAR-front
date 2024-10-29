@@ -30,7 +30,7 @@ export const ItineraryMap = () => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
-
+console.log(activities)
   return (
     <>
       <Header />
@@ -87,9 +87,9 @@ export const ItineraryMap = () => {
                 return (
                   <div key={index} className="my-2 lg:my-4 flex items-center">
                     <p className="w-[10%] text-md">{index + 1}.</p>
-                    <p className="w-[65%] text-md">
+                    <Link to={`/lugar-esperado/${activity.place.googleId}`} className="w-[65%] text-md hover:text-primary">
                       {activity.name.replace(/ - \d{1,2} \w+\./, '')}
-                    </p>
+                    </Link>
                     {distance && <p className="w-1/4 text-md text-end">{distance} km</p>}
                   </div>
                 );

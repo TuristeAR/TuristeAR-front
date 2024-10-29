@@ -162,6 +162,12 @@
     font-size: 1.5rem;
     color: #0056b3 !important;
     font-weight: bolder;
+    text-transform: lowercase;
+    /* Asegura que todo el texto esté en minúscula */
+}
+
+.fc-toolbar-title:first-letter {
+    text-transform: uppercase;
 }
 
 .fc-dayGridMonth-button,
