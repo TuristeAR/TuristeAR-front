@@ -99,7 +99,6 @@
 
 /*  Full calendar */
 
-
 .fc .fc-daygrid-event {
     z-index: unset !important;
 }
@@ -306,7 +305,6 @@
     white-space: nowrap;
 }
 
-
 @media (max-width: 800px) {
     .progress-bar::before {
         top: 40%;
@@ -339,8 +337,6 @@
     }
 }
 
-
-
 /* Tarjetas de opción con efecto 3D */
 .option-card {
     display: flex;
@@ -350,5 +346,5 @@
     background-color: white;
     border-radius: 8px;
     transition: transform 0.3s, box-shadow 0.3s;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

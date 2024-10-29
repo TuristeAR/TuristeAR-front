@@ -27,6 +27,7 @@ import {
 import { DialogWindow } from '../components/Questions/DialogWindow';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
+import EventCarousel from '../components/FormQuestions/EventCarousel';
 
 interface FormData {
   provinceId: number;
@@ -174,6 +175,8 @@ const FormQuestions = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [loadingLocalities, setLoadingLocalities] = useState(false);
+  const [loadingEvents, setLoadingEvents] = useState(false);
+  const [events, setEvents] = useState<any[]>([]);
 
   const handleCloseDialogWindow = () => {
     setDialogWindowOpen(false);
@@ -223,6 +226,7 @@ const FormQuestions = () => {
 
   const handleProvinceClick = (id: number) => {
     setLoadingLocalities(true);
+    setLoadingEvents(true);
     const province = provinces.find((p) => p.id === id);
     setSelectedProvince(province);
     formData.provinceId = province.id;
@@ -233,7 +237,17 @@ const FormQuestions = () => {
       },
     ).then((r) => {
       setLocalities(r.asentamientos);
-      setLoadingLocalities(false);
+      fetchEvents(province.id).then((events) => {
+        setEvents(events.data);
+        setLoadingLocalities(false);
+        setLoadingEvents(false);
+      });
+    });
+  };
+
+  const fetchEvents = async (provinceId: number) => {
+    return await get(`https://api-turistear.koyeb.app/events/${provinceId}`, {
+      'Content-Type': 'application/json',
     });
   };
 
@@ -564,28 +578,27 @@ const FormQuestions = () => {
                 <ProgressBar currentStep={currentStep} />
                 {questions[currentQuestion].type === 'map' ? (
                   <div className="flex flex-col gap-y-4 justify-center items-center w-full">
-                    <h2 className="text-2xl sm:text-3xl font-semibold text-primary-4">
-                      Armemos tu próxima aventura
+                    <h2 className="text-2xl sm:text-3xl font-semibold text-primary-4 mb-6">
+                      Armemos tu próxima aventura a
+                      {selectedProvince?.name ? (
+                        <>
+                          <span className="text-primary-2"> {selectedProvince.name}</span>
+                        </>
+                      ) : (
+                        '...'
+                      )}
                     </h2>
                     <div className="w-full flex flex-col md:flex-row justify-start">
                       <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:justify-end md:items-end">
-                        <div className="h-10 text-center">
-                          {selectedProvince ? (
-                            <span className="text-2xl font-bold text-primary-2">
-                              {selectedProvince.name}
-                            </span>
-                          ) : null}
-                        </div>
                         <MapaArg onProvinceClick={handleProvinceClick} />
                       </div>
                       <div className="w-full md:w-1/2 flex flex-col items-center gap-x-4">
-                        <div className="h-10 text-center"></div>
                         {localities.length > 0 ? (
-                          <div className="w-72">
+                          <div className="w-96 md:w-[420px]">
                             <span className="block text-lg font-medium leading-6 text-gray-900 my-2">
                               ¿Qué lugares querés visitar?
                             </span>
-                            <div className="flex flex-col items-center">
+                            <div className="flex flex-col items-start">
                               <input
                                 type="text"
                                 placeholder="Buscar localidad..."
@@ -638,14 +651,7 @@ const FormQuestions = () => {
                                 ))}
                               </select>
                             </div>
-                            <button
-                              type="button"
-                              className="btn-question w-full my-4"
-                              onClick={handleNextQuestion}
-                            >
-                              Continuar
-                            </button>
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap my-4 gap-2">
                               {selectedLocalities.map((locality) => (
                                 <div
                                   key={locality}
@@ -662,6 +668,29 @@ const FormQuestions = () => {
                                 </div>
                               ))}
                             </div>
+                            <hr className="text-primary-2 w-full my-6" />
+                            <div className="w-full">
+                              <span className="italic text-lg text-gray-500">
+                                Te recomendamos los siguientes eventos de la provincia que vas a
+                                visitar
+                              </span>
+                              {loadingEvents ? (
+                                <Lottie animationData={logoAnimado} />
+                              ) : (
+                                events.length > 0 && (
+                                  <div className="flex items-center mt-4">
+                                    <EventCarousel events={events} />
+                                  </div>
+                                )
+                              )}
+                            </div>
+                            <button
+                              type="button"
+                              className="btn-question w-full my-4"
+                              onClick={handleNextQuestion}
+                            >
+                              Continuar
+                            </button>
                           </div>
                         ) : (
                           <div className="w-72">
