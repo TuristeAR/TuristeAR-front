@@ -120,7 +120,7 @@ export const LeftCommunity = (props: {
               placeholder="Buscar"
             />
           </form>
-          <div className="overflow-y-scroll h-[290px] scrollbar-hidden">
+          <div className="overflow-y-scroll h-[230px] scrollbar-hidden">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <button

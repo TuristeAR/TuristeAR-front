@@ -18,6 +18,8 @@ import ForumDetail from './pages/ForumDetail';
 import Places from './pages/Places';
 import ItineraryChat from './pages/ItineraryChat';
 import { ItineraryMap } from './pages/ItineraryMap';
+import Publication from './pages/PublicationDetail';
+import PublicationDetail from './pages/PublicationDetail';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -35,6 +37,7 @@ root.render(
       <Route path="/editProfile" element={<EditProfile />} />
       <Route path="/community" element={<Publications />} />
       <Route path="/publications" element={<Publications />} />
+      <Route path="/publication/:publicationId" element={<PublicationDetail />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/itineraryCalendar/:itineraryId" element={<ItineraryCalendar />} />
       <Route path="/forums" element={<Forum />} />

@@ -53,7 +53,6 @@ const Publications = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Primer fetch - Obtener la sesión y el usuario
         const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
           method: 'GET',
           credentials: 'include',
