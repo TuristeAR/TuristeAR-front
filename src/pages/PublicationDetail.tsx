@@ -6,6 +6,8 @@ import { Header } from '../components/Header/Header';
 import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
+import { CommentDetail } from '../components/Community/CommentDetail';
+import { PublicationDetailCard } from '../components/ImageGallery/PublicationDetailCard';
 
 type User = {
   id: number;
@@ -24,6 +26,12 @@ type Category = {
   image: string;
 };
 
+type Comment = {
+  createdAt: string;
+  description: string;
+  user : User | null;
+}
+
 type Publication = {
   id: number;
   description: string;
@@ -31,9 +39,10 @@ type Publication = {
   creationDate: string;
   images: string[];
   user: User | null;
-  likes : User[]
-  reposts : User[]
-  saved : User[]
+  likes : User[];
+  reposts : User[];
+  saved : User[];
+  comments : Comment[]
 };
 
 const PublicationDetail = () => {
@@ -45,7 +54,7 @@ const PublicationDetail = () => {
   const [publication, setPublication] = useState<Publication | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
@@ -61,24 +70,29 @@ const PublicationDetail = () => {
         const sessionData = await sessionResponse.json();
         setUser(sessionData.user);
 
-        const publicationResponse = await fetch(`http://localhost:3001/publication/${publicationId}`, {
-          method: 'GET',
-          credentials: 'include',
-        });
+        // Segundo fetch - Obtener las publicaciones solo si se obtuvo el usuario
+        const publicationsResponse = await fetch(
+          `https://api-turistear.koyeb.app/publication/${publicationId}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
+        );
 
-        if (!publicationResponse.ok) {
-          console.log('Error al obtener el chat del itinerario:', await publicationResponse.json());
-        } else {
-          const publicationData = await publicationResponse.json();
-          setPublication(publicationData);
+        if (!publicationsResponse.ok) {
+          return;
         }
-        setIsLoading(false);
-      }catch (e){
-        console.log(e)
+        const publicationsData = await publicationsResponse.json();
+        setPublication(publicationsData);
+        setIsLoading(false)
+      } catch (error) {
       }
-    }
-    fetchData()
-  })
+    };
+
+    fetchData();
+  }, []);
+
+
 
   const handleClick = (name: string) => {
     if (contentRef.current) {
@@ -103,8 +117,8 @@ const PublicationDetail = () => {
             <div className="lg:w-[80%] w-[100%] pt-10 pb-10 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
               {/* Create posts */}
               <CreatePublications />
-              <div className={'grid grid-cols-2 px-10'}>
-                <ItineraryCard
+              <div className={'w-[95%] mx-auto rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] '}>
+                <PublicationDetailCard
                   id={publication.id}
                   profilePicture={publication.user?.profilePicture}
                   userId={publication.user?.name}
@@ -118,9 +132,7 @@ const PublicationDetail = () => {
                   isRepost={publication.reposts.some(item => item.id === user.id)}
                   isSaved={publication.saved.some(item => item.id === user.id)}
                   category={publication.category.description} />
-                <div>
-
-                </div>
+                <CommentDetail publication={publication} user={user} key={publication.id} />
               </div>
             </div>
           </div>
