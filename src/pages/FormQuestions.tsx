@@ -250,6 +250,7 @@ const FormQuestions = () => {
       'Content-Type': 'application/json',
     });
   };
+  console.log(localities.map(locality => locality.nombre));
 
   const handleSingleSelection = (name: keyof FormData, value: number) => {
     setFormData((prev) => ({ ...prev, [name]: value }));

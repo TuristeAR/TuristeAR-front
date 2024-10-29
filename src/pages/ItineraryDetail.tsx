@@ -8,6 +8,7 @@ import { get } from '../utilities/http.util';
 import calendarIcon from '/assets/calendar-blue.svg';
 import mapIcon from '/assets/map-icon.svg';
 import { Countdown } from '../components/Calendar/Countdown';
+import useDownloadPdf from '../utilities/useDownloadPdf';
 
 type User = {
   id: number;
@@ -17,15 +18,20 @@ type User = {
   profilePicture: string;
 };
 
+interface RespuestaNominatim {
+  address?: {
+    neighbourhood?: string; // Nombre del barrio
+  };
+}
+
 export const ItineraryDetail = () => {
   const { itineraryId } = useParams();
-
   const { itinerary, activities } = useFetchItinerary(itineraryId || null);
-
-  const [showedInfo, setShowedInfo] = useState<boolean[]>([]);
+  const { downloadPDF } = useDownloadPdf();
 
   const [reviews, setReviews] = useState<any[]>([]);
-
+  const [activitiesByNeighborhoodAndDay, setActivitiesByNeighborhoodAndDay] = useState({});
+  const [activitiesByDate, setActivitiesByDate] = useState({});
   let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
 
   useEffect(() => {
@@ -61,73 +67,24 @@ export const ItineraryDetail = () => {
     return getRandomImages();
   }, [reviews]);
 
-  const toggleInfo = (index: number) => {
-    setShowedInfo((prevState) => {
-      const newState = [...prevState];
-      newState[index] = !newState[index];
-      return newState;
-    });
-  };
-
-  const getRandomImages = () => {
-    const allPhotos = reviews.flatMap((review) => review.photos);
-    const shuffledPhotos = allPhotos.sort(() => 0.5 - Math.random());
-    return shuffledPhotos.slice(0, 3);
-  };
-
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     const options = { hour: '2-digit', minute: '2-digit', hour12: false } as const;
     return date.toLocaleTimeString([], options);
   };
 
-  const activitiesByDay = activities.reduce((acc: any, activity: any) => {
-    // Usar toLocaleDateString para obtener solo la fecha sin zona horaria
-    const date = new Date(activity.fromDate).toLocaleDateString();
-
-    if (!acc[date]) {
-      acc[date] = [];
+  const formatDate = (dateString: string): string => {
+    // Convertir de DD-MM-YYYY a YYYY-MM-DD
+    const [day, month, year] = dateString.split('-');
+    const formattedDateString = `${year}-${month}-${day}`; // Ahora en formato YYYY-MM-DD
+  
+    const date = new Date(formattedDateString);
+    if (isNaN(date.getTime())) {
+      return 'Fecha inválida';
     }
-
-    acc[date].push(activity);
-    return acc;
-  }, {});
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `https://api-turistear.koyeb.app/itinerary/participants/${itineraryId}`,
-          {
-            method: 'GET',
-            credentials: 'include',
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        if (data.status === 'success' && data.itineraryParticipants.participants) {
-          //setUsersOldNav(data.itineraryParticipants.participants);
-          const owner = {
-            ...data.itineraryParticipants.user, // El usuario dueño del itinerario
-            isOwner: true, // Marcamos que este usuario es el owner
-          };
-
-          setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
-        } else {
-          setUsersOldNav([]);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setUsersOldNav([]);
-      }
-    };
-
-    fetchData();
-  }, [itineraryId]);
+    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
+    return date.toLocaleDateString('es-ES', options);
+  };
 
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
@@ -135,7 +92,6 @@ export const ItineraryDetail = () => {
     console.log('Usuarios actualizados en el padre:', updatedUsers);
     console.log('UserNav new: ', usersOldNav);
   };
-  console.log(activities);
 
   const reorderDate = (dateString: string) => {
     const formatDate = (date) => {
@@ -146,6 +102,138 @@ export const ItineraryDetail = () => {
     return formatDate(dateString);
   };
 
+  const fetchNeighborhoods = async (latitude: number, longitude: number) => {
+    try {
+      // Paso 1: Obtén la provincia a partir de las coordenadas
+      const response = await fetch(
+        `https://apis.datos.gob.ar/georef/api/ubicacion?lat=${latitude}&lon=${longitude}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP status ${response.status}`);
+      }
+
+      const locationData = await response.json();
+      const provinciaId = locationData.ubicacion.provincia.id;
+
+      // Paso 2: Obtén los asentamientos de la provincia
+      const settlementsResponse = await fetch(
+        `https://apis.datos.gob.ar/georef/api/asentamientos?provincia=${provinciaId}&max=2000`,
+        {
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+
+      if (!settlementsResponse.ok) {
+        throw new Error(`HTTP status ${settlementsResponse.status}`);
+      }
+
+      const settlementsData = await settlementsResponse.json();
+
+      console.log(settlementsData);
+
+      const settlements = settlementsData?.asentamientos;
+
+      if (!settlements || settlements.length === 0) {
+        console.warn('No se encontraron asentamientos en la provincia especificada.');
+        return 'Barrio no encontrado';
+      }
+
+      // Paso 3: Encuentra el barrio más cercano calculando la distancia mínima
+      let closestNeighborhood = null;
+      let minDistance = Infinity;
+
+      settlements.forEach((settlement) => {
+        const settlementLat = settlement.centroide.lat;
+        const settlementLon = settlement.centroide.lon;
+
+        const distance = Math.sqrt(
+          Math.pow(settlementLat - latitude, 2) + Math.pow(settlementLon - longitude, 2),
+        );
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestNeighborhood = settlement.nombre;
+        }
+      });
+
+      return closestNeighborhood || 'Barrio no encontrado';
+    } catch (error) {
+      console.error('Error en fetchNeighborhoods:', error);
+      return 'Error al buscar barrio';
+    }
+  };
+
+  useEffect(() => {
+    const fetchSuburbs = async () => {
+      if (activities && activities.length > 0) {
+        try {
+          activities.map((activity) =>
+            fetchNeighborhoods(activity.place.latitude, activity.place.longitude),
+          );
+        } catch (error) {
+          console.error('Error al obtener barrios:', error);
+        }
+      }
+    };
+
+    fetchSuburbs();
+  }, [activities]);
+
+  useEffect(() => {
+    // Lógica para agrupar actividades por barrio y día
+    const fetchSuburbsAndGroupActivities = async () => {
+      if (activities && activities.length > 0) {
+        const suburbsPromises = activities.map((activity) =>
+          fetchNeighborhoods(activity.place.latitude, activity.place.longitude),
+        );
+
+        const allSuburbs = await Promise.all(suburbsPromises);
+
+        const activitiesByNeighborhoodAndDay = allSuburbs.reduce((acc, suburb, index) => {
+          const activity = activities[index];
+          const fromDate = typeof activity.fromDate === 'string' ? activity.fromDate : '';
+          const dayKey = reorderDate(fromDate.split('T')[0]);
+
+          if (!acc[dayKey]) {
+            acc[dayKey] = {};
+          }
+          if (!acc[dayKey][suburb]) {
+            acc[dayKey][suburb] = [];
+          }
+          acc[dayKey][suburb].push(activity);
+          return acc;
+        }, {});
+
+        setActivitiesByNeighborhoodAndDay(activitiesByNeighborhoodAndDay);
+      }
+    };
+
+    fetchSuburbsAndGroupActivities();
+  }, [activities]);
+
+  useEffect(() => {
+    // Transformación de activitiesByNeighborhoodAndDay a activitiesByDate
+    const groupActivitiesByDate = () => {
+      const grouped = Object.entries(activitiesByNeighborhoodAndDay).reduce(
+        (acc, [date, neighborhoods]) => {
+          acc[date] = neighborhoods;
+          return acc;
+        },
+        {},
+      );
+
+      setActivitiesByDate(grouped);
+    };
+
+    groupActivitiesByDate();
+  }, [activitiesByNeighborhoodAndDay]);
+
   return (
     <>
       <Header />
@@ -153,46 +241,55 @@ export const ItineraryDetail = () => {
         <div className="container mx-auto flex flex-col justify-center z-30 relative p-4">
           <div className="w-full  my-2">
             <div className="flex flex-col md:flex-row gap-y-3 md:gap-x-12 border-b pb-4 border-gray-50 ">
-              <div className="md:max-w-[650px] flex-1">
-                <div className="">
-                  <div className="border-b pb-2 border-gray-50 ">
-                    <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
-                  </div>
-                  <div>
-                    <Countdown fromDate={itinerary?.fromDate} />
-                  </div>
-                  <div className="flex flex-col md:flex-row gap-4">
-                    <div className="w-full flex   gap-2 mb-2">
-                      <div className="">
-                        <AddParticipantModal
-                          itinerary={Number(itineraryId)}
-                          tap={1}
-                          usersOldNav={usersOldNav}
-                          onUsersOldUpdate={handleUpdateUsersOld}
-                        />
-                        <AddParticipantModal
-                          itinerary={Number(itineraryId)}
-                          tap={2}
-                          usersOldNav={usersOldNav}
-                          onUsersOldUpdate={handleUpdateUsersOld}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex flex-col w-full justify-center">
-                      <div className="flex items-center p-1 gap-x-2 cursor-pointer">
-                        <img src={calendarIcon} alt="" />
-                        <Link to={`/itineraryCalendar/${itineraryId}`}>
-                          <p className="text-sm">Calendario</p>
-                        </Link>
-                      </div>
-                      <div className="flex items-center p-1 gap-x-2 cursor-pointer">
-                        <img src={mapIcon} alt="" />
-                        <Link to={`/itineraryMap/${itineraryId}`}>
-                          <p className="text-sm">Mapa</p>
-                        </Link>
-                      </div>
+              <div className="md:max-w-[650px] flex flex-col gap-y-6 flex-1 my-4">
+                <div className="border-b pb-2 border-gray-50 ">
+                  <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
+                </div>
+                <div>
+                  <Countdown fromDate={itinerary?.fromDate} />
+                </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                  {/* Participants */}
+                  <div className="w-full flex  gap-2 mb-2">
+                    <div className="">
+                      <AddParticipantModal
+                        itinerary={Number(itineraryId)}
+                        tap={1}
+                        usersOldNav={usersOldNav}
+                        onUsersOldUpdate={handleUpdateUsersOld}
+                      />
+                      <AddParticipantModal
+                        itinerary={Number(itineraryId)}
+                        tap={2}
+                        usersOldNav={usersOldNav}
+                        onUsersOldUpdate={handleUpdateUsersOld}
+                      />
                     </div>
                   </div>
+                  {/* Mapa & Calendar */}
+                  <div className="flex flex-row md:flex-col w-full justify-around md:justify-center">
+                    <div className="flex items-center p-1 gap-x-2 cursor-pointer">
+                      <img src={calendarIcon} alt="" />
+                      <Link to={`/itineraryCalendar/${itineraryId}`}>
+                        <p className="text-sm">Calendario</p>
+                      </Link>
+                    </div>
+                    <div className="flex items-center p-1 gap-x-2 cursor-pointer">
+                      <img src={mapIcon} alt="" />
+                      <Link to={`/itineraryMap/${itineraryId}`}>
+                        <p className="text-sm">Mapa</p>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+                {/* Download PDF */}
+                <div className="flex justify-center items-center">
+                  <button
+                    onClick={() => downloadPDF('itinerary', 'itinerario.pdf')}
+                    className="btn-drop-down-blue-itinerary hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mb-4"
+                  >
+                    Descargar Itinerario
+                  </button>
                 </div>
               </div>
               <div className="hidden lg:block md:w-[45%]">
@@ -201,78 +298,46 @@ export const ItineraryDetail = () => {
             </div>
           </div>
 
-          <div className="w-full  my-2">
-            {/*Itinerario */}
+          {/* Itinerario */}
+          <div id="itinerary" className="w-full my-2">
             <div className="mb-10">
               <h2 className="font-semibold text-md my-2">Itinerario de viaje</h2>
 
-              {/* Recorre los días en lugar de las actividades */}
-              {Object.keys(activitiesByDay).map((dateKey, index) => {
-                const activitiesForDay = activitiesByDay[dateKey];
-                const fecha = new Date(dateKey); // Ya tienes la clave como la fecha
-
-                return (
-                  <div key={index}>
-                    <button
-                      className="btn-drop-down-blue-itinerary my-1"
-                      onClick={() => toggleInfo(index)}
-                    >
-                      <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md">
-                        {/* Mostrar el número de día en función del índice */}
-                        Día: {index + 1}
-                        <div className="icons">
-                          <svg
-                            className={`${!showedInfo[index] ? 'block' : 'hidden'}`}
-                            xmlns="http://www.w3.org/2000/svg"
-                            height="30px"
-                            viewBox="0 -960 960 960"
-                            width="50px"
-                            fill="#FFFFFF"
-                          >
-                            <path d="M480-360 280-560h400L480-360Z" />
-                          </svg>
-                          <svg
-                            className={`${showedInfo[index] ? 'block' : 'hidden'}`}
-                            xmlns="http://www.w3.org/2000/svg"
-                            height="30px"
-                            viewBox="0 -960 960 960"
-                            width="50px"
-                            fill="#FFFFFF"
-                          >
-                            <path d="m280-400 200-200 200 200H280Z" />
-                          </svg>
-                        </div>
-                      </h3>
-                    </button>
-
-                    {/* Info */}
-                    <div className={`${showedInfo[index] ? 'block' : 'hidden'}`}>
-                      <div className="relative px-1 sm:px-0 flex flex-col gap-2 my-2 flex-wrap">
-                        {/* Mostrar actividades del día */}
-                        {activitiesForDay.map((activity: any, idx: number) => (
-                          <div key={idx}>
-                            <h3 className="font-semibold text-sm  px-4 py-1">
-                              {reorderDate(activity.fromDate.split('T')[0])}
-                            </h3>
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 ">
-                              <div className="bg-gray-50 rounded-lg px-4 py-2 flex justify-center items-center">
-                                <span className="text-sm">
-                                  {formatTime(activity.fromDate)} - {formatTime(activity.toDate)}
-                                </span>
-                              </div>
-                              <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
-                                <p className="font-semibold text-sm sm:text-base">
-                                  {activity.name?.split(' - ')[0]}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+              {Object.keys(activitiesByDate).map((dateKey, dayIndex) => (
+                <div key={dayIndex}>
+                  <div className="flex justify-between bg-gray-50 rounded-lg px-4 py-1 ">
+                    <h4 className="font-semibold text-md">Día {dayIndex + 1}</h4>
+                    <h4 className="font-semibold text-md">{formatDate(dateKey)}</h4>
                   </div>
-                );
-              })}
+                  {Object.keys(activitiesByDate[dateKey]).map((neighborhood, neighborhoodIndex) => (
+                    <div key={neighborhoodIndex}>
+                      <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md btn-drop-down-blue-itinerary my-1">
+                        {neighborhood}
+                      </h3>
+                      {activitiesByDate[dateKey][neighborhood].map((activity, idx) => (
+                        <div
+                          key={idx}
+                          className="my-4 option-card flex flex-row items-center gap-2  cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+                        >
+                          <div className="bg-gray-50 rounded-lg px-4 py-2">
+                            <span className="text-[0.95rem]">
+                              {formatTime(activity.fromDate)} - {formatTime(activity.toDate)}
+                            </span>
+                          </div>
+                          <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
+                            <Link
+                              to={`/lugar-esperado/${activity.place.googleId}`}
+                              className="font-semibold text-sm sm:text-base"
+                            >
+                              {activity.name?.split(' - ')[0]}
+                            </Link>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              ))}
             </div>
           </div>
         </div>
