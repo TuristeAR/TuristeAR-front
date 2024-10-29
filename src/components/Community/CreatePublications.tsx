@@ -126,7 +126,7 @@ export const CreatePublications = () => {
     try {
       const imageUrl = formData.images ? await uploadImage(formData.images) : "";
 
-      const response = await fetch('https://api-turistear.koyeb.app/createPublication', {
+      const response = await fetch('http://localhost:3001/createPublication', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
