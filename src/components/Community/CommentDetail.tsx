@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
+
 
 type User = {
   id: number;
@@ -20,7 +22,7 @@ type Category = {
 type Comment = {
   createdAt: string;
   description: string;
-  user : User | null;
+  user : User;
 }
 
 type Publication = {
@@ -36,63 +38,73 @@ type Publication = {
   comments : Comment[]
 };
 
-export const CommentDetail = (props : {publication : Publication}) => {
-  const { publication } = props;
+export const CommentDetail = (props : {publication : Publication | undefined, user : User | null}) => {
+  const { user } = props;
 
+  const [publication, setPublication] = useState<Publication | null>(props.publication);
   const [wasSent, setWasSent] = useState<boolean>(false);
+  const [commentContent, setCommentContent] = useState<string | null>(null);
+
+  useEffect(() => {
+
+    const socket = io('https://api-turistear.koyeb.app');
+
+    socket.on('receiveComment', (newComment) => {
+      setPublication((prevPublication) => {
+        if (!prevPublication) return null;
+        return {
+          ...prevPublication,
+          comments: [...prevPublication.comments, newComment as Comment],
+        };
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const createComment = async (publicationId: number) => {
+    if (commentContent && publicationId && user) {
+      console.log(publicationId);
+      setWasSent(true);
+      const socket = io('https://api-turistear.koyeb.app');
+      socket.emit('createComment', {
+        content: commentContent,
+        userId: user.id,
+        publicationId: publication.id,
+      });
+      setWasSent(false);
+      setCommentContent('');
+
+      return () => {
+        socket.disconnect();
+      };
+    }
+  };
 
   return(
     <>
-      <div className="lg:w-[80%] w-[100%] flex flex-col overflow-scroll scrollbar-hidden">
-        <div className="overflow-scroll scrollbar-hidden h-[90%] lg:px-4 px-2 py-6  flex flex-col gap-y-6">
-          {publication.comments.map((comment, index) => (
-            <div
-              className={`flex justify-start`}
-              key={index}
-            >
-              <div
-                className={
-                  'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:p-6 p-4 rounded-2xl lg:gap-4 gap-2 flex flex-col w-auto lg:max-w-[65%] max-w-[80%]'
-                }
-              >
-                <div className="flex justify-between items-center lg:gap-20 gap-6 ">
-                  <div className="flex items-center gap-4">
-                    <div className="rounded-full border border-1 border-black">
-                      <img
-                        className="lg:w-8 lg:h-8 w-6 h-6 rounded-full"
-                        src={comment.user.profilePicture}
-                        alt="person"
-                      />
-                    </div>
-                    <div className={'flex flex-col'}>
-                      <p className={'font-semibold lg:text-[17px] text-[14px] '}>{comment.user.name}</p>
-                    </div>
-                  </div>
-                  <p className={'lg:text-[16px] text-[12px]'}>{comment.createdAt.slice(11).slice(0, 5)}</p>
-                </div>
-                <div>
-                  <p className={'lg:text-[16px] text-sm'}>{comment.description}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="lg:w-[100%] w-[100%] flex flex-col overflow-y-scroll scrollbar-hidden">
         <div
-          className={'h-[8%] border-t border-[#999999] py-10 flex justify-around items-center'}
+          className={'h-[8%] py-4 flex justify-around items-center border-t border-[#999999]'}
         >
           <div className={'flex w-[80%] items-center'}>
             <input
               onInput={(e) => {
                 //@ts-ignore
-                setMessage(e.target.value);
+                setCommentContent(e.target.value);
               }}
               type={'text'}
-              value=''
+              value={`${commentContent ? commentContent : ''}`}
               className={'border border-[#999999] w-[90%] lg:h-[40px] h-[35px] rounded-2xl pl-2'}
               placeholder={'Escribe tu comentario...'}
             />
             <svg
               className={'cursor-pointer lg:w-[57px] lg:h-[57px] w-[40px] h-[40px]'}
+              onClick={() => {
+                createComment(Number(publication.id))
+              }}
               viewBox="0 0 25.00 25.00"
               fill={'none'}
               xmlns="http://www.w3.org/2000/svg"
@@ -117,6 +129,40 @@ export const CommentDetail = (props : {publication : Publication}) => {
               </g>
             </svg>
           </div>
+        </div>
+        <div className="overflow-y-scroll scrollbar-hidden h-[90%] flex flex-col">
+          {publication.comments.map((comment, index) => (
+            <div
+              className={`flex justify-start`}
+              key={index}
+            >
+              <div
+                className={
+                  'p-4 lg:p-6 rounded-b-2xl lg:gap-4 gap-2 flex flex-col w-[100%] border-t border-[#999999]'
+                }
+              >
+                <div className="flex justify-between items-center lg:gap-20 gap-6 ">
+                  <div className="flex items-center gap-4">
+                    <div className="rounded-full border border-1 border-black">
+                      <img
+                        className="lg:w-8 lg:h-8 w-6 h-6 rounded-full"
+                        src={comment.user.profilePicture}
+                        alt="person"
+                      />
+                    </div>
+                    <div className={'flex flex-col'}>
+                      <p className={'font-semibold lg:text-[17px] text-[14px] '}>{comment.user.name}</p>
+                    </div>
+                  </div>
+                  <p className={'lg:text-[16px] text-[12px]'}>{comment.createdAt.slice(11).slice(0, 5)}</p>
+                </div>
+                <div>
+                  <p className={'lg:text-[16px] text-sm'}>{comment.description}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+
         </div>
       </div>
     </>
