@@ -37,11 +37,11 @@ export const TravelCard : React.FC<TravelData> = ({imgProvince,province,departur
           <img
             src={imgProvince}
             alt=""
-            className="w-[100%] h-[100%] lg:rounded-l-2xl lg:rounded-tr-none rounded-t-2xl"
-          />
+            className="w-[100%] h-[100%] lg:rounded-l-2xl lg:rounded-tr-none rounded-t-2xl object-cover"
+            />
         </div>
         <div className="lg:w-[60%] p-4 flex flex-col gap-2">
-          <h1 className="text-2xl">{province}</h1>
+          <h1 className="text-2xl lg:text-lg">{province}</h1>
           <div className="flex flex-col gap-2 text-l">
             <p>Ida : {departure && typeof departure === 'string' ? reorderDate(departure.slice(0, -14)) : ''}</p>
             <p>Vuelta: {arrival && typeof arrival === 'string' ? reorderDate(arrival.slice(0, -14)) : ''}</p>
@@ -55,7 +55,7 @@ export const TravelCard : React.FC<TravelData> = ({imgProvince,province,departur
                   alt={`Imagen de ${participant.name}`}
                   className="w-[20px] h-[20px] rounded-full"
                 />
-                <p className="text-l">{participant.name}</p>
+                <p>{participant.name}</p>
               </div>
             ))}
           </details>
