@@ -1,5 +1,5 @@
 import { Header } from '../components/Header/Header';
-import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
+import { PublicationCard } from '../components/ImageGallery/PublicationCard';
 import React, { useEffect, useRef, useState } from 'react';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
@@ -115,7 +115,7 @@ const Publications = () => {
                 {publications?.filter((publication) => {
                   return categorySelected == null || publication.category.id == categorySelected;
                 }).map((publication, index) => (
-                  <ItineraryCard
+                  <PublicationCard
                     key={index}
                     id={publication.id}
                     profilePicture={publication.user?.profilePicture}

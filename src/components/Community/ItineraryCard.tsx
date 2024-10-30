@@ -20,11 +20,11 @@ type TravelData={
   participants: User[] | [];
 }
 
-export const TravelCard : React.FC<TravelData> = ({imgProvince,province,departure,arrival,participants,id}) => {
+export const ItineraryCard : React.FC<TravelData> = ({imgProvince,province,departure,arrival,participants,id}) => {
   const reorderDate = (dateString : string ) => {
     const formatDate = (date) => {
-      const [year, month, day] = date.split('-'); // Divide la fecha en año, mes, día
-      return `${day}-${month}-${year}`; // Reordena en formato 'dd-mm-yyyy'
+      const [year, month, day] = date.split('-');
+      return `${day}-${month}-${year}`;
     };
 
     return formatDate(dateString)

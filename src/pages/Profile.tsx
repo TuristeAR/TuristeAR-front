@@ -1,8 +1,8 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
-import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
-import { TravelCard } from '../components/Community/TravelCard';
+import { PublicationCard } from '../components/ImageGallery/PublicationCard';
+import { ItineraryCard } from '../components/Community/ItineraryCard';
 import { useEffect, useRef, useState } from 'react';
 import logoAnimado from '../assets/logoAnimado.json';
 import Lottie from 'lottie-react';
@@ -260,7 +260,7 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <ItineraryCard
+                    <PublicationCard
                       key={index}
                       id={publication.id}
                       profilePicture={publication.user.profilePicture}
@@ -284,7 +284,7 @@ const Profile = () => {
                   '/assets/TuristeAR-logo.png'; // imagen por defecto si no hay imagen de la provincia
             
                   return (
-                  <TravelCard
+                  <ItineraryCard
                     key={index}
                     imgProvince={imgProvince}
                     province={itinerary.name}
@@ -302,7 +302,7 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <ItineraryCard
+                    <PublicationCard
                       key={index}
                       id={publication.id}
                       profilePicture={publication.user.profilePicture}
@@ -325,7 +325,7 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <ItineraryCard
+                    <PublicationCard
                       key={index}
                       id={publication.id}
                       profilePicture={publication.user.profilePicture}

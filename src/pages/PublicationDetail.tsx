@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { Header } from '../components/Header/Header';
-import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
+import { PublicationCard } from '../components/ImageGallery/PublicationCard';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
 import { CommentDetail } from '../components/Community/CommentDetail';
