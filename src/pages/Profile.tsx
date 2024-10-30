@@ -41,6 +41,7 @@ const Profile = () => {
   };
 
   type Itinerary = {
+    activities: any;
     id: number;
     createdAt: string;
     name: string;
@@ -146,6 +147,7 @@ const Profile = () => {
     return formatDate(dateString);
   };
 
+  console.log(itineraries)
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
@@ -276,17 +278,23 @@ const Profile = () => {
                     />
                   ))}
               {activeItem === 'itineraries' &&
-                itineraries?.map((itinerary, index) => (
+                itineraries?.map((itinerary, index) => {
+                  const imgProvince =
+                  itinerary.activities[0]?.place?.province?.images[0] ||
+                  '/assets/TuristeAR-logo.png'; // imagen por defecto si no hay imagen de la provincia
+            
+                  return (
                   <TravelCard
                     key={index}
-                    imgProvince={'/assets/san-nicolas-buenos-aires.webp'}
+                    imgProvince={imgProvince}
                     province={itinerary.name}
                     departure={itinerary.fromDate}
                     arrival={itinerary.toDate}
                     participants={itinerary.participants}
                     id={itinerary.id}
                   />
-                ))}
+                  );
+                  })}
 
               {activeItem === 'likes' &&
                 likedPublications
