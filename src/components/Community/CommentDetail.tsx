@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
-
 type User = {
   id: number;
   username: string;
@@ -38,7 +37,7 @@ type Publication = {
   comments : Comment[]
 };
 
-export const CommentDetail = (props : {publication : Publication | undefined, user : User | null}) => {
+export const CommentDetail = (props : {publication : Publication | undefined, user : User | undefined}) => {
   const { user } = props;
 
   const [publication, setPublication] = useState<Publication | null>(props.publication);
@@ -46,7 +45,6 @@ export const CommentDetail = (props : {publication : Publication | undefined, us
   const [commentContent, setCommentContent] = useState<string | null>(null);
 
   useEffect(() => {
-
     const socket = io('https://api-turistear.koyeb.app');
 
     socket.on('receiveComment', (newComment) => {
