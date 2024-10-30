@@ -2,6 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { LeftCommunity } from '../src/components/Community/LeftCommunity';
+
 const infoCategories = [
   {
     title: 'Filtrar por categoría',
@@ -17,7 +18,6 @@ const infoCategories = [
   },
 ];
 
-// Mocks para simular la respuesta de la API
 beforeEach(() => {
   global.fetch = jest.fn();
 });
@@ -26,9 +26,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-
-
-describe('Publications', () => {
+describe('Left Community', () => {
   test('render menu with navigation links', async () => {
     await act(async () => {
       render(

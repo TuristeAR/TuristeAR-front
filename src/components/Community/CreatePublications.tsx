@@ -2,36 +2,36 @@ import React, { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import logoAnimado from '../../assets/logoAnimado.json';
 
+type Category = {
+  id: number,
+  name: string,
+};
+
+type Province = {
+  id: number,
+  name: string,
+  categories: Category[]
+};
+
+type Place = {
+  id: number,
+  name: string,
+  place: Province
+};
+
+type Activity = {
+  id: number,
+  name: string,
+  place: Place
+};
+
+type Itinerary = {
+  id: number,
+  name: string,
+  activities: Activity[]
+};
+
 export const CreatePublications = () => {
-
-
-  type Category = {
-    id: number,
-    name: string,
-  };
-  type Province = {
-    id: number,
-    name: string,
-    categories: Category[]
-  };
-
-  type Place = {
-    id: number,
-    name: string,
-    place: Province
-  };
-
-  type Activity = {
-    id: number,
-    name: string,
-    place: Place
-  };
-
-  type Itinerary = {
-    id: number,
-    name: string,
-    activities: Activity[]
-  };
 
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
