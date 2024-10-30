@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 const useFetchItinerary = (itineraryId: string | null) => {
   const [itinerary, setItinerary] = useState(null);
   const [activities, setActivities] = useState<{
+    fromDate: string | number | Date;
     place: any; id: number; name: string 
 }[]>([]);
 

@@ -36,7 +36,7 @@
     }
 
     .btn-drop-down-blue-itinerary {
-        @apply w-full h-[30px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all rounded-md;
+        @apply w-full h-[30px] px-6 bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all rounded-md;
     }
 
     .btn-question {
@@ -161,6 +161,12 @@
     font-size: 1.5rem;
     color: #0056b3 !important;
     font-weight: bolder;
+    text-transform: lowercase;
+    /* Asegura que todo el texto esté en minúscula */
+}
+
+.fc-toolbar-title:first-letter {
+    text-transform: uppercase;
 }
 
 .fc-dayGridMonth-button,

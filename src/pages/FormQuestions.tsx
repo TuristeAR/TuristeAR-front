@@ -32,6 +32,7 @@ import EventCarousel from '../components/FormQuestions/EventCarousel';
 interface FormData {
   provinceId: number;
   localities: string[];
+  events: number[];
   fromDate: string;
   toDate: string;
   priceLevel: string[];
@@ -166,6 +167,7 @@ const FormQuestions = () => {
   const [formData, setFormData] = useState<FormData>({
     provinceId: null,
     localities: [],
+    events: [],
     fromDate: '',
     toDate: '',
     priceLevel: [],
@@ -177,6 +179,7 @@ const FormQuestions = () => {
   const [loadingLocalities, setLoadingLocalities] = useState(false);
   const [loadingEvents, setLoadingEvents] = useState(false);
   const [events, setEvents] = useState<any[]>([]);
+  const [selectedEvents, setSelectedEvents] = useState<number[]>([]);
 
   const handleCloseDialogWindow = () => {
     setDialogWindowOpen(false);
@@ -251,6 +254,29 @@ const FormQuestions = () => {
     });
   };
 
+  const handleEventSelect = (id: number, locality: string) => {
+    setSelectedEvents((prevSelectedEvents) => {
+      const isSelected = prevSelectedEvents.includes(id);
+      const updatedSelectedEvents = isSelected
+        ? prevSelectedEvents.filter((eventId) => eventId !== id)
+        : [...prevSelectedEvents, id];
+
+      setFormData((prevFormData) => {
+        const updatedLocalities = isSelected
+          ? prevFormData.localities.filter((loc) => loc !== locality)
+          : [...prevFormData.localities, locality];
+
+        return {
+          ...prevFormData,
+          localities: updatedLocalities,
+          events: updatedSelectedEvents,
+        };
+      });
+
+      return updatedSelectedEvents;
+    });
+  };
+
   const handleSingleSelection = (name: keyof FormData, value: number) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -278,7 +304,7 @@ const FormQuestions = () => {
           return;
         }
 
-        if (selectedLocalities.length === 0) {
+        if (selectedLocalities.length === 0 && formData.localities.length === 0) {
           setErrorMessage('Tenés que seleccionar un lugar para visitar');
           return;
         }
@@ -302,6 +328,23 @@ const FormQuestions = () => {
 
         if (fromDate < today || toDate < today) {
           setErrorMessage('Las fechas no pueden ser anteriores a hoy');
+          return;
+        }
+
+        const selectedEventsDetails = events.filter((event) => formData.events.includes(event.id));
+
+        const isDateWithinEventRange = selectedEventsDetails.every((event) => {
+          const eventFromDate = new Date(event.fromDate);
+
+          const eventToDate = new Date(event.toDate);
+
+          return fromDate < eventFromDate && toDate > eventToDate;
+        });
+
+        if (!isDateWithinEventRange) {
+          setErrorMessage(
+            'Las fechas del viaje deben estar dentro del rango de fechas de los eventos seleccionados',
+          );
           return;
         }
 
@@ -356,7 +399,7 @@ const FormQuestions = () => {
   };
 
   const submitFormData = async () => {
-    setLoading(true); // Inicia el estado de carga
+    setLoading(true);
 
     formData.fromDate = state[0].startDate.toISOString();
     formData.toDate = state[0].endDate.toISOString();
@@ -379,6 +422,23 @@ const FormQuestions = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatFromDateAndToDate = (fromDate: string, toDate: string) => {
+    const from = new Date(fromDate);
+    const to = new Date(toDate);
+
+    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
+
+    if (fromDate === toDate) {
+      return from.toLocaleDateString('es-ES', options);
+    }
+
+    const fromDay = from.getDate();
+    const toDay = to.getDate();
+    const month = from.toLocaleDateString('es-ES', { month: 'long' });
+
+    return `${fromDay} a ${toDay} de ${month}`;
   };
 
   const saveFormDataToLocalStorage = (data: FormData) => {
@@ -679,7 +739,11 @@ const FormQuestions = () => {
                               ) : (
                                 events.length > 0 && (
                                   <div className="flex items-center mt-4">
-                                    <EventCarousel events={events} />
+                                    <EventCarousel
+                                      events={events}
+                                      selectedEvents={selectedEvents}
+                                      onEventSelect={handleEventSelect}
+                                    />
                                   </div>
                                 )
                               )}
@@ -713,51 +777,87 @@ const FormQuestions = () => {
                   </div>
                 ) : questions[currentQuestion].type === 'calendar' ? (
                   <div className="flex flex-col gap-y-4 justify-center items-center w-full">
-                    <h2 className="w-full md:w-[700px] text-center text-2xl sm:text-3xl font-semibold text-primary-4">
-                      Elegí la fecha para tu viaje a {selectedProvince?.name}
+                    <h2 className="w-full md:w-[700px] text-center text-2xl sm:text-3xl font-semibold text-primary-4 mb-6">
+                      Definí la fecha para tu viaje a {selectedProvince?.name}
                     </h2>
-                    <DateRangePicker
-                      editableDateInputs={true}
-                      onChange={handleDateSelect}
-                      moveRangeOnFirstSelection={false}
-                      ranges={state}
-                      locale={es}
-                      retainEndDateOnFirstSelection={false}
-                      staticRanges={[]}
-                      inputRanges={[]}
-                    />
-                    <div>
-                      <span>
-                        {state[0].endDate && state[0].startDate && (
-                          <p className="text-xl">
-                            Tu viaje va a durar
-                            <strong>
-                              {' '}
-                              {state[0].endDate && state[0].startDate
-                                ? Math.ceil(
-                                    (state[0].endDate.getTime() - state[0].startDate.getTime()) /
-                                      (1000 * 60 * 60 * 24),
-                                  )
-                                : 0}{' '}
-                              días
-                            </strong>
-                          </p>
-                        )}
-                      </span>
-                    </div>
-                    <div className="flex flex-col items-center gap-x-4">
-                      <button
-                        type="button"
-                        className="btn-question w-48 text-[14px]"
-                        onClick={handleNextQuestion}
-                      >
-                        Continuar
-                      </button>
-                      {errorMessage && (
-                        <div className="error-message" role="alert">
-                          {errorMessage}
+                    <div className="w-full max-w-[800px] flex flex-col md:flex-row md:justify-between">
+                      <div className="flex flex-col items-start w-full md:w-2/5">
+                        <h3 className="text-primary-4 font-bold text-xl text-center">
+                          Elegiste estos eventos:
+                        </h3>
+                        <div className="flex flex-col my-2">
+                          {events
+                            .filter((event) => selectedEvents.includes(event.id))
+                            .map((event, index) => (
+                              <div key={index}>
+                                <div className="my-2 w-fit px-3 py-1 bg-primary-2 text-white rounded relative">
+                                  <span className="mr-6">{event.name}</span>
+                                  <button
+                                    type="button"
+                                    className="absolute right-2 top-1/2 transform -translate-y-1/2 font-bold"
+                                    onClick={() => handleEventSelect(event.id, event.locality)}
+                                  >
+                                    X
+                                  </button>
+                                </div>
+                                <span className="text-md italic px-1">
+                                  {formatFromDateAndToDate(event.fromDate, event.toDate)}
+                                </span>
+                              </div>
+                            ))}
                         </div>
-                      )}
+                        <hr className="text-primary-2 w-full my-4" />
+                        <span className="my-2">
+                          ℹ️ Tené en cuenta que la fecha de inicio y fin del viaje tiene que
+                          ajustarse a la duración de los eventos seleccionados.
+                        </span>
+                      </div>
+                      <div className="w-full md:w-1/2 text-center">
+                        <DateRangePicker
+                          editableDateInputs={true}
+                          onChange={handleDateSelect}
+                          moveRangeOnFirstSelection={false}
+                          ranges={state}
+                          locale={es}
+                          retainEndDateOnFirstSelection={false}
+                          staticRanges={[]}
+                          inputRanges={[]}
+                        />
+                        <div>
+                          <span>
+                            {state[0].endDate && state[0].startDate && (
+                              <p className="text-xl mb-4">
+                                Tu viaje va a durar
+                                <strong>
+                                  {' '}
+                                  {state[0].endDate && state[0].startDate
+                                    ? Math.ceil(
+                                        (state[0].endDate.getTime() -
+                                          state[0].startDate.getTime()) /
+                                          (1000 * 60 * 60 * 24),
+                                      )
+                                    : 0}{' '}
+                                  días
+                                </strong>
+                              </p>
+                            )}
+                          </span>
+                        </div>
+                        <div className="flex flex-col items-center gap-x-4">
+                          <button
+                            type="button"
+                            className="btn-question w-48 text-[14px]"
+                            onClick={handleNextQuestion}
+                          >
+                            Continuar
+                          </button>
+                          {errorMessage && (
+                            <div className="error-message" role="alert">
+                              {errorMessage}
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ) : questions[currentQuestion].type === 'icon' ? (
