@@ -3,11 +3,11 @@ import { useParams } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { Header } from '../components/Header/Header';
-import { PublicationCard } from '../components/ImageGallery/PublicationCard';
+import { PublicationCard } from '../components/Community/PublicationCard';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
 import { CommentDetail } from '../components/Community/CommentDetail';
-import { PublicationDetailCard } from '../components/ImageGallery/PublicationDetailCard';
+import { PublicationDetailCard } from '../components/Community/PublicationDetailCard';
 
 type User = {
   id: number;

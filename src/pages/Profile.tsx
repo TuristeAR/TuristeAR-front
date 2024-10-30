@@ -1,7 +1,7 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
-import { PublicationCard } from '../components/ImageGallery/PublicationCard';
+import { PublicationCard } from '../components/Community/PublicationCard';
 import { ItineraryCard } from '../components/Community/ItineraryCard';
 import { useEffect, useRef, useState } from 'react';
 import logoAnimado from '../assets/logoAnimado.json';
@@ -28,6 +28,12 @@ const Profile = () => {
     image: string;
   };
 
+  type Comment = {
+    createdAt: string;
+    description: string;
+    user : User | null;
+  }
+
   type Publication = {
     id: number;
     description: string;
@@ -38,6 +44,7 @@ const Profile = () => {
     likes: User[];
     reposts: User[];
     saved: User[];
+    comments: Comment[];
   };
 
   type Itinerary = {
@@ -272,6 +279,7 @@ const Profile = () => {
                       category={publication.category.description}
                       reposts={publication.reposts.length}
                       saved={publication.saved.length}
+                      comments={publication.comments.length}
                       isLiked={publication.likes.some((item) => item.id === user.id)}
                       isRepost={publication.reposts.some((item) => item.id === user.id)}
                       isSaved={publication.saved.some((item) => item.id === user.id)}
@@ -314,6 +322,7 @@ const Profile = () => {
                       category={publication.category.description}
                       reposts={publication.reposts.length}
                       saved={publication.saved.length}
+                      comments={publication.comments.length}
                       isLiked={true}
                       isRepost={publication.reposts.some((item) => item.id === user.id)}
                       isSaved={publication.saved.some((item) => item.id === user.id)}
@@ -336,6 +345,7 @@ const Profile = () => {
                       likes={publication.likes.length}
                       reposts={publication.reposts.length}
                       saved={publication.saved.length}
+                      comments={publication.comments.length}
                       category={publication.category.description}
                       isLiked={publication.likes.some((item) => item.id === user.id)}
                       isRepost={publication.reposts.some((item) => item.id === user.id)}

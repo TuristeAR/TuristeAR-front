@@ -9,7 +9,7 @@ export const CreateForums = () => {
   };
 
   const [categories, setCategories] = useState<Category[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     name: '',

@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { PublicationCard } from '../src/components/ImageGallery/PublicationCard';
+import { PublicationCard } from '../src/components/Community/PublicationCard';
 
 const itineraries = [
   {

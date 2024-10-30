@@ -1,5 +1,5 @@
 import { Header } from '../components/Header/Header';
-import { PublicationCard } from '../components/ImageGallery/PublicationCard';
+import { PublicationCard } from '../components/Community/PublicationCard';
 import React, { useEffect, useRef, useState } from 'react';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
@@ -19,11 +19,18 @@ const Publications = () => {
     location: string
   }
 
+  type Comment = {
+    createdAt: string;
+    description: string;
+    user : User | null;
+  }
+
   type Category = {
     id: number;
     description: string;
     image: string;
   };
+
   type Publication = {
     id: number;
     description: string;
@@ -34,6 +41,7 @@ const Publications = () => {
     likes : User[]
     reposts : User[]
     saved : User[]
+    comments : Comment[]
   };
 
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -126,6 +134,7 @@ const Publications = () => {
                     likes={publication.likes.length}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}
+                    comments={publication.comments.length}
                     isLiked={publication.likes.some(item => item.id === user.id)}
                     isRepost={publication.reposts.some(item => item.id === user.id)}
                     isSaved={publication.saved.some(item => item.id === user.id)}

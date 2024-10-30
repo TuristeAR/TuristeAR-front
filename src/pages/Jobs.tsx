@@ -2,7 +2,7 @@ import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 
 import { CreatePublications } from '../components/Community/CreatePublications';
-import { PublicationCard } from '../components/ImageGallery/PublicationCard';
+import { PublicationCard } from '../components/Community/PublicationCard';
 
 export const Jobs = () => {
   return (

@@ -1,4 +1,4 @@
-import { ImageGallery } from './ImageGallery';
+import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { useState } from 'react';
 import { post } from '../../utilities/http.util';
 
@@ -12,6 +12,7 @@ export function PublicationCard(props: {
   likes: number;
   reposts: number;
   saved: number;
+  comments: number;
   category: string;
   isLiked: boolean;
   isSaved: boolean;
@@ -25,6 +26,7 @@ export function PublicationCard(props: {
     images,
     category,
     id,
+    comments
   } = props;
 
   const [isLike, setIsLike] = useState<boolean | undefined>(props.isLiked);
@@ -125,7 +127,7 @@ export function PublicationCard(props: {
                   <path d="M480-80 376-237H140q-24.75 0-42.37-17.63Q80-272.25 80-297v-523q0-24.75 17.63-42.38Q115.25-880 140-880h680q24.75 0 42.38 17.62Q880-844.75 880-820v523q0 24.75-17.62 42.37Q844.75-237 820-237H584L480-80Zm0-108 72-109h268v-523H140v523h268l72 109Zm0-371Z" />
                 </svg>
               </a>
-              <span className="ml-3">0</span>
+              <span className="ml-3">{comments}</span>
             </div>
             <div className="flex items-center mr-6">
               <svg

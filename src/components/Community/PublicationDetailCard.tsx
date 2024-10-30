@@ -1,4 +1,4 @@
-import { ImageGallery } from './ImageGallery';
+import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { useState } from 'react';
 import { post } from '../../utilities/http.util';
 
