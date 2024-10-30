@@ -32,6 +32,7 @@ import EventCarousel from '../components/FormQuestions/EventCarousel';
 interface FormData {
   provinceId: number;
   localities: string[];
+  events: number[];
   fromDate: string;
   toDate: string;
   priceLevel: string[];
@@ -166,6 +167,7 @@ const FormQuestions = () => {
   const [formData, setFormData] = useState<FormData>({
     provinceId: null,
     localities: [],
+    events: [],
     fromDate: '',
     toDate: '',
     priceLevel: [],
@@ -177,6 +179,7 @@ const FormQuestions = () => {
   const [loadingLocalities, setLoadingLocalities] = useState(false);
   const [loadingEvents, setLoadingEvents] = useState(false);
   const [events, setEvents] = useState<any[]>([]);
+  const [selectedEvents, setSelectedEvents] = useState<number[]>([]);
 
   const handleCloseDialogWindow = () => {
     setDialogWindowOpen(false);
@@ -250,7 +253,29 @@ const FormQuestions = () => {
       'Content-Type': 'application/json',
     });
   };
-  console.log(localities.map(locality => locality.nombre));
+
+  const handleEventSelect = (id: number, locality: string) => {
+    setSelectedEvents((prevSelectedEvents) => {
+      const isSelected = prevSelectedEvents.includes(id);
+      const updatedSelectedEvents = isSelected
+        ? prevSelectedEvents.filter((eventId) => eventId !== id)
+        : [...prevSelectedEvents, id];
+
+      setFormData((prevFormData) => {
+        const updatedLocalities = isSelected
+          ? prevFormData.localities.filter((loc) => loc !== locality)
+          : [...prevFormData.localities, locality];
+
+        return {
+          ...prevFormData,
+          localities: updatedLocalities,
+          events: updatedSelectedEvents,
+        };
+      });
+
+      return updatedSelectedEvents;
+    });
+  };
 
   const handleSingleSelection = (name: keyof FormData, value: number) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -357,7 +382,7 @@ const FormQuestions = () => {
   };
 
   const submitFormData = async () => {
-    setLoading(true); // Inicia el estado de carga
+    setLoading(true);
 
     formData.fromDate = state[0].startDate.toISOString();
     formData.toDate = state[0].endDate.toISOString();
@@ -680,7 +705,11 @@ const FormQuestions = () => {
                               ) : (
                                 events.length > 0 && (
                                   <div className="flex items-center mt-4">
-                                    <EventCarousel events={events} />
+                                    <EventCarousel
+                                      events={events}
+                                      selectedEvents={selectedEvents}
+                                      onEventSelect={handleEventSelect}
+                                    />
                                   </div>
                                 )
                               )}
