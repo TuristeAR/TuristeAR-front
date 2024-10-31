@@ -14,7 +14,6 @@ const useFetchItinerary = (itineraryId: string | null) => {
         const data = await response.json();
         setItinerary(data.data.itinerary || null);
         setActivities(data.data.activities?.activities || []);
-
       } catch (error) {
         console.error('Error fetching itinerary:', error);
       }
