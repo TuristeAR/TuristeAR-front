@@ -51,6 +51,7 @@ export const ItineraryCalendar = () => {
           setActivities((prevActivities) =>
             prevActivities.filter((activity) => activity.id !== activityId),
           );
+          setIsModalOpen(false);
         } else {
           console.error('Error al eliminar la actividad:', data.message);
         }
