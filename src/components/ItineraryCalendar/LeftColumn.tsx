@@ -202,7 +202,7 @@ export const LeftColumn = ({
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => {}}
+              onClick={() => (window.location.href = `/sharedGallery/${itineraryId}`)}
             >
               <img src={galleryIcon} alt="" />
               <p className="text-sm">Galeria compartida</p>
