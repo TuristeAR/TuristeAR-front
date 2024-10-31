@@ -2,10 +2,15 @@ import { useState, useEffect } from 'react';
 
 const useFetchItinerary = (itineraryId: string | null) => {
   const [itinerary, setItinerary] = useState(null);
-  const [activities, setActivities] = useState<{
-    fromDate: string | number | Date;
-    place: any; id: number; name: string 
-}[]>([]);
+  const [activities, setActivities] = useState<
+    {
+      fromDate: string | number | Date;
+      place: any;
+      id: number;
+      name: string;
+    }[]
+  >([]);
+  const [events, setEvents] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchItinerary = async () => {
@@ -14,6 +19,7 @@ const useFetchItinerary = (itineraryId: string | null) => {
         const data = await response.json();
         setItinerary(data.data.itinerary || null);
         setActivities(data.data.activities?.activities || []);
+        setEvents(data.data.events?.events || []);
       } catch (error) {
         console.error('Error fetching itinerary:', error);
       }
@@ -24,7 +30,7 @@ const useFetchItinerary = (itineraryId: string | null) => {
     }
   }, [itineraryId]);
 
-  return { itinerary, activities, setActivities, setItinerary };
+  return { itinerary, activities, events, setActivities, setItinerary, setEvents };
 };
 
 export default useFetchItinerary;
