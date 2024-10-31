@@ -282,7 +282,7 @@ export const ItineraryDetail = () => {
                 <div className="flex justify-center items-center">
                   <button
                     onClick={() => downloadPDF('itinerary', 'itinerario.pdf')}
-                    className="btn-drop-down-blue-itinerary hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mb-4"
+                    className="btn-drop-down-blue-itinerary hover:bg-blue-600 text-white font-semibold px-4 rounded mb-4"
                   >
                     Descargar Itinerario
                   </button>
