@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
 import ExpenseDetail from './ExpenseDetail';
 
-import receiptText from '/assets/receipt-text.svg';
-import { ArrowLeft, CircleX, Edit2Icon } from 'lucide-react';
+import { ArrowLeft, CircleX, Edit2Icon, Receipt } from 'lucide-react';
 import ExpenseEditForm from './ExpenseEditForm';
 
 type Expense = {
@@ -143,7 +142,8 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName, onClose }) => 
                       className="flex justify-between p-2 rounded-xl bg-slate-50 m cursor-pointer transition-all duration-500 hover:bg-gray-50"
                     >
                       <div className="flex gap-1">
-                        <img className="w-[3rem]" src={receiptText} alt="receipt icon" />
+                        <Receipt className='w-[3rem]'/>
+
                         <div className="flex h-full px-1 flex-col items-start">
                           <h5 className="font-semibold sm:text-2xl leading-9 text-black mb-1">
                             {expense.description}
