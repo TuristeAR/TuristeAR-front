@@ -26,7 +26,6 @@ export const UploadImageSharedGallery = (props : {activities : any[]}) => {
         [name]: value,
       }));
     }
-    console.log(formData)
   };
 
   const uploadImage = async (image: File) => {
