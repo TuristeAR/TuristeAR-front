@@ -38,7 +38,7 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName, onClose }) => 
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/expenses/${itineraryId as number}`);
+        const response = await fetch(`https://api-turistear.koyeb.app/expenses/${itineraryId as number}`);
         if (!response.ok) {
           throw new Error('Error al obtener los gastos');
         }
@@ -71,7 +71,7 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName, onClose }) => 
 
   const handleDeleteExpense = async (expenseId: number) => {
     try {
-      const response = await fetch(`http://localhost:3001/expenses/${expenseId}`, {
+      const response = await fetch(`https://api-turistear.koyeb.app/expenses/${expenseId}`, {
         method: 'DELETE',
       });
 

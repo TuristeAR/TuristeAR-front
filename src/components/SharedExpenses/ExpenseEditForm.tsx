@@ -119,7 +119,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
       itineraryId: itineraryId,
     };
     try {
-      const response = await fetch('http://localhost:3001/expenses', {
+      const response = await fetch('https://api-turistear.koyeb.app/expenses', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
