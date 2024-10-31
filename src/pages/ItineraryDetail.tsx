@@ -9,6 +9,7 @@ import calendarIcon from '/assets/calendar-blue.svg';
 import mapIcon from '/assets/map-icon.svg';
 import { Countdown } from '../components/Calendar/Countdown';
 import useDownloadPdf from '../utilities/useDownloadPdf';
+import { UploadImageSharedGallery } from '../components/ItineraryCalendar/UploadImageSharedGallery';
 
 type User = {
   id: number;
@@ -237,6 +238,8 @@ export const ItineraryDetail = () => {
   return (
     <>
       <Header />
+      <UploadImageSharedGallery activities={activities} />
+
       <section>
         <div className="container mx-auto flex flex-col justify-center z-30 relative p-4">
           <div className="w-full  my-2">
