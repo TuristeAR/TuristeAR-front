@@ -5,7 +5,7 @@ import plusIcon from '/assets/add.svg';
 import chatIcon from '/assets/chat.svg';
 import galleryIcon from '/assets/gallery.svg';
 import alignIcon from '/assets/align.svg';
-import { Trash2 } from 'lucide-react';
+import { Receipt, Trash2 } from 'lucide-react';
 import mapIcon from '/assets/map-icon.svg';
 
 import { Link } from 'react-router-dom';
@@ -15,6 +15,9 @@ import useFetchParticipants from '../../utilities/useFetchParticipants';
 
 import { AddParticipantModal } from '../AddParticipantModal/AddParticipantModal';
 import { io } from 'socket.io-client';
+import ExpenseForm from '../SharedExpenses/ExpenseForm';
+import ExpensesList from '../SharedExpenses/ExpensesList';
+import SharedExpenses from '../../pages/SharedExpenses';
 
 type User = {
   id: number;
@@ -31,11 +34,14 @@ export const LeftColumn = ({
   setIsAddingActivity,
   activities,
   setActivities,
+  isShowExpanse,
+  setIsShowExpanse
 }) => {
   const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
   const [selectedPlace, setSelectedPlace] = useState('');
   const [showPlaces, setShowPlaces] = useState(false);
   const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
+  const [showForm, setShowForm] = useState(false);
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
@@ -206,6 +212,12 @@ export const LeftColumn = ({
                 <p className="text-sm">Resumen del viaje</p>
               </Link>
             </div>
+            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
+              <Receipt className='stroke-primary' strokeWidth={1} />
+              <button  onClick={() => setIsShowExpanse(true)}>        
+                <p className="text-sm">Gastos Compartidos</p>
+              </button>
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-4 my-4 border-gray">
@@ -317,6 +329,8 @@ export const LeftColumn = ({
             </>
           )}
         </div>
+        {isShowExpanse ? (<SharedExpenses itineraryId={itineraryId} itineraryName={itinerary.name}  onClose={() => setIsShowExpanse(false)} 
+        ></SharedExpenses>):""}
       </div>
     </aside>
   );
