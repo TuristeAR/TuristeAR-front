@@ -3,7 +3,6 @@ import io from 'socket.io-client';
 
 type User = {
   id: number;
-  username: string;
   name: string;
   profilePicture: string;
   description: string;
@@ -21,8 +20,8 @@ type Category = {
 type Comment = {
   createdAt: string;
   description: string;
-  user : User;
-}
+  user: User;
+};
 
 type Publication = {
   id: number;
@@ -31,13 +30,16 @@ type Publication = {
   creationDate: string;
   images: string[];
   user: User | null;
-  likes : User[]
-  reposts : User[]
-  saved : User[]
-  comments : Comment[]
+  likes: User[];
+  reposts: User[];
+  saved: User[];
+  comments: Comment[];
 };
 
-export const CommentDetail = (props : {publication : Publication | undefined, user : User | undefined}) => {
+export const CommentDetail = (props: {
+  publication: Publication | undefined;
+  user: User | null;
+}) => {
   const { user } = props;
 
   const [publication, setPublication] = useState<Publication | null>(props.publication);
@@ -81,12 +83,10 @@ export const CommentDetail = (props : {publication : Publication | undefined, us
     }
   };
 
-  return(
+  return (
     <>
       <div className="lg:w-[100%] w-[100%] flex flex-col overflow-y-scroll scrollbar-hidden">
-        <div
-          className={'h-[8%] py-4 flex justify-around items-center border-t border-[#999999]'}
-        >
+        <div className={'h-[8%] py-4 flex justify-around items-center border-t border-[#999999]'}>
           <div className={'flex w-[80%] items-center'}>
             <input
               onInput={(e) => {
@@ -101,7 +101,7 @@ export const CommentDetail = (props : {publication : Publication | undefined, us
             <svg
               className={'cursor-pointer lg:w-[57px] lg:h-[57px] w-[40px] h-[40px]'}
               onClick={() => {
-                createComment(Number(publication.id))
+                createComment(Number(publication.id));
               }}
               viewBox="0 0 25.00 25.00"
               fill={'none'}
@@ -130,10 +130,7 @@ export const CommentDetail = (props : {publication : Publication | undefined, us
         </div>
         <div className="overflow-y-scroll scrollbar-hidden h-[90%] flex flex-col">
           {publication.comments.map((comment, index) => (
-            <div
-              className={`flex justify-start`}
-              key={index}
-            >
+            <div className={`flex justify-start`} key={index}>
               <div
                 className={
                   'p-4 lg:p-6 rounded-b-2xl lg:gap-4 gap-2 flex flex-col w-[100%] border-t border-[#999999]'
@@ -149,10 +146,14 @@ export const CommentDetail = (props : {publication : Publication | undefined, us
                       />
                     </div>
                     <div className={'flex flex-col'}>
-                      <p className={'font-semibold lg:text-[17px] text-[14px] '}>{comment.user.name}</p>
+                      <p className={'font-semibold lg:text-[17px] text-[14px] '}>
+                        {comment.user.name}
+                      </p>
                     </div>
                   </div>
-                  <p className={'lg:text-[16px] text-[12px]'}>{comment.createdAt.slice(11).slice(0, 5)}</p>
+                  <p className={'lg:text-[16px] text-[12px]'}>
+                    {comment.createdAt.slice(11).slice(0, 5)}
+                  </p>
                 </div>
                 <div>
                   <p className={'lg:text-[16px] text-sm'}>{comment.description}</p>
@@ -160,9 +161,8 @@ export const CommentDetail = (props : {publication : Publication | undefined, us
               </div>
             </div>
           ))}
-
         </div>
       </div>
     </>
-  )
-}
+  );
+};

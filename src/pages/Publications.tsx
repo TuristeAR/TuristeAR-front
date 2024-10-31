@@ -10,7 +10,6 @@ const Publications = () => {
 
   type User={
     id: number;
-    username: string,
     name: string,
     profilePicture: string,
     description: string,

@@ -5,7 +5,6 @@ type User = {
   id: number;
   email: string;
   name: string;
-  username: string;
   profilePicture: string;
   isOwner?: boolean;
 };
@@ -162,13 +161,13 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
     }
   };
 
- //search userold
- const filteredUsers = usersOld.filter((user) =>
- user.name.toLowerCase().includes(searchTerm.toLowerCase()),
-);
-const filteredUsersOld = usersOldNav.filter((user) =>
- user.name.toLowerCase().includes(searchTermOld.toLowerCase()),
-);
+  //search userold
+  const filteredUsers = usersOld.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+  const filteredUsersOld = usersOldNav.filter((user) =>
+    user.name.toLowerCase().includes(searchTermOld.toLowerCase()),
+  );
 
   return (
     <>

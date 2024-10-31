@@ -3,7 +3,6 @@ type User = {
   id: number;
   email: string;
   name: string;
-  username: string;
   profilePicture: string;
 };
 const useFetchParticipants = (itineraryId: any) => {

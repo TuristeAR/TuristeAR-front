@@ -15,15 +15,8 @@ type User = {
   id: number;
   email: string;
   name: string;
-  username: string;
   profilePicture: string;
 };
-
-interface RespuestaNominatim {
-  address?: {
-    neighbourhood?: string; // Nombre del barrio
-  };
-}
 
 export const ItineraryDetail = () => {
   const { itineraryId } = useParams();
@@ -78,7 +71,7 @@ export const ItineraryDetail = () => {
     // Convertir de DD-MM-YYYY a YYYY-MM-DD
     const [day, month, year] = dateString.split('-');
     const formattedDateString = `${year}-${month}-${day}`; // Ahora en formato YYYY-MM-DD
-  
+
     const date = new Date(formattedDateString);
     if (isNaN(date.getTime())) {
       return 'Fecha inválida';

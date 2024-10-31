@@ -20,7 +20,6 @@ type User = {
   id: number;
   email: string;
   name: string;
-  username: string;
   profilePicture: string;
 };
 
@@ -72,17 +71,17 @@ export const LeftColumn = ({
       );
     });
     socket.on('addActivity', ({ itinerary }) => {
-      console.log(itinerary)
+      console.log(itinerary);
       const updatedItinerary = itinerary;
-          const activitiesList = updatedItinerary?.activities || [];
-          const lastActivity = activitiesList[activitiesList.length - 1];
+      const activitiesList = updatedItinerary?.activities || [];
+      const lastActivity = activitiesList[activitiesList.length - 1];
 
-          if (lastActivity) {
-            setActivities((prevActivities) => [...prevActivities, lastActivity]);
-          }
+      if (lastActivity) {
+        setActivities((prevActivities) => [...prevActivities, lastActivity]);
+      }
 
-          setNewActivity({ name: '', fromDate: '', toDate: '', place: '' }); // Resetear el formulario
-          setIsAddingActivity(false); // Cerrar el formulario
+      setNewActivity({ name: '', fromDate: '', toDate: '', place: '' }); // Resetear el formulario
+      setIsAddingActivity(false); // Cerrar el formulario
     });
 
     return () => {
@@ -194,7 +193,9 @@ export const LeftColumn = ({
             </div>
             <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
               <img src={chatIcon} alt="" />
-              <a href={`/itineraryChat/${itineraryId}`} className="text-sm">Chat</a>
+              <a href={`/itineraryChat/${itineraryId}`} className="text-sm">
+                Chat
+              </a>
             </div>
             <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
               <img src={galleryIcon} alt="" />

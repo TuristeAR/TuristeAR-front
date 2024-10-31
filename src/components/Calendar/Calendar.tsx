@@ -7,9 +7,11 @@ import { io } from 'socket.io-client';
 import Lottie from 'lottie-react';
 import logoAnimado from '../../assets/logoAnimado.json';
 
-export const Calendar = ({ onEventClick, activities, setActivities, deleteActivity }) => {
+export const Calendar = ({ onEventClick, activities, setActivities, deleteActivity, events }) => {
   const [initialDate, setInitialDate] = useState(null);
+
   const [loading, setLoading] = useState(true);
+
   const formattedActivities = activities.map((activity) => ({
     id: String(activity.id),
     title: activity.name,
@@ -23,13 +25,31 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
     hours: activity.place.openingHours ? activity.place.openingHours : [],
   }));
 
+  const formattedEvents = events.map((event) => ({
+    id: String(event.id),
+    title: event.name,
+    start: new Date(event.fromDate),
+    end: new Date(event.toDate),
+    locality: event.locality,
+    description: event.description,
+    image: event.image,
+  }));
+
+  const combinedEvents = [
+    ...formattedActivities.map((activity) => ({
+      ...activity,
+      type: 'activity',
+    })),
+    ...formattedEvents.map((event) => ({
+      ...event,
+      type: 'event',
+    })),
+  ];
+
   useEffect(() => {
     const socket = io('https://api-turistear.koyeb.app');
 
     socket.on('activityUpdated', (data) => {
-      console.log('Activity updated socket:', data);
-
-      // Actualiza el estado de las actividades en función de los datos recibidos
       setActivities((prevActivities) =>
         prevActivities.map((activity) =>
           activity.id == data.activityId
@@ -48,7 +68,6 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
 
     setTimeout(() => setLoading(false), 3000);
 
-    // Limpiar el socket al desmontar el componente
     return () => {
       socket.off('activityUpdated');
     };
@@ -56,7 +75,7 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
 
   const updateActivityInBackend = async (activityId: number, start: Date, end: Date) => {
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/itinerary/update-activity', {
+      await fetch('https://api-turistear.koyeb.app/itinerary/update-activity', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -67,11 +86,6 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
           end: end.toISOString(),
         }),
       });
-      if (!response.ok) {
-        throw new Error('Error al actualizar la actividad en el backend');
-      }
-      const data = await response.json();
-      console.log(data.message); // Mensaje de éxito del backend
     } catch (error) {
       console.error('Error al actualizar la actividad:', error);
     }
@@ -87,49 +101,68 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
             plugins={[dayGridPlugin, interactionPlugin]}
             initialDate={initialDate}
             locale={esLocale}
-            events={formattedActivities}
+            events={combinedEvents}
             eventClick={({ event }) => onEventClick(event)}
             editable={true}
             eventDrop={(info) => {
               const { event } = info;
 
-              // Actualizamos la actividad correspondiente en el estado
-              const updatedEvents = activities.map((activity) => {
-                if (activity.id == event.id) {
-                  const updatedActivity = {
-                    ...activity,
-                    fromDate: event.start.toISOString(), // Nueva fecha de inicio
-                    toDate: event.end ? event.end.toISOString() : activity.toDate, // Nueva fecha de fin si existe, si no se mantiene la actual
-                  };
+              if (event.extendedProps.type === 'activity') {
+                const updatedActivities = activities.map((activity) => {
+                  if (activity.id == event.id) {
+                    const updatedActivity = {
+                      ...activity,
+                      fromDate: event.start.toISOString(),
+                      toDate: event.end ? event.end.toISOString() : activity.toDate,
+                    };
 
-                  // Llamar a la función para actualizar en el backend
-                  updateActivityInBackend(
-                    activity.id,
-                    event.start,
-                    event.end ? event.end : new Date(activity.toDate),
-                  );
+                    updateActivityInBackend(
+                      activity.id,
+                      event.start,
+                      event.end ? event.end : new Date(activity.toDate),
+                    );
 
-                  return updatedActivity;
-                }
-                return activity;
-              });
-              setActivities(updatedEvents);
+                    return updatedActivity;
+                  }
+                  return activity;
+                });
+                setActivities(updatedActivities);
+              }
             }}
-            eventContent={(eventInfo) => (
-              <div className="flex justify-center items-center gap-x-2 overflow-hidden">
-                <span className="hidden md:block text-[10px] md:text-xs text-gray-500 bg-primary text-white px-2 rounded-3xl">
-                  {eventInfo.event.start
-                    ? new Date(eventInfo.event.start).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })
-                    : ''}
-                </span>
-                <span className="text-[7px] md:text-xs font-semibold truncate max-w-[80px]">
-                  {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
-                </span>
-              </div>
-            )}
+            eventContent={(eventInfo) => {
+              const isActivity = eventInfo.event.extendedProps.type === 'activity';
+
+              return (
+                <div className="flex flex-col w-full">
+                  {isActivity && (
+                    <p
+                      className="text-[10px] md:text-[13px] w-14 my-2
+                      isActivity ? 'text-white bg-primary text-white px-2 mx-1 rounded-md"
+                    >
+                      {eventInfo.event.start
+                        ? new Date(eventInfo.event.start)
+                            .toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute:
+                                new Date(eventInfo.event.start).getMinutes() === 0
+                                  ? undefined
+                                  : '2-digit',
+                              hour12: false,
+                            })
+                            .replace(':00', '') + ' hs'
+                        : ''}
+                    </p>
+                  )}
+                  <p
+                    className={`flex items-center text-[8px] md:text-[12px] mx-1 p-1 font-semibold md:h-12 hover:bg-opacity-80 cursor-pointer rounded-md  ${
+                      isActivity ? 'bg-primary-3 text-white' : 'bg-orange text-black'
+                    }`}
+                  >
+                    {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
+                  </p>
+                </div>
+              );
+            }}
             headerToolbar={{
               ...(window.innerWidth > 768 && {
                 right: 'dayGridMonth,dayGridWeek,dayGridDay',

@@ -2,7 +2,6 @@ import React from 'react';
 
 type User={
   id: number;
-  username: string,
   name: string,
   profilePicture: string,
   description: string,
@@ -38,7 +37,7 @@ export const ItineraryCard : React.FC<TravelData> = ({imgProvince,province,depar
             src={imgProvince}
             alt=""
             className="w-[100%] h-[100%] lg:rounded-l-2xl lg:rounded-tr-none rounded-t-2xl object-cover"
-            />
+          />
         </div>
         <div className="lg:w-[60%] p-4 flex flex-col gap-2">
           <h1 className="text-2xl lg:text-lg">{province}</h1>
