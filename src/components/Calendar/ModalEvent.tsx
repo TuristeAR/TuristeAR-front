@@ -147,39 +147,46 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo }) => {
             {/* Sección de Reseñas */}
             {selectedTab === 'reviews' && (
               <div className="flex-1 overflow-y-auto p-4">
-                {reviews.map((review, index) => (
-                  <div key={index} className="flex flex-col items-start gap-y-2">
-                    <div className="flex gap-x-2 items-center">
-                      <img
-                        src={review.authorPhoto}
-                        alt={review.authorName}
-                        className="w-8 h-8 rounded-full"
-                      />
-                      <span className="text-md md:text-lg font-semibold whitespace-normal break-words text-black">
-                        {review.authorName}
+                {Array.isArray(reviews) && reviews.length === 0 ? (
+                  <span className="text-md md:text-lg font-semibold whitespace-normal break-words text-gray/95 md:my-3 md:ml-7">
+                    No hay reseñas disponibles
+                  </span>
+                ) : (
+                  Array.isArray(reviews) &&
+                  reviews.map((review, index) => (
+                    <div key={index} className="flex flex-col items-start gap-y-2">
+                      <div className="flex gap-x-2 items-center">
+                        <img
+                          src={review.authorPhoto}
+                          alt={review.authorName}
+                          className="w-8 h-8 rounded-full"
+                        />
+                        <span className="text-md md:text-lg font-semibold whitespace-normal break-words text-black">
+                          {review.authorName}
+                        </span>
+                        <span className="flex items-center gap-x-2 text-md md:text-lg font-semibold whitespace-normal break-words text-gray/95 md:my-3 md:ml-7">
+                          <StarIcon size={20} color="#49A2EC" fill="#49A2EC" />
+                          {review.rating}
+                        </span>
+                      </div>
+                      <span className="text-md md:text-lg font-semibold whitespace-normal break-words text-gray/95 md:my-3 md:ml-7">
+                        {review.text || 'No review text available'}
                       </span>
-                      <span className="flex items-center gap-x-2 text-md md:text-lg font-semibold whitespace-normal break-words text-gray/95 md:my-3 md:ml-7">
-                        <StarIcon size={20} color="#49A2EC" fill="#49A2EC" />
-                        {review.rating}
-                      </span>
+                      <div className="flex items-center justify-center w-full flex-wrap md:flex-nowrap my-2 gap-2">
+                        {review.photos &&
+                          review.photos.map((photo: any, index: Key) => (
+                            <img
+                              key={index}
+                              src={photo}
+                              alt={review.authorName}
+                              className="w-full h-auto max-h-[200px] object-cover rounded-md"
+                            />
+                          ))}
+                      </div>
+                      <hr className="my-2 border-[#aaaaaa] w-full" />
                     </div>
-                    <span className="text-md md:text-lg font-semibold whitespace-normal break-words text-gray/95 md:my-3 md:ml-7">
-                      {review.text || 'No review text available'}
-                    </span>
-                    <div className="flex items-center justify-center w-full flex-wrap md:flex-nowrap my-2 gap-2">
-                      {review.photos &&
-                        review.photos.map((photo: any, index: Key) => (
-                          <img
-                            key={index}
-                            src={photo}
-                            alt={review.authorName}
-                            className="w-full h-auto max-h-[200px] object-cover rounded-md"
-                          />
-                        ))}
-                    </div>
-                    <hr className="my-2 border-[#aaaaaa] w-full" />
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             )}
           </div>

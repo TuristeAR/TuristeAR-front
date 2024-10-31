@@ -1,8 +1,8 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
-import { ItineraryCard } from '../components/ImageGallery/ItineraryCard';
-import { TravelCard } from '../components/Community/TravelCard';
+import { PublicationCard } from '../components/Community/PublicationCard';
+import { ItineraryCard } from '../components/Community/ItineraryCard';
 import { useEffect, useRef, useState } from 'react';
 import logoAnimado from '../assets/logoAnimado.json';
 import Lottie from 'lottie-react';
@@ -27,6 +27,12 @@ const Profile = () => {
     image: string;
   };
 
+  type Comment = {
+    createdAt: string;
+    description: string;
+    user : User | null;
+  }
+
   type Publication = {
     id: number;
     description: string;
@@ -37,9 +43,11 @@ const Profile = () => {
     likes: User[];
     reposts: User[];
     saved: User[];
+    comments: Comment[];
   };
 
   type Itinerary = {
+    activities: any;
     id: number;
     createdAt: string;
     name: string;
@@ -145,6 +153,7 @@ const Profile = () => {
     return formatDate(dateString);
   };
 
+  console.log(itineraries)
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
@@ -260,7 +269,7 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <ItineraryCard
+                    <PublicationCard
                       key={index}
                       id={publication.id}
                       profilePicture={publication.user.profilePicture}
@@ -272,23 +281,30 @@ const Profile = () => {
                       category={publication.category.description}
                       reposts={publication.reposts.length}
                       saved={publication.saved.length}
+                      comments={publication.comments.length}
                       isLiked={publication.likes.some((item) => item.id === user.id)}
                       isRepost={publication.reposts.some((item) => item.id === user.id)}
                       isSaved={publication.saved.some((item) => item.id === user.id)}
                     />
                   ))}
               {activeItem === 'itineraries' &&
-                itineraries?.map((itinerary, index) => (
-                  <TravelCard
+                itineraries?.map((itinerary, index) => {
+                  const imgProvince =
+                  itinerary.activities[0]?.place?.province?.images[0] ||
+                  '/assets/TuristeAR-logo.png'; // imagen por defecto si no hay imagen de la provincia
+            
+                  return (
+                  <ItineraryCard
                     key={index}
-                    imgProvince={'/assets/san-nicolas-buenos-aires.webp'}
+                    imgProvince={imgProvince}
                     province={itinerary.name}
                     departure={itinerary.fromDate}
                     arrival={itinerary.toDate}
                     participants={itinerary.participants}
                     id={itinerary.id}
                   />
-                ))}
+                  );
+                  })}
 
               {activeItem === 'likes' &&
                 likedPublications
@@ -296,7 +312,7 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <ItineraryCard
+                    <PublicationCard
                       key={index}
                       id={publication.id}
                       profilePicture={publication.user.profilePicture}
@@ -308,6 +324,7 @@ const Profile = () => {
                       category={publication.category.description}
                       reposts={publication.reposts.length}
                       saved={publication.saved.length}
+                      comments={publication.comments.length}
                       isLiked={true}
                       isRepost={publication.reposts.some((item) => item.id === user.id)}
                       isSaved={publication.saved.some((item) => item.id === user.id)}
@@ -319,7 +336,7 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <ItineraryCard
+                    <PublicationCard
                       key={index}
                       id={publication.id}
                       profilePicture={publication.user.profilePicture}
@@ -330,6 +347,7 @@ const Profile = () => {
                       likes={publication.likes.length}
                       reposts={publication.reposts.length}
                       saved={publication.saved.length}
+                      comments={publication.comments.length}
                       category={publication.category.description}
                       isLiked={publication.likes.some((item) => item.id === user.id)}
                       isRepost={publication.reposts.some((item) => item.id === user.id)}
