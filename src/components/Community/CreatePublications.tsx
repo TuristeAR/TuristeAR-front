@@ -45,11 +45,9 @@ export const CreatePublications = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [formData, setFormData] = useState({
-    description: '',
-    images: null as File | null,
-    itineraryId: undefined
-  });
+  const [selectedActivities, setSelectedActivities] = useState([]);
+  const [description, setDescription] = useState<string | null>(null);
+
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -74,77 +72,34 @@ export const CreatePublications = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     // @ts-ignore
-    const { name, value, type, files } = e.target;
-    if (type === 'file') {
-      setFormData(prevData => ({
-        ...prevData,
-        images: files ? files[0] : null,
-      }));
-    } else {
-      setFormData(prevData => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+    const { name, value } = e.target;
     setActivities(itineraries.find(itinerary => itinerary.id == Number(name == 'itineraryId' ? value : null)).activities)
-  };
-
-  const uploadImage = async (image: File) => {
-    const formData = new FormData();
-    formData.append('image', image);
-
-    const url = 'https://api.imgur.com/3/image';
-    const options = {
-      method: 'POST',
-      headers: {
-        Authorization: 'Client-ID 523c9b5cf859dce',
-      },
-      body: formData,
-    };
-
-    try {
-      const response = await fetch(url, options);
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error de respuesta:', errorData);
-        throw new Error(errorData.data.error || 'Error al cargar la imagen');
-      }
-      const result = await response.json();
-      console.log('Imagen subida:', result);
-      return result.data.link;
-    } catch (error) {
-      console.error('Error en la carga de la imagen:', error);
-      throw error;
-    }
   };
 
   const createPublications = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    if (!formData.description) {
+    if (description==null) {
       setError("Ingrese una descripción!");
       return;
     }
 
-    if (formData.itineraryId === undefined) {
-      setError("Seleccione una categoría!");
+    if (selectedActivities.length < 0) {
+      setError("Seleccione actividades!");
       return;
     }
 
     setIsLoading(true);
     try {
-      const imageUrl = formData.images ? await uploadImage(formData.images) : "";
-
-      const response = await fetch('https://api-turistear.koyeb.app/createPublication', {
+      const response = await fetch('http://localhost:3001/createPublication', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          description : formData.description,
-          images: imageUrl,
-          itineraryId: formData.itineraryId
+          description: description,
+          activities: selectedActivities
         }),
         credentials: 'include',
       });
@@ -159,8 +114,6 @@ export const CreatePublications = () => {
       setIsOpen(false);
     }
   };
-
-  const [selectedActivities, setSelectedActivities] = useState([]);
 
   const handleSelection = (activityId) => {
     setSelectedActivities((prevSelected) =>
@@ -222,7 +175,6 @@ export const CreatePublications = () => {
                         <select
                           className={'border border-[#999999] pl-2 rounded-xl'}
                           name={'itineraryId'}
-                          value={formData.itineraryId}
                           onChange={handleChange}
                         >
                           <option value={'0'}>Seleccionar</option>
@@ -233,40 +185,43 @@ export const CreatePublications = () => {
                           ))}
                         </select>
                       </div>
-                      <p className={'text-[#999999] text-sm'}>*Solo puede utilizar actividades con imágenes</p>
+                      <p className={'text-[#999999] text-sm'}>
+                        *Solo puede utilizar actividades con imágenes
+                      </p>
                     </div>
                     <div className={'flex flex-row gap-x-4 items-center'}>
                       <div className={'flex flex-col w-[40%]'}>
-                          <label className="text-lg font-semibold">Descripción</label>
-                          <textarea
-                            className={
-                              'border border-[#999999] pl-2 rounded-xl min-h-48'
-                            }
-                            placeholder={'Ingrese la descripción'}
-                            name={'description'}
-                            value={formData.description}
-                            onChange={handleChange}
-                          ></textarea>
-                        </div>
+                        <label className="text-lg font-semibold">Descripción</label>
+                        <textarea
+                          className={'border border-[#999999] pl-2 rounded-xl min-h-48'}
+                          placeholder={'Ingrese la descripción'}
+                          name={'description'}
+                          onInput={(e: React.FormEvent<HTMLTextAreaElement>) =>
+                            setDescription(e.currentTarget.value)
+                          }
+                        ></textarea>
+                      </div>
                       <div className="flex flex-col w-[60%]">
-                          <label className="text-lg font-semibold">Actividades</label>
-                          <div className="rounded-2xl shadow-lg">
-                            <Carousel
-                              showThumbs={false}
-                              showStatus={false}
-                              infiniteLoop
-                              autoPlay
-                              interval={3000}
-                              showArrows={true}
-                              showIndicators={false}
-                              swipeable={true}
-                              centerMode={false}
-                              selectedItem={0}
-                              centerSlidePercentage={50}
-                              className="rounded-2xl"
-                            >
-                              {activities.length > 0 &&
-                                activities.filter(activity => activity.images.length > 0).map((activity) => (
+                        <label className="text-lg font-semibold">Actividades</label>
+                        <div className="rounded-2xl shadow-lg">
+                          <Carousel
+                            showThumbs={false}
+                            showStatus={false}
+                            infiniteLoop
+                            autoPlay
+                            interval={3000}
+                            showArrows={true}
+                            showIndicators={false}
+                            swipeable={true}
+                            centerMode={false}
+                            selectedItem={0}
+                            centerSlidePercentage={50}
+                            className="rounded-2xl"
+                          >
+                            {activities.length > 0 &&
+                              activities
+                                .filter((activity) => activity.images.length > 0)
+                                .map((activity) => (
                                   <div
                                     key={activity.id}
                                     className={`flex items-center cursor-pointer transition-transform transform ${
@@ -296,20 +251,22 @@ export const CreatePublications = () => {
                                       ))}
                                     </Carousel>
 
-                                    <div
-                                      className={`w-full text-center py-2 px-6 rounded-l-2xl`}
-                                    >
-                                      <h3 className="text-lg font-semibold">{activity.name.slice(0,-10)}</h3>
+                                    <div className={`w-full text-center py-2 px-6 rounded-l-2xl`}>
+                                      <h3 className="text-lg font-semibold">
+                                        {activity.name.slice(0, -10)}
+                                      </h3>
                                     </div>
                                   </div>
                                 ))}
-                            </Carousel>
-                          </div>
+                          </Carousel>
                         </div>
+                      </div>
                     </div>
                   </div>
                   <div className={`flex ${error ? 'justify-between' : 'justify-end'} mt-6 gap-4`}>
-                    {error && <div className="text-[#999999] text-sm text-center mt-4">{error}</div>}
+                    {error && (
+                      <div className="text-[#999999] text-sm text-center mt-4">{error}</div>
+                    )}
                     <button type={'submit'} className={'btn-blue'}>
                       Crear publicación
                     </button>

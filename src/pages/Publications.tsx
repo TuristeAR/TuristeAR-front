@@ -6,43 +6,56 @@ import { CreatePublications } from '../components/Community/CreatePublications';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 
+
+type User={
+  id: number;
+  name: string,
+  profilePicture: string,
+  description: string,
+  birthdate: string,
+  coverPicture: string,
+  location: string
+}
+
+type Comment = {
+  createdAt: string;
+  description: string;
+  user : User | null;
+}
+
+type Category = {
+  id: number;
+  description: string;
+  image: string;
+};
+
+type Place = {
+  id: number,
+  name: string,
+  googleId: string,
+};
+
+type Activity = {
+  id: number,
+  name: string,
+  place: Place
+  images: string[]
+};
+
+type Publication = {
+  id: number;
+  description: string;
+  category: Category | null;
+  createdAt: string;
+  user: User | null;
+  likes : User[]
+  reposts : User[]
+  saved : User[]
+  comments : Comment[]
+  activities: Activity[]
+};
+
 const Publications = () => {
-
-  type User={
-    id: number;
-    name: string,
-    profilePicture: string,
-    description: string,
-    birthdate: string,
-    coverPicture: string,
-    location: string
-  }
-
-  type Comment = {
-    createdAt: string;
-    description: string;
-    user : User | null;
-  }
-
-  type Category = {
-    id: number;
-    description: string;
-    image: string;
-  };
-
-  type Publication = {
-    id: number;
-    description: string;
-    category: Category | null;
-    creationDate: string;
-    images: string[];
-    user: User | null;
-    likes : User[]
-    reposts : User[]
-    saved : User[]
-    comments : Comment[]
-  };
-
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -73,7 +86,6 @@ const Publications = () => {
         const sessionData = await sessionResponse.json();
         setUser(sessionData.user);
 
-        // Segundo fetch - Obtener las publicaciones solo si se obtuvo el usuario
         const publicationsResponse = await fetch(
           `https://api-turistear.koyeb.app/publications`,
           {
@@ -127,9 +139,9 @@ const Publications = () => {
                     id={publication.id}
                     profilePicture={publication.user?.profilePicture}
                     userId={publication.user?.name}
-                    creationDate={publication.creationDate}
+                    creationDate={publication.createdAt}
                     description={publication.description}
-                    images={publication.images}
+                    images={publication.activities[0].images}
                     likes={publication.likes.length}
                     reposts={publication.reposts.length}
                     saved={publication.saved.length}

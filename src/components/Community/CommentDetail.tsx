@@ -27,8 +27,7 @@ type Publication = {
   id: number;
   description: string;
   category: Category | null;
-  creationDate: string;
-  images: string[];
+  createdAt: string;
   user: User | null;
   likes: User[];
   reposts: User[];

@@ -35,8 +35,7 @@ type Publication = {
   id: number;
   description: string;
   category: Category | null;
-  creationDate: string;
-  images: string[];
+  createdAt: string;
   user: User | null;
   likes: User[];
   reposts: User[];
@@ -122,9 +121,9 @@ const PublicationDetail = () => {
                   id={publication.id}
                   profilePicture={publication.user?.profilePicture}
                   userId={publication.user?.name}
-                  creationDate={publication.creationDate}
+                  creationDate={publication.createdAt}
                   description={publication.description}
-                  images={publication.images}
+                  images={[]}
                   likes={publication.likes.length}
                   reposts={publication.reposts.length}
                   saved={publication.saved.length}

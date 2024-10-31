@@ -37,8 +37,7 @@ const Profile = () => {
     id: number;
     description: string;
     category: Category | null;
-    creationDate: string;
-    images: string[];
+    createdAt: string;
     user: User | null;
     likes: User[];
     reposts: User[];
@@ -274,9 +273,9 @@ const Profile = () => {
                       id={publication.id}
                       profilePicture={publication.user.profilePicture}
                       userId={publication.user.name}
-                      creationDate={publication.creationDate}
+                      creationDate={publication.createdAt}
                       description={publication.description}
-                      images={publication.images}
+                      images={[]}
                       likes={publication.likes.length}
                       category={publication.category.description}
                       reposts={publication.reposts.length}
@@ -291,8 +290,8 @@ const Profile = () => {
                 itineraries?.map((itinerary, index) => {
                   const imgProvince =
                   itinerary.activities[0]?.place?.province?.images[0] ||
-                  '/assets/TuristeAR-logo.png'; // imagen por defecto si no hay imagen de la provincia
-            
+                  '/assets/TuristeAR-logo.png';
+
                   return (
                   <ItineraryCard
                     key={index}
@@ -317,9 +316,9 @@ const Profile = () => {
                       id={publication.id}
                       profilePicture={publication.user.profilePicture}
                       userId={publication.user.name}
-                      creationDate={publication.creationDate}
+                      creationDate={publication.createdAt}
                       description={publication.description}
-                      images={publication.images}
+                      images={[]}
                       likes={publication.likes.length}
                       category={publication.category.description}
                       reposts={publication.reposts.length}
@@ -341,9 +340,9 @@ const Profile = () => {
                       id={publication.id}
                       profilePicture={publication.user.profilePicture}
                       userId={publication.user.name}
-                      creationDate={publication.creationDate}
+                      creationDate={publication.createdAt}
                       description={publication.description}
-                      images={publication.images}
+                      images={[]}
                       likes={publication.likes.length}
                       reposts={publication.reposts.length}
                       saved={publication.saved.length}
