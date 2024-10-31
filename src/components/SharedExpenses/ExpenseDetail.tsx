@@ -1,4 +1,4 @@
-import receiptText from '/assets/receipt-text.svg';
+import { Receipt } from 'lucide-react';
 
 const ExpenseDetail = ({ expense, onClose }) => {
   const {
@@ -26,7 +26,8 @@ const ExpenseDetail = ({ expense, onClose }) => {
   return (
     <div className="border-b mb-4">
       <div className="flex">
-        <img className="w-[7rem] my-auto" src={receiptText} alt="receipt icon" />
+        <Receipt className="w-[7rem] stroke-primary" />
+
         <div>
           <h3 className="text-xl font-semibold">{expense.description}</h3>
           <p className="font-semibold">${expense.totalAmount}</p>
