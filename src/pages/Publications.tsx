@@ -7,17 +7,15 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 
 const Publications = () => {
-
-  type User={
+  type User = {
     id: number;
-    username: string,
-    name: string,
-    profilePicture: string,
-    description: string,
-    birthdate: string,
-    coverPicture: string,
-    location: string
-  }
+    name: string;
+    profilePicture: string;
+    description: string;
+    birthdate: string;
+    coverPicture: string;
+    location: string;
+  };
 
   type Category = {
     id: number;
@@ -31,9 +29,9 @@ const Publications = () => {
     creationDate: string;
     images: string[];
     user: User | null;
-    likes : User[]
-    reposts : User[]
-    saved : User[]
+    likes: User[];
+    reposts: User[];
+    saved: User[];
   };
 
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -41,8 +39,7 @@ const Publications = () => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [publications, setPublications] = useState<Publication[] | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleClick = (name: string) => {
     if (contentRef.current) {
@@ -67,13 +64,10 @@ const Publications = () => {
         setUser(sessionData.user);
 
         // Segundo fetch - Obtener las publicaciones solo si se obtuvo el usuario
-        const publicationsResponse = await fetch(
-          `https://api-turistear.koyeb.app/publications`,
-          {
-            method: 'GET',
-            credentials: 'include',
-          }
-        );
+        const publicationsResponse = await fetch(`https://api-turistear.koyeb.app/publications`, {
+          method: 'GET',
+          credentials: 'include',
+        });
 
         if (!publicationsResponse.ok) {
           setError('Error al obtener las publicaciones');
@@ -82,7 +76,7 @@ const Publications = () => {
         const publicationsData = await publicationsResponse.json();
         setPublications(publicationsData.data);
         setError('');
-        setIsLoading(false)
+        setIsLoading(false);
       } catch (error) {
         setError('Error en la comunicación con el servidor');
       }
@@ -91,51 +85,55 @@ const Publications = () => {
     fetchData();
   }, []);
 
-
   return (
     <>
-      {isLoading ?
+      {isLoading ? (
         <div className="w-[90%] md:w-full mx-auto min-h-[90vh] flex flex-col items-center justify-center">
           <Lottie className="w-[16rem] md:w-[18rem] mx-auto" animationData={logoAnimado} />
         </div>
-        :
+      ) : (
         <>
           <Header containerStyles={'relative top-0 z-[60]'} />
           <div className="flex justify-between h-[160vh] ">
-            <LeftCommunity vista={'publications'}
-                           categorySelected={categorySelected}
-                           setCategorySelected={setCategorySelected}
-                           activeItem={null}
-                           handleClick={handleClick} />
+            <LeftCommunity
+              vista={'publications'}
+              categorySelected={categorySelected}
+              setCategorySelected={setCategorySelected}
+              activeItem={null}
+              handleClick={handleClick}
+            />
             <div className="lg:w-[80%] w-[100%] pt-10 pb-10 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
               {/* Create posts */}
               <CreatePublications />
               {/* Posts */}
               <div className="flex flex-col gap-6 lg:w-[80%] w-[90%] mx-auto">
-                {publications?.filter((publication) => {
-                  return categorySelected == null || publication.category.id == categorySelected;
-                }).map((publication, index) => (
-                  <ItineraryCard
-                    key={index}
-                    id={publication.id}
-                    profilePicture={publication.user?.profilePicture}
-                    userId={publication.user?.name}
-                    creationDate={publication.creationDate}
-                    description={publication.description}
-                    images={publication.images}
-                    likes={publication.likes.length}
-                    reposts={publication.reposts.length}
-                    saved={publication.saved.length}
-                    isLiked={publication.likes.some(item => item.id === user.id)}
-                    isRepost={publication.reposts.some(item => item.id === user.id)}
-                    isSaved={publication.saved.some(item => item.id === user.id)}
-                    category={publication.category.description} />
-                ))}
+                {publications
+                  ?.filter((publication) => {
+                    return categorySelected == null || publication.category.id == categorySelected;
+                  })
+                  .map((publication, index) => (
+                    <ItineraryCard
+                      key={index}
+                      id={publication.id}
+                      profilePicture={publication.user?.profilePicture}
+                      userId={publication.user?.name}
+                      creationDate={publication.creationDate}
+                      description={publication.description}
+                      images={publication.images}
+                      likes={publication.likes.length}
+                      reposts={publication.reposts.length}
+                      saved={publication.saved.length}
+                      isLiked={publication.likes.some((item) => item.id === user.id)}
+                      isRepost={publication.reposts.some((item) => item.id === user.id)}
+                      isSaved={publication.saved.some((item) => item.id === user.id)}
+                      category={publication.category.description}
+                    />
+                  ))}
               </div>
             </div>
           </div>
         </>
-      }
+      )}
     </>
   );
 };

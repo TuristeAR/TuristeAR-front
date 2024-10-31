@@ -7,24 +7,22 @@ export const LeftCommunity = (props: {
   activeItem: string;
   handleClick: (section: string) => void;
 }) => {
-
   const { vista, categorySelected, setCategorySelected, handleClick, activeItem } = props;
 
-  type User={
+  type User = {
     id: number;
-    username: string,
-    name: string,
-    profilePicture: string,
-    description: string,
-    birthdate: string,
-    coverPicture: string,
-    location: string
-  }
-  type Category={
-    id: number,
-    description: string,
-    image: string,
-  }
+    name: string;
+    profilePicture: string;
+    description: string;
+    birthdate: string;
+    coverPicture: string;
+    location: string;
+  };
+  type Category = {
+    id: number;
+    description: string;
+    image: string;
+  };
 
   const [user, setUser] = useState<User | null>(null);
   const [categories, setCategories] = useState<Category[] | null>(null);
@@ -35,7 +33,6 @@ export const LeftCommunity = (props: {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
           method: 'GET',
           credentials: 'include',
@@ -53,13 +50,10 @@ export const LeftCommunity = (props: {
         setError('');
 
         try {
-          const categoriesResponse = await fetch(
-            `https://api-turistear.koyeb.app/categories`,
-            {
-              method: 'GET',
-              credentials: 'include',
-            }
-          );
+          const categoriesResponse = await fetch(`https://api-turistear.koyeb.app/categories`, {
+            method: 'GET',
+            credentials: 'include',
+          });
 
           if (!categoriesResponse.ok) {
             console.log('Error al obtener publicaciones:', await categoriesResponse.json());
@@ -68,7 +62,7 @@ export const LeftCommunity = (props: {
             setCategories(categoriesData);
           }
         } catch (err) {
-          setError(err)
+          setError(err);
           console.log('Error al obtener las publicaciones:', err);
         }
       } catch (error) {
@@ -125,12 +119,10 @@ export const LeftCommunity = (props: {
               <div className="flex justify-between items-center">
                 <button
                   onClick={() => {
-                    setCategorySelected(null)
-                    handleClick((activeItem == 'itineraries') ? 'posts' : activeItem);
+                    setCategorySelected(null);
+                    handleClick(activeItem == 'itineraries' ? 'posts' : activeItem);
                   }}
-                  className={
-                    `flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${null == categorySelected ? 'bg-[#c0daeb]' : ''}`
-                  }
+                  className={`flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${null == categorySelected ? 'bg-[#c0daeb]' : ''}`}
                 >
                   <div className="flex items-center">
                     <p className="">General</p>
@@ -151,12 +143,10 @@ export const LeftCommunity = (props: {
                   <div className="flex justify-between items-center">
                     <button
                       onClick={() => {
-                        setCategorySelected(category.id)
-                        handleClick((activeItem == 'itineraries') ? 'posts' : activeItem);
+                        setCategorySelected(category.id);
+                        handleClick(activeItem == 'itineraries' ? 'posts' : activeItem);
                       }}
-                      className={
-                        `flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${category.id == categorySelected ? 'bg-[#c0daeb]' : ''}`
-                      }
+                      className={`flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${category.id == categorySelected ? 'bg-[#c0daeb]' : ''}`}
                     >
                       <div className="flex items-center">
                         <p className="">{category.description}</p>

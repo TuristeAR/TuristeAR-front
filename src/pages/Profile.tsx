@@ -13,7 +13,6 @@ const Profile = () => {
 
   type User = {
     id: number;
-    username: string;
     name: string;
     profilePicture: string;
     description: string;
@@ -178,7 +177,6 @@ const Profile = () => {
                     <h1 className="lg:text-3xl text-xl tracking-[.1em] text-[#215a9d]">
                       {user?.name}
                     </h1>
-                    <h3 className="text-xl text-[#a2c8de]">{'@' + user?.username}</h3>
                   </div>
                   <p className="mt-4">{user?.description}</p>
                   <div className="flex gap-4 lg:text-[14px] text-[10px] mt-2 text-[#999999]">
@@ -200,7 +198,11 @@ const Profile = () => {
                   <div
                     className={`lg:w-[150px] w-[100px] lg:h-[150px] h-[100px] bg-gray border-white border-4`}
                   >
-                    <img src={user?.profilePicture} alt={user?.name} className="w-[100%] h-[100%]" />
+                    <img
+                      src={user?.profilePicture}
+                      alt={user?.name}
+                      className="w-[100%] h-[100%]"
+                    />
                   </div>
                   <div>
                     <a
