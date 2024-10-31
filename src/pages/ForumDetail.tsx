@@ -7,13 +7,12 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 
 type Category = {
-  id: number,
-  description: string
+  id: number;
+  description: string;
 };
 
 type User = {
   id: number;
-  username: string;
   name: string;
   profilePicture: string;
   description: string;
@@ -88,7 +87,6 @@ const ForumDetail = () => {
   }, [id]);
 
   useEffect(() => {
-
     const socket = io('https://api-turistear.koyeb.app');
 
     socket.on('receiveMessage', (newMessage) => {
@@ -211,31 +209,39 @@ const ForumDetail = () => {
                             />
                           </div>
                           <div className={'flex flex-col'}>
-                            <p className={'font-semibold lg:text-[17px] text-[14px] '}>{message.user.name}</p>
+                            <p className={'font-semibold lg:text-[17px] text-[14px] '}>
+                              {message.user.name}
+                            </p>
                           </div>
                         </div>
-                        <p className={'lg:text-[16px] text-[12px]'}>{message.createdAt.slice(11).slice(0, 5)}</p>
+                        <p className={'lg:text-[16px] text-[12px]'}>
+                          {message.createdAt.slice(11).slice(0, 5)}
+                        </p>
                       </div>
                       <div>
                         <p className={'lg:text-[16px] text-sm'}>{message.content}</p>
                       </div>
-                      {message.images ?
+                      {message.images ? (
                         <div>
-                          {Array.isArray(message.images) ?
+                          {Array.isArray(message.images) ? (
                             message.images.map((image, index) => (
-                            <img key={index} src={image} alt="Imagen" />
+                              <img key={index} src={image} alt="Imagen" />
                             ))
-                            : <img src={message.images} alt={'Imagen'} />
-                          }
+                          ) : (
+                            <img src={message.images} alt={'Imagen'} />
+                          )}
                         </div>
-                        : <></>
-                      }
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
               <div
-                className={'h-[8%] border-t border-[#999999] py-10 flex justify-around items-center'}
+                className={
+                  'h-[8%] border-t border-[#999999] py-10 flex justify-around items-center'
+                }
               >
                 <div className="flex flex-col items-center w-[6%]">
                   <label className="cursor-pointer">
@@ -275,12 +281,16 @@ const ForumDetail = () => {
                     }}
                     type={'text'}
                     value={message || ''}
-                    className={'border border-[#999999] w-[90%] lg:h-[40px] h-[35px] rounded-2xl pl-2'}
+                    className={
+                      'border border-[#999999] w-[90%] lg:h-[40px] h-[35px] rounded-2xl pl-2'
+                    }
                     placeholder={'Escribe tu mensaje...'}
                   />
                   <svg
                     className={'cursor-pointer lg:w-[57px] lg:h-[57px] w-[40px] h-[40px]'}
-                    onClick={() => {createMessage(Number(id))}}
+                    onClick={() => {
+                      createMessage(Number(id));
+                    }}
                     viewBox="0 0 25.00 25.00"
                     fill={'none'}
                     xmlns="http://www.w3.org/2000/svg"
