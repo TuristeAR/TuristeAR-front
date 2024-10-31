@@ -142,7 +142,7 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName, onClose }) => 
                       className="flex justify-between p-2 rounded-xl bg-slate-50 m cursor-pointer transition-all duration-500 hover:bg-gray-50"
                     >
                       <div className="flex gap-1">
-                        <Receipt className='w-[3rem] stroke-primary'/>
+                        <Receipt size={60} className='stroke-primary'/>
 
                         <div className="flex h-full px-1 flex-col items-start">
                           <h5 className="font-semibold sm:text-2xl leading-9 text-black mb-1">
