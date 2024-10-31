@@ -30,6 +30,8 @@ export const LeftColumn = ({
   setIsAddingActivity,
   activities,
   setActivities,
+  events,
+  setEvents,
 }) => {
   const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
   const [selectedPlace, setSelectedPlace] = useState('');
@@ -70,6 +72,13 @@ export const LeftColumn = ({
         prevActivities.filter((activity) => activity.id !== activityId),
       );
     });
+
+    socket.on('eventRemoved', ({ itineraryId, eventId }) => {
+      setEvents((prevEvents) =>
+      prevEvents.filter((event) => event.id !== eventId),
+      );
+    });
+
     socket.on('addActivity', ({ itinerary }) => {
       console.log(itinerary);
       const updatedItinerary = itinerary;
@@ -89,6 +98,7 @@ export const LeftColumn = ({
       socket.off('userRemoved');
       socket.off('usersAdddItinerary');
       socket.off('activityRemoved');
+      socket.off('eventRemoved');
       socket.off('addActivity');
     };
   }, []);
@@ -149,7 +159,7 @@ export const LeftColumn = ({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ itineraryId: itineraryId, activityId }), // Asegúrate de usar el itineraryId correcto
+      body: JSON.stringify({ itineraryId: itineraryId, activityId }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -163,6 +173,28 @@ export const LeftColumn = ({
       })
       .catch((error) => {
         console.error('Error al eliminar la actividad:', error);
+      });
+  };
+
+  const deleteEvent = (eventId: number) => {
+    fetch('https://api-turistear.koyeb.app/itinerary/remove-event', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ itineraryId: itineraryId, eventId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
+        } else {
+          console.log(eventId)
+          console.error('Error al eliminar el evento:', data.message);
+        }
+      })
+      .catch((error) => {
+        console.error('Error al eliminar el evento:', error);
       });
   };
 
@@ -317,6 +349,30 @@ export const LeftColumn = ({
                   >
                     <p className="text-sm w-[90%]">{activity.name}</p>
                     <button onClick={() => deleteActivity(activity.id)}>
+                      <Trash2 strokeWidth={1.5} color="red" width={22} height={22} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+        {/* Eliminar actividad */}
+        <div className="flex flex-col gap-4 md:my-4">
+          <h2 className="font-medium tracking-[-0.5px] leading-none">Eliminar eventos</h2>
+
+          {events.length === 0 ? (
+            <p>No hay eventos para eliminar</p>
+          ) : (
+            <>
+              <div className="w-full flex flex-col gap-4 mb-2">
+                {events.map((event, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center w-full p-2 bg-white rounded-lg shadow-md option-card hover:-translate-y-1.5 hover:shadow-lg hover:bg-[#d9d9d9]"
+                  >
+                    <p className="text-sm w-[90%]">{event.name}</p>
+                    <button onClick={() => deleteEvent(event.id)}>
                       <Trash2 strokeWidth={1.5} color="red" width={22} height={22} />
                     </button>
                   </div>
