@@ -74,6 +74,8 @@ export const ItineraryCalendar = () => {
           setIsAddingActivity={setIsAddingActivity}
           activities={activities}
           setActivities={setActivities}
+          events={events}
+          setEvents={setEvents}
         />
         <main className="order-1 lg:order-2 col-span-1 container mx-auto">
           <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-full md:p-4">
