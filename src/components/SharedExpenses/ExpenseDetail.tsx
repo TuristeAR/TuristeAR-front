@@ -26,8 +26,7 @@ const ExpenseDetail = ({ expense, onClose }) => {
   return (
     <div className="border-b mb-4">
       <div className="flex">
-        <Receipt className="w-[7rem] stroke-primary" />
-
+        <Receipt size={100} className="stroke-primary" />
         <div>
           <h3 className="text-xl font-semibold">{expense.description}</h3>
           <p className="font-semibold">${expense.totalAmount}</p>
