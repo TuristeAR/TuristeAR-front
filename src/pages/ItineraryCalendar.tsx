@@ -9,7 +9,9 @@ import { io } from 'socket.io-client';
 
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
-  const { itinerary, activities, setActivities } = useFetchItinerary(itineraryId || null);
+  const { itinerary, activities, events, setActivities, setEvents } = useFetchItinerary(
+    itineraryId || null,
+  );
   const [isAddingActivity, setIsAddingActivity] = useState(false);
   const [selectedEventInfo, setSelectedEventInfo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,6 +52,7 @@ export const ItineraryCalendar = () => {
           setActivities((prevActivities) =>
             prevActivities.filter((activity) => activity.id !== activityId),
           );
+          setIsModalOpen(false);
         } else {
           console.error('Error al eliminar la actividad:', data.message);
         }
@@ -82,6 +85,7 @@ export const ItineraryCalendar = () => {
               activities={activities}
               setActivities={setActivities}
               deleteActivity={deleteActivity}
+              events={events}
             />
             {isModalOpen && selectedEventInfo && (
               <ModalActivity

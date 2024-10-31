@@ -14,7 +14,6 @@ const provinces: Province[] = provinciasData;
 const EditProfile = () => {
   type User = {
     id: number;
-    username: string;
     name: string;
     profilePicture: string;
     description: string;
@@ -114,11 +113,13 @@ const EditProfile = () => {
   const editProfile = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const profilePictureUrl = formData.profilePicture ? await uploadImage(formData.profilePicture) : "";
-      const coverPictureUrl = formData.coverPicture ? await uploadImage(formData.coverPicture) : "";
-      
+      const profilePictureUrl = formData.profilePicture
+        ? await uploadImage(formData.profilePicture)
+        : '';
+      const coverPictureUrl = formData.coverPicture ? await uploadImage(formData.coverPicture) : '';
+
       const response = await fetch(`https://api-turistear.koyeb.app/editProfile`, {
         method: 'PUT',
         headers: {
@@ -131,7 +132,7 @@ const EditProfile = () => {
           profilePicture: profilePictureUrl,
           coverPicture: coverPictureUrl,
         }),
-        credentials: 'include'
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -210,13 +211,23 @@ const EditProfile = () => {
                   <label htmlFor={'profilePicture'} className="text-lg font-semibold">
                     Foto de perfil
                   </label>
-                  <input name={'profilePicture'} onChange={handleChange} type={'file'} accept={'image/*'} />
+                  <input
+                    name={'profilePicture'}
+                    onChange={handleChange}
+                    type={'file'}
+                    accept={'image/*'}
+                  />
                 </div>
                 <div className={'flex flex-col gap-y-2'}>
                   <label htmlFor={'coverPicture'} className="text-lg font-semibold">
                     Foto de portada
                   </label>
-                  <input name={'coverPicture'} onChange={handleChange} type={'file'} accept={'image/*'} />
+                  <input
+                    name={'coverPicture'}
+                    onChange={handleChange}
+                    type={'file'}
+                    accept={'image/*'}
+                  />
                 </div>
               </div>
               <div className={'flex justify-center mt-4'}>

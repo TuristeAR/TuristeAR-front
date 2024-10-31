@@ -32,7 +32,7 @@ export const Countdown: React.FC<CountdownProps> = ({ fromDate }) => {
 
   return (
     <div className="my-4 p-4 bg-white shadow-md rounded-lg text-center">
-      <p className="text-md font-semibold text-primary-3">Contador regresivo:</p>
+      <p className="text-md font-semibold text-primary-3">Cuenta regresiva:</p>
       <p className="text-xl font-bold text-primary"> {timeRemaining}</p>
     </div>
   );

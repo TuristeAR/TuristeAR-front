@@ -23,7 +23,6 @@ type User = {
   id: number;
   email: string;
   name: string;
-  username: string;
   profilePicture: string;
 };
 
@@ -78,17 +77,17 @@ export const LeftColumn = ({
       );
     });
     socket.on('addActivity', ({ itinerary }) => {
-      console.log(itinerary)
+      console.log(itinerary);
       const updatedItinerary = itinerary;
-          const activitiesList = updatedItinerary?.activities || [];
-          const lastActivity = activitiesList[activitiesList.length - 1];
+      const activitiesList = updatedItinerary?.activities || [];
+      const lastActivity = activitiesList[activitiesList.length - 1];
 
-          if (lastActivity) {
-            setActivities((prevActivities) => [...prevActivities, lastActivity]);
-          }
+      if (lastActivity) {
+        setActivities((prevActivities) => [...prevActivities, lastActivity]);
+      }
 
-          setNewActivity({ name: '', fromDate: '', toDate: '', place: '' }); // Resetear el formulario
-          setIsAddingActivity(false); // Cerrar el formulario
+      setNewActivity({ name: '', fromDate: '', toDate: '', place: '' }); // Resetear el formulario
+      setIsAddingActivity(false); // Cerrar el formulario
     });
 
     return () => {
@@ -186,31 +185,40 @@ export const LeftColumn = ({
             {(itinerary as any)?.name}
           </h2>
           <div className="flex flex-col p-2 gap-4">
-            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
+            <div
+              className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+              onClick={() => setIsAddingActivity(true)}
+            >
               <img src={plusIcon} alt="" />
-              <button className="text-sm" onClick={() => setIsAddingActivity(true)}>
-                Agregar actividad
-              </button>
+              <button className="text-sm">Agregar actividad</button>
             </div>
-            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
+            <div
+              className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+              onClick={() => (window.location.href = `/itineraryMap/${itineraryId}`)}
+            >
               <img src={mapIcon} alt="" />
-              <Link to={`/itineraryMap/${itineraryId}`}>
-                <p className="text-sm">Mapa</p>
-              </Link>
+              <p className="text-sm">Mapa</p>
             </div>
-            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
+            <div
+              className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+              onClick={() => (window.location.href = `/itineraryChat/${itineraryId}`)}
+            >
               <img src={chatIcon} alt="" />
-              <a href={`/itineraryChat/${itineraryId}`} className="text-sm">Chat</a>
+              <p className="text-sm">Chat</p>
             </div>
-            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
+            <div
+              className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+              onClick={() => (window.location.href = `/sharedGallery/${itineraryId}`)}
+            >
               <img src={galleryIcon} alt="" />
               <p className="text-sm">Galeria compartida</p>
             </div>
-            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
+            <div
+              className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+              onClick={() => (window.location.href = `/itineraryDetail/${itineraryId}`)}
+            >
               <img src={alignIcon} alt="" />
-              <Link to={`/itineraryDetail/${itineraryId}`}>
-                <p className="text-sm">Resumen del viaje</p>
-              </Link>
+              <p className="text-sm">Resumen del viaje</p>
             </div>
             <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
               <Receipt className='stroke-primary' strokeWidth={1} />

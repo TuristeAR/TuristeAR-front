@@ -36,7 +36,7 @@
     }
 
     .btn-drop-down-blue-itinerary {
-        @apply w-full h-[30px] px-6 bg-primary hover:bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all rounded-md;
+        @apply w-full h-[30px] px-6 bg-primary-3 text-white text-[13px] uppercase font-semibold tracking-[.15em] transition-all rounded-md;
     }
 
     .btn-question {
@@ -99,18 +99,6 @@
 
 /*  Full calendar */
 
-
-.fc .fc-daygrid-event {
-    z-index: unset !important;
-}
-
-.fc-daygrid-day-events {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-
-}
-
 .fc-button {
     background-color: #4285f4;
     border: none;
@@ -118,18 +106,6 @@
     font-weight: 600;
     border-radius: 4px;
     transition: background-color 0.3s;
-}
-
-.fc-button:hover {
-    background-color: #357ae8;
-}
-
-.fc-event {
-    background-color: #e8f0fe;
-    color: #1a73e8;
-    border: none;
-    border-radius: 6px;
-    padding: 4px 6px;
 }
 
 /* Días */
@@ -162,6 +138,11 @@
     font-size: 1.5rem;
     color: #0056b3 !important;
     font-weight: bolder;
+    text-transform: lowercase;
+}
+
+.fc-toolbar-title:first-letter {
+    text-transform: uppercase;
 }
 
 .fc-dayGridMonth-button,
@@ -179,6 +160,26 @@
     background-color: #0056b3 !important;
     border-color: #007bff !important;
     border-radius: 4px;
+}
+
+/*  Full calendar */
+.fc-event,
+.fc-event-draggable,
+.fc-event-start,
+.fc-event-end,
+.fc-event-future,
+.fc-daygrid-event,
+.fc-daygrid-block-event,
+.fc-h-event,
+.fc-event:hover,
+.fc-event-draggable:hover,
+.fc-event-start:hover,
+.fc-event-end:hover,
+.fc-event-future:hover,
+.fc-daygrid-event:hover,
+.fc-daygrid-block-event:hover,
+.fc-h-event:hover {
+    all: unset !important;
 }
 
 /* Responsividad para pantallas pequeñas (dispositivos móviles) */
@@ -306,7 +307,6 @@
     white-space: nowrap;
 }
 
-
 @media (max-width: 800px) {
     .progress-bar::before {
         top: 40%;
@@ -339,8 +339,6 @@
     }
 }
 
-
-
 /* Tarjetas de opción con efecto 3D */
 .option-card {
     display: flex;
@@ -350,5 +348,5 @@
     background-color: rgb(255, 255, 255);
     border-radius: 8px;
     transition: transform 0.3s, box-shadow 0.3s;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

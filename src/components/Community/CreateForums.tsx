@@ -105,12 +105,13 @@ export const CreateForums = () => {
         </div>
       ) : (
         <>
-          <div
+          <button
             onClick={() => setIsOpen(true)}
             className="fixed bottom-4 right-4 bg-[#49a2ec] rounded-full flex flex-col justify-evenly"
+            id={'crearForum'}
           >
-            <img src={'/assets/createForum.svg'} className={'w-[70px] m-6'} alt={'Crear post'} />
-          </div>
+            <img src={'/assets/createForum.svg'} className={'w-[70px] m-6'} alt={'Abrir pop up para crear foro'} />
+          </button>
           {isOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 border border-gray-50 rounded-lg">
               <div className="bg-white rounded-2xl p-10 flex flex-col justify-evenly relative">
