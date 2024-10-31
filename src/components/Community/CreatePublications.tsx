@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import logoAnimado from '../../assets/logoAnimado.json';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 
 type Category = {
   id: number,
@@ -16,6 +22,7 @@ type Province = {
 type Place = {
   id: number,
   name: string,
+  googleId: string,
   place: Province
 };
 
@@ -23,6 +30,7 @@ type Activity = {
   id: number,
   name: string,
   place: Place
+  images: string[]
 };
 
 type Itinerary = {
@@ -34,12 +42,13 @@ type Itinerary = {
 export const CreatePublications = () => {
 
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     description: '',
     images: null as File | null,
-    categoryId: undefined
+    itineraryId: undefined
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -77,6 +86,7 @@ export const CreatePublications = () => {
         [name]: value,
       }));
     }
+    setActivities(itineraries.find(itinerary => itinerary.id == Number(name == 'itineraryId' ? value : null)).activities)
   };
 
   const uploadImage = async (image: File) => {
@@ -101,23 +111,23 @@ export const CreatePublications = () => {
       }
       const result = await response.json();
       console.log('Imagen subida:', result);
-      return result.data.link; // Retorna el enlace de la imagen
+      return result.data.link;
     } catch (error) {
       console.error('Error en la carga de la imagen:', error);
-      throw error; // Lanza el error para manejarlo en createPublications
+      throw error;
     }
   };
 
   const createPublications = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Reinicia errores
+    setError(null);
 
     if (!formData.description) {
       setError("Ingrese una descripción!");
       return;
     }
 
-    if (formData.categoryId === undefined) {
+    if (formData.itineraryId === undefined) {
       setError("Seleccione una categoría!");
       return;
     }
@@ -134,7 +144,7 @@ export const CreatePublications = () => {
         body: JSON.stringify({
           description : formData.description,
           images: imageUrl,
-          itineraryId: formData.categoryId
+          itineraryId: formData.itineraryId
         }),
         credentials: 'include',
       });
@@ -150,11 +160,23 @@ export const CreatePublications = () => {
     }
   };
 
+  const [selectedActivities, setSelectedActivities] = useState([]);
+
+  const handleSelection = (activityId) => {
+    setSelectedActivities((prevSelected) =>
+      prevSelected.includes(activityId)
+        ? prevSelected.filter((id) => id !== activityId)
+        : [...prevSelected, activityId]
+    );
+  };
+
   return (
     <>
       {isLoading ? (
         <div className="fixed inset-0 flex items-center justify-center bg-white z-50 border border-gray-50 rounded-lg">
-          <h2 className="text-4xl text-center text-primary-4 mx-auto mb-6 md:mb-8">Creando publicación...</h2>
+          <h2 className="text-4xl text-center text-primary-4 mx-auto mb-6 md:mb-8">
+            Creando publicación...
+          </h2>
           <Lottie className="w-[16rem] md:w-[18rem] mx-auto" animationData={logoAnimado} />
         </div>
       ) : (
@@ -171,7 +193,7 @@ export const CreatePublications = () => {
           </div>
           {isOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 border border-gray-50 rounded-lg">
-              <div className="bg-white rounded-2xl p-10 flex flex-col justify-evenly relative">
+              <div className="bg-white rounded-2xl py-6 px-10 flex flex-col justify-evenly relative max-w-[70%] max-h-[75%]">
                 <button
                   className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
                   onClick={() => setIsOpen(false)}
@@ -193,24 +215,14 @@ export const CreatePublications = () => {
                 </button>
                 <h2 className="text-2xl text-center font-bold mb-4">Crear publicación</h2>
                 <form onSubmit={createPublications}>
-                  <div className={'flex flex-col gap-6'}>
-                    <div className={'flex flex-col'}>
-                      <label className="text-lg font-semibold">Descripción</label>
-                      <textarea
-                        className={'border border-[#999999] pl-2 rounded-xl min-w-[500px] min-h-[100px]'}
-                        placeholder={'Ingrese la descripción'}
-                        name={'description'}
-                        value={formData.description}
-                        onChange={handleChange}
-                      ></textarea>
-                    </div>
-                    <div className={'grid grid-cols-2 gap-x-6'}>
-                      <div className={'flex flex-col'}>
+                  <div className={'flex flex-col gap-4'}>
+                    <div className={'flex flex-row gap-x-4 items-end'}>
+                      <div className={'flex flex-col gap-x-2'}>
                         <label className="text-lg font-semibold">Itinerario</label>
                         <select
                           className={'border border-[#999999] pl-2 rounded-xl'}
-                          name={'categoryId'}
-                          value={formData.categoryId}
+                          name={'itineraryId'}
+                          value={formData.itineraryId}
                           onChange={handleChange}
                         >
                           <option value={'0'}>Seleccionar</option>
@@ -221,24 +233,88 @@ export const CreatePublications = () => {
                           ))}
                         </select>
                       </div>
-                      <div className={'flex flex-col'}>
-                        <label className="text-lg font-semibold">Imágenes</label>
-                        <input
-                          name={'images'}
-                          onChange={handleChange}
-                          type={'file'}
-                          accept={'image/*'}
-                        />
-                      </div>
+                      <p className={'text-[#999999] text-sm'}>*Solo puede utilizar actividades con imágenes</p>
+                    </div>
+                    <div className={'flex flex-row gap-x-4 items-center'}>
+                      <div className={'flex flex-col w-[40%]'}>
+                          <label className="text-lg font-semibold">Descripción</label>
+                          <textarea
+                            className={
+                              'border border-[#999999] pl-2 rounded-xl min-h-48'
+                            }
+                            placeholder={'Ingrese la descripción'}
+                            name={'description'}
+                            value={formData.description}
+                            onChange={handleChange}
+                          ></textarea>
+                        </div>
+                      <div className="flex flex-col w-[60%]">
+                          <label className="text-lg font-semibold">Actividades</label>
+                          <div className="rounded-2xl shadow-lg">
+                            <Carousel
+                              showThumbs={false}
+                              showStatus={false}
+                              infiniteLoop
+                              autoPlay
+                              interval={3000}
+                              showArrows={true}
+                              showIndicators={false}
+                              swipeable={true}
+                              centerMode={false}
+                              selectedItem={0}
+                              centerSlidePercentage={50}
+                              className="rounded-2xl"
+                            >
+                              {activities.length > 0 &&
+                                activities.filter(activity => activity.images.length > 0).map((activity) => (
+                                  <div
+                                    key={activity.id}
+                                    className={`flex items-center cursor-pointer transition-transform transform ${
+                                      selectedActivities.includes(activity.id)
+                                        ? 'rounded-2xl bg-[#c0daeb]'
+                                        : 'hover:bg-[#d9d9d9] hover:rounded-2xl'
+                                    }`}
+                                    onClick={() => handleSelection(activity.id)}
+                                  >
+                                    <Carousel
+                                      showThumbs={false}
+                                      showStatus={false}
+                                      showArrows={false}
+                                      showIndicators={false}
+                                      infiniteLoop
+                                      autoPlay
+                                      interval={2000}
+                                      className={'w-full rounded-l-2xl'}
+                                    >
+                                      {activity.images.map((image, imgIndex) => (
+                                        <img
+                                          key={imgIndex}
+                                          src={image}
+                                          alt={`Imagen ${imgIndex + 1}`}
+                                          className="rounded-l-2xl w-full h-48 object-cover"
+                                        />
+                                      ))}
+                                    </Carousel>
+
+                                    <div
+                                      className={`w-full text-center py-2 px-6 rounded-l-2xl`}
+                                    >
+                                      <h3 className="text-lg font-semibold">{activity.name.slice(0,-10)}</h3>
+                                    </div>
+                                  </div>
+                                ))}
+                            </Carousel>
+                          </div>
+                        </div>
                     </div>
                   </div>
-                  <div className={'flex justify-center mt-8'}>
+                  <div className={`flex ${error ? 'justify-between' : 'justify-end'} mt-6 gap-4`}>
+                    {error && <div className="text-[#999999] text-sm text-center mt-4">{error}</div>}
                     <button type={'submit'} className={'btn-blue'}>
                       Crear publicación
                     </button>
                   </div>
                 </form>
-                {error && <div className="text-danger text-center mt-4">{error}</div>}
               </div>
             </div>
           )}

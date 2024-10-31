@@ -12,7 +12,7 @@ export const SharedGallery = () => {
     <>
       <Header />
       <UploadImageSharedGallery activities={activities} />
-      
+
       <div className="border-b pb-2 border-gray-50 ">
         <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
       </div>
