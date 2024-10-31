@@ -253,7 +253,7 @@ export const LeftColumn = ({
             <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
               <Receipt className='stroke-primary' strokeWidth={1} />
               <button  onClick={() => setIsShowExpanse(true)}>        
-                <p className="text-sm">Gastos Compartidos</p>
+                <p className="text-sm">Gastos compartidos</p>
               </button>
             </div>
           </div>
