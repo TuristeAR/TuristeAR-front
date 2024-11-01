@@ -99,14 +99,13 @@ const Profile = () => {
 
       setPublications(publications);
 
-      const itineraries = await get(
-        `https://api-turistear.koyeb.app/itinerary/byUser/${session.user.id}`,
-        {
-          contentType: 'application/json',
-        },
-      );
+      const itinerariesResponse = await fetch( `http://localhost:3001/itinerary/byUser/${user.id}`, {
+          method: 'GET',
+          credentials: 'include'
+      });
 
-      setItineraries(itineraries.participants);
+      const itinerariesData = await itinerariesResponse.json();
+      setItineraries(itinerariesData);
     };
 
     fetchData().then(() => setLoading(false));
@@ -139,6 +138,7 @@ const Profile = () => {
           `https://api-turistear.koyeb.app/publications/saved/${user.id}`,
           {
             contentType: 'application/json',
+            credentials: 'include',
           },
         );
 
@@ -270,27 +270,20 @@ const Profile = () => {
             <CreatePublications />
 
             {/* Content */}
-            <div
-              className="lg:w-[100%] w-[90%] mx-auto"
-              ref={contentRef}
-            >
+            <div className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid grid-cols-2' : ''}`} ref={contentRef}>
               {activeItem === 'posts' &&
                 publications
                   ?.filter((publication) => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <PublicationCard
-                      key={index}
-                      publication={publication}
-                      user={user}
-                    />
+                    <PublicationCard key={index} publication={publication} user={user} />
                   ))}
               {activeItem === 'itineraries' &&
                 itineraries?.map((itinerary, index) => {
                   const imgProvince =
-                  itinerary.activities[0]?.place?.province?.images[0] ||
-                  '/assets/TuristeAR-logo.png';
+                    itinerary.activities[0]?.place?.province?.images[0] ||
+                    '/assets/TuristeAR-logo.png';
 
                   return (
                     <ItineraryCard
@@ -311,11 +304,7 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <PublicationCard
-                      key={index}
-                      publication={publication}
-                      user={user}
-                    />
+                    <PublicationCard key={index} publication={publication} user={user} />
                   ))}
               {activeItem === 'saved' &&
                 savedPublications
@@ -323,11 +312,7 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <PublicationCard
-                      key={index}
-                      publication={publication}
-                      user={user}
-                    />
+                    <PublicationCard key={index} publication={publication} user={user} />
                   ))}
             </div>
           </div>

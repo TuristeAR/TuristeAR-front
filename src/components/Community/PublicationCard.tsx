@@ -124,7 +124,7 @@ export function PublicationCard(props: {
           <summary className={'text-xl'}>Actividades</summary>
           <div className={'flex '}>
             {publication.activities.map((activity, index) => (
-              <Link to={`/lugar-esperado/${activity.place.googleId}`}>
+              <Link to={`/lugar-esperado/${activity.place.googleId}`} key={index}>
                 <div className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] m-4 py-2 px-4 rounded-2xl'}>
                   <p className="text-primary-3">{activity.name.slice(0, -10)}</p>
                 </div>
