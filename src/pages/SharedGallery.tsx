@@ -1,39 +1,112 @@
 import { useParams } from 'react-router-dom';
 import useFetchItinerary from '../utilities/useFetchItinerary';
 import { Header } from '../components/Header/Header';
-import Carousel from '../components/Destinations/Carousel';
 import { UploadImageSharedGallery } from '../components/ItineraryCalendar/UploadImageSharedGallery';
+import { useState, useRef } from 'react';
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 export const SharedGallery = () => {
   const { itineraryId } = useParams();
   const { itinerary, activities } = useFetchItinerary(itineraryId || null);
 
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [initialSlide, setInitialSlide] = useState(0);
+  const swiperRef = useRef(null);
+
+  const openLightbox = (index) => {
+    setInitialSlide(index);
+    setIsLightboxOpen(true);
+  };
+
+  const closeLightbox = () => setIsLightboxOpen(false);
+
   return (
     <>
       <Header />
       <UploadImageSharedGallery activities={activities} />
-      
-      <div className="border-b pb-2 border-gray-50 ">
-        <h2 className="text-xl font-bold text-primary-3">{itinerary?.name}</h2>
+
+      <div className="border-b p-4 mb-4 border-gray-50">
+        <h2 className="text-2xl font-bold text-primary-3">{itinerary?.name}</h2>
       </div>
-      <div className={'flex flex-col gap-10'}>
+
+      <div className="flex flex-col gap-10">
         {activities.map((activity, index) => (
-          <details key={index} className={'flex flex-col gap-4'}>
-            <summary className={'text-xl text-primary-3'}>{activity.name}</summary>
-            <div className={'grid grid-cols-3 col-span-2'}>
-              <div></div>
-              <div className="rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)]">
-                <Carousel>
-                  {activity.images.map((image, index) => (
-                    <img key={index} src={image} alt={'Imagen'}
-                         className={'rounded-2xl'} />
-                  ))}
-                </Carousel>
-              </div>
-            </div>
+          <details key={index} className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-md">
+            <summary className="text-xl font-semibold text-primary-3 cursor-pointer hover:text-primary-4">
+              {activity.name}
+            </summary>
+
+            <Swiper
+              modules={[Navigation, Pagination, Scrollbar, A11y]}
+              navigation
+              slidesPerView={3}
+              spaceBetween={10}
+              autoplay={{ delay: 3000, disableOnInteraction: false }}
+              loop={true}
+              className="w-full max-w-4xl mt-4"
+            >
+              {activity.images.length !== 0 ? (
+                activity.images.map((image, imgIndex) => (
+                  <SwiperSlide key={imgIndex}>
+                    <div
+                      className="overflow-hidden rounded-lg shadow-lg transform transition duration-300 hover:scale-105 cursor-pointer"
+                      onClick={() => openLightbox(imgIndex)}
+                    >
+                      <img src={image} alt="Imagen" className="w-full h-48 object-cover" />
+                    </div>
+                  </SwiperSlide>
+                ))
+              ) : (
+                <div className="flex items-center justify-center text-gray-400 text-xl">                
+                  No hay imágenes para mostrar sobre  {activity.name.split('-')[0]}
+                </div>
+              )}
+            </Swiper>
           </details>
         ))}
       </div>
+
+      {isLightboxOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="relative w-full h-full max-w-4xl">
+            <button
+              onClick={closeLightbox}
+              className="absolute top-4 right-4 text-white text-3xl font-bold cursor-pointer z-10"
+            >
+              &times;
+            </button>
+            <Swiper
+              ref={swiperRef}
+              modules={[Navigation, Pagination, Scrollbar, A11y]}
+              navigation
+              pagination={{ clickable: true }}
+              slidesPerView={1}
+              initialSlide={initialSlide}
+              onSwiper={(swiper) => {
+                if (swiperRef.current) swiperRef.current = swiper;
+              }}
+              className="w-full h-full"
+            >
+              {activities
+                .flatMap((activity) => activity.images)
+                .map((image, index) => (
+                  <SwiperSlide key={index}>
+                    <img
+                      src={image}
+                      alt="Imagen ampliada"
+                      className="w-full h-full object-contain"
+                    />
+                  </SwiperSlide>
+                ))}
+            </Swiper>
+          </div>
+        </div>
+      )}
     </>
   );
-}
+};
