@@ -74,6 +74,7 @@ export const CreatePublications = () => {
     // @ts-ignore
     const { name, value } = e.target;
     setActivities(itineraries.find(itinerary => itinerary.id == Number(name == 'itineraryId' ? value : null)).activities)
+    setSelectedActivities([]);
   };
 
   const createPublications = async (e: React.FormEvent) => {
@@ -92,7 +93,7 @@ export const CreatePublications = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/createPublication', {
+      const response = await fetch('https://api-turistear.koyeb.app/createPublication', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,7 +137,7 @@ export const CreatePublications = () => {
         <>
           <div
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-4 right-4 bg-[#49a2ec] rounded-full flex flex-col justify-evenly"
+            className="fixed bottom-4 right-4 bg-[#49a2ec] rounded-full flex flex-col justify-evenly z-[80]"
           >
             <img
               src={'/assets/createPublications.svg'}
