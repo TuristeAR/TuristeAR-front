@@ -3,21 +3,27 @@ import { useParams } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { Header } from '../components/Header/Header';
-import { PublicationCard } from '../components/Community/PublicationCard';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
 import { CommentDetail } from '../components/Community/CommentDetail';
 import { PublicationDetailCard } from '../components/Community/PublicationDetailCard';
 
-type User = {
+
+type User={
   id: number;
-  name: string;
-  profilePicture: string;
+  name: string,
+  profilePicture: string,
+  description: string,
+  birthdate: string,
+  coverPicture: string,
+  location: string
+}
+
+type Comment = {
+  createdAt: string;
   description: string;
-  birthdate: string;
-  coverPicture: string;
-  location: string;
-};
+  user : User | null;
+}
 
 type Category = {
   id: number;
@@ -25,10 +31,17 @@ type Category = {
   image: string;
 };
 
-type Comment = {
-  createdAt: string;
-  description: string;
-  user: User | null;
+type Place = {
+  id: number,
+  name: string,
+  googleId: string,
+};
+
+type Activity = {
+  id: number,
+  name: string,
+  place: Place
+  images: string[]
 };
 
 type Publication = {
@@ -37,12 +50,12 @@ type Publication = {
   category: Category | null;
   createdAt: string;
   user: User | null;
-  likes: User[];
-  reposts: User[];
-  saved: User[];
-  comments: Comment[];
+  likes : User[]
+  reposts : User[]
+  saved : User[]
+  comments : Comment[]
+  activities: Activity[]
 };
-
 const PublicationDetail = () => {
   const { publicationId } = useParams();
 
@@ -118,19 +131,8 @@ const PublicationDetail = () => {
                 className={'w-[95%] mx-auto rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] '}
               >
                 <PublicationDetailCard
-                  id={publication.id}
-                  profilePicture={publication.user?.profilePicture}
-                  userId={publication.user?.name}
-                  creationDate={publication.createdAt}
-                  description={publication.description}
-                  images={[]}
-                  likes={publication.likes.length}
-                  reposts={publication.reposts.length}
-                  saved={publication.saved.length}
-                  isLiked={publication.likes.some((item) => item.id === user.id)}
-                  isRepost={publication.reposts.some((item) => item.id === user.id)}
-                  isSaved={publication.saved.some((item) => item.id === user.id)}
-                  category={publication.category.description}
+                  publication={publication}
+                  user={user}
                 />
                 <CommentDetail publication={publication} user={user} key={publication.id} />
               </div>

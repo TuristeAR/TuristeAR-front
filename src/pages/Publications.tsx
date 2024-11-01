@@ -56,6 +56,7 @@ type Publication = {
 };
 
 const Publications = () => {
+
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -136,20 +137,9 @@ const Publications = () => {
                 }).map((publication, index) => (
                   <PublicationCard
                     key={index}
-                    id={publication.id}
-                    profilePicture={publication.user?.profilePicture}
-                    userId={publication.user?.name}
-                    creationDate={publication.createdAt}
-                    description={publication.description}
-                    images={publication.activities[0].images}
-                    likes={publication.likes.length}
-                    reposts={publication.reposts.length}
-                    saved={publication.saved.length}
-                    comments={publication.comments.length}
-                    isLiked={publication.likes.some(item => item.id === user.id)}
-                    isRepost={publication.reposts.some(item => item.id === user.id)}
-                    isSaved={publication.saved.some(item => item.id === user.id)}
-                    category={publication.category.description} />
+                    publication={publication}
+                    user={user}
+                  />
                 ))}
               </div>
             </div>

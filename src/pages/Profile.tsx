@@ -8,54 +8,67 @@ import logoAnimado from '../assets/logoAnimado.json';
 import Lottie from 'lottie-react';
 import { get } from '../utilities/http.util';
 
+
+type User={
+  id: number;
+  name: string,
+  profilePicture: string,
+  description: string,
+  birthdate: string,
+  coverPicture: string,
+  location: string
+}
+
+type Comment = {
+  createdAt: string;
+  description: string;
+  user : User | null;
+}
+
+type Category = {
+  id: number;
+  description: string;
+  image: string;
+};
+
+type Place = {
+  id: number,
+  name: string,
+  googleId: string,
+};
+
+type Activity = {
+  id: number,
+  name: string,
+  place: Place
+  images: string[]
+};
+
+type Publication = {
+  id: number;
+  description: string;
+  category: Category | null;
+  createdAt: string;
+  user: User | null;
+  likes : User[]
+  reposts : User[]
+  saved : User[]
+  comments : Comment[]
+  activities: Activity[]
+};
+type Itinerary = {
+  activities: any;
+  id: number;
+  createdAt: string;
+  name: string;
+  fromDate: string;
+  toDate: string;
+  participants: User[];
+  user: User | null;
+};
+
 const Profile = () => {
   const contentRef = useRef<HTMLDivElement | null>(null);
-
-  type User = {
-    id: number;
-    name: string;
-    profilePicture: string;
-    description: string;
-    birthdate: string;
-    coverPicture: string;
-    location: string;
-  };
-
-  type Category = {
-    id: number;
-    description: string;
-    image: string;
-  };
-
-  type Comment = {
-    createdAt: string;
-    description: string;
-    user : User | null;
-  }
-
-  type Publication = {
-    id: number;
-    description: string;
-    category: Category | null;
-    createdAt: string;
-    user: User | null;
-    likes: User[];
-    reposts: User[];
-    saved: User[];
-    comments: Comment[];
-  };
-
-  type Itinerary = {
-    activities: any;
-    id: number;
-    createdAt: string;
-    name: string;
-    fromDate: string;
-    toDate: string;
-    participants: User[];
-    user: User | null;
-  };
-
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [publications, setPublications] = useState<Publication[] | null>(null);
   const [likedPublications, setLikedPublications] = useState<Publication[] | null>(null);
@@ -259,7 +272,7 @@ const Profile = () => {
 
             {/* Content */}
             <div
-              className="lg:w-[100%] w-[90%] mx-auto lg:grid lg:grid-cols-2 lg:gap-6"
+              className="lg:w-[100%] w-[90%] mx-auto"
               ref={contentRef}
             >
               {activeItem === 'posts' &&
@@ -270,20 +283,8 @@ const Profile = () => {
                   .map((publication, index) => (
                     <PublicationCard
                       key={index}
-                      id={publication.id}
-                      profilePicture={publication.user.profilePicture}
-                      userId={publication.user.name}
-                      creationDate={publication.createdAt}
-                      description={publication.description}
-                      images={[]}
-                      likes={publication.likes.length}
-                      category={publication.category.description}
-                      reposts={publication.reposts.length}
-                      saved={publication.saved.length}
-                      comments={publication.comments.length}
-                      isLiked={publication.likes.some((item) => item.id === user.id)}
-                      isRepost={publication.reposts.some((item) => item.id === user.id)}
-                      isSaved={publication.saved.some((item) => item.id === user.id)}
+                      publication={publication}
+                      user={user}
                     />
                   ))}
               {activeItem === 'itineraries' &&
@@ -313,20 +314,8 @@ const Profile = () => {
                   .map((publication, index) => (
                     <PublicationCard
                       key={index}
-                      id={publication.id}
-                      profilePicture={publication.user.profilePicture}
-                      userId={publication.user.name}
-                      creationDate={publication.createdAt}
-                      description={publication.description}
-                      images={[]}
-                      likes={publication.likes.length}
-                      category={publication.category.description}
-                      reposts={publication.reposts.length}
-                      saved={publication.saved.length}
-                      comments={publication.comments.length}
-                      isLiked={true}
-                      isRepost={publication.reposts.some((item) => item.id === user.id)}
-                      isSaved={publication.saved.some((item) => item.id === user.id)}
+                      publication={publication}
+                      user={user}
                     />
                   ))}
               {activeItem === 'saved' &&
@@ -337,20 +326,8 @@ const Profile = () => {
                   .map((publication, index) => (
                     <PublicationCard
                       key={index}
-                      id={publication.id}
-                      profilePicture={publication.user.profilePicture}
-                      userId={publication.user.name}
-                      creationDate={publication.createdAt}
-                      description={publication.description}
-                      images={[]}
-                      likes={publication.likes.length}
-                      reposts={publication.reposts.length}
-                      saved={publication.saved.length}
-                      comments={publication.comments.length}
-                      category={publication.category.description}
-                      isLiked={publication.likes.some((item) => item.id === user.id)}
-                      isRepost={publication.reposts.some((item) => item.id === user.id)}
-                      isSaved={true}
+                      publication={publication}
+                      user={user}
                     />
                   ))}
             </div>
