@@ -11,12 +11,11 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
   const [payerId, setPayerId] = useState();
   const [description, setDescription] = useState(''); 
   const { usersOldNav } = useFetchParticipants(itineraryId);
-  const [individualAmounts, setIndividualAmounts] = useState({});
+  const [individualAmounts, setIndividualAmounts] = useState(expense.individualAmounts);
   const [individualPercentages, setIndividualPercentages] = useState({});
   const [participatingUsers, setParticipatingUsers] = useState(expense.participatingUsers);
   const [totalAmount, setTotalAmount] = useState(0);
   const [validationError, setValidationError] = useState('');
-
   useEffect(() => {
     if (expense) {
       setDate(new Date(expense.date));
@@ -30,7 +29,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
       participatingUsers.map(u =>
         toggleParticipatingUser(u.id)
       )
-      console.log(expense.participatingUsers)
+      console.log("llllllll",expense.participatingUsers)
     }
   }, [expense]);
 
@@ -50,7 +49,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
     setTotalAmount(e.target.value);
   };
   const handleIndividualAmountChange = (userId, value) => {
-    console.log("Cambio de monto para el usuario:", userId, "Nuevo valor:", value); // Para depuración
+    console.log("Cambio de monto para el usuario:", userId, "Nuevo valor:", value); 
 
     setIndividualAmounts((prev) => ({
       ...prev,
@@ -248,7 +247,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
             <label className="block font-semibold text-gray-700 mb-2">Montos Individuales</label>
             {usersOldNav.map(
               (user) =>
-                expense.participatingUsers[user.id] && (
+                participatingUsers[user.id] && (
                   <div key={user.id} className="flex items-center mb-2">
                     <span className="w-1/2 text-gray-600">{user.name}</span>
                     <input
