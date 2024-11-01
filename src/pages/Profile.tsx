@@ -272,14 +272,14 @@ const Profile = () => {
             <CreatePublications />
 
             {/* Content */}
-            <div className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid grid-cols-2 gap-6' : ''}`} ref={contentRef}>
+            <div className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid grid-cols-2 gap-6' : 'flex flex-col gap-8'}`} ref={contentRef}>
               {activeItem === 'posts' &&
                 publications
                   ?.filter((publication) => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <PublicationCard key={index} publication={publication} user={user} />
+                    <PublicationCard key={index} publication={publication} user={user} onDelete={ () => setPublications((prev) => prev.filter((p) => p.id !== publication.id))} />
                   ))}
               {activeItem === 'itineraries' &&
                 itineraries?.map((itinerary, index) => {
@@ -306,7 +306,7 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <PublicationCard key={index} publication={publication} user={user} />
+                    <PublicationCard key={index} publication={publication} user={user} onDelete={ () => setPublications((prev) => prev.filter((p) => p.id !== publication.id))} />
                   ))}
               {activeItem === 'saved' &&
                 savedPublications
@@ -314,7 +314,7 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <PublicationCard key={index} publication={publication} user={user} />
+                    <PublicationCard key={index} publication={publication} user={user} onDelete={ () => setPublications((prev) => prev.filter((p) => p.id !== publication.id))} />
                   ))}
             </div>
           </div>

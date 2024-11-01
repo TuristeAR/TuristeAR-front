@@ -65,7 +65,6 @@ export const CommentDetail = (props: {
 
   const createComment = async (publicationId: number) => {
     if (commentContent && publicationId && user) {
-      console.log(publicationId);
       setWasSent(true);
       const socket = io('https://api-turistear.koyeb.app');
       socket.emit('createComment', {
@@ -73,6 +72,7 @@ export const CommentDetail = (props: {
         userId: user.id,
         publicationId: publication.id,
       });
+
       setWasSent(false);
       setCommentContent('');
 

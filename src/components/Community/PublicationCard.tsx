@@ -1,8 +1,9 @@
 import { ImageGallery } from '../ImageGallery/ImageGallery';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { post } from '../../utilities/http.util';
 import Carousel from '../Destinations/Carousel';
 import { Link } from 'react-router-dom';
+import io from 'socket.io-client';
 
 type User={
   id: number;
@@ -51,11 +52,15 @@ type Publication = {
   comments : Comment[]
   activities: Activity[]
 };
+
+const socket = io('https://api-turistear.koyeb.app');
+
 export function PublicationCard(props: {
   publication : Publication | null,
   user: User
+  onDelete: () => void,
 }) {
-  let { publication, user } = props;
+  let { publication, user, onDelete } = props;
 
   const [isLike, setIsLike] = useState<boolean | undefined>(publication.likes.some(item => item.id === user.id));
   const [isSave, setIsSave] = useState<boolean | null>(publication.saved.some(item => item.id === user.id));
@@ -63,6 +68,7 @@ export function PublicationCard(props: {
   const [likes, setLikes] = useState<number | null>(publication.likes.length);
   const [saved, setSaved] = useState<number | null>(publication.saved.length);
   const [reposts, setReposts] = useState<number | null>(publication.reposts.length);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean | null>(false);
 
   const handleLike = async (idPublication: number) => {
     setLikes(!isLike ? likes + 1 : likes - 1);
@@ -97,10 +103,19 @@ export function PublicationCard(props: {
     return formatDate(dateString);
   };
 
+  const deletePublication = async (id) => {
+    socket.emit('deletePublication', {
+      publicationId: id,
+      userId: user.id,
+    });
+    onDelete()
+    setIsDropdownOpen(false);
+  };
+
   return (
     <>
       <div className="w-full h-fit p-4 lg:mb-0 mb-6 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center relative">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
               <img
@@ -114,7 +129,29 @@ export function PublicationCard(props: {
               <p className={'text-[12px]'}>{publication.category.description}</p>
             </div>
           </div>
-          <p>{reorderDate(publication.createdAt.slice(0, -14))}</p>
+          <div className={'flex items-center'}>
+            <p>{reorderDate(publication.createdAt.slice(0, -14))}</p>
+            {publication.user.id == user.id && (
+              <img
+                src={'/assets/menu.svg'}
+                alt={'Menú'}
+                className={'w-[28px] cursor-pointer'}
+                onClick={() => {
+                  setIsDropdownOpen(!isDropdownOpen);
+                }}
+              />
+            )}
+          </div>
+          {publication.user.id == user.id && (
+            <div className="absolute -top-12 right-4 bg-white shadow-lg rounded-lg my-3 w-44 z-50">
+              <button
+                onClick={() => deletePublication(publication.id)}
+                className={`${isDropdownOpen ? 'block' : 'hidden'} w-full text-left px-4 py-2 text-gray-700 font-medium hover:bg-primary rounded-md transition duration-200 ease-in-out`}
+              >
+                Eliminar
+              </button>
+            </div>
+          )}
         </div>
         <p className="font-light py-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
           {publication.description}
@@ -125,7 +162,9 @@ export function PublicationCard(props: {
           <div className={'flex '}>
             {publication.activities.map((activity, index) => (
               <Link to={`/lugar-esperado/${activity.place.googleId}`} key={index}>
-                <div className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] m-4 py-2 px-4 rounded-2xl'}>
+                <div
+                  className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] m-4 py-2 px-4 rounded-2xl'}
+                >
                   <p className="text-primary-3">{activity.name.slice(0, -10)}</p>
                 </div>
               </Link>

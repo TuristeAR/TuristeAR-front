@@ -5,6 +5,7 @@ import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
+import io from 'socket.io-client';
 
 
 type User={
@@ -103,6 +104,17 @@ const Publications = () => {
         setPublications(publicationsData.data);
         setError('');
         setIsLoading(false)
+
+        const socket = io('https://api-turistear.koyeb.app');
+        socket.on('receiveDelete', (publicationId) => {
+          setPublications((prevPublications) =>
+            prevPublications.filter((pub) => pub.id !== publicationId)
+          );
+        });
+
+        return () => {
+          socket.disconnect();
+        };
       } catch (error) {
         setError('Error en la comunicación con el servidor');
       }
@@ -139,6 +151,7 @@ const Publications = () => {
                     key={index}
                     publication={publication}
                     user={user}
+                    onDelete={ () => setPublications((prev) => prev.filter((p) => p.id !== publication.id))}
                   />
                 ))}
               </div>
