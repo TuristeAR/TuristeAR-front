@@ -430,7 +430,7 @@ const FormQuestions = () => {
 
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
 
-    if (fromDate === toDate) {
+    if (!toDate || fromDate === toDate) {
       return from.toLocaleDateString('es-ES', options);
     }
 
@@ -665,6 +665,7 @@ const FormQuestions = () => {
                                 className="w-72 h-10 border border-gray-300 rounded-md px-2 mb-2"
                                 value={searchLocality}
                                 onChange={(e) => setSearchLocality(e.target.value)}
+                                autoComplete="off"
                               />
                               {searchLocality && (
                                 <div className="z-20 w-72">

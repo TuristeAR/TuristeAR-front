@@ -109,6 +109,7 @@ const SearchHeroSection = ({
               className="w-[350px] md:w-[400px] rounded outline-none text-sm md:text-md p-1 pr-10"
               type="text"
               placeholder="Buscar por provincia, localidad o tipo de lugar..."
+              autoComplete="off"
             />
             <button className="absolute right-2" type="submit">
               <img src="/assets/search.svg" alt="Buscar" />

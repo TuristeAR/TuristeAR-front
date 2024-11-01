@@ -80,9 +80,7 @@ export const LeftColumn = ({
     });
 
     socket.on('eventRemoved', ({ itineraryId, eventId }) => {
-      setEvents((prevEvents) =>
-      prevEvents.filter((event) => event.id !== eventId),
-      );
+      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
     });
 
     socket.on('addActivity', ({ itinerary }) => {
@@ -251,11 +249,12 @@ export const LeftColumn = ({
               <img src={alignIcon} alt="" />
               <p className="text-sm">Resumen del viaje</p>
             </div>
-            <div className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
-              <Receipt className='stroke-primary' strokeWidth={1} />
-              <button  onClick={() => setIsShowExpanse(true)}>        
-                <p className="text-sm">Gastos compartidos</p>
-              </button>
+            <div
+              className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+              onClick={() => setIsShowExpanse(true)}
+            >
+              <Receipt className="stroke-primary" strokeWidth={1} />
+              <p className="text-sm">Gastos compartidos</p>
             </div>
           </div>
         </div>
@@ -293,6 +292,7 @@ export const LeftColumn = ({
                   value={newActivity.name}
                   onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
                   className="w-full p-2 border border-primary  rounded mb-2 outline-none"
+                  autoComplete="off"
                 />
                 <input
                   type="datetime-local"
@@ -314,6 +314,7 @@ export const LeftColumn = ({
                     onChange={handleInputChange}
                     onFocus={() => setShowPlaces(true)}
                     className="w-full p-2 border border-primary rounded mb-2 outline-none"
+                    autoComplete="off"
                   />
 
                   {showPlaces && (
@@ -368,8 +369,15 @@ export const LeftColumn = ({
             </>
           )}
         </div>
-        {isShowExpanse ? (<SharedExpenses itineraryId={itineraryId} itineraryName={itinerary.name}  onClose={() => setIsShowExpanse(false)} 
-        ></SharedExpenses>):""}
+        {isShowExpanse ? (
+          <SharedExpenses
+            itineraryId={itineraryId}
+            itineraryName={itinerary.name}
+            onClose={() => setIsShowExpanse(false)}
+          ></SharedExpenses>
+        ) : (
+          ''
+        )}
         {/* Eliminar actividad */}
         <div className="flex flex-col gap-4 md:my-4">
           <h2 className="font-medium tracking-[-0.5px] leading-none">Eliminar eventos</h2>
