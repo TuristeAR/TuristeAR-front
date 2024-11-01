@@ -215,44 +215,47 @@ const ExpectedPlace = () => {
                 ) : (
                   ''
                 )}
-                <div className="w-full my-2 lg:my-0 flex justify-start lg:justify-center items-center gap-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`fill-primary`}
-                    height="32px"
-                    viewBox="0 -960 960 960"
-                    width="32px"
-                  >
-                    <path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z" />
-                  </svg>
-                  <div className="flex flex-col sm:w-[200px] lg:w-[300px] justify-between">
-                    {place.openingHours.slice(0, 1).map((i, index) => (
-                      <span key={index}>{i}</span>
-                    ))}
-                    {showHours && place.openingHours.slice(2).map((i) => <span>{i}</span>)}
+                {place.openingHours && (
+                  <div className="w-full my-2 lg:my-0 flex justify-start lg:justify-center items-center gap-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`fill-primary`}
+                      height="32px"
+                      viewBox="0 -960 960 960"
+                      width="32px"
+                    >
+                      <path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z" />
+                    </svg>
+                    <div className="flex flex-col sm:w-[200px] lg:w-[300px] justify-between">
+                      {place.openingHours.slice(0, 1).map((i, index) => (
+                        <span key={index}>{i}</span>
+                      ))}
+                      {showHours &&
+                        place.openingHours.slice(2).map((i) => <span key={i}>{i}</span>)}
+                    </div>
+                    <svg
+                      onClick={toggleHours}
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`fill-primary ${!showHours ? 'block' : 'hidden'}`}
+                      height="32px"
+                      viewBox="0 -960 960 960"
+                      width="32px"
+                    >
+                      <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
+                    </svg>
+                    <svg
+                      onClick={toggleHours}
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`fill-primary ${showHours ? 'block' : 'hidden'}`}
+                      height="32px"
+                      viewBox="0 -960 960 960"
+                      width="32px"
+                      fill="#e8eaed"
+                    >
+                      <path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z" />
+                    </svg>
                   </div>
-                  <svg
-                    onClick={toggleHours}
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`fill-primary ${!showHours ? 'block' : 'hidden'}`}
-                    height="32px"
-                    viewBox="0 -960 960 960"
-                    width="32px"
-                  >
-                    <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                  </svg>
-                  <svg
-                    onClick={toggleHours}
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`fill-primary ${showHours ? 'block' : 'hidden'}`}
-                    height="32px"
-                    viewBox="0 -960 960 960"
-                    width="32px"
-                    fill="#e8eaed"
-                  >
-                    <path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z" />
-                  </svg>
-                </div>
+                )}
                 <div className="w-full my-2 lg:my-0 flex justify-start lg:justify-center items-center gap-3">
                   <div className="flex items-center justify-start gap-3">
                     {[...Array(Math.round(place.rating))].map((_, index) => (
@@ -320,9 +323,11 @@ const ExpectedPlace = () => {
             {reviews.length < visibleCount || !(reviews.length > 0) ? (
               <></>
             ) : (
-              <button onClick={toggleReviews} className="btn-blue my-8">
-                Ver más publicaciones
-              </button>
+              reviews.length > 3 && (
+                <button onClick={toggleReviews} className="btn-blue my-8">
+                  Ver más publicaciones
+                </button>
+              )
             )}
           </div>
         </div>

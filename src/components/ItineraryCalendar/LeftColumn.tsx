@@ -1,22 +1,14 @@
 import { useEffect, useState } from 'react';
-
-/* Icons */
 import plusIcon from '/assets/add.svg';
 import chatIcon from '/assets/chat.svg';
 import galleryIcon from '/assets/gallery.svg';
 import alignIcon from '/assets/align.svg';
 import { Receipt, Trash2 } from 'lucide-react';
 import mapIcon from '/assets/map-icon.svg';
-
-import { Link } from 'react-router-dom';
-
 import useFetchPlacesByProvince from '../../utilities/useFetchPlacesByProvince';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
-
 import { AddParticipantModal } from '../AddParticipantModal/AddParticipantModal';
 import { io } from 'socket.io-client';
-import ExpenseForm from '../SharedExpenses/ExpenseForm';
-import ExpensesList from '../SharedExpenses/ExpensesList';
 import SharedExpenses from '../../pages/SharedExpenses';
 
 type User = {
@@ -37,6 +29,7 @@ export const LeftColumn = ({
   setIsShowExpanse,
   events,
   setEvents,
+  deleteEvent,
 }) => {
   const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
   const [selectedPlace, setSelectedPlace] = useState('');
@@ -177,27 +170,6 @@ export const LeftColumn = ({
       })
       .catch((error) => {
         console.error('Error al eliminar la actividad:', error);
-      });
-  };
-
-  const deleteEvent = (eventId: number) => {
-    fetch('https://api-turistear.koyeb.app/itinerary/remove-event', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ itineraryId: itineraryId, eventId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === 'success') {
-          setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
-        } else {
-          console.error('Error al eliminar el evento:', data.message);
-        }
-      })
-      .catch((error) => {
-        console.error('Error al eliminar el evento:', error);
       });
   };
 
