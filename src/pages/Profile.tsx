@@ -100,9 +100,10 @@ const Profile = () => {
       setPublications(publications);
 
       const itineraries = await get(
-        `https://api-turistear.koyeb.app/itinerary/byUser/${session.user.id}`,
+        `https://api-turistear.koyeb.app/itinerary/own`,
         {
           contentType: 'application/json',
+          credentials: 'include',
         },
       );
 
@@ -136,9 +137,10 @@ const Profile = () => {
     if (activeItem === 'saved' && user?.id) {
       const fetchSavedPublications = async () => {
         const savedPublications = await get(
-          `https://api-turistear.koyeb.app/publications/saved/${user.id}`,
+          `https://api-turistear.koyeb.app/publications/saved`,
           {
             contentType: 'application/json',
+            credentials: 'include',
           },
         );
 

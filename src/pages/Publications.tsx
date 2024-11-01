@@ -121,7 +121,7 @@ const Publications = () => {
         :
         <>
           <Header containerStyles={'relative top-0 z-[60]'} />
-          <div className="flex justify-between h-[160vh] ">
+          <div className="flex justify-between min-h-[88.8vh]">
             <LeftCommunity vista={'publications'}
                            categorySelected={categorySelected}
                            setCategorySelected={setCategorySelected}
