@@ -1,3 +1,5 @@
+import formatEventDate from '../../utilities/formatEventDate';
+
 interface EventCardProps {
   fromDate: Date;
   toDate: Date;
@@ -44,13 +46,9 @@ export const EventCard: React.FC<EventCardProps> = ({
         </div>
         <div className="my-2">
           <p className="text-sm text-gray-700 font-semibold">
-            {fromDate && toDate && fromDate !== toDate ? (
-              <>
-                {new Date(fromDate).toLocaleDateString('es-ES')} -{' '}
-                {new Date(toDate).toLocaleDateString('es-ES')}
-              </>
-            ) : (
-              new Date(fromDate).toLocaleDateString('es-ES')
+            {formatEventDate(
+              fromDate instanceof Date ? fromDate.toISOString() : new Date(fromDate).toISOString(),
+              toDate instanceof Date ? toDate.toISOString() : new Date(toDate).toISOString(),
             )}
           </p>
         </div>
