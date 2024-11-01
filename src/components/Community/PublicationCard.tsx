@@ -1,40 +1,68 @@
 import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { useState } from 'react';
 import { post } from '../../utilities/http.util';
+import Carousel from '../Destinations/Carousel';
+import { Link } from 'react-router-dom';
 
-export function PublicationCard(props: {
+type User={
   id: number;
-  profilePicture: string | undefined;
-  userId: string | undefined;
-  creationDate: string;
-  description: string;
-  images: string[];
-  likes: number;
-  reposts: number;
-  saved: number;
-  comments: number;
-  category: string;
-  isLiked: boolean;
-  isSaved: boolean;
-  isRepost: boolean;
-}) {
-  let {
-    profilePicture,
-    userId,
-    creationDate,
-    description,
-    images,
-    category,
-    id,
-    comments
-  } = props;
+  name: string,
+  profilePicture: string,
+  description: string,
+  birthdate: string,
+  coverPicture: string,
+  location: string
+}
 
-  const [isLike, setIsLike] = useState<boolean | undefined>(props.isLiked);
-  const [isSave, setIsSave] = useState<boolean | null>(props.isSaved);
-  const [isRepost, setIsRepost] = useState<boolean | null>(props.isRepost);
-  const [likes, setLikes] = useState<number | null>(props.likes);
-  const [saved, setSaved] = useState<number | null>(props.saved);
-  const [reposts, setReposts] = useState<number | null>(props.reposts);
+type Comment = {
+  createdAt: string;
+  description: string;
+  user : User | null;
+}
+
+type Category = {
+  id: number;
+  description: string;
+  image: string;
+};
+
+type Place = {
+  id: number,
+  name: string,
+  googleId: string,
+};
+
+type Activity = {
+  id: number,
+  name: string,
+  place: Place
+  images: string[]
+};
+
+type Publication = {
+  id: number;
+  description: string;
+  category: Category | null;
+  createdAt: string;
+  user: User | null;
+  likes : User[]
+  reposts : User[]
+  saved : User[]
+  comments : Comment[]
+  activities: Activity[]
+};
+export function PublicationCard(props: {
+  publication : Publication | null,
+  user: User
+}) {
+  let { publication, user } = props;
+
+  const [isLike, setIsLike] = useState<boolean | undefined>(publication.likes.some(item => item.id === user.id));
+  const [isSave, setIsSave] = useState<boolean | null>(publication.saved.some(item => item.id === user.id));
+  const [isRepost, setIsRepost] = useState<boolean | null>(publication.reposts.some(item => item.id === user.id));
+  const [likes, setLikes] = useState<number | null>(publication.likes.length);
+  const [saved, setSaved] = useState<number | null>(publication.saved.length);
+  const [reposts, setReposts] = useState<number | null>(publication.reposts.length);
 
   const handleLike = async (idPublication: number) => {
     setLikes(!isLike ? likes + 1 : likes - 1);
@@ -75,26 +103,44 @@ export function PublicationCard(props: {
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
-              <img className="w-8 h-8 rounded-full" src={profilePicture} alt="person" />
+              <img
+                className="w-8 h-8 rounded-full"
+                src={publication.user.profilePicture}
+                alt="person"
+              />
             </div>
             <div className={'flex flex-col'}>
-              <p className={'font-semibold '}>{userId}</p>
-              <p className={'text-[12px]'}>{category}</p>
+              <p className={'font-semibold '}>{publication.user.name}</p>
+              <p className={'text-[12px]'}>{publication.category.description}</p>
             </div>
           </div>
-          <p>{reorderDate(creationDate.slice(0, -14))}</p>
+          <p>{reorderDate(publication.createdAt.slice(0, -14))}</p>
         </div>
         <p className="font-light py-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
-          {description}
+          {publication.description}
         </p>
-        <ImageGallery images={images} />
+
+        <details className={'flex flex-col gap-4 mb-4'}>
+          <summary className={'lg:text-xl'}>Actividades</summary>
+          <div className={'flex '}>
+            {publication.activities.map((activity, index) => (
+              <Link to={`/lugar-esperado/${activity.place.googleId}`} key={index}>
+                <div className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] m-4 py-2 px-4 rounded-2xl'}>
+                  <p className="text-primary-3">{activity.name.slice(0, -10)}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </details>
+
+        <ImageGallery images={publication.activities.flatMap((activity) => activity.images)} />
         <div>
           <div className="text-gray-500 dark:text-gray-400 flex mt-3 justify-around">
             <div className="flex items-center mr-6">
               <svg
                 className="cursor-pointer"
                 onClick={() => {
-                  handleLike(id);
+                  handleLike(publication.id);
                 }}
                 width="25px"
                 height="25px"
@@ -116,7 +162,7 @@ export function PublicationCard(props: {
               <span className="ml-3">{likes}</span>
             </div>
             <div className="flex items-center mr-6">
-              <a href={`/publication/${id}`}>
+              <a href={`/publication/${publication.id}`}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="20px"
@@ -127,12 +173,12 @@ export function PublicationCard(props: {
                   <path d="M480-80 376-237H140q-24.75 0-42.37-17.63Q80-272.25 80-297v-523q0-24.75 17.63-42.38Q115.25-880 140-880h680q24.75 0 42.38 17.62Q880-844.75 880-820v523q0 24.75-17.62 42.37Q844.75-237 820-237H584L480-80Zm0-108 72-109h268v-523H140v523h268l72 109Zm0-371Z" />
                 </svg>
               </a>
-              <span className="ml-3">{comments}</span>
+              <span className="ml-3">{publication.comments.length}</span>
             </div>
             <div className="flex items-center mr-6">
               <svg
                 onClick={() => {
-                  handleRepost(id);
+                  handleRepost(publication.id);
                 }}
                 xmlns="http://www.w3.org/2000/svg"
                 height="25px"
@@ -148,7 +194,7 @@ export function PublicationCard(props: {
               <svg
                 className="cursor-pointer"
                 onClick={() => {
-                  handleSaved(id);
+                  handleSaved(publication.id);
                 }}
                 width="25px"
                 height="25px"
