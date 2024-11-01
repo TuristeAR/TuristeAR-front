@@ -1,6 +1,8 @@
 import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { useState } from 'react';
 import { post } from '../../utilities/http.util';
+import Carousel from '../Destinations/Carousel';
+import { Link } from 'react-router-dom';
 
 type User={
   id: number;
@@ -101,7 +103,11 @@ export function PublicationCard(props: {
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
-              <img className="w-8 h-8 rounded-full" src={publication.user.profilePicture} alt="person" />
+              <img
+                className="w-8 h-8 rounded-full"
+                src={publication.user.profilePicture}
+                alt="person"
+              />
             </div>
             <div className={'flex flex-col'}>
               <p className={'font-semibold '}>{publication.user.name}</p>
@@ -113,7 +119,21 @@ export function PublicationCard(props: {
         <p className="font-light py-4 text-gray-500 text-sm md:text-base lg:text-lg text-start">
           {publication.description}
         </p>
-        <ImageGallery images={publication.activities.flatMap(activity => activity.images)} />
+
+        <details className={'flex flex-col gap-4 mb-4'}>
+          <summary className={'text-xl'}>Actividades</summary>
+          <div className={'flex '}>
+            {publication.activities.map((activity, index) => (
+              <Link to={`/lugar-esperado/${activity.place.googleId}`}>
+                <div className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] m-4 py-2 px-4 rounded-2xl'}>
+                  <p className="text-primary-3">{activity.name.slice(0, -10)}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </details>
+
+        <ImageGallery images={publication.activities.flatMap((activity) => activity.images)} />
         <div>
           <div className="text-gray-500 dark:text-gray-400 flex mt-3 justify-around">
             <div className="flex items-center mr-6">
