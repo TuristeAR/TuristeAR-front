@@ -6,50 +6,36 @@ import { StarIcon } from 'lucide-react';
 import { MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { get } from '../../utilities/http.util';
+import formatFromDateAndToDate from '../../utilities/formatEventDate';
 
-export const ModalActivity = ({ handleClose, deleteActivity, eventInfo }) => {
+export const ModalActivity = ({ handleClose, deleteActivity, eventInfo, deleteEvent }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [selectedTab, setSelectedTab] = useState('info');
   const isActivity = eventInfo._def.extendedProps.type === 'activity';
 
-  const formatFromDateAndToDate = (fromDate: string, toDate: string) => {
-    const from = new Date(fromDate);
-    const to = new Date(toDate);
-
-    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
-
-    if (!toDate || fromDate === toDate) {
-      return from.toLocaleDateString('es-ES', options);
-    }
-
-    const fromDay = from.getDate();
-    const toDay = to.getDate();
-    const month = from.toLocaleDateString('es-ES', { month: 'long' });
-
-    return `${fromDay} a ${toDay} de ${month}`;
-  };
-
   useEffect(() => {
-    const fetchReviews = () => {
-      return get(
-        `https://api-turistear.koyeb.app/reviews/place/${eventInfo.extendedProps.googleId}`,
-        {
-          'Content-Type': 'application/json',
-        },
-      );
-    };
+    if (isActivity) {
+      const fetchReviews = () => {
+        return get(
+          `https://api-turistear.koyeb.app/reviews/place/${eventInfo.extendedProps.googleId}`,
+          {
+            'Content-Type': 'application/json',
+          },
+        );
+      };
 
-    const fetchData = async () => {
-      try {
-        const [reviewsData] = await Promise.all([fetchReviews()]);
-        setReviews(reviewsData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+      const fetchData = async () => {
+        try {
+          const [reviewsData] = await Promise.all([fetchReviews()]);
+          setReviews(reviewsData);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
 
-    fetchData();
+      fetchData();
+    }
   }, [eventInfo.extendedProps.googleId]);
 
   return (
@@ -123,22 +109,25 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo }) => {
                     Sobre este lugar
                   </Link>
                   <div className="flex flex-col items-start gap-x-2 gap-y-2 w-full">
-                    <span className="flex items-center gap-x-2 text-md md:text-lg font-semibold whitespace-normal break-words text-gray/95 hover:text-gray/70 md:my-3 md:ml-7 cursor-pointer">
-                      {' '}
-                      <MapPin size={20} color="#49A2EC" />
-                      {eventInfo.extendedProps.address}
-                    </span>
-                    <div className="flex gap-x-2 md:my-3 md:ml-7 text-md md:text-lg font-semibold text-gray/95">
-                      {' '}
-                      <Calendar size={20} color="#49A2EC" />
-                      <div className="flex flex-col items-start">
-                        {eventInfo.extendedProps.hours.map((hour, index) => (
-                          <span className="whitespace-normal break-words" key={index}>
-                            {hour}
-                          </span>
-                        ))}
+                    {eventInfo.extendedProps.address && (
+                      <span className="flex items-center gap-x-2 text-md md:text-lg font-semibold whitespace-normal break-words text-gray/95 hover:text-gray/70 md:my-3 md:ml-7 cursor-pointer">
+                        <MapPin size={20} color="#49A2EC" />
+                        {eventInfo.extendedProps.address}
+                      </span>
+                    )}
+                    {eventInfo.extendedProps.hours.length > 0 && (
+                      <div className="flex gap-x-2 md:my-3 md:ml-7 text-md md:text-lg font-semibold text-gray/95">
+                        {' '}
+                        <Calendar size={20} color="#49A2EC" />
+                        <div className="flex flex-col items-start">
+                          {eventInfo.extendedProps.hours.map((hour, index) => (
+                            <span className="whitespace-normal break-words" key={index}>
+                              {hour}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -192,13 +181,18 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo }) => {
           </div>
         ) : (
           <div className="flex flex-col justify-evenly md:justify-start gap-y-2 bg-white p-4 rounded-lg shadow-md text-center w-[90%] lg:max-w-[800px] h-[75vh] overflow-y-auto relative">
-            <div className="relative bg-gray-50 hover:bg-gray/25 rounded-full w-10 h-10 flex justify-center items-center">
-              <span
-                className="absolute top-0 right-0 left-0 text-[26px] text-center text-gray font-bold cursor-pointer"
-                onClick={handleClose}
-              >
-                &times;
-              </span>
+            <div className="flex justify-end gap-x-6 w-full">
+              <button onClick={() => deleteEvent(Number(eventInfo.id))}>
+                <Trash2Icon size={20} color="#49A2EC" />
+              </button>
+              <div className="relative bg-gray-50 hover:bg-gray/25 rounded-full w-10 h-10 flex justify-center items-center">
+                <span
+                  className="absolute top-0 right-0 left-0 text-[26px] text-center text-gray font-bold cursor-pointer"
+                  onClick={handleClose}
+                >
+                  &times;
+                </span>
+              </div>
             </div>
             <p className="text-lg md:text-2xl font-semibold whitespace-normal break-words text-black text-center">
               {eventInfo.title.replace(/ - \d{1,2} \w+\./, '')}

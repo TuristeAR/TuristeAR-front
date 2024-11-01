@@ -127,6 +127,8 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
                   return activity;
                 });
                 setActivities(updatedActivities);
+              } else {
+                info.revert();
               }
             }}
             eventContent={(eventInfo) => {
@@ -137,7 +139,7 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
                   {isActivity && (
                     <p
                       className="text-[10px] md:text-[13px] w-[70px] my-2
-                      isActivity ? 'text-white bg-primary text-white px-2 mx-1 rounded-md"
+            isActivity ? 'text-white bg-primary text-white px-2 mx-1 rounded-md"
                     >
                       {eventInfo.event.start
                         ? new Date(eventInfo.event.start)
