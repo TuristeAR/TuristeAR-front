@@ -30,8 +30,8 @@ const Profile = () => {
   type Comment = {
     createdAt: string;
     description: string;
-    user : User | null;
-  }
+    user: User | null;
+  };
 
   type Publication = {
     id: number;
@@ -153,7 +153,6 @@ const Profile = () => {
     return formatDate(dateString);
   };
 
-  console.log(itineraries)
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
@@ -177,7 +176,7 @@ const Profile = () => {
                 <img
                   src={user?.coverPicture}
                   alt={'Foto de portada'}
-                  className={'w-[100%] h-[100%]'}
+                  className={'w-[100%] h-[100%] object-cover'}
                 />
               </div>
               <div className="flex text-l relative pl-2">
@@ -290,21 +289,21 @@ const Profile = () => {
               {activeItem === 'itineraries' &&
                 itineraries?.map((itinerary, index) => {
                   const imgProvince =
-                  itinerary.activities[0]?.place?.province?.images[0] ||
-                  '/assets/TuristeAR-logo.png'; // imagen por defecto si no hay imagen de la provincia
-            
+                    itinerary.activities[0]?.place?.province?.images[0] ||
+                    '/assets/TuristeAR-logo.png'; // imagen por defecto si no hay imagen de la provincia
+
                   return (
-                  <ItineraryCard
-                    key={index}
-                    imgProvince={imgProvince}
-                    province={itinerary.name}
-                    departure={itinerary.fromDate}
-                    arrival={itinerary.toDate}
-                    participants={itinerary.participants}
-                    id={itinerary.id}
-                  />
+                    <ItineraryCard
+                      key={index}
+                      imgProvince={imgProvince}
+                      province={itinerary.name}
+                      departure={itinerary.fromDate}
+                      arrival={itinerary.toDate}
+                      participants={itinerary.participants}
+                      id={itinerary.id}
+                    />
                   );
-                  })}
+                })}
 
               {activeItem === 'likes' &&
                 likedPublications
