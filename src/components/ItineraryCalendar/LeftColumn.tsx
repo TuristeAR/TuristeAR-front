@@ -193,7 +193,6 @@ export const LeftColumn = ({
         if (data.status === 'success') {
           setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
         } else {
-          console.log(eventId);
           console.error('Error al eliminar el evento:', data.message);
         }
       })
