@@ -62,7 +62,7 @@ export const SharedGallery = () => {
                   </SwiperSlide>
                 ))
               ) : (
-                <div className="flex items-center justify-center text-gray-400 text-xl">                
+                <div className="flex items-center justify-center text-gray-400 text-xl">
                   No hay imágenes para mostrar sobre  {activity.name.split('-')[0]}
                 </div>
               )}
