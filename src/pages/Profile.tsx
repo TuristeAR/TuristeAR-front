@@ -99,7 +99,7 @@ const Profile = () => {
 
       setPublications(publications);
 
-      const itinerariesResponse = await fetch( `http://localhost:3001/itinerary/byUser/${user.id}`, {
+      const itinerariesResponse = await fetch( `https://api-turistear.koyeb.app/itinerary/byUser/${user.id}`, {
           method: 'GET',
           credentials: 'include'
       });
