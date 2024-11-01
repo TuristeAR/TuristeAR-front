@@ -121,7 +121,7 @@ export function PublicationCard(props: {
         </p>
 
         <details className={'flex flex-col gap-4 mb-4'}>
-          <summary className={'text-xl'}>Actividades</summary>
+          <summary className={'lg:text-xl'}>Actividades</summary>
           <div className={'flex '}>
             {publication.activities.map((activity, index) => (
               <Link to={`/lugar-esperado/${activity.place.googleId}`} key={index}>

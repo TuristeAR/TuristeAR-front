@@ -99,13 +99,15 @@ const Profile = () => {
 
       setPublications(publications);
 
-      const itinerariesResponse = await fetch( `http://localhost:3001/itinerary/byUser/${user.id}`, {
-          method: 'GET',
-          credentials: 'include'
-      });
+      const itinerariesResponse = await get(
+        `https://api-turistear.koyeb.app/itinerary/byUser/${session.user.id}`,
+        {
+          contentType: 'application/json',
+        },
+      );
 
-      const itinerariesData = await itinerariesResponse.json();
-      setItineraries(itinerariesData);
+      console.log(itinerariesResponse);
+      setItineraries(itinerariesResponse.participants);
     };
 
     fetchData().then(() => setLoading(false));
@@ -270,7 +272,7 @@ const Profile = () => {
             <CreatePublications />
 
             {/* Content */}
-            <div className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid grid-cols-2' : ''}`} ref={contentRef}>
+            <div className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid grid-cols-2 gap-6' : ''}`} ref={contentRef}>
               {activeItem === 'posts' &&
                 publications
                   ?.filter((publication) => {

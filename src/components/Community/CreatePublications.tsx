@@ -140,13 +140,13 @@ export const CreatePublications = () => {
           >
             <img
               src={'/assets/createPublications.svg'}
-              className={'w-[70px] m-6'}
+              className={'lg:w-[70px] w-[45px] lg:m-6 m-3'}
               alt={'Crear post'}
             />
           </div>
           {isOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 border border-gray-50 rounded-lg">
-              <div className="bg-white rounded-2xl py-6 px-10 flex flex-col justify-evenly relative max-w-[70%] max-h-[75%]">
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 lg:z-[50] z-[80] border border-gray-50 rounded-lg">
+              <div className="bg-white rounded-2xl md:py-6 py-4 lg:px-10 px-6 flex flex-col justify-evenly relative md:max-w-[70%] max-w-[90%] max-h-[90%]">
                 <button
                   className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
                   onClick={() => setIsOpen(false)}
@@ -166,12 +166,12 @@ export const CreatePublications = () => {
                     />
                   </svg>
                 </button>
-                <h2 className="text-2xl text-center font-bold mb-4">Crear publicación</h2>
+                <h2 className="lg:text-2xl text-xl text-center font-bold lg:mb-4 mb-2">Crear publicación</h2>
                 <form onSubmit={createPublications}>
                   <div className={'flex flex-col gap-4'}>
-                    <div className={'flex flex-row gap-x-4 items-end'}>
+                    <div className={'flex lg:flex-row flex-col gap-x-4 lg:items-end'}>
                       <div className={'flex flex-col gap-x-2'}>
-                        <label className="text-lg font-semibold">Itinerario</label>
+                        <label className="lg:text-lg font-semibold">Itinerario</label>
                         <select
                           className={'border border-[#999999] pl-2 rounded-xl'}
                           name={'itineraryId'}
@@ -189,11 +189,11 @@ export const CreatePublications = () => {
                         *Solo puede utilizar actividades con imágenes
                       </p>
                     </div>
-                    <div className={'flex flex-row gap-x-4 items-center'}>
-                      <div className={'flex flex-col w-[40%]'}>
-                        <label className="text-lg font-semibold">Descripción</label>
+                    <div className={'flex lg:flex-row flex-col lg:gap-x-4 lg:gap-y-0 gap-y-2 items-center'}>
+                      <div className={'flex flex-col lg:w-[40%] w-[100%]'}>
+                        <label className="lg:text-lg font-semibold">Descripción</label>
                         <textarea
-                          className={'border border-[#999999] pl-2 rounded-xl min-h-48'}
+                          className={'border border-[#999999] pl-2 rounded-xl lg:min-h-48 min-h-20'}
                           placeholder={'Ingrese la descripción'}
                           name={'description'}
                           onInput={(e: React.FormEvent<HTMLTextAreaElement>) =>
@@ -201,8 +201,8 @@ export const CreatePublications = () => {
                           }
                         ></textarea>
                       </div>
-                      <div className="flex flex-col w-[60%]">
-                        <label className="text-lg font-semibold">Actividades</label>
+                      <div className="flex flex-col lg:w-[60%] w-[100%]">
+                        <label className="lg:text-lg font-semibold">Actividades</label>
                         <div className="rounded-2xl shadow-lg">
                           <Carousel
                             showThumbs={false}
@@ -246,13 +246,13 @@ export const CreatePublications = () => {
                                           key={imgIndex}
                                           src={image}
                                           alt={`Imagen ${imgIndex + 1}`}
-                                          className="rounded-l-2xl w-full h-48 object-cover"
+                                          className="rounded-l-2xl w-full lg:h-48 h-20 object-cover"
                                         />
                                       ))}
                                     </Carousel>
 
-                                    <div className={`w-full text-center py-2 px-6 rounded-l-2xl`}>
-                                      <h3 className="text-lg font-semibold">
+                                    <div className={`w-full text-center lg:py-2 lg:px-6 rounded-l-2xl`}>
+                                      <h3 className="lg:text-lg text-sm font-semibold">
                                         {activity.name.slice(0, -10)}
                                       </h3>
                                     </div>
@@ -263,13 +263,13 @@ export const CreatePublications = () => {
                       </div>
                     </div>
                   </div>
-                  <div className={`flex ${error ? 'justify-between' : 'justify-end'} mt-6 gap-4`}>
-                    {error && (
-                      <div className="text-[#999999] text-sm text-center mt-4">{error}</div>
-                    )}
-                    <button type={'submit'} className={'btn-blue'}>
+                  <div className={`flex flex-col lg:mt-6 mt-4 lg:gap-2`}>
+                    <button type={'submit'} className={'btn-blue lg:w-[60%] w-[90%] mx-auto'}>
                       Crear publicación
                     </button>
+                    {error && (
+                      <div className="text-[#999999] text-sm text-center mt-2">{error}</div>
+                    )}
                   </div>
                 </form>
               </div>
