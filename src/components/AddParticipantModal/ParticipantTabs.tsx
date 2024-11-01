@@ -227,6 +227,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
                       placeholder="Buscar participantes"
                       value={searchTermOld}
                       onChange={(e) => setSearchTermOld(e.target.value)}
+                      autoComplete="off"
                     />
                   </div>
                   <div className="max-h-52 overflow-y-auto">
@@ -308,6 +309,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
                       placeholder="Buscar participantes"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
+                      autoComplete="off"
                     />
                   </div>
                   <div className="max-h-56 overflow-y-auto">

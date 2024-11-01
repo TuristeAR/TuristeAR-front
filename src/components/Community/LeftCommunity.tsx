@@ -112,6 +112,7 @@ export const LeftCommunity = (props: {
               }
               className="border border-[#999999] pl-2"
               placeholder="Buscar"
+              autoComplete="off"
             />
           </form>
           <div className="overflow-y-scroll h-[230px] scrollbar-hidden">
