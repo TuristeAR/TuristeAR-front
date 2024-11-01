@@ -15,6 +15,7 @@ export const ItineraryCalendar = () => {
   const [isAddingActivity, setIsAddingActivity] = useState(false);
   const [selectedEventInfo, setSelectedEventInfo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isShowExpanse, setIsShowExpanse] = useState(false);
 
   const socket = io('https://api-turistear.koyeb.app');
 
@@ -74,8 +75,12 @@ export const ItineraryCalendar = () => {
           setIsAddingActivity={setIsAddingActivity}
           activities={activities}
           setActivities={setActivities}
+          isShowExpanse={isShowExpanse}
+          setIsShowExpanse={setIsShowExpanse}
+
           events={events}
           setEvents={setEvents}
+
         />
         <main className="order-1 lg:order-2 col-span-1 container mx-auto">
           <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-full md:p-4">
