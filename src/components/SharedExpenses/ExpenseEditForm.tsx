@@ -9,7 +9,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
   const onDateChangeHandler = useCallback((date) => setDate(date), [date]);
   const [distributionType, setDistributionType] = useState('equivalente');
   const [payerId, setPayerId] = useState();
-  const [description, setDescription] = useState(''); 
+  const [description, setDescription] = useState('');
   const { usersOldNav } = useFetchParticipants(itineraryId);
   const [individualAmounts, setIndividualAmounts] = useState(expense.individualAmounts);
   const [individualPercentages, setIndividualPercentages] = useState({});
@@ -26,10 +26,8 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
       setIndividualAmounts(expense.individualAmounts);
       setIndividualPercentages(expense.individualPercentages);
       setParticipatingUsers(expense.participatingUsers);
-      participatingUsers.map(u =>
-        toggleParticipatingUser(u.id)
-      )
-      console.log("llllllll",expense.participatingUsers)
+      participatingUsers.map((u) => toggleParticipatingUser(u.id));
+      console.log(expense.participatingUsers);
     }
   }, [expense]);
 
@@ -97,7 +95,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     setValidationError('');
     if (!validateAmounts()) {
@@ -105,7 +103,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
       return;
     }
     const expenseData = {
-      description, 
+      description,
       date,
       payerId,
       participatingUsers: Object.keys(participatingUsers).filter(
@@ -136,15 +134,13 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
       console.log('Gasto guardado:', result);
     } catch (error) {
       console.log(error.message);
-    } 
+    }
   };
 
   return (
     <div className="bg-white p-6 rounded-sm shadow-lg max-w-lg mx-auto">
-     <ArrowLeft onClick={onClose} className='cursor-pointer'/>
-      <h3 className="font-bold text-3xl lead-10 text-black mb-9">
-        Editar Gasto
-      </h3>
+      <ArrowLeft onClick={onClose} className="cursor-pointer" />
+      <h3 className="font-bold text-3xl lead-10 text-black mb-9">Editar Gasto</h3>
       <form>
         <div className="mb-4">
           <label className="block font-semibold text-gray-700 mb-2">Descripción</label>
@@ -152,8 +148,9 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
             type="text"
             className="w-full px-4 py-2 border rounded-lg"
             placeholder="Ejemplo: Cena en restaurante"
-            value={description} 
-            onChange={handleDescriptionChange} 
+            value={description}
+            onChange={handleDescriptionChange}
+            autoComplete="off"
             required
           />
         </div>
@@ -193,7 +190,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
                 type="checkbox"
                 onChange={() => toggleParticipatingUser(user.id)}
                 className="mr-2"
-                checked={expense.participatingUsers.find(u => u.id == user.id)}
+                checked={expense.participatingUsers.find((u) => u.id == user.id)}
               />
               <span className="text-gray-600">{user.name}</span>
             </div>

@@ -19,7 +19,7 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo }) => {
 
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
 
-    if (fromDate === toDate) {
+    if (!toDate || fromDate === toDate) {
       return from.toLocaleDateString('es-ES', options);
     }
 

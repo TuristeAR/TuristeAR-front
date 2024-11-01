@@ -91,7 +91,6 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
     }
   };
 
-  console.log(events)
   return (
     <>
       {loading ? (
@@ -134,10 +133,10 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
               const isActivity = eventInfo.event.extendedProps.type === 'activity';
 
               return (
-                <div className="flex flex-col w-full overflow-hidden">
+                <div className="flex flex-col w-full ">
                   {isActivity && (
                     <p
-                      className="text-[10px] md:text-[13px] w-16 my-2
+                      className="text-[10px] md:text-[13px] w-[70px] my-2
                       isActivity ? 'text-white bg-primary text-white px-2 mx-1 rounded-md"
                     >
                       {eventInfo.event.start
@@ -155,8 +154,8 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
                     </p>
                   )}
                   <p
-                    className={`flex items-center text-[8px] md:text-[12px] mx-1 p-1 font-semibold md:h-12 hover:bg-opacity-80 cursor-pointer rounded-md truncate ${
-                      isActivity ? 'bg-primary-3 text-white' : 'bg-orange text-black'
+                    className={`flex items-center text-[8px] md:text-[12px] mx-1 p-1 font-semibold md:h-12 hover:bg-opacity-80 cursor-pointer rounded-md ${
+                      isActivity ? 'bg-primary-3 text-white' : 'bg-orange text-black my-1.5'
                     }`}
                   >
                     {eventInfo.event.title.replace(/ - \d{1,2} \w+\./, '')}
