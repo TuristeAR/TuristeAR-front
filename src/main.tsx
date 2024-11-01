@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './index.css';
 import { Home } from './pages/Home';
 import Destinations from './pages/Destinations';
+import SharedExpenses from './pages/SharedExpenses';
 import FormQuestions from './pages/FormQuestions';
 import ExpectedPlace from './pages/ExpectedPlace';
 import Publications from './pages/Publications';

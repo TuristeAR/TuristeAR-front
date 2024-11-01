@@ -165,7 +165,6 @@ const Profile = () => {
     return formatDate(dateString);
   };
 
-  console.log(itineraries)
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
@@ -189,7 +188,7 @@ const Profile = () => {
                 <img
                   src={user?.coverPicture}
                   alt={'Foto de portada'}
-                  className={'w-[100%] h-[100%]'}
+                  className={'w-[100%] h-[100%] object-cover'}
                 />
               </div>
               <div className="flex text-l relative pl-2">
@@ -294,17 +293,17 @@ const Profile = () => {
                   '/assets/TuristeAR-logo.png';
 
                   return (
-                  <ItineraryCard
-                    key={index}
-                    imgProvince={imgProvince}
-                    province={itinerary.name}
-                    departure={itinerary.fromDate}
-                    arrival={itinerary.toDate}
-                    participants={itinerary.participants}
-                    id={itinerary.id}
-                  />
+                    <ItineraryCard
+                      key={index}
+                      imgProvince={imgProvince}
+                      province={itinerary.name}
+                      departure={itinerary.fromDate}
+                      arrival={itinerary.toDate}
+                      participants={itinerary.participants}
+                      id={itinerary.id}
+                    />
                   );
-                  })}
+                })}
 
               {activeItem === 'likes' &&
                 likedPublications
