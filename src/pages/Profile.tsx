@@ -294,8 +294,10 @@ const Profile = () => {
                       province={itinerary.name}
                       departure={itinerary.fromDate}
                       arrival={itinerary.toDate}
+                      userId={user.id}
                       participants={itinerary.participants}
                       id={itinerary.id}
+                      onDelete={ () => setItineraries((prev) => prev.filter((p) => p.id !== itinerary.id))}
                     />
                   );
                 })}

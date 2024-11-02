@@ -53,8 +53,6 @@ type Publication = {
   activities: Activity[]
 };
 
-const socket = io('https://api-turistear.koyeb.app');
-
 export function PublicationCard(props: {
   publication : Publication | null,
   user: User
@@ -104,6 +102,7 @@ export function PublicationCard(props: {
   };
 
   const deletePublication = async (id) => {
+    const socket = io('https://api-turistear.koyeb.app');
     socket.emit('deletePublication', {
       publicationId: id,
       userId: user.id,
