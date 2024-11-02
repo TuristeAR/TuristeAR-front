@@ -85,7 +85,7 @@ const questions = [
       {
         src: <Binoculars width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
         alt: 'Atracción turística',
-        data: 'tourist_attraction,point_of_interest,landmark,scenic_viewpoint,natural_feature,historical_landmark',
+        data: 'tourist_attraction,landmark,scenic_viewpoint,natural_feature,historical_landmark',
       },
       {
         src: <Utensils width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
