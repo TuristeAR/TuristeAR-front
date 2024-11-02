@@ -570,8 +570,7 @@ const FormQuestions = () => {
                         })}
                         <div
                           key="company"
-                          className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 p-2 border border-gray"
-                        >
+                          className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 p-2 border border-gray">
                           {
                             questions[4].options.find((option) => option.data === formData.company)
                               ?.src

@@ -325,7 +325,7 @@ export const LeftColumn = ({
             <p>No hay actividades para eliminar</p>
           ) : (
             <>
-              <div className="w-full flex flex-col gap-4 mb-2">
+              <div className="w-full flex flex-col gap-4 mb-2 overflow-scroll scrollbar-hidden max-h-[400px]">
                 {activities.map((activity, index) => (
                   <div
                     key={index}

@@ -42,7 +42,7 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo, deleteEv
     <>
       <div className="flex justify-center items-center fixed top-0 left-0 w-screen h-screen z-50 bg-black/80 cursor-default">
         {isActivity ? (
-          <div className="flex flex-col justify-evenly md:justify-start gap-y-2 bg-white p-4 rounded-lg shadow-md text-center w-[90%] lg:max-w-[800px] h-[75vh] overflow-y-auto relative">
+          <div className="flex flex-col justify-evenly md:justify-start gap-y-2 bg-white p-4 rounded-lg shadow-md text-center w-[90%] lg:max-w-[800px] h-[75vh] overflow-y-auto scrollbar-hidden relative">
             <div className="flex justify-end gap-x-6 w-full">
               <button onClick={() => setIsEditing(true)}>
                 <Edit2Icon size={20} color="#49A2EC" />
@@ -135,7 +135,7 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo, deleteEv
 
             {/* Sección de Reseñas */}
             {selectedTab === 'reviews' && (
-              <div className="flex-1 overflow-y-auto p-4">
+              <div className="flex-1 overflow-y-auto scrollbar-hidden p-4">
                 {Array.isArray(reviews) && reviews.length === 0 ? (
                   <span className="text-md md:text-lg font-semibold whitespace-normal break-words text-gray/95 md:my-3 md:ml-7">
                     No hay reseñas disponibles
@@ -180,7 +180,7 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo, deleteEv
             )}
           </div>
         ) : (
-          <div className="flex flex-col justify-evenly md:justify-start gap-y-2 bg-white p-4 rounded-lg shadow-md text-center w-[90%] lg:max-w-[800px] h-[75vh] overflow-y-auto relative">
+          <div className="flex flex-col justify-evenly md:justify-start gap-y-2 bg-white p-4 rounded-lg shadow-md text-center w-[90%] lg:max-w-[800px] h-[75vh] overflow-y-auto scrollbar-hidden relative">
             <div className="flex justify-end gap-x-6 w-full">
               <button onClick={() => deleteEvent(Number(eventInfo.id))}>
                 <Trash2Icon size={20} color="#49A2EC" />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 type User={
   id: number;
@@ -58,9 +59,9 @@ export const ItineraryCard : React.FC<TravelData> = ({imgProvince,province,depar
               </div>
             ))}
           </details>
-          <div className="rounded-2xl py-2 bg-primary hover:bg-primary-3 text-white text-center w-[150px]">
-            <a href={'/itineraryCalendar/'+ id}>Ver más</a>
-          </div>
+          <Link to={'/itineraryCalendar/'+id} className="rounded-2xl py-2 bg-primary hover:bg-primary-3 text-white text-center w-[150px]">
+            <p>Ver más</p>
+          </Link>
         </div>
       </div>
     </>
