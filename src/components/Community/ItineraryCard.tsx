@@ -24,7 +24,7 @@ export const ItineraryCard = (props: {
   };
 
   const deleteItinerary = async (id: number) => {
-    const socket = io('http://localhost:3001');
+    const socket = io('https://api-turistear.koyeb.app');
     socket.emit('deleteItinerary', {
       itineraryId: id,
       userId: userId,
