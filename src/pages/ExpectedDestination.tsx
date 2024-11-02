@@ -55,6 +55,19 @@ type PlaceCard = {
   }[];
 };
 
+type GastronomyPlace = {
+  id: number;
+  googleId: string;
+  name: string;
+  types: string[];
+  rating: number;
+  address: string;
+  reviews: {
+    id: number;
+    photos: string[];
+  }[];
+};
+
 const ExpectedDestination = () => {
   const [showedLugares, setShowedLugares] = useState(false);
   const [showedGastronomia, setShowedGastronomia] = useState(false);
@@ -63,11 +76,11 @@ const ExpectedDestination = () => {
   const [visibleCount, setVisibleCount] = useState(3);
   const {nombreDeLaProvincia} = useParams();
   const [province, setProvince] = useState<Province>();
-  const [gastronomyPlace, setGastronomyPlace] = useState<PlaceCard[]>([]);
+  const [gastronomyPlace, setGastronomyPlace] = useState<GastronomyPlace[]>([]);
   const [pointsInterest, setPointsInterest] = useState<PlaceCard[]>([]);
   const [airFreePlace, setAirFreePlace] = useState<PlaceCard[]>([]);
   const [culturePlace, setCulturePlace] = useState<PlaceCard[]>([]);
-
+  const [atractionPlace, setAtractionPlace] = useState<PlaceCard[]>([]);
   const gastronomyRef = useRef(null);
   const cultureRef = useRef(null);
   const airFreeRef = useRef(null);
@@ -75,20 +88,20 @@ const ExpectedDestination = () => {
 
   const handleScrollToSection = (sectionRef, setShowSection) => {
     setShowSection((prev) => !prev); // Cambia el estado de despliegue
-    sectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   useEffect(() => {
     const fetchProvince = async () => {
       try {
-        const response = await get(
+        const responseProvince = await get(
           `https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}`,
           {
             'Content-Type': 'application/json',
           },
         );
-
-        setProvince(response);
+        console.log('Province:', responseProvince);
+        setProvince(responseProvince);
       } catch (error) {
         console.error('Error fetching province:', error);
       }
@@ -102,14 +115,18 @@ const ExpectedDestination = () => {
     const fetchGastronomyPlace = async () => {
       if (province) {
         try {
-          const response = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=restaurant&types=food&count=6`,
+          const responseGastronomy = await get(
+            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=restaurant&types=food&count=10`,
             {
               'Content-Type': 'application/json',
             },
           );
-
-          setGastronomyPlace(response.data);
+           // Actualiza el objeto province con el nuevo gastronomyPlace
+        setProvince((prevProvince) => ({
+          ...prevProvince,
+          gastronomyPlace: responseGastronomy.data, // Almacena la respuesta en gastronomyPlace
+        }));
+          setGastronomyPlace(responseGastronomy.data);
         } catch (error) {
           console.error('Error fetching GastronomyPlace:', error);
         }
@@ -125,14 +142,14 @@ const ExpectedDestination = () => {
       if (province) {
         try {
           //change value count on url, to receive more places
-          const response = await get(
+          const responseAirFree = await get(
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=hiking_area&types=campground&types=national_park&types=park&count=10`,
             {
               'Content-Type': 'application/json',
             },
           );
-
-          setAirFreePlace(response.data);
+          console.log('Air Free Data:', responseAirFree.data);
+          setAirFreePlace(responseAirFree.data);
         } catch (error) {
           console.error('Error fetching AirFreePlace:', error);
         }
@@ -148,16 +165,16 @@ const ExpectedDestination = () => {
       if (province) {
         try {
           //change value count on url, to receive more places
-          const response = await get(
+          const responseCulture = await get(
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=library&types=museum&types=political&count=10`,
             {
               'Content-Type': 'application/json',
             },
           );
-
-          setCulturePlace(response.data);
+          console.log('Culture Data:', responseCulture.data);
+          setCulturePlace(responseCulture.data);
         } catch (error) {
-          console.error('Error fetching AirFreePlace:', error);
+          console.error('Error fetching CulturePlace:', error);
         }
       }
     };
@@ -167,25 +184,25 @@ const ExpectedDestination = () => {
 
   // atraction
   useEffect(() => {
-    const fetchCulturePlace = async () => {
+    const fetchAtractionPlace = async () => {
       if (province) {
         try {
           //change value count on url, to receive more places
-          const response = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=tourist_attraction&types=museum&types=political&count=10`,
+          const responseAtraction = await get(
+            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=tourist_attraction&types=bar&types=night_club&types=stadium&count=10`,
             {
               'Content-Type': 'application/json',
             },
           );
-
-          setCulturePlace(response.data);
+          console.log('atraction Data:', responseAtraction.data);
+          setAtractionPlace(responseAtraction.data);
         } catch (error) {
-          console.error('Error fetching AirFreePlace:', error);
+          console.error('Error fetching AtractionPlace:', error);
         }
       }
     };
 
-    fetchCulturePlace();
+    fetchAtractionPlace();
   }, [province]);
 
   // points of interest
@@ -193,14 +210,14 @@ const ExpectedDestination = () => {
     const fetchPointsInterest = async () => {
       if (province) {
         try {
-          const response = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&count=6`,
+          const responsePointIenterest = await get(
+            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&count=10`,
             {
               'Content-Type': 'application/json',
             },
           );
 
-          setPointsInterest(response.data);
+          setPointsInterest(responsePointIenterest.data);
         } catch (error) {
           console.error('Error fetching GastronomyPlace:', error);
         }
@@ -233,7 +250,13 @@ const ExpectedDestination = () => {
               {province.description}
             </p>
           </div>
+          
           <div className="flex flex-wrap justify-center gap-6 mt-3">
+            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
+            onClick={() => handleScrollToSection(cultureRef, setShowedCulture)}>
+              <School width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
+              <span className="sm:text-xl font-medium text-center">Cultura</span>
+            </div>
             <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
             onClick={() => handleScrollToSection(airFreeRef, setShowedAirFree)}>
               <Trees width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
@@ -244,11 +267,7 @@ const ExpectedDestination = () => {
               <Ticket width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
               <span className="sm:text-xl font-medium text-center">Atracciones</span>
             </div>
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
-            onClick={() => handleScrollToSection(cultureRef, setShowedCulture)}>
-              <School width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
-              <span className="sm:text-xl font-medium text-center">Cultura</span>
-            </div>
+            
             <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300" 
             onClick={() => handleScrollToSection(gastronomyRef, setShowedGastronomia)}>
               <UtensilsCrossed width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
@@ -265,7 +284,7 @@ const ExpectedDestination = () => {
             Descubrí lo que cuentan nuestros usuarios
           </h3>
           <hr />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
             {province.places.slice(0, visibleCount).map((userPost, index) => (
               <PostCard
                 key={index}
@@ -378,17 +397,17 @@ const ExpectedDestination = () => {
           </div>
         </div>
       </section>
-      {/* Gastronomía */}
-      <section ref={gastronomyRef} className="my-10">
+      {/* Culture */}
+      <section  ref={cultureRef} className="my-10">
         <div className="sm:w-10/12 m-auto mt-10">
           <h3
-            onClick={() => setShowedGastronomia(!showedGastronomia)}
+            onClick={() => setShowedCulture(!showedCulture)}
             className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer"
           >
-            Gastronomía
+            Cultura
             <div className="icons">
               <svg
-                className={`${!showedGastronomia ? 'block' : 'hidden'}`}
+                className={`${!showedCulture ? 'block' : 'hidden'}`}
                 xmlns="http://www.w3.org/2000/svg"
                 height="50px"
                 viewBox="0 -960 960 960"
@@ -398,7 +417,7 @@ const ExpectedDestination = () => {
                 <path d="M480-360 280-560h400L480-360Z" />
               </svg>
               <svg
-                className={`${showedGastronomia ? 'block' : 'hidden'}`}
+                className={`${showedCulture ? 'block' : 'hidden'}`}
                 xmlns="http://www.w3.org/2000/svg"
                 height="50px"
                 viewBox="0 -960 960 960"
@@ -409,7 +428,7 @@ const ExpectedDestination = () => {
               </svg>
             </div>
           </h3>
-          <div className={`${showedGastronomia ? 'block' : 'hidden'}`}>
+          <div className={`${showedCulture ? 'block' : 'hidden'}`}>
             <div className={`relative px-2 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap`}>
               <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -435,7 +454,7 @@ const ExpectedDestination = () => {
                   },
                 }}
               >
-                {gastronomyPlace.map(
+                {culturePlace.map(
                   (article, index) =>
                     article.reviews.length > 0 &&
                     article.reviews[0].photos.length > 0 && (
@@ -552,17 +571,17 @@ const ExpectedDestination = () => {
         </div>
       </section>{' '}
 
-      {/* Culture */}
-      <section  ref={cultureRef} className="my-10">
+      {/* Gastronomía */}
+      <section ref={gastronomyRef} className="my-10">
         <div className="sm:w-10/12 m-auto mt-10">
           <h3
-            onClick={() => setShowedCulture(!showedCulture)}
+            onClick={() => setShowedGastronomia(!showedGastronomia)}
             className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer"
           >
-            Cultura
+            Gastronomía
             <div className="icons">
               <svg
-                className={`${!showedCulture ? 'block' : 'hidden'}`}
+                className={`${!showedGastronomia ? 'block' : 'hidden'}`}
                 xmlns="http://www.w3.org/2000/svg"
                 height="50px"
                 viewBox="0 -960 960 960"
@@ -572,7 +591,7 @@ const ExpectedDestination = () => {
                 <path d="M480-360 280-560h400L480-360Z" />
               </svg>
               <svg
-                className={`${showedCulture ? 'block' : 'hidden'}`}
+                className={`${showedGastronomia ? 'block' : 'hidden'}`}
                 xmlns="http://www.w3.org/2000/svg"
                 height="50px"
                 viewBox="0 -960 960 960"
@@ -583,7 +602,7 @@ const ExpectedDestination = () => {
               </svg>
             </div>
           </h3>
-          <div className={`${showedCulture ? 'block' : 'hidden'}`}>
+          <div className={`${showedGastronomia ? 'block' : 'hidden'}`}>
             <div className={`relative px-2 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap`}>
               <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -609,7 +628,7 @@ const ExpectedDestination = () => {
                   },
                 }}
               >
-                {culturePlace.map(
+                {gastronomyPlace.map(
                   (article, index) =>
                     article.reviews.length > 0 &&
                     article.reviews[0].photos.length > 0 && (
@@ -638,6 +657,7 @@ const ExpectedDestination = () => {
           </div>
         </div>
       </section>{' '}
+      
     </>
   );
 };
