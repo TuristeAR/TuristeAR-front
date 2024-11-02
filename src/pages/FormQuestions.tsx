@@ -28,6 +28,7 @@ import { DialogWindow } from '../components/Questions/DialogWindow';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import EventCarousel from '../components/FormQuestions/EventCarousel';
+import formatFromDateAndToDate from '../utilities/formatEventDate';
 
 interface FormData {
   provinceId: number;
@@ -84,37 +85,37 @@ const questions = [
       {
         src: <Binoculars width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
         alt: 'Atracción turística',
-        data: 'tourist_attraction',
+        data: 'tourist_attraction,point_of_interest,landmark,scenic_viewpoint,natural_feature,historical_landmark',
       },
       {
         src: <Utensils width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
         alt: 'Comida',
-        data: 'food,restaurant,cafe,coffee_shop',
+        data: 'restaurant,cafe,coffee_shop,bakery,food,food_court',
       },
       {
         src: <Book width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
         alt: 'Cultura',
-        data: 'library,museum,political',
+        data: 'library,museum,political,art_gallery,cultural_center,theater,city_hall,church,place_of_worship,embassy',
       },
       {
         src: <Trophy width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
         alt: 'Deporte',
-        data: 'sports_complex,stadium',
+        data: 'sports_complex,stadium,climbing_area,skate_park,ice_skating_rink,ski_resort,surf_spot',
       },
       {
         src: <PartyPopper width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
         alt: 'Fiesta',
-        data: 'bar,night_club',
+        data: 'bar,night_club,music_venue,dance_club,cocktail_bar,event_venue,beer_hall,pub,karaoke',
       },
       {
         src: <Mountain width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
         alt: 'Montaña',
-        data: 'hiking_area',
+        data: 'hiking_area,mountain,campground,scenic_point,trailhead,national_forest,wilderness_area,climbing_area',
       },
       {
         src: <TreePine width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
         alt: 'Naturaleza',
-        data: 'campground,national_park,park',
+        data: 'campground,national_park,park,lake,beach,forest,waterfall,botanical_garden,nature_reserve,wildlife_reserve',
       },
     ],
     type: 'icon',
@@ -422,23 +423,6 @@ const FormQuestions = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const formatFromDateAndToDate = (fromDate: string, toDate: string) => {
-    const from = new Date(fromDate);
-    const to = new Date(toDate);
-
-    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
-
-    if (!toDate || fromDate === toDate) {
-      return from.toLocaleDateString('es-ES', options);
-    }
-
-    const fromDay = from.getDate();
-    const toDay = to.getDate();
-    const month = from.toLocaleDateString('es-ES', { month: 'long' });
-
-    return `${fromDay} a ${toDay} de ${month}`;
   };
 
   const saveFormDataToLocalStorage = (data: FormData) => {
