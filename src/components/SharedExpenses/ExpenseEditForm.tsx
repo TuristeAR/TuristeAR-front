@@ -5,23 +5,22 @@ import useFetchParticipants from '../../utilities/useFetchParticipants';
 import { ArrowLeft } from 'lucide-react';
 
 const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(expense.date);
   const onDateChangeHandler = useCallback((date) => setDate(date), [date]);
-  const [distributionType, setDistributionType] = useState('equivalente');
-  const [payerId, setPayerId] = useState();
-  const [description, setDescription] = useState('');
+  const [distributionType, setDistributionType] = useState(expense.distributionType);
+  const [payerId, setPayerId] = useState(expense.payer.id);
+  const [description, setDescription] = useState(expense.description);
   const { usersOldNav } = useFetchParticipants(itineraryId);
-  const [individualAmounts, setIndividualAmounts] = useState({});
-  const [individualPercentages, setIndividualPercentages] = useState({});
+  const [individualAmounts, setIndividualAmounts] = useState(expense.individualAmounts);
+  const [individualPercentages, setIndividualPercentages] = useState(expense.individualPercentages);
   const [participatingUsers, setParticipatingUsers] = useState(expense.participatingUsers);
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(expense.totalAmount);
   const [validationError, setValidationError] = useState('');
-
   useEffect(() => {
     if (expense) {
       setDate(new Date(expense.date));
       setDescription(expense.description);
-      setPayerId(expense.payer.payerId);
+      setPayerId(expense.payer.id);
       setTotalAmount(expense.totalAmount);
       setDistributionType(expense.distributionType);
       setIndividualAmounts(expense.individualAmounts);
@@ -48,7 +47,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
     setTotalAmount(e.target.value);
   };
   const handleIndividualAmountChange = (userId, value) => {
-    console.log('Cambio de monto para el usuario:', userId, 'Nuevo valor:', value); // Para depuración
+    console.log("Cambio de monto para el usuario:", userId, "Nuevo valor:", value); 
 
     setIndividualAmounts((prev) => ({
       ...prev,
@@ -96,8 +95,8 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
   };
 
   const handleSubmit = async (e) => {
+    console.log("--", expense)
     e.preventDefault();
-
     setValidationError('');
     if (!validateAmounts()) {
       setValidationError(`La suma de los ${distributionType} no coincide con el monto total.`);
@@ -117,8 +116,8 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
       itineraryId: itineraryId,
     };
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/expenses', {
-        method: 'POST',
+      const response = await fetch(`https://api-turistear.koyeb.app/expenses/${expense.id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -155,7 +154,6 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
             required
           />
         </div>
-
         <div className="mb-4">
           <label className="block font-semibold text-gray-700 mb-2">Fecha del Gasto</label>
           <DatePicker
@@ -245,7 +243,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
             <label className="block font-semibold text-gray-700 mb-2">Montos Individuales</label>
             {usersOldNav.map(
               (user) =>
-                expense.participatingUsers[user.id] && (
+                participatingUsers[user.id] && (
                   <div key={user.id} className="flex items-center mb-2">
                     <span className="w-1/2 text-gray-600">{user.name}</span>
                     <input
