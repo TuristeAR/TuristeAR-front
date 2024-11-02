@@ -24,7 +24,7 @@ export const ItineraryCard = (props: {
   };
 
   const deleteItinerary = async (id: number) => {
-    const socket = io('http://localhost:3001');
+    const socket = io('https://api-turistear.koyeb.app');
     socket.emit('deleteItinerary', {
       itineraryId: id,
       userId: userId,
@@ -47,20 +47,7 @@ export const ItineraryCard = (props: {
           <button onClick={()=> deleteItinerary(id)}
             className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <img src={'/assets/delete.svg'} alt={'Eliminar'} />
           </button>
           <h1 className="text-2xl lg:text-lg">{province}</h1>
           <div className="flex flex-col gap-2 text-l">
