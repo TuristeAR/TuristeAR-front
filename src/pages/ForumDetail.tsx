@@ -148,12 +148,14 @@ const ForumDetail = () => {
       setWasSent(true);
       const imageUrl = selectedImage ? await uploadImage(selectedImage) : null;
       const socket = io('https://api-turistear.koyeb.app');
+
       socket.emit('createMessage', {
         content: message,
         images: imageUrl,
         userId: user.id,
         forumId: forumId,
       });
+
       setWasSent(false);
       setSelectedImage(null);
       setMessage('');

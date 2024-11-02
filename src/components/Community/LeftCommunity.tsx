@@ -1,5 +1,21 @@
 import { useEffect, useState } from 'react';
 
+type User = {
+  id: number;
+  name: string;
+  profilePicture: string;
+  description: string;
+  birthdate: string;
+  coverPicture: string;
+  location: string;
+};
+
+type Category = {
+  id: number;
+  description: string;
+  image: string;
+};
+
 export const LeftCommunity = (props: {
   vista: string;
   categorySelected: number | null;
@@ -8,22 +24,6 @@ export const LeftCommunity = (props: {
   handleClick: (section: string) => void;
 }) => {
   const { vista, categorySelected, setCategorySelected, handleClick, activeItem } = props;
-
-  type User = {
-    id: number;
-    name: string;
-    profilePicture: string;
-    description: string;
-    birthdate: string;
-    coverPicture: string;
-    location: string;
-  };
-  type Category = {
-    id: number;
-    description: string;
-    image: string;
-  };
-
   const [user, setUser] = useState<User | null>(null);
   const [categories, setCategories] = useState<Category[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
