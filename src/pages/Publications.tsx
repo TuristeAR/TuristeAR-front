@@ -5,43 +5,58 @@ import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
+import io from 'socket.io-client';
+
+
+type User={
+  id: number;
+  name: string,
+  profilePicture: string,
+  description: string,
+  birthdate: string,
+  coverPicture: string,
+  location: string
+}
+
+type Comment = {
+  createdAt: string;
+  description: string;
+  user : User | null;
+}
+
+type Category = {
+  id: number;
+  description: string;
+  image: string;
+};
+
+type Place = {
+  id: number,
+  name: string,
+  googleId: string,
+};
+
+type Activity = {
+  id: number,
+  name: string,
+  place: Place
+  images: string[]
+};
+
+type Publication = {
+  id: number;
+  description: string;
+  category: Category | null;
+  createdAt: string;
+  user: User | null;
+  likes : User[]
+  reposts : User[]
+  saved : User[]
+  comments : Comment[]
+  activities: Activity[]
+};
 
 const Publications = () => {
-
-  type User={
-    id: number;
-    name: string,
-    profilePicture: string,
-    description: string,
-    birthdate: string,
-    coverPicture: string,
-    location: string
-  }
-
-  type Comment = {
-    createdAt: string;
-    description: string;
-    user : User | null;
-  }
-
-  type Category = {
-    id: number;
-    description: string;
-    image: string;
-  };
-
-  type Publication = {
-    id: number;
-    description: string;
-    category: Category | null;
-    creationDate: string;
-    images: string[];
-    user: User | null;
-    likes : User[]
-    reposts : User[]
-    saved : User[]
-    comments : Comment[]
-  };
 
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
@@ -73,7 +88,6 @@ const Publications = () => {
         const sessionData = await sessionResponse.json();
         setUser(sessionData.user);
 
-        // Segundo fetch - Obtener las publicaciones solo si se obtuvo el usuario
         const publicationsResponse = await fetch(
           `https://api-turistear.koyeb.app/publications`,
           {
@@ -90,6 +104,17 @@ const Publications = () => {
         setPublications(publicationsData.data);
         setError('');
         setIsLoading(false)
+
+        const socket = io('https://api-turistear.koyeb.app');
+        socket.on('receiveDelete', (publicationId) => {
+          setPublications((prevPublications) =>
+            prevPublications.filter((pub) => pub.id !== publicationId)
+          );
+        });
+
+        return () => {
+          socket.disconnect();
+        };
       } catch (error) {
         setError('Error en la comunicación con el servidor');
       }
@@ -108,7 +133,7 @@ const Publications = () => {
         :
         <>
           <Header containerStyles={'relative top-0 z-[60]'} />
-          <div className="flex justify-between h-[160vh] ">
+          <div className="flex justify-between min-h-[88.8vh]">
             <LeftCommunity vista={'publications'}
                            categorySelected={categorySelected}
                            setCategorySelected={setCategorySelected}
@@ -124,20 +149,10 @@ const Publications = () => {
                 }).map((publication, index) => (
                   <PublicationCard
                     key={index}
-                    id={publication.id}
-                    profilePicture={publication.user?.profilePicture}
-                    userId={publication.user?.name}
-                    creationDate={publication.creationDate}
-                    description={publication.description}
-                    images={publication.images}
-                    likes={publication.likes.length}
-                    reposts={publication.reposts.length}
-                    saved={publication.saved.length}
-                    comments={publication.comments.length}
-                    isLiked={publication.likes.some(item => item.id === user.id)}
-                    isRepost={publication.reposts.some(item => item.id === user.id)}
-                    isSaved={publication.saved.some(item => item.id === user.id)}
-                    category={publication.category.description} />
+                    publication={publication}
+                    user={user}
+                    onDelete={ () => setPublications((prev) => prev.filter((p) => p.id !== publication.id))}
+                  />
                 ))}
               </div>
             </div>

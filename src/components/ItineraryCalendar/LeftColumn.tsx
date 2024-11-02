@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react';
-
-/* Icons */
 import plusIcon from '/assets/add.svg';
 import chatIcon from '/assets/chat.svg';
 import galleryIcon from '/assets/gallery.svg';
 import alignIcon from '/assets/align.svg';
-import { Trash2 } from 'lucide-react';
+import { Receipt, Trash2 } from 'lucide-react';
 import mapIcon from '/assets/map-icon.svg';
-
-import { Link } from 'react-router-dom';
-
 import useFetchPlacesByProvince from '../../utilities/useFetchPlacesByProvince';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
-
 import { AddParticipantModal } from '../AddParticipantModal/AddParticipantModal';
 import { io } from 'socket.io-client';
+import SharedExpenses from '../../pages/SharedExpenses';
 
 type User = {
   id: number;
@@ -30,11 +25,17 @@ export const LeftColumn = ({
   setIsAddingActivity,
   activities,
   setActivities,
+  isShowExpanse,
+  setIsShowExpanse,
+  events,
+  setEvents,
+  deleteEvent,
 }) => {
   const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
   const [selectedPlace, setSelectedPlace] = useState('');
   const [showPlaces, setShowPlaces] = useState(false);
   const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
+  const [showForm, setShowForm] = useState(false);
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
@@ -70,6 +71,11 @@ export const LeftColumn = ({
         prevActivities.filter((activity) => activity.id !== activityId),
       );
     });
+
+    socket.on('eventRemoved', ({ itineraryId, eventId }) => {
+      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
+    });
+
     socket.on('addActivity', ({ itinerary }) => {
       console.log(itinerary);
       const updatedItinerary = itinerary;
@@ -89,6 +95,7 @@ export const LeftColumn = ({
       socket.off('userRemoved');
       socket.off('usersAdddItinerary');
       socket.off('activityRemoved');
+      socket.off('eventRemoved');
       socket.off('addActivity');
     };
   }, []);
@@ -149,7 +156,7 @@ export const LeftColumn = ({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ itineraryId: itineraryId, activityId }), // Asegúrate de usar el itineraryId correcto
+      body: JSON.stringify({ itineraryId: itineraryId, activityId }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -214,6 +221,13 @@ export const LeftColumn = ({
               <img src={alignIcon} alt="" />
               <p className="text-sm">Resumen del viaje</p>
             </div>
+            <div
+              className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+              onClick={() => setIsShowExpanse(true)}
+            >
+              <Receipt className="stroke-primary" strokeWidth={1} />
+              <p className="text-sm">Gastos compartidos</p>
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-4 my-4 border-gray">
@@ -250,6 +264,7 @@ export const LeftColumn = ({
                   value={newActivity.name}
                   onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
                   className="w-full p-2 border border-primary  rounded mb-2 outline-none"
+                  autoComplete="off"
                 />
                 <input
                   type="datetime-local"
@@ -271,6 +286,7 @@ export const LeftColumn = ({
                     onChange={handleInputChange}
                     onFocus={() => setShowPlaces(true)}
                     className="w-full p-2 border border-primary rounded mb-2 outline-none"
+                    autoComplete="off"
                   />
 
                   {showPlaces && (
@@ -317,6 +333,39 @@ export const LeftColumn = ({
                   >
                     <p className="text-sm w-[90%]">{activity.name}</p>
                     <button onClick={() => deleteActivity(activity.id)}>
+                      <Trash2 strokeWidth={1.5} color="red" width={22} height={22} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+        {isShowExpanse ? (
+          <SharedExpenses
+            itineraryId={itineraryId}
+            itineraryName={itinerary.name}
+            onClose={() => setIsShowExpanse(false)}
+          ></SharedExpenses>
+        ) : (
+          ''
+        )}
+        {/* Eliminar actividad */}
+        <div className="flex flex-col gap-4 md:my-4">
+          <h2 className="font-medium tracking-[-0.5px] leading-none">Eliminar eventos</h2>
+
+          {events.length === 0 ? (
+            <p>No hay eventos para eliminar</p>
+          ) : (
+            <>
+              <div className="w-full flex flex-col gap-4 mb-2">
+                {events.map((event, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center w-full p-2 bg-white rounded-lg shadow-md option-card hover:-translate-y-1.5 hover:shadow-lg hover:bg-[#d9d9d9]"
+                  >
+                    <p className="text-sm w-[90%]">{event.name}</p>
+                    <button onClick={() => deleteEvent(event.id)}>
                       <Trash2 strokeWidth={1.5} color="red" width={22} height={22} />
                     </button>
                   </div>

@@ -16,6 +16,7 @@ export const AddActivityCalendar = ({ eventName, setEventName, handleClose, hand
             placeholder="Título del evento"
             value={eventName}
             onChange={(e) => setEventName(e.target.value)}
+            autoComplete="off"
           />
           <button className="btn-question" onClick={handleSave}>
             Guardar

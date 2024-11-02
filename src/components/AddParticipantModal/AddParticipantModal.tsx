@@ -47,7 +47,7 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({
                   <div className="bg-gray-50 w-8 h-8 rounded-full overflow-hidden">
                     <img src={user.profilePicture} alt="" className="w-full h-full object-cover" />
                   </div>
-                  <p>{user.name}</p>
+                  <p className="text-center">{user.name}</p>
                 </div>
               ))}
             {Array.isArray(usersOldNav) && usersOldNav.length > 3 && (
