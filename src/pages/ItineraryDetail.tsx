@@ -67,18 +67,22 @@ export const ItineraryDetail = () => {
     return date.toLocaleTimeString([], options);
   };
 
-  const formatDate = (dateString: string): string => {
-    const [day, month, year] = dateString.split('-');
+const formatDate = (dateString: string): string => {
+  // Convertir de DD-MM-YYYY a YYYY-MM-DD
+  const [day, month, year] = dateString.split('-');
+  const formattedDateString = `${year}-${month}-${day}`;
 
-    const date = new Date(Number(year), Number(month) - 1, Number(day));
+  // Crear la fecha especificando explícitamente la zona horaria local
+  const date = new Date(`${formattedDateString}T00:00:00`);
+  
+  if (isNaN(date.getTime())) {
+    return 'Fecha inválida';
+  }
 
-    if (isNaN(date.getTime())) {
-      return 'Fecha inválida';
-    }
+  const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
+  return date.toLocaleDateString('es-ES', options);
+};
 
-    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
-    return date.toLocaleDateString('es-ES', options);
-  };
 
 
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
