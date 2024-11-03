@@ -10,6 +10,7 @@ import useFetchParticipants from '../../utilities/useFetchParticipants';
 import { AddParticipantModal } from '../AddParticipantModal/AddParticipantModal';
 import { io } from 'socket.io-client';
 import SharedExpenses from '../../pages/SharedExpenses';
+import useAddActivities from '../../utilities/useAddActivities';
 
 type User = {
   id: number;
@@ -31,11 +32,19 @@ export const LeftColumn = ({
   setEvents,
   deleteEvent,
 }) => {
-  const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
   const [selectedPlace, setSelectedPlace] = useState('');
   const [showPlaces, setShowPlaces] = useState(false);
   const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
-  const [showForm, setShowForm] = useState(false);
+
+  const { handleAddActivity, newActivity, setNewActivity } = useAddActivities(
+    itineraryId,
+    setActivities,
+  );
+
+  const btnHandleAddActivity = () => {
+    handleAddActivity();
+    setIsAddingActivity(false);
+  };
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
@@ -76,29 +85,15 @@ export const LeftColumn = ({
       setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
     });
 
-    socket.on('addActivity', ({ itinerary }) => {
-      console.log(itinerary);
-      const updatedItinerary = itinerary;
-      const activitiesList = updatedItinerary?.activities || [];
-      const lastActivity = activitiesList[activitiesList.length - 1];
-
-      if (lastActivity) {
-        setActivities((prevActivities) => [...prevActivities, lastActivity]);
-      }
-
-      setNewActivity({ name: '', fromDate: '', toDate: '', place: '' }); // Resetear el formulario
-      setIsAddingActivity(false); // Cerrar el formulario
-    });
-
     return () => {
       socket.off('usersUpdated');
       socket.off('userRemoved');
       socket.off('usersAdddItinerary');
       socket.off('activityRemoved');
       socket.off('eventRemoved');
-      socket.off('addActivity');
     };
   }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setSelectedPlace(inputValue);
@@ -116,38 +111,6 @@ export const LeftColumn = ({
     setSelectedPlace(placeName);
     setNewActivity({ ...newActivity, place: placeId });
     setShowPlaces(false); // Cierra la lista al seleccionar un lugar
-  };
-
-  const handleAddActivity = () => {
-    fetch('https://api-turistear.koyeb.app/itinerary/add-activity', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ itineraryId, createActivityDto: newActivity }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Response data:', data); // Verificar la estructura de la respuesta
-
-        if (data.status === 'success') {
-          const updatedItinerary = data.itinerary;
-          const activitiesList = updatedItinerary?.activities || [];
-          const lastActivity = activitiesList[activitiesList.length - 1];
-
-          if (lastActivity) {
-            setActivities((prevActivities) => [...prevActivities, lastActivity]);
-          }
-
-          setNewActivity({ name: '', fromDate: '', toDate: '', place: '' }); // Resetear el formulario
-          setIsAddingActivity(false); // Cerrar el formulario
-        } else {
-          console.error('Error al agregar la actividad:', data.message);
-        }
-      })
-      .catch((error) => {
-        console.error('Error al agregar la actividad:', error);
-      });
   };
 
   const deleteActivity = (activityId: number) => {
@@ -306,7 +269,7 @@ export const LeftColumn = ({
                 </div>
 
                 <div className="flex gap-x-2 justify-center">
-                  <button onClick={handleAddActivity} className="btn-question">
+                  <button onClick={btnHandleAddActivity} className="btn-question">
                     Agregar
                   </button>
                   <button onClick={() => setIsAddingActivity(false)} className="btn-question">
