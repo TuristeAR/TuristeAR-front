@@ -6,9 +6,7 @@ import useFetchItinerary from '../utilities/useFetchItinerary';
 import { LeftColumn } from '../components/ItineraryCalendar/LeftColumn';
 import { ModalActivity } from '../components/Calendar/ModalEvent';
 import { io } from 'socket.io-client';
-import { get } from '../utilities/http.util';
-import Events from '../components/ItineraryCalendar/Events';
-import Swal from 'sweetalert2';
+
 
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
@@ -19,8 +17,6 @@ export const ItineraryCalendar = () => {
   const [selectedEventInfo, setSelectedEventInfo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShowExpanse, setIsShowExpanse] = useState(false);
-  const [eventsAdd, setEventsAdd] = useState<any[]>([]);
-  const [selectedEvents, setSelectedEvents] = useState<number[]>([]);
 
   const socket = io('https://api-turistear.koyeb.app');
 
@@ -91,88 +87,7 @@ export const ItineraryCalendar = () => {
       });
   };
 
-  useEffect(() => {
-    activities.forEach((activity) => {
-      fetchEvents(activity.place.province.id).then((data) => {
-        setEventsAdd(data.data);
-      });
-    });
-  }, [itinerary]);
 
-  const fetchEvents = async (provinceId: number) => {
-    return await get(`https://api-turistear.koyeb.app/events/${provinceId}`, {
-      'Content-Type': 'application/json',
-    });
-  };
-
-  const addEventToItinerary = async (itineraryId, eventId) => {
-    try {
-      const response = await fetch('http://localhost:3001/itinerary/add-event', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ itineraryId, eventId }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Evento agregado',
-          text: 'Se agregó con éxito el evento.',
-        });
-      } else {
-        console.error(data.message);
-      }
-    } catch (error) {
-      console.error('Error adding event:', error);
-    }
-  };
-
-  const handleEventSelect = (id: number) => {
-    setSelectedEvents((prevSelectedEvents) => {
-      const isSelected = prevSelectedEvents.includes(id);
-      const newEvent = eventsAdd.find((event) => event.id === id);
-
-      const isEventAlreadyAdded = events.some((event) => event.id === newEvent.id);
-      if (isEventAlreadyAdded) {
-        Swal.fire({
-          icon: 'info',
-          title: 'Notificación',
-          text: 'Este evento ya está agregado.',
-        });
-        return prevSelectedEvents; // No hacer nada si ya está agregado
-      }
-
-      const updatedSelectedEvents = isSelected
-        ? prevSelectedEvents.filter((eventId) => eventId !== id)
-        : [...prevSelectedEvents, id];
-
-      setEvents((prevEvents) => {
-        if (newEvent && Object.keys(newEvent).length > 0) {
-          const itineraryStartDate = new Date(itinerary.fromDate).getTime();
-          const itineraryEndDate = new Date(itinerary.toDate).getTime();
-          const eventStartDate = new Date(newEvent.fromDate).getTime();
-          const eventEndDate = new Date(newEvent.toDate).getTime();
-
-          if (eventStartDate < itineraryStartDate || eventEndDate > itineraryEndDate) {
-            Swal.fire({
-              icon: 'warning',
-              title: 'Advertencia',
-              text: 'No puedes agregar este evento porque está fuera del rango de tu viaje.',
-            });
-            return prevEvents;
-          } else {
-            addEventToItinerary(itineraryId, newEvent.id);
-            return [...prevEvents, newEvent];
-          }
-        }
-        return prevEvents;
-      });
-      return updatedSelectedEvents;
-    });
-  };
 
   return (
     <section
@@ -201,12 +116,11 @@ export const ItineraryCalendar = () => {
               setActivities={setActivities}
               deleteActivity={deleteActivity}
               events={events}
+              setEvents={setEvents}
+              itineraryId={itineraryId}
+              itinerary={itinerary}
             />
-            <Events
-              events={eventsAdd}
-              selectedEvents={selectedEvents}
-              onEventSelect={handleEventSelect}
-            />
+            
             {isModalOpen && selectedEventInfo && (
               <ModalActivity
                 handleClose={handleClose}

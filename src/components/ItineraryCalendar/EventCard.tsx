@@ -24,10 +24,10 @@ export const EventCard: React.FC<EventCardProps> = ({
   onSelect,
 }) => {
   return (
-    <div className="h-[450px] sm:h-auto max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[650px] m-auto bg-white border border-primary-3 rounded-lg shadow relative group overflow-hidden transform transition-transform duration-300 hover:shadow-sm hover:shadow-gray hover:-translate-y-1.5 mt-2 flex flex-col md:flex-row">
+    <div className="h-[350px] sm:h-auto max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[900px] m-auto bg-white border border-primary-3 rounded-lg shadow relative group overflow-hidden transform transition-transform duration-300 hover:shadow-sm hover:shadow-gray hover:-translate-y-1.5 mt-6 flex flex-col md:flex-row">
       {/* Img */}
       <div className="relative z-30 w-full md:w-1/2">
-        <div className="h-[200px] sm:h-full max-w-full w-full overflow-hidden">
+        <div className="h-[80px] sm:h-full max-w-full w-full overflow-hidden">
           <img
             className="rounded-t-lg md:rounded-l-lg md:rounded-tr-none h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
             src={image}
@@ -36,7 +36,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         </div>
       </div>
 
-      <div className="flex flex-col justify-between p-4 sm:p-5 h-auto md:h-[320px] w-full md:w-1/2 relative z-20">
+      <div className="flex flex-col justify-between p-4 sm:p-5 max-h-[350px] h-full md:h-[320px] w-full md:w-1/2 relative z-20">
         <div>
           <h5 className="mb-2 text-base sm:text-xl font-bold tracking-tight text-gray-900">
             {name}
