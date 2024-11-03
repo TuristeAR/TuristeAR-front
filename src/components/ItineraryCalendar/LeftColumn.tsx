@@ -90,7 +90,6 @@ export const LeftColumn = ({
       socket.off('userRemoved');
       socket.off('usersAdddItinerary');
       socket.off('activityRemoved');
-      socket.off('eventRemoved');
     };
   }, []);
 

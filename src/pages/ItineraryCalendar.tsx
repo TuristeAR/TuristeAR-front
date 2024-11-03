@@ -91,39 +91,6 @@ export const ItineraryCalendar = () => {
       });
   };
 
-  const addEventToItinerary = async (itineraryId, eventId) => {
-    try {
-      const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-event', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ itineraryId, eventId }),
-      });
-
-      const data = await response.json();
-
-      console.log(data);
-
-      if (response.ok) {
-        if (data.event && Object.keys(data.event).length > 0) {
-          Swal.fire({
-            icon: 'success',
-            title: '¡Evento Agregado!',
-            text: 'Se agrego con éxito el evento.',
-          });
-          setEvents((prevEvents) => [...prevEvents, data.event]);
-        } else {
-          console.error('Received an empty event. Not adding to the list.');
-        }
-      } else {
-        console.error(data.message);
-      }
-    } catch (error) {
-      console.error('Error adding event:', error);
-    }
-  };
-
   useEffect(() => {
     activities.forEach((activity) => {
       fetchEvents(activity.place.province.id).then((data) => {
@@ -138,25 +105,44 @@ export const ItineraryCalendar = () => {
     });
   };
 
-  const [warningMessage, setWarningMessage] = useState('');
-  const [notificationMessage, setNotificationMessage] = useState('');
+  const addEventToItinerary = async (itineraryId, eventId) => {
+    try {
+      const response = await fetch('http://localhost:3001/itinerary/add-event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ itineraryId, eventId }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Evento agregado',
+          text: 'Se agregó con éxito el evento.',
+        });
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error('Error adding event:', error);
+    }
+  };
 
   const handleEventSelect = (id: number) => {
-    // Limpia los mensajes al inicio de la función
-    setWarningMessage('');
-    setNotificationMessage('');
-
     setSelectedEvents((prevSelectedEvents) => {
       const isSelected = prevSelectedEvents.includes(id);
-      const isEventAlreadyAdded = events.some((event) => event.id === id);
+      const newEvent = eventsAdd.find((event) => event.id === id);
 
+      const isEventAlreadyAdded = events.some((event) => event.id === newEvent.id);
       if (isEventAlreadyAdded) {
         Swal.fire({
           icon: 'info',
           title: 'Notificación',
           text: 'Este evento ya está agregado.',
         });
-        return prevSelectedEvents;
+        return prevSelectedEvents; // No hacer nada si ya está agregado
       }
 
       const updatedSelectedEvents = isSelected
@@ -164,8 +150,6 @@ export const ItineraryCalendar = () => {
         : [...prevSelectedEvents, id];
 
       setEvents((prevEvents) => {
-        const newEvent = eventsAdd.find((event) => event.id === id);
-
         if (newEvent && Object.keys(newEvent).length > 0) {
           const itineraryStartDate = new Date(itinerary.fromDate).getTime();
           const itineraryEndDate = new Date(itinerary.toDate).getTime();
@@ -184,10 +168,8 @@ export const ItineraryCalendar = () => {
             return [...prevEvents, newEvent];
           }
         }
-
         return prevEvents;
       });
-
       return updatedSelectedEvents;
     });
   };
@@ -224,8 +206,6 @@ export const ItineraryCalendar = () => {
               events={eventsAdd}
               selectedEvents={selectedEvents}
               onEventSelect={handleEventSelect}
-              warningMessage={warningMessage}
-              notificationMessage={notificationMessage}
             />
             {isModalOpen && selectedEventInfo && (
               <ModalActivity

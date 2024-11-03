@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { EventCard } from '../ItineraryCalendar/EventCard';
 
-function Events({ events, selectedEvents, onEventSelect, warningMessage, notificationMessage }) {
+function Events({ events, selectedEvents, onEventSelect }) {
   const swiperRef = useRef(null);
   return (
     <>
@@ -29,8 +29,6 @@ function Events({ events, selectedEvents, onEventSelect, warningMessage, notific
               image={event.image}
               isSelected={selectedEvents.includes(event.id)}
               onSelect={onEventSelect}
-              warningMessage={warningMessage}
-              notificationMessage={notificationMessage}
             />
           </SwiperSlide>
         ))}
