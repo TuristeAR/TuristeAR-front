@@ -8,6 +8,7 @@ import { ModalActivity } from '../components/Calendar/ModalEvent';
 import { io } from 'socket.io-client';
 import { get } from '../utilities/http.util';
 import Events from '../components/ItineraryCalendar/Events';
+import Swal from 'sweetalert2';
 
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
@@ -136,14 +137,23 @@ export const ItineraryCalendar = () => {
   const [notificationMessage, setNotificationMessage] = useState('');
 
   const handleEventSelect = (id: number) => {
+    // Limpia los mensajes al inicio de la función
+    setWarningMessage('');
+    setNotificationMessage('');
+
     setSelectedEvents((prevSelectedEvents) => {
       const isSelected = prevSelectedEvents.includes(id);
-
       const isEventAlreadyAdded = events.some((event) => event.id === id);
+
       if (isEventAlreadyAdded) {
-        setNotificationMessage('Este evento ya está agregado.');
+        Swal.fire({
+          icon: 'info',
+          title: 'Notificación',
+          text: 'Este evento ya está agregado.',
+        });
         return prevSelectedEvents;
       }
+  
 
       const updatedSelectedEvents = isSelected
         ? prevSelectedEvents.filter((eventId) => eventId !== id)
@@ -151,6 +161,7 @@ export const ItineraryCalendar = () => {
 
       setEvents((prevEvents) => {
         const newEvent = eventsAdd.find((event) => event.id === id);
+
         if (newEvent && Object.keys(newEvent).length > 0) {
           const itineraryStartDate = new Date(itinerary.fromDate).getTime();
           const itineraryEndDate = new Date(itinerary.toDate).getTime();
@@ -158,16 +169,19 @@ export const ItineraryCalendar = () => {
           const eventEndDate = new Date(newEvent.toDate).getTime();
 
           if (eventStartDate < itineraryStartDate || eventEndDate > itineraryEndDate) {
-            setWarningMessage(
-              'No puedes agregar este evento porque está fuera del rango de tu viaje.',
-            );
-            return prevEvents;
+            Swal.fire({
+              icon: 'warning',
+              title: 'Advertencia',
+              text: 'No puedes agregar este evento porque está fuera del rango de tu viaje.',
+            });
+            return prevEvents; 
           } else {
-            setWarningMessage(''); // Limpia el mensaje si es válido
+            
             addEventToItinerary(itineraryId, newEvent.id);
             return [...prevEvents, newEvent];
           }
         }
+
         return prevEvents;
       });
 
@@ -208,6 +222,7 @@ export const ItineraryCalendar = () => {
               selectedEvents={selectedEvents}
               onEventSelect={handleEventSelect}
               warningMessage={warningMessage}
+              notificationMessage={notificationMessage}
             />
             {isModalOpen && selectedEventInfo && (
               <ModalActivity

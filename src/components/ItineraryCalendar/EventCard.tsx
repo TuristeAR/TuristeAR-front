@@ -24,11 +24,14 @@ export const EventCard: React.FC<EventCardProps> = ({
   id,
   isSelected,
   onSelect,
+  warningMessage,
+  notificationMessage,
 }) => {
   return (
-    <div className="h-[500px] max-w-xs m-auto bg-white border border-primary-3 rounded-lg shadow relative group overflow-hidden transform transition-transform duration-300  hover:shadow-sm hover:shadow-gray hover:-translate-y-1.5 mt-2">
+    <div className="h-auto max-w-[650px] m-auto bg-white border border-primary-3 rounded-lg shadow relative group overflow-hidden transform transition-transform duration-300  hover:shadow-sm hover:shadow-gray hover:-translate-y-1.5 mt-2 flex">
+      {/* Img */}
       <div className="relative z-30">
-        <div className="h-[180px] overflow-hidden">
+        <div className="h-full w-full overflow-hidden">
           <img
             className="rounded-t-lg h-full w-full object-cover transition-all duration-300 group-hover:scale-125 "
             src={image}
@@ -36,7 +39,7 @@ export const EventCard: React.FC<EventCardProps> = ({
           />
         </div>
       </div>
-      <div className="flex flex-col justify-between h-[320px] relative z-20 p-5">
+      <div className="flex flex-col  justify-between h-[320px] relative z-20 p-5">
         <div>
           <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900">{name}</h5>
           <p className="italic text-md mt-auto font-light">{locality}</p>
