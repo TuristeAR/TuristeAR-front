@@ -122,7 +122,7 @@ export const Calendar = ({
 
   const addEventToItinerary = async (itineraryId, eventId) => {
     try {
-      const response = await fetch('http://localhost:3001/itinerary/add-event', {
+      const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-event', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
