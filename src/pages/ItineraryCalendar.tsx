@@ -6,6 +6,8 @@ import useFetchItinerary from '../utilities/useFetchItinerary';
 import { LeftColumn } from '../components/ItineraryCalendar/LeftColumn';
 import { ModalActivity } from '../components/Calendar/ModalEvent';
 import { io } from 'socket.io-client';
+import { get } from '../utilities/http.util';
+import Events from '../components/ItineraryCalendar/Events';
 
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
@@ -16,6 +18,8 @@ export const ItineraryCalendar = () => {
   const [selectedEventInfo, setSelectedEventInfo] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShowExpanse, setIsShowExpanse] = useState(false);
+  const [eventsAdd, setEventsAdd] = useState<any[]>([]);
+  const [selectedEvents, setSelectedEvents] = useState<number[]>([]);
 
   const socket = io('https://api-turistear.koyeb.app');
 
@@ -28,6 +32,7 @@ export const ItineraryCalendar = () => {
     setSelectedEventInfo(null);
     setIsModalOpen(false);
   };
+
   useEffect(() => {
     socket.on('activityRemoved', ({ itineraryId, activityId }) => {
       console.log(`Activity with ID ${activityId} removed from itinerary ${itineraryId}`);
@@ -85,6 +90,91 @@ export const ItineraryCalendar = () => {
       });
   };
 
+  const addEventToItinerary = async (itineraryId, eventId) => {
+    try {
+      const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ itineraryId, eventId }),
+      });
+
+      const data = await response.json();
+
+      console.log(data);
+
+      if (response.ok) {
+        if (data.event && Object.keys(data.event).length > 0) {
+          setEvents((prevEvents) => [...prevEvents, data.event]);
+        } else {
+          console.error('Received an empty event. Not adding to the list.');
+        }
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error('Error adding event:', error);
+    }
+  };
+
+  useEffect(() => {
+    activities.forEach((activity) => {
+      fetchEvents(activity.place.province.id).then((data) => {
+        setEventsAdd(data.data);
+      });
+    });
+  }, [itinerary]);
+
+  const fetchEvents = async (provinceId: number) => {
+    return await get(`https://api-turistear.koyeb.app/events/${provinceId}`, {
+      'Content-Type': 'application/json',
+    });
+  };
+
+  const [warningMessage, setWarningMessage] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState('');
+
+  const handleEventSelect = (id: number) => {
+    setSelectedEvents((prevSelectedEvents) => {
+      const isSelected = prevSelectedEvents.includes(id);
+
+      const isEventAlreadyAdded = events.some((event) => event.id === id);
+      if (isEventAlreadyAdded) {
+        setNotificationMessage('Este evento ya está agregado.');
+        return prevSelectedEvents;
+      }
+
+      const updatedSelectedEvents = isSelected
+        ? prevSelectedEvents.filter((eventId) => eventId !== id)
+        : [...prevSelectedEvents, id];
+
+      setEvents((prevEvents) => {
+        const newEvent = eventsAdd.find((event) => event.id === id);
+        if (newEvent && Object.keys(newEvent).length > 0) {
+          const itineraryStartDate = new Date(itinerary.fromDate).getTime();
+          const itineraryEndDate = new Date(itinerary.toDate).getTime();
+          const eventStartDate = new Date(newEvent.fromDate).getTime();
+          const eventEndDate = new Date(newEvent.toDate).getTime();
+
+          if (eventStartDate < itineraryStartDate || eventEndDate > itineraryEndDate) {
+            setWarningMessage(
+              'No puedes agregar este evento porque está fuera del rango de tu viaje.',
+            );
+            return prevEvents;
+          } else {
+            setWarningMessage(''); // Limpia el mensaje si es válido
+            addEventToItinerary(itineraryId, newEvent.id);
+            return [...prevEvents, newEvent];
+          }
+        }
+        return prevEvents;
+      });
+
+      return updatedSelectedEvents;
+    });
+  };
+
   return (
     <section
       className={`${isAddingActivity ? 'h-screen overflow-hidden' : ''} h-screen xl:h-auto overflow-x-clip relative`}
@@ -112,6 +202,12 @@ export const ItineraryCalendar = () => {
               setActivities={setActivities}
               deleteActivity={deleteActivity}
               events={events}
+            />
+            <Events
+              events={eventsAdd}
+              selectedEvents={selectedEvents}
+              onEventSelect={handleEventSelect}
+              warningMessage={warningMessage}
             />
             {isModalOpen && selectedEventInfo && (
               <ModalActivity
