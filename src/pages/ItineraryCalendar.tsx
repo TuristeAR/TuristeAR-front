@@ -107,6 +107,11 @@ export const ItineraryCalendar = () => {
 
       if (response.ok) {
         if (data.event && Object.keys(data.event).length > 0) {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Evento Agregado!',
+            text: 'Se agrego con éxito el evento.',
+          });
           setEvents((prevEvents) => [...prevEvents, data.event]);
         } else {
           console.error('Received an empty event. Not adding to the list.');
@@ -153,7 +158,6 @@ export const ItineraryCalendar = () => {
         });
         return prevSelectedEvents;
       }
-  
 
       const updatedSelectedEvents = isSelected
         ? prevSelectedEvents.filter((eventId) => eventId !== id)
@@ -174,9 +178,8 @@ export const ItineraryCalendar = () => {
               title: 'Advertencia',
               text: 'No puedes agregar este evento porque está fuera del rango de tu viaje.',
             });
-            return prevEvents; 
+            return prevEvents;
           } else {
-            
             addEventToItinerary(itineraryId, newEvent.id);
             return [...prevEvents, newEvent];
           }

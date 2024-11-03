@@ -2,9 +2,9 @@ import { useRef, useEffect } from 'react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import { EventCard } from '../ItineraryCalendar/EventCard'
+import { EventCard } from '../ItineraryCalendar/EventCard';
 
-function Events({ events, selectedEvents, onEventSelect, warningMessage,notificationMessage }) {
+function Events({ events, selectedEvents, onEventSelect, warningMessage, notificationMessage }) {
   const prevRef = useRef<HTMLDivElement>(null);
   const nextRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef(null);
@@ -32,7 +32,7 @@ function Events({ events, selectedEvents, onEventSelect, warningMessage,notifica
     <>
       <Swiper
         ref={swiperRef}
-        className="max-w-[650px]"
+        className="w-full max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[650px] xl:max-w-[750px]"
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         navigation={{
           prevEl: prevRef.current || undefined,
@@ -40,7 +40,7 @@ function Events({ events, selectedEvents, onEventSelect, warningMessage,notifica
         }}
         slidesPerView={1}
         slidesPerGroup={1}
-        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
         loop={true}
       >
         {events.map((event) => (
@@ -55,9 +55,9 @@ function Events({ events, selectedEvents, onEventSelect, warningMessage,notifica
               image={event.image}
               isSelected={selectedEvents.includes(event.id)}
               onSelect={onEventSelect}
-              warningMessage={warningMessage} 
+              warningMessage={warningMessage}
               notificationMessage={notificationMessage}
-              />
+            />
           </SwiperSlide>
         ))}
       </Swiper>
