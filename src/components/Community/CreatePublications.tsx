@@ -40,7 +40,6 @@ type Itinerary = {
 };
 
 export const CreatePublications = () => {
-
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -53,15 +52,15 @@ export const CreatePublications = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await fetch('https://api-turistear.koyeb.app/user-itineraries', {
+        const itinerariesResponse = await fetch('https://api-turistear.koyeb.app/user-itineraries', {
           method: 'GET',
           credentials: 'include',
         });
 
-        if (!categoriesResponse.ok) throw new Error('Error al obtener categorías');
+        if (!itinerariesResponse.ok) throw new Error('Error al obtener categorías');
 
-        const categoriesData = await categoriesResponse.json();
-        setItineraries(categoriesData.data);
+        const itinerariesData = await itinerariesResponse.json();
+        setItineraries(itinerariesData.data);
       } catch (error) {
         setError('Error en la comunicación con el servidor');
       }

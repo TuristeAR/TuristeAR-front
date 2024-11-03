@@ -7,6 +7,7 @@ import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
 import { CommentDetail } from '../components/Community/CommentDetail';
 import { PublicationDetailCard } from '../components/Community/PublicationDetailCard';
+import io from 'socket.io-client';
 
 
 type User={
@@ -95,6 +96,12 @@ const PublicationDetail = () => {
         }
         const publicationsData = await publicationsResponse.json();
         setPublication(publicationsData);
+
+        const socket = io('https://api-turistear.koyeb.app');
+        socket.on('receiveDelete', () => {
+          window.location.href = '/publications';
+        });
+
         setIsLoading(false);
       } catch (error) {}
     };
@@ -133,6 +140,7 @@ const PublicationDetail = () => {
                 <PublicationDetailCard
                   publication={publication}
                   user={user}
+                  onDelete={() => { window.location.href = '/publications'}}
                 />
                 <CommentDetail publication={publication} user={user} key={publication.id} />
               </div>

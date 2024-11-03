@@ -19,8 +19,9 @@ const useFetchItinerary = (itineraryId: string | null) => {
       try {
         const response = await fetch(`https://api-turistear.koyeb.app/itinerary/${itineraryId}`);
         const data = await response.json();
+
         setItinerary(data.data.itinerary || null);
-        setActivities(data.data.activities?.activities || []);
+        setActivities(data.data.activities || []);
         setEvents(data.data.events?.events || []);
       } catch (error) {
         console.error('Error fetching itinerary:', error);

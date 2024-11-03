@@ -1,25 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import io from 'socket.io-client';
 
-type User={
-  id: number;
-  name: string,
-  profilePicture: string,
-  description: string,
-  birthdate: string,
-  coverPicture: string,
-  location: string
-}
-
-type TravelData={
+export const ItineraryCard = (props: {
+  imgProvince: string,
+  province: string,
+  departure: string,
+  arrival: string,
+  participants: any[],
+  userId: number,
   id: number,
-  imgProvince: string;
-  province: string;
-  departure: string;
-  arrival: string;
-  participants: User[] | [];
-}
+  onDelete:() =>void
+}) => {
+  const {imgProvince, province, departure, arrival, participants, userId, id, onDelete} = props;
 
-export const ItineraryCard : React.FC<TravelData> = ({imgProvince,province,departure,arrival,participants,id}) => {
   const reorderDate = (dateString : string ) => {
     const formatDate = (date) => {
       const [year, month, day] = date.split('-');
@@ -29,9 +23,19 @@ export const ItineraryCard : React.FC<TravelData> = ({imgProvince,province,depar
     return formatDate(dateString)
   };
 
+  const deleteItinerary = async (id: number) => {
+    const socket = io('https://api-turistear.koyeb.app');
+    socket.emit('deleteItinerary', {
+      itineraryId: id,
+      userId: userId,
+    });
+    onDelete()
+  }
+
   return (
     <>
-      <div className="lg:w-[100%] lg:mb-0 mb-6 mx-auto rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex lg:flex-row flex-col">
+      <div
+        className="lg:w-[100%] lg:mb-0 mb-6 mx-auto rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex lg:flex-row flex-col relative">
         <div className="lg:w-[40%]">
           <img
             src={imgProvince}
@@ -39,7 +43,12 @@ export const ItineraryCard : React.FC<TravelData> = ({imgProvince,province,depar
             className="w-[100%] h-[100%] lg:rounded-l-2xl lg:rounded-tr-none rounded-t-2xl object-cover"
           />
         </div>
-        <div className="lg:w-[60%] p-4 flex flex-col gap-2">
+        <div className="lg:w-[60%] p-4 flex flex-col gap-2 relative">
+          <button onClick={()=> deleteItinerary(id)}
+            className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+          >
+            <img src={'/assets/delete.svg'} alt={'Eliminar'} />
+          </button>
           <h1 className="text-2xl lg:text-lg">{province}</h1>
           <div className="flex flex-col gap-2 text-l">
             <p>Ida : {departure && typeof departure === 'string' ? reorderDate(departure.slice(0, -14)) : ''}</p>
@@ -58,9 +67,10 @@ export const ItineraryCard : React.FC<TravelData> = ({imgProvince,province,depar
               </div>
             ))}
           </details>
-          <div className="rounded-2xl py-2 bg-primary hover:bg-primary-3 text-white text-center w-[150px]">
-            <a href={'/itineraryCalendar/'+ id}>Ver más</a>
-          </div>
+          <Link to={'/itineraryCalendar/' + id}
+                className="rounded-2xl py-2 bg-primary hover:bg-primary-3 text-white text-center w-[150px]">
+            <p>Ver más</p>
+          </Link>
         </div>
       </div>
     </>

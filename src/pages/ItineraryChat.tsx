@@ -1,7 +1,7 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
@@ -187,11 +187,14 @@ const ItineraryChat = () => {
           <div className="flex h-[100vh]">
             <div className="lg:w-[100%] w-[100%] flex flex-col overflow-scroll scrollbar-hidden">
               <div
-                className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex flex-col p-4'}
+                className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex items-center p-4'}
               >
+                <Link to={`/itineraryCalendar/${itineraryId}`}>
+                  <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px]'}/>
+                </Link>
                 <h1 className="text-3xl">{itinerary?.name}</h1>
               </div>
-              <div className="overflow-scroll scrollbar-hidden h-[90%] lg:px-4 px-2 py-6  flex flex-col gap-y-6">
+              <div className="overflow-scroll scrollbar-hidden lg:px-4 px-2 py-6  flex flex-col gap-y-6">
                 {forum?.messages.map((message, index) => (
                   <div
                     className={`flex ${user.id == message.user.id ? 'justify-end' : 'justify-start'}`}
@@ -243,7 +246,7 @@ const ItineraryChat = () => {
               </div>
               <div
                 className={
-                  'fixed bottom-0 left-0 right-0 h-[8%] border-t border-[#999999] py-10 flex justify-around items-center'
+                  'h-[8%] border-t border-[#999999] py-10 flex justify-around items-center'
                 }
               >
                 <div className="flex flex-col items-center w-[6%]">
