@@ -258,21 +258,17 @@ const FormQuestions = () => {
   const handleEventSelect = (id: number, locality: string) => {
     setSelectedEvents((prevSelectedEvents) => {
       const isSelected = prevSelectedEvents.includes(id);
+
       const updatedSelectedEvents = isSelected
         ? prevSelectedEvents.filter((eventId) => eventId !== id)
         : [...prevSelectedEvents, id];
 
-      setFormData((prevFormData) => {
-        const updatedLocalities = isSelected
-          ? prevFormData.localities.filter((loc) => loc !== locality)
-          : [...prevFormData.localities, locality];
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        events: updatedSelectedEvents,
+      }));
 
-        return {
-          ...prevFormData,
-          localities: updatedLocalities,
-          events: updatedSelectedEvents,
-        };
-      });
+      handleLocalitySelection(locality);
 
       return updatedSelectedEvents;
     });
@@ -819,7 +815,8 @@ const FormQuestions = () => {
                                     ? Math.ceil(
                                         (state[0].endDate.getTime() -
                                           state[0].startDate.getTime()) /
-                                          (1000 * 60 * 60 * 24)+1,
+                                          (1000 * 60 * 60 * 24) +
+                                          1,
                                       )
                                     : 0}{' '}
                                   días
