@@ -818,7 +818,7 @@ const FormQuestions = () => {
                                     ? Math.ceil(
                                         (state[0].endDate.getTime() -
                                           state[0].startDate.getTime()) /
-                                          (1000 * 60 * 60 * 24),
+                                          (1000 * 60 * 60 * 24)+1,
                                       )
                                     : 0}{' '}
                                   días

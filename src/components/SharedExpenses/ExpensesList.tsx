@@ -21,7 +21,7 @@ type User = {
 
 const ExpensesList = ({ onAddExpense, itineraryId, itineraryName, onClose }) => {
   const [groupedExpenses, setGroupedExpenses] = useState({});
-  const { usersOldNav } = useFetchParticipants(497);
+  const { usersOldNav } = useFetchParticipants(itineraryId);
   const [selectedExpenseId, setSelectedExpenseId] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [expense, setExpense] = useState(false);
@@ -131,8 +131,11 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName, onClose }) => 
               <h2 className="text-2xl font-semibold mb-3">{date}</h2>
               {groupedExpenses[date].map((expense: Expense) => {
                 const payer: User | undefined = usersOldNav.find(
-                  (user) => user.id === expense.payer.id,
+                  (user) => user.id == expense.payer.id,
                 );
+                console.log(usersOldNav.find(
+                  (user) => user.id == expense.payer.id,
+                ))
                 const isSelected = selectedExpenseId === expense.id;
 
                 return (
@@ -152,6 +155,7 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName, onClose }) => 
                             Pagado por{' '}
                             {payer && payer.profilePicture && (
                               <img
+                                alt={''}
                                 src={payer.profilePicture}
                                 className="w-5 rounded-full inline-flex"
                               />

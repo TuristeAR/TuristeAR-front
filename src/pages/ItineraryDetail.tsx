@@ -68,17 +68,18 @@ export const ItineraryDetail = () => {
   };
 
   const formatDate = (dateString: string): string => {
-    // Convertir de DD-MM-YYYY a YYYY-MM-DD
     const [day, month, year] = dateString.split('-');
-    const formattedDateString = `${year}-${month}-${day}`; // Ahora en formato YYYY-MM-DD
 
-    const date = new Date(formattedDateString);
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+
     if (isNaN(date.getTime())) {
       return 'Fecha inválida';
     }
+
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
     return date.toLocaleDateString('es-ES', options);
   };
+
 
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
