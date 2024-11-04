@@ -38,7 +38,35 @@ type Itinerary = {
     activities: Activity[]
 };
 
-export const CreateEvent = () => {
+const uploadImage = async (image: File) => {
+    const formData = new FormData();
+    formData.append('image', image);
+
+    const url = 'https://api.imgur.com/3/image';
+    const options = {
+        method: 'POST',
+        headers: {
+            Authorization: 'Client-ID 523c9b5cf859dce',
+        },
+        body: formData,
+    };
+
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error de respuesta:', errorData);
+            throw new Error(errorData.data.error || 'Error al cargar la imagen');
+        }
+        const result = await response.json();
+        return result.data.link;
+    } catch (error) {
+        console.error('Error en la carga de la imagen:', error);
+        throw error;
+    }
+};
+
+export const CreateEvent =  () => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -48,8 +76,10 @@ export const CreateEvent = () => {
     const [toDate, setToDate] = useState<string | null>(null);
     const [province, setProvince] = useState<string | null>(null);
     const [locality, setLocality] = useState<string | null>(null);
-    const [eventImages, setEventImages] = useState<FileList | null>(null);
+    const [eventImages, setEventImages] = useState<File | null>(null);
     const [description, setDescription] = useState<string | null>(null);
+
+
 
     const [error, setError] = useState<string | null>(null);
 
@@ -73,11 +103,14 @@ export const CreateEvent = () => {
             " \n toDate: " + toDate +
             " \n province: " + province +
             " \n locality: " + locality +
-            " \n description: " + description
+            " \n description: " + description +
+            " \n eventImages: " + eventImages.name
         )
-        
+
+        console.log(eventImages)
+
         try {
-            const response = await fetch('http://localhost:3000/createEvent', {
+            const response = await fetch('http://localhost:3001/createEventTemp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +121,8 @@ export const CreateEvent = () => {
                     toDate: toDate,
                     province: province,
                     locality: locality,
-                    description: description
+                    description: description,
+                    image: eventImages.name
                 }),
                 credentials: 'include',
             });
@@ -102,7 +136,7 @@ export const CreateEvent = () => {
             setIsLoading(false);
             setIsOpen(false);
         }
-            
+
     };
 
 
@@ -196,6 +230,7 @@ export const CreateEvent = () => {
                                             onChange={(e) => setProvince(e.target.value)}
                                         >
                                             <option value="1">Buenos Aires</option>
+                                            <option value="2">Ciudad Autónoma de Buenos Aires</option>
                                         </select>
                                     </div>
 
@@ -207,7 +242,8 @@ export const CreateEvent = () => {
                                             required
                                             onChange={(e) => setLocality(e.target.value)}
                                         >
-                                            <option value="1">San Justo</option>
+                                            <option value="San Justo">San Justo</option>
+                                            <option value="Palermo">Palermo</option>
                                         </select>
                                     </div>
 
@@ -215,8 +251,7 @@ export const CreateEvent = () => {
                                         <label>Subir imagen del evento</label>
                                         <input
                                             type="file"
-                                            multiple
-                                            onChange={(e) => setEventImages(e.target.files)}
+                                            onChange={(e) => setEventImages(e.target.files[0])}
                                         />
                                     </div>
 
