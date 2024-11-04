@@ -86,7 +86,7 @@ const ItineraryChat = () => {
           console.log('Error al obtener el chat del itinerario:', await itineraryResponse.json());
         } else {
           const chatData = await itineraryResponse.json();
-          setForum(chatData.data.forum);
+          setForum(chatData.data.itinerary.forum);
           setItinerary(chatData.data.itinerary);
         }
         setLoading(false);
@@ -194,7 +194,7 @@ const ItineraryChat = () => {
                 </Link>
                 <h1 className="text-3xl">{itinerary?.name}</h1>
               </div>
-              <div className="overflow-scroll scrollbar-hidden lg:px-4 px-2 py-6  flex flex-col gap-y-6">
+              <div className="overflow-scroll scrollbar-hidden lg:px-4 px-2 py-6 h-[86%]  flex flex-col gap-y-6">
                 {forum?.messages.map((message, index) => (
                   <div
                     className={`flex ${user.id == message.user.id ? 'justify-end' : 'justify-start'}`}

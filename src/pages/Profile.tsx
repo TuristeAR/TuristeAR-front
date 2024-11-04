@@ -79,8 +79,6 @@ const Profile = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-
-    console.log('useEffect')
     const fetchData = async () => {
       const session = await get('https://api-turistear.koyeb.app/session', {
         contentType: 'application/json',
