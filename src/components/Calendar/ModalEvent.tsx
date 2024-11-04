@@ -18,7 +18,7 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo, deleteEv
     if (isActivity) {
       const fetchReviews = () => {
         return get(
-          `http://localhost:3001/reviews/place/${eventInfo.extendedProps.googleId}`,
+          `https://api-turistear.koyeb.app/reviews/place/${eventInfo.extendedProps.googleId}`,
           {
             'Content-Type': 'application/json',
           },

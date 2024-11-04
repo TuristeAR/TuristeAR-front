@@ -52,7 +52,7 @@ export const CreatePublications = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const itinerariesResponse = await fetch('http://localhost:3001/user-itineraries', {
+        const itinerariesResponse = await fetch('https://api-turistear.koyeb.app/user-itineraries', {
           method: 'GET',
           credentials: 'include',
         });
@@ -92,7 +92,7 @@ export const CreatePublications = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/createPublication', {
+      const response = await fetch('https://api-turistear.koyeb.app/createPublication', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

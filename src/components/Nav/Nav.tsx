@@ -11,7 +11,7 @@ export const Nav = () => {
 
   const handleLogout = async () => {
     try {
-      await get('http://localhost:3001/logout', {
+      await get('https://api-turistear.koyeb.app/logout', {
         'Content-Type': 'application/json',
       });
       setUser(null);
@@ -22,7 +22,7 @@ export const Nav = () => {
   };
 
   const fetchUser = async () => {
-    const response = await get('http://localhost:3001/session', {
+    const response = await get('https://api-turistear.koyeb.app/session', {
       'Content-Type': 'application/json',
     });
 

@@ -48,7 +48,7 @@ export const LeftColumn = ({
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
-  const socket = io('http://localhost:3001');
+  const socket = io('https://api-turistear.koyeb.app');
 
   useEffect(() => {
     socket.on('usersUpdated', (data) => {
@@ -113,7 +113,7 @@ export const LeftColumn = ({
   };
 
   const deleteActivity = (activityId: number) => {
-    fetch('http://localhost:3001/itinerary/remove-activity', {
+    fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

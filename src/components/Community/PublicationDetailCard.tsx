@@ -70,7 +70,7 @@ export function PublicationDetailCard(props: {
   const handleLike = async (idPublication: number) => {
     setLikes(!isLike ? likes + 1 : likes - 1);
     setIsLike(!isLike);
-    await post(`http://localhost:3001/handleLike/${idPublication}`, {
+    await post(`https://api-turistear.koyeb.app/handleLike/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
@@ -78,7 +78,7 @@ export function PublicationDetailCard(props: {
   const handleSaved = async (idPublication: number) => {
     setSaved(!isSave ? saved + 1 : saved - 1);
     setIsSave(!isSave);
-    await post(`http://localhost:3001/handleSaved/${idPublication}`, {
+    await post(`https://api-turistear.koyeb.app/handleSaved/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
@@ -86,13 +86,13 @@ export function PublicationDetailCard(props: {
   const handleRepost = async (idPublication: number) => {
     setReposts(!isRepost ? reposts + 1 : reposts - 1);
     setIsRepost(!isRepost);
-    await post(`http://localhost:3001/handleReposts/${idPublication}`, {
+    await post(`https://api-turistear.koyeb.app/handleReposts/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
 
   const deletePublication = async (id) => {
-    const socket = io('http://localhost:3001');
+    const socket = io('https://api-turistear.koyeb.app');
     socket.emit('deletePublication', {
       publicationId: id,
       userId: user.id,

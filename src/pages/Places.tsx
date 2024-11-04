@@ -92,7 +92,7 @@ const Places = () => {
 
     const fetchProvinces = async () => {
       try {
-        const response = await get(`http://localhost:3001/provinces/${provinceName}`, {
+        const response = await get(`https://api-turistear.koyeb.app/provinces/${provinceName}`, {
           'Content-Type': 'application/json',
         });
         setProvince(response);
@@ -109,7 +109,7 @@ const Places = () => {
       if (province) {
         try {
           const response = await fetch(
-            `http://localhost:3001/province/places/${province.id}`,
+            `https://api-turistear.koyeb.app/province/places/${province.id}`,
           );
           const data = await response.json();
 

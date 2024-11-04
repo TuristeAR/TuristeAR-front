@@ -6,7 +6,7 @@ export const useFetchReviews = (googleId: string) => {
 
   useEffect(() => {
     const fetchReviews = async () => {
-      const data = await get(`http://localhost:3001/review/${googleId}`, {
+      const data = await get(`https://api-turistear.koyeb.app/review/${googleId}`, {
         'Content-Type': 'application/json',
       });
 

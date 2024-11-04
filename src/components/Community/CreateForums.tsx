@@ -21,7 +21,7 @@ export const CreateForums = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await fetch('http://localhost:3001/categories', {
+        const categoriesResponse = await fetch('https://api-turistear.koyeb.app/categories', {
           method: 'GET',
           credentials:
             'include',
@@ -68,7 +68,7 @@ export const CreateForums = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/createForum', {
+      const response = await fetch('https://api-turistear.koyeb.app/createForum', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

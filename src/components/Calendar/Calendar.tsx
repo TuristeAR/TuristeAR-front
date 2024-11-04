@@ -60,7 +60,7 @@ export const Calendar = ({
   ];
 
   useEffect(() => {
-    const socket = io('http://localhost:3001');
+    const socket = io('https://api-turistear.koyeb.app');
 
     socket.on('activityUpdated', (data) => {
       setActivities((prevActivities) =>
@@ -88,7 +88,7 @@ export const Calendar = ({
 
   const updateActivityInBackend = async (activityId: number, start: Date, end: Date) => {
     try {
-      await fetch('http://localhost:3001/itinerary/update-activity', {
+      await fetch('https://api-turistear.koyeb.app/itinerary/update-activity', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

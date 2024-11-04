@@ -69,7 +69,7 @@ const PublicationDetail = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sessionResponse = await fetch('http://localhost:3001/session', {
+        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
           method: 'GET',
           credentials: 'include',
         });
@@ -84,7 +84,7 @@ const PublicationDetail = () => {
 
         // Segundo fetch - Obtener las publicaciones solo si se obtuvo el usuario
         const publicationsResponse = await fetch(
-          `http://localhost:3001/publication/${publicationId}`,
+          `https://api-turistear.koyeb.app/publication/${publicationId}`,
           {
             method: 'GET',
             credentials: 'include',
@@ -97,7 +97,7 @@ const PublicationDetail = () => {
         const publicationsData = await publicationsResponse.json();
         setPublication(publicationsData);
 
-        const socket = io('http://localhost:3001');
+        const socket = io('https://api-turistear.koyeb.app');
         socket.on('receiveDelete', () => {
           window.location.href = '/publications';
         });

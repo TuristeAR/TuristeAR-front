@@ -33,7 +33,7 @@ export const ItineraryDetail = () => {
   useEffect(() => {
     if (activities.length > 0) {
       const fetchReviewsForActivity = (googleId: string) => {
-        return get(`http://localhost:3001/reviews/place/${googleId}`, {
+        return get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
           'Content-Type': 'application/json',
         });
       };

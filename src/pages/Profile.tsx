@@ -80,7 +80,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const session = await get('http://localhost:3001/session', {
+      const session = await get('https://api-turistear.koyeb.app/session', {
         contentType: 'application/json',
       });
 
@@ -92,7 +92,7 @@ const Profile = () => {
       setUser(session.user);
 
       const publications = await get(
-        `http://localhost:3001/publications/${session.user.id}`,
+        `https://api-turistear.koyeb.app/publications/${session.user.id}`,
         {
           contentType: 'application/json',
         },
@@ -101,7 +101,7 @@ const Profile = () => {
       setPublications(publications);
 
       const itinerariesResponse = await get(
-        `http://localhost:3001/itinerary/byUser/${session.user.id}`,
+        `https://api-turistear.koyeb.app/itinerary/byUser/${session.user.id}`,
         {
           contentType: 'application/json',
         },
@@ -121,7 +121,7 @@ const Profile = () => {
       setLoading(true);
       const fetchLikedPublications = async () => {
         const likedPublications = await get(
-          `http://localhost:3001/publications/likes/${user.id}`,
+          `https://api-turistear.koyeb.app/publications/likes/${user.id}`,
           {
             contentType: 'application/json',
           },
@@ -138,7 +138,7 @@ const Profile = () => {
     if (activeItem === 'saved' && user?.id) {
       const fetchSavedPublications = async () => {
         const savedPublications = await get(
-          `http://localhost:3001/publications/saved/${user.id}`,
+          `https://api-turistear.koyeb.app/publications/saved/${user.id}`,
           {
             contentType: 'application/json',
             credentials: 'include',

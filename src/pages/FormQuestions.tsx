@@ -250,7 +250,7 @@ const FormQuestions = () => {
   };
 
   const fetchEvents = async (provinceId: number) => {
-    return await get(`http://localhost:3001/events/${provinceId}`, {
+    return await get(`https://api-turistear.koyeb.app/events/${provinceId}`, {
       'Content-Type': 'application/json',
     });
   };
@@ -403,7 +403,7 @@ const FormQuestions = () => {
 
     try {
       const response = await post(
-        'http://localhost:3001/formQuestion',
+        'https://api-turistear.koyeb.app/formQuestion',
         {
           'Content-Type': 'application/json',
         },
@@ -450,7 +450,7 @@ const FormQuestions = () => {
 
     const fetchProvinces = async () => {
       try {
-        const response = await get('http://localhost:3001/province', {
+        const response = await get('https://api-turistear.koyeb.app/province', {
           'Content-Type': 'application/json',
         });
 
@@ -463,7 +463,7 @@ const FormQuestions = () => {
     fetchProvinces();
 
     const fetchSession = async () => {
-      const response = await get('http://localhost:3001/session', {
+      const response = await get('https://api-turistear.koyeb.app/session', {
         'Content-Type': 'application/json',
       });
 
