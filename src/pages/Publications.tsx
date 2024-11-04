@@ -6,6 +6,7 @@ import { CreatePublications } from '../components/Community/CreatePublications';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import io from 'socket.io-client';
+import { CreateEvent } from '../components/Community/CreateEvent';
 
 
 type User={
@@ -75,7 +76,7 @@ const Publications = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
+        const sessionResponse = await fetch('http://localhost:3001/session', {
           method: 'GET',
           credentials: 'include',
         });
@@ -89,7 +90,7 @@ const Publications = () => {
         setUser(sessionData.user);
 
         const publicationsResponse = await fetch(
-          `https://api-turistear.koyeb.app/publications`,
+          ` http://localhost:3001/publications`,
           {
             method: 'GET',
             credentials: 'include',
@@ -105,7 +106,7 @@ const Publications = () => {
         setError('');
         setIsLoading(false)
 
-        const socket = io('https://api-turistear.koyeb.app');
+        const socket = io(' http://localhost:3001');
         socket.on('receiveDelete', (publicationId) => {
           setPublications((prevPublications) =>
             prevPublications.filter((pub) => pub.id !== publicationId)
@@ -143,6 +144,7 @@ const Publications = () => {
               {/* Create posts */}
               <CreatePublications />
               {/* Posts */}
+              <CreateEvent />
               <div className="flex flex-col gap-6 lg:w-[80%] w-[90%] mx-auto">
                 {publications?.filter((publication) => {
                   return categorySelected == null || publication.category.id == categorySelected;
