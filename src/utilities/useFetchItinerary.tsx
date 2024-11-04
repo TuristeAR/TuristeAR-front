@@ -1,7 +1,25 @@
 import { useState, useEffect } from 'react';
+type User={
+  id: number;
+  name: string,
+  profilePicture: string,
+  description: string,
+  birthdate: string,
+  coverPicture: string,
+  location: string
+}
+
+type Itinerary = {
+  id: number;
+  createdAt: string;
+  name: string;
+  fromDate: string;
+  toDate: string;
+  user: User | null;
+};
 
 const useFetchItinerary = (itineraryId: string | null) => {
-  const [itinerary, setItinerary] = useState(null);
+  const [itinerary, setItinerary] = useState<Itinerary | null>(null);
 
   const [activities, setActivities] = useState<
     {
