@@ -32,13 +32,11 @@ export const LeftColumn = ({
   events,
   setEvents,
   deleteEvent,
-  onDelete
 }) => {
   
   const [selectedPlace, setSelectedPlace] = useState('');
   const [showPlaces, setShowPlaces] = useState(false);
   const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
-  const [user, setUser] = useState<User | null>(null);
 
   const { handleAddActivity, newActivity, setNewActivity } = useAddActivities(
     itineraryId,
@@ -49,25 +47,6 @@ export const LeftColumn = ({
     handleAddActivity();
     setIsAddingActivity(false);
   };
-
-  useEffect(() => {
-    console.log('use')
-    const fetchData = async () => {
-      const session = await get('https://api-turistear.koyeb.app/session', {
-        contentType: 'application/json',
-      });
-
-      if (session.statusCode !== 200) {
-        window.location.href = '/login';
-        return;
-      }
-
-      setUser(session.user);
-    };
-
-    fetchData();
-  }, []);
-
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
@@ -158,15 +137,6 @@ export const LeftColumn = ({
       });
   };
 
-  const deleteItinerary = async (id: number) => {
-    const socket = io('https://api-turistear.koyeb.app');
-    socket.emit('deleteItinerary', {
-      itineraryId: id,
-      userId: user.id,
-    });
-    onDelete();
-  }
-
   //users updated in parent
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
@@ -222,15 +192,6 @@ export const LeftColumn = ({
               <Receipt className="stroke-primary" strokeWidth={1} />
               <p className="text-sm">Gastos compartidos</p>
             </div>
-            {user && itinerary.user && user.id == itinerary.user.id && (
-              <div
-                className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-                onClick={() => deleteItinerary(itineraryId)}
-              >
-                <Trash2 strokeWidth={1} color="red" />
-                <p className="text-sm">Eliminar</p>
-              </div>
-            )}
           </div>
         </div>
         <div className="flex flex-col gap-4 my-4 border-gray">
