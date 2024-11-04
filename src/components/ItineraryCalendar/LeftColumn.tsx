@@ -135,6 +135,16 @@ export const LeftColumn = ({
       });
   };
 
+  const deleteItinerary = async (id: number) => {
+    const socket = io('https://api-turistear.koyeb.app');
+    socket.emit('deleteItinerary', {
+      itineraryId: id,
+      userId: itinerary.user.id,
+    });
+    window.location.href='/profile'
+  }
+
+
   //users updated in parent
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
@@ -189,6 +199,13 @@ export const LeftColumn = ({
             >
               <Receipt className="stroke-primary" strokeWidth={1} />
               <p className="text-sm">Gastos compartidos</p>
+            </div>
+            <div
+              className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+              onClick={() => deleteItinerary(itineraryId)}
+            >
+              <Trash2 strokeWidth={1} color="red" />
+              <p className="text-sm">Eliminar</p>
             </div>
           </div>
         </div>

@@ -56,17 +56,14 @@ export const ItineraryCard = (props: {
               Eliminar
             </button>
           </div>
-
           <div className="flex flex-col gap-2 text-l">
             <p>
-              Ida :{' '}
-              {departure && typeof departure === 'string'
+              Ida: { departure && typeof departure === 'string'
                 ? formatDate(departure.slice(0, -14))
                 : ''}
             </p>
             <p>
-              Vuelta:{' '}
-              {arrival && typeof arrival === 'string' ? formatDate(arrival.slice(0, -14)) : ''}
+              Vuelta: {arrival && typeof arrival === 'string' ? formatDate(arrival.slice(0, -14)) : ''}
             </p>
           </div>
           <details className="">
