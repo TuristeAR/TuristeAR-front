@@ -39,7 +39,7 @@ export const LeftColumn = ({
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
-  const socket = io('https://api-turistear.koyeb.app');
+  const socket = io('http://localhost:3001');
 
   useEffect(() => {
     socket.on('usersUpdated', (data) => {
@@ -51,7 +51,7 @@ export const LeftColumn = ({
 
       setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
     });
-    socket.on('usersAdddItinerary', (data) => {
+    socket.on('usersAddItinerary', (data) => {
       console.log('socket add', data.updatedItinerary);
       const owner = {
         ...data.updatedItinerary.user,
@@ -93,7 +93,7 @@ export const LeftColumn = ({
     return () => {
       socket.off('usersUpdated');
       socket.off('userRemoved');
-      socket.off('usersAdddItinerary');
+      socket.off('usersAddItinerary');
       socket.off('activityRemoved');
       socket.off('eventRemoved');
       socket.off('addActivity');
@@ -119,7 +119,7 @@ export const LeftColumn = ({
   };
 
   const handleAddActivity = () => {
-    fetch('https://api-turistear.koyeb.app/itinerary/add-activity', {
+    fetch('http://localhost:3001/itinerary/add-activity', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ export const LeftColumn = ({
   };
 
   const deleteActivity = (activityId: number) => {
-    fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
+    fetch('http://localhost:3001/itinerary/remove-activity', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

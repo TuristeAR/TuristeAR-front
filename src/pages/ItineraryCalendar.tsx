@@ -17,7 +17,7 @@ export const ItineraryCalendar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShowExpanse, setIsShowExpanse] = useState(false);
 
-  const socket = io('https://api-turistear.koyeb.app');
+  const socket = io('http://localhost:3001');
 
   const handleEventClick = (eventInfo) => {
     setSelectedEventInfo(eventInfo);
@@ -39,7 +39,7 @@ export const ItineraryCalendar = () => {
   }, []);
 
   const deleteActivity = (activityId: number) => {
-    fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
+    fetch('http://localhost:3001/itinerary/remove-activity', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export const ItineraryCalendar = () => {
   };
 
   const deleteEvent = (eventId: number) => {
-    fetch('https://api-turistear.koyeb.app/itinerary/remove-event', {
+    fetch('http://localhost:3001/itinerary/remove-event', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

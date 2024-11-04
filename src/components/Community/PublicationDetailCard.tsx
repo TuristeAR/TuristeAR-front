@@ -2,6 +2,7 @@ import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { useState } from 'react';
 import { post } from '../../utilities/http.util';
 import io from 'socket.io-client';
+import { reorderDate } from '../../utilities/reorderDate';
 
 type User={
   id: number;
@@ -51,8 +52,6 @@ type Publication = {
   activities: Activity[]
 };
 
-const socket = io('https://api-turistear.koyeb.app');
-
 export function PublicationDetailCard(props: {
   publication: Publication,
   user: User
@@ -71,7 +70,7 @@ export function PublicationDetailCard(props: {
   const handleLike = async (idPublication: number) => {
     setLikes(!isLike ? likes + 1 : likes - 1);
     setIsLike(!isLike);
-    await post(`https://api-turistear.koyeb.app/handleLike/${idPublication}`, {
+    await post(`http://localhost:3001/handleLike/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
@@ -79,7 +78,7 @@ export function PublicationDetailCard(props: {
   const handleSaved = async (idPublication: number) => {
     setSaved(!isSave ? saved + 1 : saved - 1);
     setIsSave(!isSave);
-    await post(`https://api-turistear.koyeb.app/handleSaved/${idPublication}`, {
+    await post(`http://localhost:3001/handleSaved/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
@@ -87,21 +86,13 @@ export function PublicationDetailCard(props: {
   const handleRepost = async (idPublication: number) => {
     setReposts(!isRepost ? reposts + 1 : reposts - 1);
     setIsRepost(!isRepost);
-    await post(`https://api-turistear.koyeb.app/handleReposts/${idPublication}`, {
+    await post(`http://localhost:3001/handleReposts/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
 
-  const reorderDate = (dateString: string) => {
-    const formatDate = (date) => {
-      const [year, month, day] = date.split('-');
-      return `${day}-${month}-${year}`;
-    };
-
-    return formatDate(dateString);
-  };
-
   const deletePublication = async (id) => {
+    const socket = io('http://localhost:3001');
     socket.emit('deletePublication', {
       publicationId: id,
       userId: user.id,

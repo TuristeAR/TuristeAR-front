@@ -80,7 +80,7 @@ export const UploadImageSharedGallery = (props : {activities : any[]}) => {
         imagesUrl.push(imageUrl);
       }
 
-      const response = await fetch('https://api-turistear.koyeb.app/addImagesToActivity', {
+      const response = await fetch('http://localhost:3001/addImagesToActivity', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -43,7 +43,7 @@ type UseReceiveMessageProps = {
 
 export const useReceiveMessage = ({ setForum }: UseReceiveMessageProps) => {
   useEffect(() => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io('http://localhost:3001');
 
     socket.on('receiveMessage', (newMessage: Message) => {
       setForum((prevForum) => {

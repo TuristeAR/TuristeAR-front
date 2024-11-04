@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import logoAnimado from '../assets/logoAnimado.json';
 import Lottie from 'lottie-react';
 import { get } from '../utilities/http.util';
+import { reorderDate } from '../utilities/reorderDate';
 
 
 type User={
@@ -79,7 +80,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const session = await get('https://api-turistear.koyeb.app/session', {
+      const session = await get('http://localhost:3001/session', {
         contentType: 'application/json',
       });
 
@@ -91,7 +92,7 @@ const Profile = () => {
       setUser(session.user);
 
       const publications = await get(
-        `https://api-turistear.koyeb.app/publications/${session.user.id}`,
+        `http://localhost:3001/publications/${session.user.id}`,
         {
           contentType: 'application/json',
         },
@@ -100,7 +101,7 @@ const Profile = () => {
       setPublications(publications);
 
       const itinerariesResponse = await get(
-        `https://api-turistear.koyeb.app/itinerary/byUser/${session.user.id}`,
+        `http://localhost:3001/itinerary/byUser/${session.user.id}`,
         {
           contentType: 'application/json',
         },
@@ -120,7 +121,7 @@ const Profile = () => {
       setLoading(true);
       const fetchLikedPublications = async () => {
         const likedPublications = await get(
-          `https://api-turistear.koyeb.app/publications/likes/${user.id}`,
+          `http://localhost:3001/publications/likes/${user.id}`,
           {
             contentType: 'application/json',
           },
@@ -137,7 +138,7 @@ const Profile = () => {
     if (activeItem === 'saved' && user?.id) {
       const fetchSavedPublications = async () => {
         const savedPublications = await get(
-          `https://api-turistear.koyeb.app/publications/saved/${user.id}`,
+          `http://localhost:3001/publications/saved/${user.id}`,
           {
             contentType: 'application/json',
             credentials: 'include',
@@ -156,15 +157,6 @@ const Profile = () => {
     if (contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  };
-
-  const reorderDate = (dateString: string) => {
-    const formatDate = (date) => {
-      const [year, month, day] = date.split('-');
-      return `${day}-${month}-${year}`;
-    };
-
-    return formatDate(dateString);
   };
 
   return (
@@ -272,7 +264,7 @@ const Profile = () => {
             <CreatePublications />
 
             {/* Content */}
-            <div className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid grid-cols-2 gap-6' : 'flex flex-col gap-8'}`} ref={contentRef}>
+            <div className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid lg:grid-cols-2 gap-6 grid-cols-1' : 'flex flex-col gap-8'}`} ref={contentRef}>
               {activeItem === 'posts' &&
                 publications
                   ?.filter((publication) => {

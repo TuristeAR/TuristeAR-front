@@ -33,7 +33,7 @@ const EditProfile = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('https://api-turistear.koyeb.app/session', {
+    fetch('http://localhost:3001/session', {
       method: 'GET',
       credentials: 'include',
     })
@@ -120,7 +120,7 @@ const EditProfile = () => {
         : '';
       const coverPictureUrl = formData.coverPicture ? await uploadImage(formData.coverPicture) : '';
 
-      const response = await fetch(`https://api-turistear.koyeb.app/editProfile`, {
+      const response = await fetch(`http://localhost:3001/editProfile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

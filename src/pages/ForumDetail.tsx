@@ -49,7 +49,7 @@ const ForumDetail = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
+        const sessionResponse = await fetch('http://localhost:3001/session', {
           method: 'GET',
           credentials: 'include',
         });
@@ -67,7 +67,7 @@ const ForumDetail = () => {
           return;
         }
 
-        const forumResponse = await fetch(`https://api-turistear.koyeb.app/forum/${id}`, {
+        const forumResponse = await fetch(`http://localhost:3001/forum/${id}`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -87,7 +87,7 @@ const ForumDetail = () => {
   }, [id]);
 
   useEffect(() => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io('http://localhost:3001');
 
     socket.on('receiveMessage', (newMessage) => {
       setForum((prevForum) => {
@@ -147,7 +147,7 @@ const ForumDetail = () => {
     if (message && forumId && user) {
       setWasSent(true);
       const imageUrl = selectedImage ? await uploadImage(selectedImage) : null;
-      const socket = io('https://api-turistear.koyeb.app');
+      const socket = io('http://localhost:3001');
 
       socket.emit('createMessage', {
         content: message,

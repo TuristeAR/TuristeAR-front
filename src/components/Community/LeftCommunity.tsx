@@ -34,7 +34,7 @@ export const LeftCommunity = (props: {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
+        const sessionResponse = await fetch('http://localhost:3001/session', {
           method: 'GET',
           credentials: 'include',
         });
@@ -51,7 +51,7 @@ export const LeftCommunity = (props: {
         setError('');
 
         try {
-          const categoriesResponse = await fetch(`https://api-turistear.koyeb.app/categories`, {
+          const categoriesResponse = await fetch(`http://localhost:3001/categories`, {
             method: 'GET',
             credentials: 'include',
           });

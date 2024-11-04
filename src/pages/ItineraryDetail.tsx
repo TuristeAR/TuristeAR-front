@@ -10,6 +10,8 @@ import mapIcon from '/assets/map-icon.svg';
 import { Countdown } from '../components/Calendar/Countdown';
 import useDownloadPdf from '../utilities/useDownloadPdf';
 import { UploadImageSharedGallery } from '../components/ItineraryCalendar/UploadImageSharedGallery';
+import { formatDate } from '../utilities/formatDate';
+import { reorderDate } from '../utilities/reorderDate';
 
 type User = {
   id: number;
@@ -31,7 +33,7 @@ export const ItineraryDetail = () => {
   useEffect(() => {
     if (activities.length > 0) {
       const fetchReviewsForActivity = (googleId: string) => {
-        return get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
+        return get(`http://localhost:3001/reviews/place/${googleId}`, {
           'Content-Type': 'application/json',
         });
       };
@@ -67,34 +69,11 @@ export const ItineraryDetail = () => {
     return date.toLocaleTimeString([], options);
   };
 
-  const formatDate = (dateString: string): string => {
-    const [day, month, year] = dateString.split('-');
-
-    const date = new Date(Number(year), Number(month) - 1, Number(day));
-
-    if (isNaN(date.getTime())) {
-      return 'Fecha inválida';
-    }
-
-    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
-    return date.toLocaleDateString('es-ES', options);
-  };
-
-
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
     usersOldNav = updatedUsers;
     console.log('Usuarios actualizados en el padre:', updatedUsers);
     console.log('UserNav new: ', usersOldNav);
-  };
-
-  const reorderDate = (dateString: string) => {
-    const formatDate = (date) => {
-      const [year, month, day] = date.split('-'); // Divide la fecha en año, mes, día
-      return `${day}-${month}-${year}`; // Reordena en formato 'dd-mm-yyyy'
-    };
-
-    return formatDate(dateString);
   };
 
   const fetchNeighborhoods = async (latitude: number, longitude: number) => {

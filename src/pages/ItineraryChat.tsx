@@ -56,7 +56,7 @@ const ItineraryChat = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
+        const sessionResponse = await fetch('http://localhost:3001/session', {
           method: 'GET',
           credentials: 'include',
         });
@@ -75,7 +75,7 @@ const ItineraryChat = () => {
         }
 
         const itineraryResponse = await fetch(
-          `https://api-turistear.koyeb.app/itinerary/${itineraryId}`,
+          `http://localhost:3001/itinerary/${itineraryId}`,
           {
             method: 'GET',
             credentials: 'include',
@@ -98,7 +98,7 @@ const ItineraryChat = () => {
   }, [itineraryId]);
 
   useEffect(() => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io('http://localhost:3001');
 
     socket.on('receiveMessage', (newMessage) => {
       setForum((prevForum) => {
@@ -158,7 +158,7 @@ const ItineraryChat = () => {
     if (message && forumId && user) {
       setWasSent(true);
       const imageUrl = selectedImage ? await uploadImage(selectedImage) : null;
-      const socket = io('https://api-turistear.koyeb.app');
+      const socket = io('http://localhost:3001');
       socket.emit('createMessage', {
         content: message,
         images: imageUrl,

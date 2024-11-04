@@ -89,13 +89,13 @@ const ExpectedPlace = () => {
     }
 
     const fetchReviews = () => {
-      return get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
+      return get(`http://localhost:3001/reviews/place/${googleId}`, {
         'Content-Type': 'application/json',
       });
     };
 
     const fetchPlace = () => {
-      return get(`https://api-turistear.koyeb.app/place/${googleId}`, {
+      return get(`http://localhost:3001/place/${googleId}`, {
         'Content-Type': 'application/json',
       });
     };

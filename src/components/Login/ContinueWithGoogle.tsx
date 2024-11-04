@@ -1,6 +1,6 @@
 export const ContinueWithGoogle = () => {
   const goToGoogleAuth = () => {
-    window.location.href = 'https://api-turistear.koyeb.app/auth/google';
+    window.location.href = 'http://localhost:3001/auth/google';
   };
 
   //obtener coordenadas del navegador 
@@ -16,7 +16,7 @@ export const ContinueWithGoogle = () => {
 //enviar coordenadas al back 
   const sendCoordinates= async (lat, lon) => {
     try {
-     await fetch('https://api-turistear.koyeb.app/auth/google', { // Cambia la URL si es necesario ...
+     await fetch('http://localhost:3001/auth/google', { // Cambia la URL si es necesario ...
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -62,7 +62,7 @@ const Destinations = () => {
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
-        const response = await get('https://api-turistear.koyeb.app/province', {
+        const response = await get('http://localhost:3001/province', {
           'Content-Type': 'application/json',
         });
         setProvinces(response.data);
@@ -78,7 +78,7 @@ const Destinations = () => {
 
   const fetchReviews = async (provinceName: string) => {
     try {
-      const response = await get(`https://api-turistear.koyeb.app/provinces/${provinceName}/4`, {
+      const response = await get(`http://localhost:3001/provinces/${provinceName}/4`, {
         'Content-Type': 'application/json',
       });
       setReviews(response.places);

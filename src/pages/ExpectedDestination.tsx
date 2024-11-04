@@ -68,7 +68,7 @@ const ExpectedDestination = () => {
     const fetchProvince = async () => {
       try {
         const response = await get(
-          `https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}`,
+          `http://localhost:3001/provinces/${nombreDeLaProvincia}`,
           {
             'Content-Type': 'application/json',
           },
@@ -89,7 +89,7 @@ const ExpectedDestination = () => {
       if (province) {
         try {
           const response = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=restaurant&types=food&count=6`,
+            `http://localhost:3001/places/province?provinceId=${province.id}&types=restaurant&types=food&count=6`,
             {
               'Content-Type': 'application/json',
             },
@@ -111,7 +111,7 @@ const ExpectedDestination = () => {
       if (province) {
         try {
           const response = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&count=6`,
+            `http://localhost:3001/places/province?provinceId=${province.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&count=6`,
             {
               'Content-Type': 'application/json',
             },

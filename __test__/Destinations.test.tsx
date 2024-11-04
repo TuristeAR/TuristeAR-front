@@ -49,7 +49,7 @@ describe('Destinations Component', () => {
       </BrowserRouter>,
     );
 
-    expect(get).toHaveBeenCalledWith('https://api-turistear.koyeb.app/province', {
+    expect(get).toHaveBeenCalledWith('http://localhost:3001/province', {
       'Content-Type': 'application/json',
     });
   });
