@@ -79,6 +79,8 @@ const Profile = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+
+    console.log('useEffect')
     const fetchData = async () => {
       const session = await get('https://api-turistear.koyeb.app/session', {
         contentType: 'application/json',
@@ -180,7 +182,7 @@ const Profile = () => {
             <div className="">
               <div className="h-[200px]">
                 <img
-                  src={user?.coverPicture}
+                  src={user?.coverPicture ? user.coverPicture : ''}
                   alt={'Foto de portada'}
                   className={'w-[100%] h-[100%] object-cover'}
                 />
@@ -196,7 +198,7 @@ const Profile = () => {
                   <div className="flex gap-4 lg:text-[14px] text-[10px] mt-2 text-[#999999]">
                     <div className="flex items-center gap-x-2">
                       <img src="/assets/location.svg" alt="Ubicación" className="w-6 h-6" />
-                      <p>{user?.location}, Argentina</p>
+                      <p>{user?.location ? user.location + ', Argentina' : 'Desconocido'}</p>
                     </div>
                     <div className="flex items-center gap-x-2">
                       <img src="/assets/calendar.svg" alt="Calendario" className="w-6 h-6" />
@@ -213,7 +215,7 @@ const Profile = () => {
                     className={`lg:w-[150px] w-[100px] lg:h-[150px] h-[100px] bg-gray border-white border-4`}
                   >
                     <img
-                      src={user?.profilePicture}
+                      src={user?.profilePicture ? user.profilePicture : ''}
                       alt={user?.name}
                       className="w-[100%] h-[100%]"
                     />
