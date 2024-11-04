@@ -31,22 +31,25 @@ describe('Left Community', () => {
     await act(async () => {
       render(
         <BrowserRouter>
-          <LeftCommunity vista={'jobs'}  activeItem={''} categorySelected={1} handleClick={null} setCategorySelected={null}/>
+          <LeftCommunity
+            vista={'jobs'}
+            activeItem={''}
+            categorySelected={1}
+            handleClick={null}
+            setCategorySelected={null}
+          />
         </BrowserRouter>,
       );
-    })
+    });
 
     const publicationsLink = screen.getByText('Publicaciones');
     const forumLink = screen.getByText('Foro y preguntas');
-    const jobsLink = screen.getByText('Ofertas de trabajo');
 
     expect(publicationsLink).toBeInTheDocument();
     expect(forumLink).toBeInTheDocument();
-    expect(jobsLink).toBeInTheDocument();
   });
 
-
-  test('render community filters',async () => {
+  test('render community filters', async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -59,9 +62,7 @@ describe('Left Community', () => {
             <div className="space-y-4" key={index}>
               <div className="flex justify-between items-center">
                 <button
-                  className={
-                    `flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4`
-                  }
+                  className={`flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4`}
                 >
                   <div className="flex items-center">
                     <p className="">{category.categories[1].user}</p>

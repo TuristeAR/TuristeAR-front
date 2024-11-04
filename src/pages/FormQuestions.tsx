@@ -258,21 +258,17 @@ const FormQuestions = () => {
   const handleEventSelect = (id: number, locality: string) => {
     setSelectedEvents((prevSelectedEvents) => {
       const isSelected = prevSelectedEvents.includes(id);
+
       const updatedSelectedEvents = isSelected
         ? prevSelectedEvents.filter((eventId) => eventId !== id)
         : [...prevSelectedEvents, id];
 
-      setFormData((prevFormData) => {
-        const updatedLocalities = isSelected
-          ? prevFormData.localities.filter((loc) => loc !== locality)
-          : [...prevFormData.localities, locality];
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        events: updatedSelectedEvents,
+      }));
 
-        return {
-          ...prevFormData,
-          localities: updatedLocalities,
-          events: updatedSelectedEvents,
-        };
-      });
+      handleLocalitySelection(locality);
 
       return updatedSelectedEvents;
     });
@@ -339,7 +335,7 @@ const FormQuestions = () => {
 
           const eventToDate = new Date(event.toDate);
 
-          return fromDate < eventFromDate && toDate > eventToDate;
+          return fromDate <= eventFromDate && toDate >= eventToDate;
         });
 
         if (!isDateWithinEventRange) {
@@ -570,7 +566,8 @@ const FormQuestions = () => {
                         })}
                         <div
                           key="company"
-                          className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 p-2 border border-gray">
+                          className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 p-2 border border-gray"
+                        >
                           {
                             questions[4].options.find((option) => option.data === formData.company)
                               ?.src
@@ -818,7 +815,8 @@ const FormQuestions = () => {
                                     ? Math.ceil(
                                         (state[0].endDate.getTime() -
                                           state[0].startDate.getTime()) /
-                                          (1000 * 60 * 60 * 24)+1,
+                                          (1000 * 60 * 60 * 24) +
+                                          1,
                                       )
                                     : 0}{' '}
                                   días
