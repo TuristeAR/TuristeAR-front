@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import logoAnimado from '../assets/logoAnimado.json';
 import Lottie from 'lottie-react';
 import { get } from '../utilities/http.util';
+import { reorderDate } from '../utilities/reorderDate';
 
 
 type User={
@@ -158,15 +159,6 @@ const Profile = () => {
     }
   };
 
-  const reorderDate = (dateString: string) => {
-    const formatDate = (date) => {
-      const [year, month, day] = date.split('-');
-      return `${day}-${month}-${year}`;
-    };
-
-    return formatDate(dateString);
-  };
-
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
@@ -272,7 +264,7 @@ const Profile = () => {
             <CreatePublications />
 
             {/* Content */}
-            <div className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid grid-cols-2 gap-6' : 'flex flex-col gap-8'}`} ref={contentRef}>
+            <div className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid lg:grid-cols-2 gap-6 grid-cols-1' : 'flex flex-col gap-8'}`} ref={contentRef}>
               {activeItem === 'posts' &&
                 publications
                   ?.filter((publication) => {

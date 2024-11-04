@@ -60,7 +60,7 @@ export const LeftColumn = ({
 
       setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
     });
-    socket.on('usersAdddItinerary', (data) => {
+    socket.on('usersAddItinerary', (data) => {
       console.log('socket add', data.updatedItinerary);
       const owner = {
         ...data.updatedItinerary.user,
@@ -88,7 +88,7 @@ export const LeftColumn = ({
     return () => {
       socket.off('usersUpdated');
       socket.off('userRemoved');
-      socket.off('usersAdddItinerary');
+      socket.off('usersAddItinerary');
       socket.off('activityRemoved');
     };
   }, []);

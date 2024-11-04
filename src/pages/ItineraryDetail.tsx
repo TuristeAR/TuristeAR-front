@@ -10,6 +10,8 @@ import mapIcon from '/assets/map-icon.svg';
 import { Countdown } from '../components/Calendar/Countdown';
 import useDownloadPdf from '../utilities/useDownloadPdf';
 import { UploadImageSharedGallery } from '../components/ItineraryCalendar/UploadImageSharedGallery';
+import { formatDate } from '../utilities/formatDate';
+import { reorderDate } from '../utilities/reorderDate';
 
 type User = {
   id: number;
@@ -67,38 +69,11 @@ export const ItineraryDetail = () => {
     return date.toLocaleTimeString([], options);
   };
 
-const formatDate = (dateString: string): string => {
-  // Convertir de DD-MM-YYYY a YYYY-MM-DD
-  const [day, month, year] = dateString.split('-');
-  const formattedDateString = `${year}-${month}-${day}`;
-
-  // Crear la fecha especificando explícitamente la zona horaria local
-  const date = new Date(`${formattedDateString}T00:00:00`);
-  
-  if (isNaN(date.getTime())) {
-    return 'Fecha inválida';
-  }
-
-  const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
-  return date.toLocaleDateString('es-ES', options);
-};
-
-
-
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
     usersOldNav = updatedUsers;
     console.log('Usuarios actualizados en el padre:', updatedUsers);
     console.log('UserNav new: ', usersOldNav);
-  };
-
-  const reorderDate = (dateString: string) => {
-    const formatDate = (date) => {
-      const [year, month, day] = date.split('-'); // Divide la fecha en año, mes, día
-      return `${day}-${month}-${year}`; // Reordena en formato 'dd-mm-yyyy'
-    };
-
-    return formatDate(dateString);
   };
 
   const fetchNeighborhoods = async (latitude: number, longitude: number) => {
