@@ -2,6 +2,7 @@ import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { useState } from 'react';
 import { post } from '../../utilities/http.util';
 import io from 'socket.io-client';
+import { reorderDate } from '../../utilities/reorderDate';
 
 type User={
   id: number;
@@ -51,8 +52,6 @@ type Publication = {
   activities: Activity[]
 };
 
-const socket = io('https://api-turistear.koyeb.app');
-
 export function PublicationDetailCard(props: {
   publication: Publication,
   user: User
@@ -92,16 +91,8 @@ export function PublicationDetailCard(props: {
     });
   };
 
-  const reorderDate = (dateString: string) => {
-    const formatDate = (date) => {
-      const [year, month, day] = date.split('-');
-      return `${day}-${month}-${year}`;
-    };
-
-    return formatDate(dateString);
-  };
-
   const deletePublication = async (id) => {
+    const socket = io('https://api-turistear.koyeb.app');
     socket.emit('deletePublication', {
       publicationId: id,
       userId: user.id,

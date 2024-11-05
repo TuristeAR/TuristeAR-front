@@ -39,6 +39,7 @@ const ExpenseDetail = ({ expense, onClose }) => {
         </div>
       </div>
       <div className="ml-4">
+        <p>Tipo de distribución: {distributionType}</p>
         <ul>
           {expense.participatingUsers.map((participant) => (
             <li key={participant.name}>

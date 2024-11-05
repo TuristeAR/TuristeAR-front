@@ -21,7 +21,7 @@ type User = {
 
 const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
   const [groupedExpenses, setGroupedExpenses] = useState({});
-  const { usersOldNav } = useFetchParticipants(497);
+  const { usersOldNav } = useFetchParticipants(itineraryId);
   const [selectedExpenseId, setSelectedExpenseId] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [expense, setExpense] = useState(false);
@@ -133,6 +133,7 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
                     (user) => user.id === expense.payer.id,
                   );
                   const isSelected = selectedExpenseId === expense.id;
+
 
                   return (
                     <div className="max-w-xxl" key={expense.id}>

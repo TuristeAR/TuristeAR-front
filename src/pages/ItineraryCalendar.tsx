@@ -7,6 +7,7 @@ import { LeftColumn } from '../components/ItineraryCalendar/LeftColumn';
 import { ModalActivity } from '../components/Calendar/ModalEvent';
 import { io } from 'socket.io-client';
 
+
 export const ItineraryCalendar = () => {
   const { itineraryId } = useParams();
   const { itinerary, activities, events, setActivities, setEvents } = useFetchItinerary(
@@ -28,6 +29,7 @@ export const ItineraryCalendar = () => {
     setSelectedEventInfo(null);
     setIsModalOpen(false);
   };
+
   useEffect(() => {
     socket.on('activityRemoved', ({ itineraryId, activityId }) => {
       console.log(`Activity with ID ${activityId} removed from itinerary ${itineraryId}`);
@@ -85,6 +87,8 @@ export const ItineraryCalendar = () => {
       });
   };
 
+
+
   return (
     <section
       className={`${isAddingActivity ? 'h-screen overflow-hidden' : ''} h-screen xl:h-auto overflow-x-clip relative`}
@@ -103,6 +107,7 @@ export const ItineraryCalendar = () => {
           events={events}
           setEvents={setEvents}
           deleteEvent={deleteEvent}
+          onDelete={() => { window.location.href='/profile' }}
         />
         <main className="order-1 lg:order-2 col-span-1 container mx-auto">
           <div className="flex flex-col h-full mx-4 mb-4 md:mx-0 md:w-full md:p-4">
@@ -112,7 +117,11 @@ export const ItineraryCalendar = () => {
               setActivities={setActivities}
               deleteActivity={deleteActivity}
               events={events}
+              setEvents={setEvents}
+              itineraryId={itineraryId}
+              itinerary={itinerary}
             />
+            
             {isModalOpen && selectedEventInfo && (
               <ModalActivity
                 handleClose={handleClose}
