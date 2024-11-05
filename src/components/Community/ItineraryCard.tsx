@@ -4,16 +4,16 @@ import io from 'socket.io-client';
 import { formatDate } from '../../utilities/formatDate';
 
 export const ItineraryCard = (props: {
-  imgProvince: string,
-  province: string,
-  departure: string,
-  arrival: string,
-  participants: any[],
-  userId: number,
-  id: number,
-  onDelete:() =>void
+  imgProvince: string;
+  province: string;
+  departure: string;
+  arrival: string;
+  participants: any[];
+  userId: number;
+  id: number;
+  onDelete: () => void;
 }) => {
-  const {imgProvince, province, departure, arrival, participants, userId, id, onDelete} = props;
+  const { imgProvince, province, departure, arrival, participants, userId, id, onDelete } = props;
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean | null>(false);
 
@@ -23,8 +23,14 @@ export const ItineraryCard = (props: {
       itineraryId: id,
       userId: userId,
     });
-    onDelete()
-  }
+    onDelete();
+  };
+
+  const formatDepartureAndArrivalDate = (date: string) => {
+    const dateFormatted = new Date(date);
+    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
+    return dateFormatted.toLocaleDateString('es-ES', options);
+  };
 
   return (
     <>
@@ -57,20 +63,15 @@ export const ItineraryCard = (props: {
             </button>
           </div>
           <div className="flex flex-col gap-2 text-l">
-            <p>
-              Ida: { departure && typeof departure === 'string'
-                ? formatDate(departure.slice(0, -14))
-                : ''}
-            </p>
-            <p>
-              Vuelta: {arrival && typeof arrival === 'string' ? formatDate(arrival.slice(0, -14)) : ''}
-            </p>
+            <p className="italic">Ida: {departure && formatDepartureAndArrivalDate(departure)}</p>
+            <p className="italic">Vuelta: {arrival && formatDepartureAndArrivalDate(arrival)}</p>
           </div>
           <details className="">
             <summary className="font-semibold">Participantes:</summary>
             <div className={'flex gap-2 p-2'}>
               {participants.map((participant, index) => (
-                <img key={index}
+                <img
+                  key={index}
                   src={participant.profilePicture}
                   alt={`Imagen de ${participant.name}`}
                   className="w-[20px] h-[20px] rounded-full"
@@ -88,4 +89,4 @@ export const ItineraryCard = (props: {
       </div>
     </>
   );
-}
+};

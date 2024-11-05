@@ -9,22 +9,21 @@ import Lottie from 'lottie-react';
 import { get } from '../utilities/http.util';
 import { reorderDate } from '../utilities/reorderDate';
 
-
-type User={
+type User = {
   id: number;
-  name: string,
-  profilePicture: string,
-  description: string,
-  birthdate: string,
-  coverPicture: string,
-  location: string
-}
+  name: string;
+  profilePicture: string;
+  description: string;
+  birthdate: string;
+  coverPicture: string;
+  location: string;
+};
 
 type Comment = {
   createdAt: string;
   description: string;
-  user : User | null;
-}
+  user: User | null;
+};
 
 type Category = {
   id: number;
@@ -33,16 +32,16 @@ type Category = {
 };
 
 type Place = {
-  id: number,
-  name: string,
-  googleId: string,
+  id: number;
+  name: string;
+  googleId: string;
 };
 
 type Activity = {
-  id: number,
-  name: string,
-  place: Place
-  images: string[]
+  id: number;
+  name: string;
+  place: Place;
+  images: string[];
 };
 
 type Publication = {
@@ -51,11 +50,11 @@ type Publication = {
   category: Category | null;
   createdAt: string;
   user: User | null;
-  likes : User[]
-  reposts : User[]
-  saved : User[]
-  comments : Comment[]
-  activities: Activity[]
+  likes: User[];
+  reposts: User[];
+  saved: User[];
+  comments: Comment[];
+  activities: Activity[];
 };
 type Itinerary = {
   activities: any;
@@ -107,7 +106,6 @@ const Profile = () => {
         },
       );
 
-      console.log(itinerariesResponse);
       setItineraries(itinerariesResponse.participants);
     };
 
@@ -264,14 +262,24 @@ const Profile = () => {
             <CreatePublications />
 
             {/* Content */}
-            <div className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid lg:grid-cols-2 gap-6 grid-cols-1' : 'flex flex-col gap-8'}`} ref={contentRef}>
+            <div
+              className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid lg:grid-cols-2 gap-6 grid-cols-1' : 'flex flex-col gap-8'}`}
+              ref={contentRef}
+            >
               {activeItem === 'posts' &&
                 publications
                   ?.filter((publication) => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <PublicationCard key={index} publication={publication} user={user} onDelete={ () => setPublications((prev) => prev.filter((p) => p.id !== publication.id))} />
+                    <PublicationCard
+                      key={index}
+                      publication={publication}
+                      user={user}
+                      onDelete={() =>
+                        setPublications((prev) => prev.filter((p) => p.id !== publication.id))
+                      }
+                    />
                   ))}
               {activeItem === 'itineraries' &&
                 itineraries?.map((itinerary, index) => {
@@ -289,7 +297,9 @@ const Profile = () => {
                       userId={user.id}
                       participants={itinerary.participants}
                       id={itinerary.id}
-                      onDelete={ () => setItineraries((prev) => prev.filter((p) => p.id !== itinerary.id))}
+                      onDelete={() =>
+                        setItineraries((prev) => prev.filter((p) => p.id !== itinerary.id))
+                      }
                     />
                   );
                 })}
@@ -300,7 +310,14 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <PublicationCard key={index} publication={publication} user={user} onDelete={ () => setPublications((prev) => prev.filter((p) => p.id !== publication.id))} />
+                    <PublicationCard
+                      key={index}
+                      publication={publication}
+                      user={user}
+                      onDelete={() =>
+                        setPublications((prev) => prev.filter((p) => p.id !== publication.id))
+                      }
+                    />
                   ))}
               {activeItem === 'saved' &&
                 savedPublications
@@ -308,7 +325,14 @@ const Profile = () => {
                     return categorySelected == null || publication.category.id == categorySelected;
                   })
                   .map((publication, index) => (
-                    <PublicationCard key={index} publication={publication} user={user} onDelete={ () => setPublications((prev) => prev.filter((p) => p.id !== publication.id))} />
+                    <PublicationCard
+                      key={index}
+                      publication={publication}
+                      user={user}
+                      onDelete={() =>
+                        setPublications((prev) => prev.filter((p) => p.id !== publication.id))
+                      }
+                    />
                   ))}
             </div>
           </div>
