@@ -1,10 +1,11 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { CreateForums } from '../components/Community/CreateForums';
+import { Link } from 'react-router-dom';
 
 const Forum = () => {
 
@@ -72,17 +73,15 @@ const Forum = () => {
                 } ).map((forum, index) => (
                   <div
                     key={index}
-                    className="w-[100%] mx-auto p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col gap-4"
+                    className="w-[100%] h-fit mx-auto p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col gap-4"
                   >
                     <h1 className={'text-2xl'}>{forum.name}</h1>
                     <p>{forum.description}</p>
                     <div className={'flex justify-end'}>
-                      <div
+                      <Link to={`/forum/${forum.id}`}
                         className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center">
-                        <a href={`/forum/${forum.id}`}>
-                          Ingresar
-                        </a>
-                      </div>
+                        <p>Ingresar</p>
+                      </Link>
                     </div>
                   </div>
                 ))}

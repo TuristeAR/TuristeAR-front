@@ -207,6 +207,7 @@ export function PublicationCard(props: {
             </div>
             <div className="flex items-center mr-6">
               <svg
+                className="cursor-pointer"
                 onClick={() => {
                   handleRepost(publication.id);
                 }}
