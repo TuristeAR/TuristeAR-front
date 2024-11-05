@@ -52,7 +52,7 @@ export const CreateForums = () => {
     setError(null);
 
     if (!formData.name) {
-      setError("Ingrese una descripción!");
+      setError("Ingrese un nombre!");
       return;
     }
 

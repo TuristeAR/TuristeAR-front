@@ -12,7 +12,7 @@ export const Nav = () => {
 
   const handleLogout = async () => {
     try {
-      await get(' http://localhost:3001/logout', {
+      await get('https://api-turistear.koyeb.app/logout', {
         'Content-Type': 'application/json',
       });
       setUser(null);
@@ -23,7 +23,7 @@ export const Nav = () => {
   };
 
   const fetchUser = async () => {
-    const response = await get(' http://localhost:3001/session', {
+    const response = await get(' https://api-turistear.koyeb.app/session', {
       'Content-Type': 'application/json',
     });
 
@@ -83,10 +83,10 @@ export const Nav = () => {
         </Link>
       ) : (
         <div className="hidden mt-auto md:flex items-center gap-x-4">
-          
-          <img 
+
+          <img
           className="w-[3em] h-[3em] mt-4 md:mt-auto md:mb-0 border-white rounded-full cursor-pointer"
-          src="https://img.icons8.com/?size=100&id=0qxdKWVkmxjy&format=png&color=FFFFFF" alt="" 
+          src="https://img.icons8.com/?size=100&id=0qxdKWVkmxjy&format=png&color=FFFFFF" alt=""
           onClick={() => setIsDropdownOpenNotification(!isDropdownOpenNotification)}
           />
           <div
@@ -113,7 +113,7 @@ export const Nav = () => {
               </button>
             </div>
           )}
-          
+
           <img
             src={user.profilePicture}
             className="w-[3em] h-[3em] border-2 mt-4 md:mt-auto md:mb-0 border-white rounded-full cursor-pointer"
