@@ -31,7 +31,7 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import EventCarousel from '../components/FormQuestions/EventCarousel';
 import formatFromDateAndToDate from '../utilities/formatEventDate';
-import { EventCard } from '../components/ItineraryCalendar/EventCard';
+import { EventCard } from '../components/FormQuestions/EventCard';
 
 interface FormData {
   provinceId: number;
@@ -496,17 +496,20 @@ const FormQuestions = () => {
       <DialogWindow isOpen={dialogWindowOpen} onClose={handleCloseDialogWindow} />
       {loading ? (
         <div className="w-[90%] md:w-full mx-auto min-h-[90vh] flex flex-col items-center justify-center">
-          <h2 className="text-4xl text-center text-primary-4 mx-auto mb-6 md:mb-8">
-            Estamos armando el viaje ideal para vos...
-          </h2>
-          <Lottie className="w-[16rem] md:w-[18rem] mx-auto" animationData={logoAnimado} />
+          <div className="h-full flex flex-col md:flex-row justify-center items-center gap-x-4 my-4">
+            <h2 className="text-4xl text-center text-primary-4 mx-auto mb-6 md:mb-0">
+              Estamos armando el viaje ideal para vos...
+            </h2>
+            <Lottie className="w-[6rem] md:w-[4rem] mx-auto" animationData={logoAnimado} />
+          </div>
+
           <Swiper
             ref={swiperRef}
-            className="w-full max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[650px] xl:max-w-[750px]"
+            className="w-full max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[650px] xl:max-w-[850px]"
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             slidesPerView={1}
             slidesPerGroup={1}
-            autoplay={{ delay: 2000, disableOnInteraction: false }}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
             loop={true}
           >
             {carouselEvents.map((event) => (
@@ -521,6 +524,7 @@ const FormQuestions = () => {
                   image={event.image}
                   isSelected={selectedEvents.includes(event.id)}
                   onSelect={handleEventSelect}
+                  isLoading={true}
                 />
               </SwiperSlide>
             ))}
