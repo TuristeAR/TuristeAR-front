@@ -22,12 +22,12 @@ type User = {
 
 export const ItineraryDetail = () => {
   const { itineraryId } = useParams();
-  const { itinerary, activities } = useFetchItinerary(itineraryId || null);
+  const { itinerary, activities, events } = useFetchItinerary(itineraryId || null);
   const { downloadPDF } = useDownloadPdf();
 
   const [reviews, setReviews] = useState<any[]>([]);
   const [activitiesByNeighborhoodAndDay, setActivitiesByNeighborhoodAndDay] = useState({});
-  const [activitiesByDate, setActivitiesByDate] = useState({});
+  const [activitiesAndEventsByDate, setActivitiesAndEventsByDate] = useState({});
   let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
 
   useEffect(() => {
@@ -160,8 +160,7 @@ export const ItineraryDetail = () => {
   }, [activities]);
 
   useEffect(() => {
-    // Lógica para agrupar actividades por barrio y día
-    const fetchSuburbsAndGroupActivities = async () => {
+    const fetchSuburbsAndGroupActivitiesAndEvents = async () => {
       if (activities && activities.length > 0) {
         const suburbsPromises = activities.map((activity) =>
           fetchNeighborhoods(activity.place.latitude, activity.place.longitude),
@@ -175,37 +174,50 @@ export const ItineraryDetail = () => {
           const dayKey = reorderDate(fromDate.split('T')[0]);
 
           if (!acc[dayKey]) {
-            acc[dayKey] = {};
+            acc[dayKey] = { activities: {}, events: {} };
           }
-          if (!acc[dayKey][suburb]) {
-            acc[dayKey][suburb] = [];
+          if (!acc[dayKey].activities[suburb]) {
+            acc[dayKey].activities[suburb] = [];
           }
-          acc[dayKey][suburb].push(activity);
+          acc[dayKey].activities[suburb].push(activity);
           return acc;
         }, {});
+
+        if (events && events.length > 0) {
+          events.forEach((event) => {
+            const fromDate = typeof event.fromDate === 'string' ? event.fromDate : '';
+            const dayKey = reorderDate(fromDate.split('T')[0]);
+
+            if (!activitiesByNeighborhoodAndDay[dayKey]) {
+              activitiesByNeighborhoodAndDay[dayKey] = { activities: {}, events: {} };
+            }
+            if (!activitiesByNeighborhoodAndDay[dayKey].events[event.locality]) {
+              activitiesByNeighborhoodAndDay[dayKey].events[event.locality] = [];
+            }
+            activitiesByNeighborhoodAndDay[dayKey].events[event.locality].push(event);
+          });
+        }
 
         setActivitiesByNeighborhoodAndDay(activitiesByNeighborhoodAndDay);
       }
     };
 
-    fetchSuburbsAndGroupActivities();
-  }, [activities]);
+    fetchSuburbsAndGroupActivitiesAndEvents();
+  }, [activities, events]);
 
   useEffect(() => {
-    // Transformación de activitiesByNeighborhoodAndDay a activitiesByDate
-    const groupActivitiesByDate = () => {
-      const grouped = Object.entries(activitiesByNeighborhoodAndDay).reduce(
-        (acc, [date, neighborhoods]) => {
-          acc[date] = neighborhoods;
-          return acc;
-        },
-        {},
-      );
+    const groupActivitiesAndEventsByDate = () => {
+      const grouped = Object.entries<Record<string, { activities: any[]; events: any[] }>>(
+        activitiesByNeighborhoodAndDay,
+      ).reduce((acc, [date, { activities, events }]) => {
+        acc[date] = { activities, events };
+        return acc;
+      }, {});
 
-      setActivitiesByDate(grouped);
+      setActivitiesAndEventsByDate(grouped);
     };
 
-    groupActivitiesByDate();
+    groupActivitiesAndEventsByDate();
   }, [activitiesByNeighborhoodAndDay]);
 
   return (
@@ -247,13 +259,13 @@ export const ItineraryDetail = () => {
                     <div className="flex items-center p-1 gap-x-2 cursor-pointer">
                       <img src={calendarIcon} alt="" />
                       <Link to={`/itineraryCalendar/${itineraryId}`}>
-                        <p className="text-sm">Calendario</p>
+                        <p className="text-sm hover:underline">Calendario</p>
                       </Link>
                     </div>
                     <div className="flex items-center p-1 gap-x-2 cursor-pointer">
                       <img src={mapIcon} alt="" />
                       <Link to={`/itineraryMap/${itineraryId}`}>
-                        <p className="text-sm">Mapa</p>
+                        <p className="text-sm hover:underline">Mapa</p>
                       </Link>
                     </div>
                   </div>
@@ -279,41 +291,78 @@ export const ItineraryDetail = () => {
             <div className="mb-10">
               <h2 className="font-semibold text-md my-2">Itinerario de viaje</h2>
 
-              {Object.keys(activitiesByDate).map((dateKey, dayIndex) => (
-                <div key={dayIndex}>
-                  <div className="flex justify-between bg-gray-50 rounded-lg px-4 py-1 ">
-                    <h4 className="font-semibold text-md">Día {dayIndex + 1}</h4>
-                    <h4 className="font-semibold text-md">{formatDate(dateKey)}</h4>
-                  </div>
-                  {Object.keys(activitiesByDate[dateKey]).map((neighborhood, neighborhoodIndex) => (
-                    <div key={neighborhoodIndex}>
-                      <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md btn-drop-down-blue-itinerary my-1">
-                        {neighborhood}
-                      </h3>
-                      {activitiesByDate[dateKey][neighborhood].map((activity, idx) => (
-                        <div
-                          key={idx}
-                          className="my-4 option-card flex flex-row items-center gap-2  cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-                        >
-                          <div className="bg-gray-50 rounded-lg px-4 py-2">
-                            <span className="text-[0.95rem]">
-                              {formatTime(activity.fromDate)} - {formatTime(activity.toDate)}
-                            </span>
-                          </div>
-                          <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
-                            <Link
-                              to={`/lugar-esperado/${activity.place.googleId}`}
-                              className="font-semibold text-sm sm:text-base"
-                            >
-                              {activity.name?.split(' - ')[0]}
-                            </Link>
-                          </div>
-                        </div>
-                      ))}
+              {Object.keys(activitiesAndEventsByDate)
+                .sort((a, b) => a.localeCompare(b)) // Ordenar fechas como cadenas
+                .map((dateKey, dayIndex) => (
+                  <div key={dayIndex}>
+                    <div className="flex justify-between bg-gray-50 rounded-lg px-4 py-1 ">
+                      <h4 className="font-semibold text-md">Día {dayIndex + 1}</h4>
+                      <h4 className="font-semibold text-md">{formatDate(dateKey)}</h4>
                     </div>
-                  ))}
-                </div>
-              ))}
+
+                    {/* Mostrar actividades */}
+                    {Object.keys(activitiesAndEventsByDate[dateKey].activities).map(
+                      (neighborhood) => (
+                        <div key={neighborhood}>
+                          <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md btn-drop-down-blue-itinerary my-1">
+                            {neighborhood}
+                          </h3>
+                          {activitiesAndEventsByDate[dateKey].activities[neighborhood].map(
+                            (activity, idx) => (
+                              <div
+                                key={idx}
+                                className="my-4 option-card flex flex-row items-center gap-2 cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+                              >
+                                <div className="bg-gray-50 rounded-lg px-4 py-2">
+                                  <span className="text-[0.95rem]">
+                                    {formatTime(activity.fromDate)} - {formatTime(activity.toDate)}
+                                  </span>
+                                </div>
+                                <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
+                                  <Link
+                                    to={`/lugar-esperado/${activity.place.googleId}`}
+                                    className="font-semibold text-sm sm:text-base"
+                                  >
+                                    {activity.name?.split(' - ')[0]}
+                                  </Link>
+                                </div>
+                              </div>
+                            ),
+                          )}
+                        </div>
+                      ),
+                    )}
+
+                    {/* Mostrar eventos */}
+                    {Object.keys(activitiesAndEventsByDate[dateKey].events).map((locality) => (
+                      <div key={locality}>
+                        <h3 className="text-sm sm:text-md font-semibold flex items-center rounded-md btn-drop-down-blue-itinerary my-1">
+                          {locality}
+                        </h3>
+                        {activitiesAndEventsByDate[dateKey].events[locality].map((event, idx) => (
+                          <div
+                            key={idx}
+                            className="my-4 option-card flex flex-row items-center gap-2 cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+                          >
+                            <div className="bg-gray-50 rounded-lg px-4 py-2">
+                              <span className="text-[0.95rem]">
+                                {formatTime(event.fromDate)} - {formatTime(event.toDate)}
+                              </span>
+                            </div>
+                            <div className="flex-1 border-l border-gray-200 pl-4 sm:pl-2">
+                              <Link
+                                to={`/evento/${event.id}`}
+                                className="font-semibold text-sm sm:text-base"
+                              >
+                                {event.name}
+                              </Link>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                ))}
             </div>
           </div>
         </div>
