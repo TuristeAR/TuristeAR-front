@@ -247,13 +247,13 @@ export const ItineraryDetail = () => {
                     <div className="flex items-center p-1 gap-x-2 cursor-pointer">
                       <img src={calendarIcon} alt="" />
                       <Link to={`/itineraryCalendar/${itineraryId}`}>
-                        <p className="text-sm">Calendario</p>
+                        <p className="text-sm hover:underline">Calendario</p>
                       </Link>
                     </div>
                     <div className="flex items-center p-1 gap-x-2 cursor-pointer">
                       <img src={mapIcon} alt="" />
                       <Link to={`/itineraryMap/${itineraryId}`}>
-                        <p className="text-sm">Mapa</p>
+                        <p className="text-sm hover:underline">Mapa</p>
                       </Link>
                     </div>
                   </div>
