@@ -6,6 +6,7 @@ import { CreatePublications } from '../components/Community/CreatePublications';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import io from 'socket.io-client';
+import { CreateEvent } from '../components/Community/CreateEvent';
 
 
 type User={
@@ -143,6 +144,7 @@ const Publications = () => {
               {/* Create posts */}
               <CreatePublications />
               {/* Posts */}
+              <CreateEvent />
               <div className="flex flex-col gap-6 lg:w-[80%] w-[90%] mx-auto">
                 {publications?.filter((publication) => {
                   return categorySelected == null || publication.category.id == categorySelected;
