@@ -19,7 +19,7 @@ type User = {
   profilePicture: string;
 };
 
-const ExpensesList = ({ onAddExpense, itineraryId, itineraryName, onClose }) => {
+const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
   const [groupedExpenses, setGroupedExpenses] = useState({});
   const { usersOldNav } = useFetchParticipants(497);
   const [selectedExpenseId, setSelectedExpenseId] = useState<number | null>(null);
@@ -37,7 +37,9 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName, onClose }) => 
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await fetch(`https://api-turistear.koyeb.app/expenses/${itineraryId as number}`);
+        const response = await fetch(
+          `https://api-turistear.koyeb.app/expenses/${itineraryId as number}`,
+        );
         if (!response.ok) {
           throw new Error('Error al obtener los gastos');
         }
@@ -107,12 +109,9 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName, onClose }) => 
           expense={expense}
           onBack={() => setShowForm(false)}
           itineraryId={itineraryId}
-          onClose={onClose}
         />
       ) : (
-        <div className="bg-white p-6 rounded-sm shadow-lg max-w-lg mx-auto">
-               <ArrowLeft onClick={onClose} className='cursor-pointer'/>
-
+        <div className="bg-white w-full mx-auto">
           <h2 className="font-bold text-3xl lead-10 text-black mb-9">
             Gastos Compartidos - {itineraryName}
           </h2>
@@ -125,70 +124,73 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName, onClose }) => 
               Añadir Gasto
             </button>
           </div>
-
           {Object.keys(groupedExpenses).map((date) => (
             <div key={date} className="mt-4">
               <h2 className="text-2xl font-semibold mb-3">{date}</h2>
-              {groupedExpenses[date].map((expense: Expense) => {
-                const payer: User | undefined = usersOldNav.find(
-                  (user) => user.id === expense.payer.id,
-                );
-                const isSelected = selectedExpenseId === expense.id;
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
+                {groupedExpenses[date].map((expense: Expense) => {
+                  const payer: User | undefined = usersOldNav.find(
+                    (user) => user.id === expense.payer.id,
+                  );
+                  const isSelected = selectedExpenseId === expense.id;
 
-                return (
-                  <div key={expense.id}>
-                    <div
-                      onClick={() => handleOpenModal(expense.id)}
-                      className="flex justify-between p-2 rounded-xl bg-slate-50 m cursor-pointer transition-all duration-500 hover:bg-gray-50"
-                    >
-                      <div className="flex gap-1">
-                        <Receipt size={60} className='stroke-primary'/>
+                  return (
+                    <div className="max-w-xxl" key={expense.id}>
+                      <div
+                        onClick={() => handleOpenModal(expense.id)}
+                        className="flex justify-between p-2 rounded-xl bg-slate-50 m cursor-pointer transition-all duration-500 hover:bg-gray-50"
+                      >
+                        <div className="flex gap-1">
+                          <Receipt size={60} className="stroke-primary" />
 
-                        <div className="flex h-full px-1 flex-col items-start">
-                          <h5 className="font-semibold sm:text-2xl leading-9 text-black mb-1">
-                            {expense.description}
-                          </h5>
-                          <p className="text-base leading-7 text-gray-600">
-                            Pagado por{' '}
-                            {payer && payer.profilePicture && (
-                              <img
-                                src={payer.profilePicture}
-                                className="w-5 rounded-full inline-flex"
-                              />
-                            )}
-                            <span className="font-bold">{payer ? payer.name : 'Desconocido'}</span>
+                          <div className="flex h-full px-1 flex-col items-start">
+                            <h5 className="font-semibold sm:text-xl leading-9 text-black mb-1">
+                              {expense.description}
+                            </h5>
+                            <p className="text-sm text-gray-600">
+                              Pagado por{' '}
+                              {payer && payer.profilePicture && (
+                                <img
+                                  src={payer.profilePicture}
+                                  className="w-5 rounded-full inline-flex"
+                                />
+                              )}
+                              <span className="font-bold">
+                                {payer ? payer.name : 'Desconocido'}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-center">
+                          <p className="font-semibold text-2xl leading-8 text-black">
+                            ${expense.totalAmount}
                           </p>
                         </div>
+                        <div className=" flex flex-col justify-between ml-2">
+                          <Edit2Icon
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditExpense(expense);
+                            }}
+                            size={25}
+                            className="stroke-primary-3 hover:stroke-primary"
+                          />
+                          <CircleX
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteExpense(expense.id);
+                            }}
+                            size={25}
+                            className="stroke-[#ba0000] hover:stroke-[#f00]"
+                          />
+                        </div>
                       </div>
-                      <div className="flex items-center justify-center">
-                        <p className="font-semibold text-2xl leading-8 text-black">
-                          ${expense.totalAmount}
-                        </p>
-                      </div>
-                      <div className=" flex flex-col justify-between ml-2">
-                        <Edit2Icon
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEditExpense(expense);
-                          }}
-                          size={30}
-                          className="stroke-primary-3 hover:stroke-primary"
-                        />
-                        <CircleX
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteExpense(expense.id);
-                          }}
-                          size={30}
-                          className="stroke-[#ba0000] hover:stroke-[#f00]"
-                        />
-                      </div>
-                    </div>
 
-                    {isSelected && <ExpenseDetail expense={expense} onClose={handleCloseModal} />}
-                  </div>
-                );
-              })}
+                      {isSelected && <ExpenseDetail expense={expense} onClose={handleCloseModal} />}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           ))}
         </div>
