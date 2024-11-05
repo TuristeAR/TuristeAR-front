@@ -140,7 +140,7 @@ export const CreatePublications = () => {
           >
             <img
               src={'/assets/createPublications.svg'}
-              className={'lg:w-[70px] w-[45px] lg:m-6 m-3'}
+              className={'lg:w-[55px] w-[45px] lg:m-6 m-3'}
               alt={'Crear post'}
             />
           </div>
