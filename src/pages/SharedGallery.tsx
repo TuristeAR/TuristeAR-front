@@ -41,7 +41,7 @@ export const SharedGallery = () => {
         {activities.map((activity, index) => (
           <details key={index} className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-md">
             <summary className="text-xl font-semibold text-primary-3 cursor-pointer hover:text-primary-4">
-              {activity.name}
+              {activity.name + ' | ' + activity.images.length} {activity.images.length!=1 ? ' imágenes' : ' imagen'}
             </summary>
 
             <Swiper

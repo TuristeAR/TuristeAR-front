@@ -46,7 +46,6 @@ const ForumDetail = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -89,7 +88,6 @@ const ForumDetail = () => {
     };
     fetchData();
   }, [id]);
-
 
   return (
     <>
