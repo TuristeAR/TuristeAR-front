@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+
 type Category = {
   id: number;
   description: string;
