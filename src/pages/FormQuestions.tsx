@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Header } from '../components/Header/Header';
 import { MapaArg } from '../components/Destinations/MapaArg';
 import { ProgressBar } from '../components/Questions/ProgressBar';
@@ -8,6 +8,8 @@ import { DateRangePicker } from 'react-date-range';
 import { es } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { get, getWithoutCredentials, post } from '../utilities/http.util';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import {
   Baby,
   Banknote,
@@ -29,6 +31,7 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import EventCarousel from '../components/FormQuestions/EventCarousel';
 import formatFromDateAndToDate from '../utilities/formatEventDate';
+import { EventCard } from '../components/FormQuestions/EventCard';
 
 interface FormData {
   provinceId: number;
@@ -475,16 +478,57 @@ const FormQuestions = () => {
     fetchSession();
   }, []);
 
+  const [carouselEvents, setCarouselEvents] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (selectedProvince?.id) {
+      fetchEvents(selectedProvince.id).then((data) => {
+        setCarouselEvents(data.data);
+      });
+    }
+  }, [selectedProvince]);
+
+  const swiperRef = useRef(null);
+
   return (
     <>
       <Header />
       <DialogWindow isOpen={dialogWindowOpen} onClose={handleCloseDialogWindow} />
       {loading ? (
         <div className="w-[90%] md:w-full mx-auto min-h-[90vh] flex flex-col items-center justify-center">
-          <h2 className="text-4xl text-center text-primary-4 mx-auto mb-6 md:mb-8">
-            Estamos armando el viaje ideal para vos...
-          </h2>
-          <Lottie className="w-[16rem] md:w-[18rem] mx-auto" animationData={logoAnimado} />
+          <div className="h-full flex flex-col md:flex-row justify-center items-center gap-x-4 my-4">
+            <h2 className="text-4xl text-center text-primary-4 mx-auto mb-6 md:mb-0">
+              Estamos armando el viaje ideal para vos...
+            </h2>
+            <Lottie className="w-[6rem] md:w-[4rem] mx-auto" animationData={logoAnimado} />
+          </div>
+
+          <Swiper
+            ref={swiperRef}
+            className="w-full max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[650px] xl:max-w-[850px]"
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
+            slidesPerView={1}
+            slidesPerGroup={1}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            loop={true}
+          >
+            {carouselEvents.map((event) => (
+              <SwiperSlide key={event.id}>
+                <EventCard
+                  id={event.id}
+                  fromDate={event.fromDate}
+                  toDate={event.toDate}
+                  name={event.name}
+                  locality={event.locality}
+                  description={event.description}
+                  image={event.image}
+                  isSelected={selectedEvents.includes(event.id)}
+                  onSelect={handleEventSelect}
+                  isLoading={true}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
       ) : (
         <section

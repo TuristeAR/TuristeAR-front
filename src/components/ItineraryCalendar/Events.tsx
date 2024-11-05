@@ -10,7 +10,7 @@ function Events({ events, selectedEvents, onEventSelect }) {
     <>
       <Swiper
         ref={swiperRef}
-        className="w-full max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[650px] xl:max-w-[750px]"
+        className="w-full max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[650px] xl:max-w-[950px]"
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         slidesPerView={1}
         slidesPerGroup={1}
