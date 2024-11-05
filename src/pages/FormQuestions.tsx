@@ -32,6 +32,7 @@ import logoAnimado from '../assets/logoAnimado.json';
 import EventCarousel from '../components/FormQuestions/EventCarousel';
 import formatFromDateAndToDate from '../utilities/formatEventDate';
 import { EventCard } from '../components/FormQuestions/EventCard';
+import { getJsonUrl } from '../utilities/getJsonUrl';
 
 interface FormData {
   provinceId: number;
@@ -233,17 +234,21 @@ const FormQuestions = () => {
 
   const handleProvinceClick = (id: number) => {
     setLoadingLocalities(true);
+
     setLoadingEvents(true);
+
     const province = provinces.find((p) => p.id === id);
+
     setSelectedProvince(province);
+
     formData.provinceId = province.id;
-    getWithoutCredentials(
-      `https://apis.datos.gob.ar/georef/api/asentamientos?provincia=${province.georefId}&max=5000`,
-      {
-        'Content-Type': 'application/json',
-      },
-    ).then((r) => {
-      setLocalities(r.asentamientos);
+
+    const url = getJsonUrl(province.id);
+
+    getWithoutCredentials(url, {
+      'Content-Type': 'application/json',
+    }).then((r) => {
+      setLocalities(r);
       fetchEvents(province.id).then((events) => {
         setEvents(events.data);
         setLoadingLocalities(false);
