@@ -267,73 +267,97 @@ const Profile = () => {
               ref={contentRef}
             >
               {activeItem === 'posts' &&
-                publications
-                  ?.filter((publication) => {
-                    return categorySelected == null || publication.category.id == categorySelected;
-                  })
-                  .map((publication, index) => (
-                    <PublicationCard
-                      key={index}
-                      publication={publication}
-                      user={user}
-                      onDelete={() =>
-                        setPublications((prev) => prev.filter((p) => p.id !== publication.id))
-                      }
-                    />
-                  ))}
+                (publications && publications.length > 0 ? (
+                  publications
+                    .filter((publication) => {
+                      return (
+                        categorySelected == null || publication.category.id == categorySelected
+                      );
+                    })
+                    .map((publication, index) => (
+                      <PublicationCard
+                        key={index}
+                        publication={publication}
+                        user={user}
+                        onDelete={() =>
+                          setPublications((prev) => prev.filter((p) => p.id !== publication.id))
+                        }
+                      />
+                    ))
+                ) : (
+                  <p className="text-center text-xl md:mt-4 md:text-2xl">No hay publicaciones</p>
+                ))}
               {activeItem === 'itineraries' &&
-                itineraries?.map((itinerary, index) => {
-                  const imgProvince =
-                    itinerary.activities[0]?.place?.province?.images[0] ||
-                    '/assets/TuristeAR-logo.png';
+                (itineraries && itineraries.length > 0 ? (
+                  itineraries.map((itinerary, index) => {
+                    const imgProvince =
+                      itinerary.activities[0]?.place?.province?.images[0] ||
+                      '/assets/TuristeAR-logo.png';
 
-                  return (
-                    <ItineraryCard
-                      key={index}
-                      imgProvince={imgProvince}
-                      province={itinerary.name}
-                      departure={itinerary.fromDate}
-                      arrival={itinerary.toDate}
-                      userId={user.id}
-                      participants={itinerary.participants}
-                      id={itinerary.id}
-                      onDelete={() =>
-                        setItineraries((prev) => prev.filter((p) => p.id !== itinerary.id))
-                      }
-                    />
-                  );
-                })}
+                    return (
+                      <ItineraryCard
+                        key={index}
+                        imgProvince={imgProvince}
+                        province={itinerary.name}
+                        departure={itinerary.fromDate}
+                        arrival={itinerary.toDate}
+                        userId={user.id}
+                        participants={itinerary.participants}
+                        id={itinerary.id}
+                        onDelete={() =>
+                          setItineraries((prev) => prev.filter((p) => p.id !== itinerary.id))
+                        }
+                      />
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-xl md:mt-4 md:text-2xl">No hay itinerarios</p>
+                ))}
 
               {activeItem === 'likes' &&
-                likedPublications
-                  ?.filter((publication) => {
-                    return categorySelected == null || publication.category.id == categorySelected;
-                  })
-                  .map((publication, index) => (
-                    <PublicationCard
-                      key={index}
-                      publication={publication}
-                      user={user}
-                      onDelete={() =>
-                        setPublications((prev) => prev.filter((p) => p.id !== publication.id))
-                      }
-                    />
-                  ))}
+                (likedPublications && likedPublications.length > 0 ? (
+                  likedPublications
+                    .filter((publication) => {
+                      return (
+                        categorySelected == null || publication.category.id == categorySelected
+                      );
+                    })
+                    .map((publication, index) => (
+                      <PublicationCard
+                        key={index}
+                        publication={publication}
+                        user={user}
+                        onDelete={() =>
+                          setPublications((prev) => prev.filter((p) => p.id !== publication.id))
+                        }
+                      />
+                    ))
+                ) : (
+                  <p className="text-center text-xl md:mt-4 md:text-2xl">No hay likes</p>
+                ))}
               {activeItem === 'saved' &&
-                savedPublications
-                  ?.filter((publication) => {
-                    return categorySelected == null || publication.category.id == categorySelected;
-                  })
-                  .map((publication, index) => (
-                    <PublicationCard
-                      key={index}
-                      publication={publication}
-                      user={user}
-                      onDelete={() =>
-                        setPublications((prev) => prev.filter((p) => p.id !== publication.id))
-                      }
-                    />
-                  ))}
+                (savedPublications && savedPublications.length > 0 ? (
+                  savedPublications
+                    .filter((publication) => {
+                      return (
+                        categorySelected == null || publication.category.id == categorySelected
+                      );
+                    })
+                    .map((publication, index) => (
+                      <PublicationCard
+                        key={index}
+                        publication={publication}
+                        user={user}
+                        onDelete={() =>
+                          setPublications((prev) => prev.filter((p) => p.id !== publication.id))
+                        }
+                      />
+                    ))
+                ) : (
+                  <p className="text-center text-xl md:mt-4 md:text-2xl">
+                    No hay publicaciones guardadas
+                  </p>
+                ))}
             </div>
           </div>
         </div>
