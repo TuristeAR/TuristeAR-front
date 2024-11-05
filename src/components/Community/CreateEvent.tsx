@@ -110,7 +110,7 @@ export const CreateEvent =  () => {
         console.log(eventImages)
 
         try {
-            const response = await fetch('http://localhost:3001/createEventTemp', {
+            const response = await fetch('https://api-turistear.koyeb.app/createEventTemp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
