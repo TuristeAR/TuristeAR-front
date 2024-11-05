@@ -7,7 +7,20 @@ import { io } from 'socket.io-client';
 import Lottie from 'lottie-react';
 import logoAnimado from '../../assets/logoAnimado.json';
 
-export const Calendar = ({ onEventClick, activities, setActivities, deleteActivity, events }) => {
+import { get } from '../../utilities/http.util';
+import Events from '../../components/ItineraryCalendar/Events';
+import Swal from 'sweetalert2';
+
+export const Calendar = ({
+  onEventClick,
+  activities,
+  setActivities,
+  deleteActivity,
+  events,
+  setEvents,
+  itineraryId,
+  itinerary,
+}) => {
   const [initialDate, setInitialDate] = useState(null);
 
   const [loading, setLoading] = useState(true);
@@ -89,6 +102,91 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
     } catch (error) {
       console.error('Error al actualizar la actividad:', error);
     }
+  };
+  const [eventsAdd, setEventsAdd] = useState<any[]>([]);
+  const [selectedEvents, setSelectedEvents] = useState<number[]>([]);
+
+  useEffect(() => {
+    activities.forEach((activity) => {
+      fetchEvents(activity.place.province.id).then((data) => {
+        setEventsAdd(data.data);
+      });
+    });
+  }, [itinerary]);
+
+  const fetchEvents = async (provinceId: number) => {
+    return await get(`https://api-turistear.koyeb.app/events/${provinceId}`, {
+      'Content-Type': 'application/json',
+    });
+  };
+
+  const addEventToItinerary = async (itineraryId, eventId) => {
+    try {
+      const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ itineraryId, eventId }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Evento agregado',
+          text: 'Se agregó con éxito el evento.',
+        });
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error('Error adding event:', error);
+    }
+  };
+
+  const handleEventSelect = (id: number) => {
+    setSelectedEvents((prevSelectedEvents) => {
+      const isSelected = prevSelectedEvents.includes(id);
+      const newEvent = eventsAdd.find((event) => event.id === id);
+
+      const isEventAlreadyAdded = events.some((event) => event.id === newEvent.id);
+      if (isEventAlreadyAdded) {
+        Swal.fire({
+          icon: 'info',
+          title: 'Notificación',
+          text: 'Este evento ya está agregado.',
+        });
+        return prevSelectedEvents; // No hacer nada si ya está agregado
+      }
+
+      const updatedSelectedEvents = isSelected
+        ? prevSelectedEvents.filter((eventId) => eventId !== id)
+        : [...prevSelectedEvents, id];
+
+      setEvents((prevEvents) => {
+        if (newEvent && Object.keys(newEvent).length > 0) {
+          const itineraryStartDate = new Date(itinerary.fromDate).getTime();
+          const itineraryEndDate = new Date(itinerary.toDate).getTime();
+          const eventStartDate = new Date(newEvent.fromDate).getTime();
+          const eventEndDate = new Date(newEvent.toDate).getTime();
+
+          if (eventStartDate < itineraryStartDate || eventEndDate > itineraryEndDate) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Advertencia',
+              text: 'No puedes agregar este evento porque está fuera del rango de tu viaje.',
+            });
+            return prevEvents;
+          } else {
+            addEventToItinerary(itineraryId, newEvent.id);
+            return [...prevEvents, newEvent];
+          }
+        }
+        return prevEvents;
+      });
+      return updatedSelectedEvents;
+    });
   };
 
   return (
@@ -172,6 +270,11 @@ export const Calendar = ({ onEventClick, activities, setActivities, deleteActivi
                 center: 'title',
               }),
             }}
+          />
+          <Events
+            events={eventsAdd}
+            selectedEvents={selectedEvents}
+            onEventSelect={handleEventSelect}
           />
         </div>
       )}

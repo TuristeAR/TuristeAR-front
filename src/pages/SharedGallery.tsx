@@ -1,8 +1,8 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useFetchItinerary from '../utilities/useFetchItinerary';
 import { Header } from '../components/Header/Header';
 import { UploadImageSharedGallery } from '../components/ItineraryCalendar/UploadImageSharedGallery';
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
@@ -30,7 +30,10 @@ export const SharedGallery = () => {
       <Header />
       <UploadImageSharedGallery activities={activities} />
 
-      <div className="border-b p-4 mb-4 border-gray-50">
+      <div className="border-b p-4 mb-4 border-gray-50 flex items-center">
+        <Link to={`/itineraryCalendar/${itineraryId}`}>
+          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px]'}/>
+        </Link>
         <h2 className="text-2xl font-bold text-primary-3">{itinerary?.name}</h2>
       </div>
 
@@ -38,7 +41,7 @@ export const SharedGallery = () => {
         {activities.map((activity, index) => (
           <details key={index} className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-md">
             <summary className="text-xl font-semibold text-primary-3 cursor-pointer hover:text-primary-4">
-              {activity.name}
+              {activity.name + ' | ' + activity.images.length} {activity.images.length!=1 ? ' imágenes' : ' imagen'}
             </summary>
 
             <Swiper

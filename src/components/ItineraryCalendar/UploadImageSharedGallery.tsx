@@ -159,9 +159,9 @@ export const UploadImageSharedGallery = (props : {activities : any[]}) => {
                   </svg>
                 </button>
                 <h2 className="text-2xl text-center font-bold mb-4">Subir imágenes</h2>
-                <form onSubmit={addImagesToActivity}>
+                <form onSubmit={addImagesToActivity} className={'flex flex-col'}>
                   <div className={'flex flex-col gap-6'}>
-                    <div className={'grid grid-cols-2 gap-x-6'}>
+                    <div className={'grid grid-cols-1 gap-y-6'}>
                       <div className={'flex flex-col'}>
                         <label className="text-lg font-semibold">Actividad</label>
                         <select

@@ -7,23 +7,23 @@ import { useEffect, useRef, useState } from 'react';
 import logoAnimado from '../assets/logoAnimado.json';
 import Lottie from 'lottie-react';
 import { get } from '../utilities/http.util';
+import { reorderDate } from '../utilities/reorderDate';
 
-
-type User={
+type User = {
   id: number;
-  name: string,
-  profilePicture: string,
-  description: string,
-  birthdate: string,
-  coverPicture: string,
-  location: string
-}
+  name: string;
+  profilePicture: string;
+  description: string;
+  birthdate: string;
+  coverPicture: string;
+  location: string;
+};
 
 type Comment = {
   createdAt: string;
   description: string;
-  user : User | null;
-}
+  user: User | null;
+};
 
 type Category = {
   id: number;
@@ -32,16 +32,16 @@ type Category = {
 };
 
 type Place = {
-  id: number,
-  name: string,
-  googleId: string,
+  id: number;
+  name: string;
+  googleId: string;
 };
 
 type Activity = {
-  id: number,
-  name: string,
-  place: Place
-  images: string[]
+  id: number;
+  name: string;
+  place: Place;
+  images: string[];
 };
 
 type Publication = {
@@ -50,11 +50,11 @@ type Publication = {
   category: Category | null;
   createdAt: string;
   user: User | null;
-  likes : User[]
-  reposts : User[]
-  saved : User[]
-  comments : Comment[]
-  activities: Activity[]
+  likes: User[];
+  reposts: User[];
+  saved: User[];
+  comments: Comment[];
+  activities: Activity[];
 };
 type Itinerary = {
   activities: any;
@@ -106,7 +106,6 @@ const Profile = () => {
         },
       );
 
-      console.log(itinerariesResponse);
       setItineraries(itinerariesResponse.participants);
     };
 
@@ -158,15 +157,6 @@ const Profile = () => {
     }
   };
 
-  const reorderDate = (dateString: string) => {
-    const formatDate = (date) => {
-      const [year, month, day] = date.split('-');
-      return `${day}-${month}-${year}`;
-    };
-
-    return formatDate(dateString);
-  };
-
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
@@ -188,7 +178,7 @@ const Profile = () => {
             <div className="">
               <div className="h-[200px]">
                 <img
-                  src={user?.coverPicture}
+                  src={user?.coverPicture ? user.coverPicture : ''}
                   alt={'Foto de portada'}
                   className={'w-[100%] h-[100%] object-cover'}
                 />
@@ -204,7 +194,7 @@ const Profile = () => {
                   <div className="flex gap-4 lg:text-[14px] text-[10px] mt-2 text-[#999999]">
                     <div className="flex items-center gap-x-2">
                       <img src="/assets/location.svg" alt="Ubicación" className="w-6 h-6" />
-                      <p>{user?.location}, Argentina</p>
+                      <p>{user?.location ? user.location + ', Argentina' : 'Desconocido'}</p>
                     </div>
                     <div className="flex items-center gap-x-2">
                       <img src="/assets/calendar.svg" alt="Calendario" className="w-6 h-6" />
@@ -221,7 +211,7 @@ const Profile = () => {
                     className={`lg:w-[150px] w-[100px] lg:h-[150px] h-[100px] bg-gray border-white border-4`}
                   >
                     <img
-                      src={user?.profilePicture}
+                      src={user?.profilePicture ? user.profilePicture : ''}
                       alt={user?.name}
                       className="w-[100%] h-[100%]"
                     />
@@ -272,50 +262,102 @@ const Profile = () => {
             <CreatePublications />
 
             {/* Content */}
-            <div className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid grid-cols-2 gap-6' : 'flex flex-col gap-8'}`} ref={contentRef}>
+            <div
+              className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid lg:grid-cols-2 gap-6 grid-cols-1' : 'flex flex-col gap-8'}`}
+              ref={contentRef}
+            >
               {activeItem === 'posts' &&
-                publications
-                  ?.filter((publication) => {
-                    return categorySelected == null || publication.category.id == categorySelected;
-                  })
-                  .map((publication, index) => (
-                    <PublicationCard key={index} publication={publication} user={user} onDelete={ () => setPublications((prev) => prev.filter((p) => p.id !== publication.id))} />
-                  ))}
+                (publications && publications.length > 0 ? (
+                  publications
+                    .filter((publication) => {
+                      return (
+                        categorySelected == null || publication.category.id == categorySelected
+                      );
+                    })
+                    .map((publication, index) => (
+                      <PublicationCard
+                        key={index}
+                        publication={publication}
+                        user={user}
+                        onDelete={() =>
+                          setPublications((prev) => prev.filter((p) => p.id !== publication.id))
+                        }
+                      />
+                    ))
+                ) : (
+                  <p className="text-center text-xl md:mt-4 md:text-2xl">No hay publicaciones</p>
+                ))}
               {activeItem === 'itineraries' &&
-                itineraries?.map((itinerary, index) => {
-                  const imgProvince =
-                    itinerary.activities[0]?.place?.province?.images[0] ||
-                    '/assets/TuristeAR-logo.png';
+                (itineraries && itineraries.length > 0 ? (
+                  itineraries.map((itinerary, index) => {
+                    const imgProvince =
+                      itinerary.activities[0]?.place?.province?.images[0] ||
+                      '/assets/TuristeAR-logo.png';
 
-                  return (
-                    <ItineraryCard
-                      key={index}
-                      imgProvince={imgProvince}
-                      province={itinerary.name}
-                      departure={itinerary.fromDate}
-                      arrival={itinerary.toDate}
-                      participants={itinerary.participants}
-                      id={itinerary.id}
-                    />
-                  );
-                })}
+                    return (
+                      <ItineraryCard
+                        key={index}
+                        imgProvince={imgProvince}
+                        province={itinerary.name}
+                        departure={itinerary.fromDate}
+                        arrival={itinerary.toDate}
+                        userId={user.id}
+                        participants={itinerary.participants}
+                        id={itinerary.id}
+                        onDelete={() =>
+                          setItineraries((prev) => prev.filter((p) => p.id !== itinerary.id))
+                        }
+                      />
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-xl md:mt-4 md:text-2xl">No hay itinerarios</p>
+                ))}
 
               {activeItem === 'likes' &&
-                likedPublications
-                  ?.filter((publication) => {
-                    return categorySelected == null || publication.category.id == categorySelected;
-                  })
-                  .map((publication, index) => (
-                    <PublicationCard key={index} publication={publication} user={user} onDelete={ () => setPublications((prev) => prev.filter((p) => p.id !== publication.id))} />
-                  ))}
+                (likedPublications && likedPublications.length > 0 ? (
+                  likedPublications
+                    .filter((publication) => {
+                      return (
+                        categorySelected == null || publication.category.id == categorySelected
+                      );
+                    })
+                    .map((publication, index) => (
+                      <PublicationCard
+                        key={index}
+                        publication={publication}
+                        user={user}
+                        onDelete={() =>
+                          setPublications((prev) => prev.filter((p) => p.id !== publication.id))
+                        }
+                      />
+                    ))
+                ) : (
+                  <p className="text-center text-xl md:mt-4 md:text-2xl">No hay likes</p>
+                ))}
               {activeItem === 'saved' &&
-                savedPublications
-                  ?.filter((publication) => {
-                    return categorySelected == null || publication.category.id == categorySelected;
-                  })
-                  .map((publication, index) => (
-                    <PublicationCard key={index} publication={publication} user={user} onDelete={ () => setPublications((prev) => prev.filter((p) => p.id !== publication.id))} />
-                  ))}
+                (savedPublications && savedPublications.length > 0 ? (
+                  savedPublications
+                    .filter((publication) => {
+                      return (
+                        categorySelected == null || publication.category.id == categorySelected
+                      );
+                    })
+                    .map((publication, index) => (
+                      <PublicationCard
+                        key={index}
+                        publication={publication}
+                        user={user}
+                        onDelete={() =>
+                          setPublications((prev) => prev.filter((p) => p.id !== publication.id))
+                        }
+                      />
+                    ))
+                ) : (
+                  <p className="text-center text-xl md:mt-4 md:text-2xl">
+                    No hay publicaciones guardadas
+                  </p>
+                ))}
             </div>
           </div>
         </div>

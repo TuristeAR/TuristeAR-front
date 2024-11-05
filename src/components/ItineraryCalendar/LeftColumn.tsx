@@ -10,6 +10,8 @@ import useFetchParticipants from '../../utilities/useFetchParticipants';
 import { AddParticipantModal } from '../AddParticipantModal/AddParticipantModal';
 import { io } from 'socket.io-client';
 import SharedExpenses from '../../pages/SharedExpenses';
+import useAddActivities from '../../utilities/useAddActivities';
+import { get } from '../../utilities/http.util';
 
 type User = {
   id: number;
@@ -30,16 +32,44 @@ export const LeftColumn = ({
   events,
   setEvents,
   deleteEvent,
+  onDelete
 }) => {
-  const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
+  
   const [selectedPlace, setSelectedPlace] = useState('');
   const [showPlaces, setShowPlaces] = useState(false);
   const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
-  const [showForm, setShowForm] = useState(false);
+
+  const { handleAddActivity, newActivity, setNewActivity } = useAddActivities(
+    itineraryId,
+    setActivities,
+  );
+
+  const btnHandleAddActivity = () => {
+    handleAddActivity();
+    setIsAddingActivity(false);
+  };
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
   const socket = io('https://api-turistear.koyeb.app');
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const session = await get('https://api-turistear.koyeb.app/session', {
+        contentType: 'application/json',
+      });
+
+      if (session.statusCode !== 200) {
+        window.location.href = '/login';
+        return;
+      }
+
+      setUser(session.user);
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     socket.on('usersUpdated', (data) => {
@@ -51,7 +81,7 @@ export const LeftColumn = ({
 
       setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
     });
-    socket.on('usersAdddItinerary', (data) => {
+    socket.on('usersAddItinerary', (data) => {
       console.log('socket add', data.updatedItinerary);
       const owner = {
         ...data.updatedItinerary.user,
@@ -76,29 +106,14 @@ export const LeftColumn = ({
       setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
     });
 
-    socket.on('addActivity', ({ itinerary }) => {
-      console.log(itinerary);
-      const updatedItinerary = itinerary;
-      const activitiesList = updatedItinerary?.activities || [];
-      const lastActivity = activitiesList[activitiesList.length - 1];
-
-      if (lastActivity) {
-        setActivities((prevActivities) => [...prevActivities, lastActivity]);
-      }
-
-      setNewActivity({ name: '', fromDate: '', toDate: '', place: '' }); // Resetear el formulario
-      setIsAddingActivity(false); // Cerrar el formulario
-    });
-
     return () => {
       socket.off('usersUpdated');
       socket.off('userRemoved');
-      socket.off('usersAdddItinerary');
+      socket.off('usersAddItinerary');
       socket.off('activityRemoved');
-      socket.off('eventRemoved');
-      socket.off('addActivity');
     };
   }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setSelectedPlace(inputValue);
@@ -116,38 +131,6 @@ export const LeftColumn = ({
     setSelectedPlace(placeName);
     setNewActivity({ ...newActivity, place: placeId });
     setShowPlaces(false); // Cierra la lista al seleccionar un lugar
-  };
-
-  const handleAddActivity = () => {
-    fetch('https://api-turistear.koyeb.app/itinerary/add-activity', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ itineraryId, createActivityDto: newActivity }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Response data:', data); // Verificar la estructura de la respuesta
-
-        if (data.status === 'success') {
-          const updatedItinerary = data.itinerary;
-          const activitiesList = updatedItinerary?.activities || [];
-          const lastActivity = activitiesList[activitiesList.length - 1];
-
-          if (lastActivity) {
-            setActivities((prevActivities) => [...prevActivities, lastActivity]);
-          }
-
-          setNewActivity({ name: '', fromDate: '', toDate: '', place: '' }); // Resetear el formulario
-          setIsAddingActivity(false); // Cerrar el formulario
-        } else {
-          console.error('Error al agregar la actividad:', data.message);
-        }
-      })
-      .catch((error) => {
-        console.error('Error al agregar la actividad:', error);
-      });
   };
 
   const deleteActivity = (activityId: number) => {
@@ -177,6 +160,15 @@ export const LeftColumn = ({
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
   };
+
+  const deleteItinerary = async (id: number) => {
+    const socket = io('https://api-turistear.koyeb.app');
+    socket.emit('deleteItinerary', {
+      itineraryId: id,
+      userId: user.id,
+    });
+    onDelete()
+  }
 
   return (
     <aside className="order-2 lg:order-1 col-span-1 p-4 flex">
@@ -221,13 +213,15 @@ export const LeftColumn = ({
               <img src={alignIcon} alt="" />
               <p className="text-sm">Resumen del viaje</p>
             </div>
-            <div
-              className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => setIsShowExpanse(true)}
-            >
-              <Receipt className="stroke-primary" strokeWidth={1} />
-              <p className="text-sm">Gastos compartidos</p>
-            </div>
+            {user && itinerary && user.id == itinerary.user.id && (
+              <div
+                className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+                onClick={() => deleteItinerary(itineraryId)}
+              >
+                <Trash2 strokeWidth={1} color="red" />
+                <p className="text-sm">Eliminar</p>
+              </div>
+            )}
           </div>
         </div>
         <div className="flex flex-col gap-4 my-4 border-gray">
@@ -306,7 +300,7 @@ export const LeftColumn = ({
                 </div>
 
                 <div className="flex gap-x-2 justify-center">
-                  <button onClick={handleAddActivity} className="btn-question">
+                  <button onClick={btnHandleAddActivity} className="btn-question">
                     Agregar
                   </button>
                   <button onClick={() => setIsAddingActivity(false)} className="btn-question">
@@ -325,7 +319,7 @@ export const LeftColumn = ({
             <p>No hay actividades para eliminar</p>
           ) : (
             <>
-              <div className="w-full flex flex-col gap-4 mb-2">
+              <div className="w-full flex flex-col gap-4 mb-2 overflow-scroll scrollbar-hidden max-h-[400px]">
                 {activities.map((activity, index) => (
                   <div
                     key={index}

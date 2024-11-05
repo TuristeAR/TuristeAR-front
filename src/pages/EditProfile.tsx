@@ -161,7 +161,7 @@ const EditProfile = () => {
           <Header containerStyles={'relative top-0 z-[60]'} />
           <div
             className={
-              'rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] p-10 w-[60%] mx-auto mt-16 flex flex-col gap-y-10'
+              'rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] p-10 w-[60%] mx-auto m-10 flex flex-col gap-y-10'
             }
           >
             <h1 className={'text-center text-5xl'}>Editar perfil</h1>
