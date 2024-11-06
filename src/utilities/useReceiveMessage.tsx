@@ -34,7 +34,6 @@ type Forum = {
   description: string;
   category: Category | null;
   messages: Message[];
-  itinerary: Itinerary;
 };
 
 type UseReceiveMessageProps = {
