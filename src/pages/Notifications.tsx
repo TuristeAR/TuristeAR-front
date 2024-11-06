@@ -65,7 +65,7 @@ const Notifications = () => {
   };
 
   const fetchUser = async () => {
-    const response = await get(' https://api-turistear.koyeb.app/session', {
+    const response = await get('https://api-turistear.koyeb.app/session', {
       'Content-Type': 'application/json',
     });
 
@@ -74,6 +74,13 @@ const Notifications = () => {
     } else {
       window.location.href = '/login';
     }
+  };
+
+  const updateNotifications = async () => {
+    await fetch('http://localhost:3001/markNotificationsAsRead', {
+      method: 'PUT',
+      credentials: 'include'
+    });
   };
 
   const fetchNotifications = async () => {
@@ -88,6 +95,7 @@ const Notifications = () => {
   useEffect(() => {
     fetchUser();
     fetchNotifications();
+    updateNotifications()
   }, []);
 
   return (
@@ -140,7 +148,7 @@ const Notifications = () => {
                           ))}
                           <h1 className={'font-bold text-[18px]'}>{notification.description}</h1>
                         </div>
-                        <p className={`text-l ${notification.isRead && 'text-[#999999]'}`}>
+                        <p className={`text-l ${notification.isRead && 'text-[#484b56]'}`}>
                           {notification.publication.description.slice(0, 100)}
                         </p>
                       </div>
@@ -155,7 +163,7 @@ const Notifications = () => {
                           />
                           <h1 className={'font-bold text-[18px]'}>{notification.description}</h1>
                         </div>
-                        <p className={`text-l ${notification.isRead && 'text-[#999999]'}`}>
+                        <p className={`text-l ${notification.isRead && 'text-[#484b56]'}`}>
                           {notification.itinerary.name}
                         </p>
                       </div>
