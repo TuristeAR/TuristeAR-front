@@ -41,22 +41,18 @@ export const Nav = () => {
   };
 
   const fetchNotifications = async () => {
-    const response = await get('http://localhost:3001/notifications/byUser', {
+    const response = await get('https://api-turistear.koyeb.app/notifications/byUser', {
       'Content-Type': 'application/json',
       credentials: 'include',
     });
-
-    if (response.statusCode === 200) {
-      setNotifications(response)
-    } else {
-      localStorage.removeItem('user');
-    }
+    setNotifications(response)
   };
 
   useEffect(() => {
     const cachedUser = localStorage.getItem('user');
     setUser(cachedUser ? JSON.parse(cachedUser) : null);
     fetchUser();
+    fetchNotifications()
   }, []);
 
   return (
@@ -122,8 +118,8 @@ export const Nav = () => {
               </g>
             </svg>
             {notifications.length > 0 && (
-              <div className="absolute bg-[#c0daeb] rounded-full w-[35px] h-[35px] flex items-center justify-center -left-5 -top-5">
-                <span className={'font-semibold'}>{notifications.length}</span>
+              <div className="absolute bg-[#c0daeb] rounded-full w-[27px] h-[27px] flex items-center justify-center -left-3 -top-3">
+                <span className={'font-semibold text-sm'}>{notifications.length}</span>
               </div>
             )}
           </div>
