@@ -113,13 +113,13 @@ const ForumDetail = () => {
               <div
                 className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex flex-col p-6'}
               >
-                <h1 className="text-3xl">{forum?.name}</h1>
-                <h3 className={'text-[#999999]'}>{forum.category.description}</h3>
+                <h1 className="my-1 text-3xl">{forum?.name}</h1>
+                <h3 className={'my-1 text-2xl text-[#999999]'}>{forum.category.description}</h3>
+                <p className="my-1 text-xl italic">{forum.description}</p>
               </div>
               <div className="overflow-scroll scrollbar-hidden h-[90%] lg:px-4 px-2 py-6  flex flex-col gap-y-6">
                 <MessagesContainer forum={forum} user={user} />
               </div>
-
               <CreateMessage user={user} forum={forum} setForum={setForum} />
             </div>
           </div>

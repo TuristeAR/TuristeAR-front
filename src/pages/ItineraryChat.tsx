@@ -108,17 +108,21 @@ const ItineraryChat = () => {
           <div className="flex h-[100vh]">
             <div className="lg:w-[100%] w-[100%] flex flex-col overflow-scroll scrollbar-hidden">
               <div
-                className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex items-center p-4'}
+                className={
+                  'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex items-center p-4'
+                }
               >
                 <Link to={`/itineraryCalendar/${itineraryId}`}>
-                  <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px]'}/>
+                  <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px]'} />
                 </Link>
                 <h1 className="text-3xl">{itinerary?.name}</h1>
               </div>
               <div className="overflow-scroll scrollbar-hidden lg:px-4 px-2 py-6 h-[86%]  flex flex-col gap-y-6">
                 <MessagesContainer forum={forum} user={user} />
               </div>
-              <CreateMessage user={user} forum={forum} setForum={setForum} />
+              <div className="flex justify-center">
+                <CreateMessage user={user} forum={forum} setForum={setForum} />
+              </div>
             </div>
           </div>
         </>
