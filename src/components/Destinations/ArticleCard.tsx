@@ -10,7 +10,7 @@ interface ArticleCardProps {
 export const ArticleCard: React.FC<ArticleCardProps> = ({ title, image, rating, address }) => {
   return (
     <div className="h-[400px] max-w-xs m-auto bg-white border border-primary-3 rounded-lg shadow relative group overflow-hidden transform transition-transform duration-300  hover:shadow-sm hover:shadow-gray hover:-translate-y-1.5 mt-2">
-      <span className="absolute inset-0 z-10 bg-orange transition-all duration-300 ease-out transform translate-x-full translate-y-full group-hover:translate-x-0 group-hover:translate-y-0"></span>
+      <span className="absolute inset-0 z-10 bg-primary-4 transition-all duration-300 ease-out transform translate-x-full translate-y-full group-hover:translate-x-0 group-hover:translate-y-0"></span>
       <div className="relative z-30">
         <div className="h-[200px] overflow-hidden">
           <img
