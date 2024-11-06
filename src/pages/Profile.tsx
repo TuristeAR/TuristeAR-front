@@ -157,6 +157,8 @@ const Profile = () => {
     }
   };
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
     <>
       <Header containerStyles={'relative top-0 z-[60]'} />
@@ -165,15 +167,20 @@ const Profile = () => {
           <Lottie className="w-[16rem] md:w-[18rem] mx-auto" animationData={logoAnimado} />
         </div>
       ) : (
-        <div className="flex justify-between h-[160vh] ">
+        <div
+          className={`flex justify-between min-h-[88.8vh] relative ${isOpen ? 'overflow-hidden' : ''}`}
+        >
           <LeftCommunity
             vista=""
             categorySelected={categorySelected}
             setCategorySelected={setCategorySelected}
             activeItem={activeItem}
             handleClick={handleClick}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
           />
-          <div className="lg:w-[80%] w-[100%] lg:p-10 lg:pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
+          <div className="absolute md:static lg:w-[80%] w-[100%] lg:p-10 lg:pt-0 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
+            {' '}
             {/* Portada */}
             <div className="">
               <div className="h-[200px]">
@@ -216,10 +223,10 @@ const Profile = () => {
                       className="w-[100%] h-[100%]"
                     />
                   </div>
-                  <div>
+                  <div className="-my-4 md:-my-0">
                     <a
                       href={`/editProfile`}
-                      className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl"
+                      className="lg:btn-blue px-4 py-2 text-sm bg-primary hover:bg-primary-3 text-white rounded-2xl"
                     >
                       Editar perfil
                     </a>
@@ -227,7 +234,6 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-
             <div className="border-b border-black grid lg:grid-cols-4 lg:grid-rows-1 grid-cols-2 grid-rows-2 lg:text-2xl text-xl lg:ml-0 ml-4 font-semibold">
               <h2
                 className={`hover:cursor-pointer text-center py-2 rounded-t-xl ${activeItem === 'posts' ? 'bg-[#c0daeb]' : ''}`}
@@ -258,9 +264,7 @@ const Profile = () => {
                 Guardados
               </h2>
             </div>
-
             <CreatePublications />
-
             {/* Content */}
             <div
               className={`lg:w-[100%] w-[90%] mx-auto ${activeItem === 'itineraries' ? 'grid lg:grid-cols-2 gap-6 grid-cols-1' : 'flex flex-col gap-8'}`}

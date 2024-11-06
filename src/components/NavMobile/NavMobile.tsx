@@ -42,7 +42,7 @@ export const NavMobile = () => {
         <ul className="flex flex-col gap-8 font-primary text-2xl font-semibold items-center uppercase ">
           {!user ? (
             <Link to={'/login'} className="flex justify-center items-center ">
-              <p className=" text-4xl font-semibold  uppercase text-white hover:text-gray ">
+              <p className=" text-2xl font-semibold  uppercase text-white hover:text-gray ">
                 Login
               </p>
             </Link>
