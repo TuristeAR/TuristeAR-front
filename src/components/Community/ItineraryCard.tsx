@@ -23,6 +23,7 @@ export const ItineraryCard = (props: {
       itineraryId: id,
       userId: userId,
     });
+    setIsDropdownOpen(false);
     onDelete();
   };
 

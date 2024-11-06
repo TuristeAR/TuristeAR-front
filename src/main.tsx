@@ -20,6 +20,7 @@ import { ItineraryMap } from './pages/ItineraryMap';
 import PublicationDetail from './pages/PublicationDetail';
 import { SharedGallery } from './pages/SharedGallery';
 import SharedExpenses from './pages/SharedExpenses';
+import Notifications from './pages/Notifications';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -36,6 +37,7 @@ root.render(
       <Route path="/profile" element={<Profile />} />
       <Route path="/editProfile" element={<EditProfile />} />
       <Route path="/community" element={<Publications />} />
+      <Route path="/notifications" element={<Notifications />} />
       <Route path="/publications" element={<Publications />} />
       <Route path="/publication/:publicationId" element={<PublicationDetail />} />
       <Route path="/profile" element={<Profile />} />
