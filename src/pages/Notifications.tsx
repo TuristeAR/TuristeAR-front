@@ -77,7 +77,7 @@ const Notifications = () => {
   };
 
   const updateNotifications = async () => {
-    await fetch('http://localhost:3001/markNotificationsAsRead', {
+    await fetch('https://api-turistear.koyeb.app/markNotificationsAsRead', {
       method: 'PUT',
       credentials: 'include'
     });
