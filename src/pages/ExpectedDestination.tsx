@@ -284,88 +284,6 @@ const ExpectedDestination = () => {
         </div>
       </section>
 
-{/* Puntos de interes */}
-
-      <section  ref={lugaresRef} className="my-10">
-        <div className="sm:w-10/12 m-auto mt-10">
-          <h3
-            onClick={() => setShowedLugares(!showedLugares)}
-            className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer">
-            Lugares
-            <div className="icons">
-              <svg
-                className={`${!showedLugares ? 'block' : 'hidden'}`}
-                xmlns="http://www.w3.org/2000/svg"
-                height="50px"
-                viewBox="0 -960 960 960"
-                width="50px"
-                fill="#FFFFFF">
-                <path d="M480-360 280-560h400L480-360Z" />
-              </svg>
-              <svg
-                className={`${showedLugares ? 'block' : 'hidden'}`}
-                xmlns="http://www.w3.org/2000/svg"
-                height="50px"
-                viewBox="0 -960 960 960"
-                width="50px"
-                fill="#FFFFFF">
-                <path d="m280-400 200-200 200 200H280Z" />
-              </svg>
-            </div>
-          </h3>
-          <div className={`${showedLugares ? 'block' : 'hidden'}`}>
-            <div className="relative px-1 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
-              <Swiper
-                modules={[Navigation, Pagination, Scrollbar, A11y]}
-                spaceBetween={5}
-                slidesPerView={'auto'}
-                navigation={{
-                  nextEl: '.swiper-button-next',
-                  prevEl: '.swiper-button-prev',
-                }}
-                onSwiper={(swiper) => console.log(swiper)}
-                onSlideChange={() => console.log('slide change')}
-                breakpoints={{
-                  300: {
-                    slidesPerView: 1,
-                  },
-                  480: {
-                    slidesPerView: 2,
-                  },
-                  768: {
-                    slidesPerView: 3,
-                  },
-                  1024: {
-                    slidesPerView: 4,
-                  },
-                }}>
-                {pointsInterest.map(
-                  (article) =>
-                    article.reviews.length > 0 &&
-                    article.reviews[0].photos.length > 0 && (
-                      <div className="w-80" key={article.id}>
-                        <SwiperSlide>
-                          <Link to={`/lugar-esperado/${article.googleId}`}>
-                            <ArticleCard
-                              key={article.id}
-                              title={article.name}
-                              image={article.reviews[0].photos[0]}
-                              rating={article.rating}
-                              address={article.address}
-                            />
-                          </Link>
-                        </SwiperSlide>
-                      </div>
-                    ),
-                )}
-              </Swiper>
-              <div className="swiper-button-prev hidden"></div>
-              <div className="hidden swiper-button-next"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
 {/* Cultura */}
 
 <section ref={cultureRef} className="my-10">
@@ -419,7 +337,7 @@ const ExpectedDestination = () => {
             },
           }}>
         {culturePlace.map((article) => (
-         article.reviews.length > 0 && article.reviews[0].photos.length > 0 && (
+         article.reviews.length > 0 && article.reviews[0]?.photos?.length > 0 && (
         <div className="w-80" key={article.id}>
           <SwiperSlide>
           <Link to={`/lugar-esperado/${article.googleId}`}>
@@ -495,7 +413,7 @@ const ExpectedDestination = () => {
             },
           }}>
         {airFreePlace.map((article) => (
-         article.reviews.length > 0 && article.reviews[0].photos.length > 0 && (
+         article.reviews.length > 0 && article.reviews[0]?.photos?.length > 0 && (
         <div className="w-80" key={article.id}>
           <SwiperSlide>
           <Link to={`/lugar-esperado/${article.googleId}`}>
@@ -571,7 +489,7 @@ const ExpectedDestination = () => {
             },
           }}>
         {atractionPlace.map((article) => (
-         article.reviews.length > 0 && article.reviews[0].photos.length > 0 && (
+         article.reviews.length > 0 && article.reviews[0]?.photos?.length > 0 && (
         <div className="w-80" key={article.id}>
           <SwiperSlide>
           <Link to={`/lugar-esperado/${article.googleId}`}>
@@ -647,7 +565,7 @@ const ExpectedDestination = () => {
             },
           }}>
         {gastronomyPlace.map((article) => (
-         article.reviews.length > 0 && article.reviews[0].photos.length > 0 && (
+         article.reviews.length > 0 && article.reviews[0]?.photos?.length > 0 && (
         <div className="w-80" key={article.id}>
           <SwiperSlide>
           <Link to={`/lugar-esperado/${article.googleId}`}>
