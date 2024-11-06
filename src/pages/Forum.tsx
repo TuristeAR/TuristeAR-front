@@ -74,9 +74,8 @@ const Forum = () => {
               className="absolute md:static lg:w-[80%] w-[100%] py-10 flex flex-col gap-10 ${
                 scrollbar-hidden"
             >
-              {' '}
               <CreateForums />
-              <div className={'grid lg:grid-cols-2 grid-cols-1 m-4 gap-6'}>
+              <div className={'grid lg:grid-cols-2 grid-cols-1 mx-4 gap-6'}>
                 {forums
                   ?.filter((forum) => {
                     return categorySelected == null || forum.category.id == categorySelected;
