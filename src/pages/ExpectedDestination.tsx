@@ -58,11 +58,18 @@ type PlaceCard = {
 const ExpectedDestination = () => {
   const [showedLugares, setShowedLugares] = useState(false);
   const [showedGastronomia, setShowedGastronomia] = useState(false);
+  const [showedCulture, setShowedCulture] = useState(false);
+  const [showedFreeAir, setShowedFreeAir] = useState(false);
+
   const [visibleCount, setVisibleCount] = useState(3);
+
   const { nombreDeLaProvincia } = useParams();
   const [province, setProvince] = useState<Province>();
+
   const [gastronomyPlace, setGastronomyPlace] = useState<PlaceCard[]>([]);
   const [pointsInterest, setPointsInterest] = useState<PlaceCard[]>([]);
+  const [culturePlaces, setCulture] = useState<PlaceCard[]>([]);
+  const [FreeAirPlaces, setFreeAir] = useState<PlaceCard[]>([]);
 
   useEffect(() => {
     const fetchProvince = async () => {
@@ -118,6 +125,44 @@ const ExpectedDestination = () => {
       }
     };
     fetchPointsInterest();
+  }, [province]);
+
+  useEffect(() => {
+    const fetchCulture = async () => {
+      if (province) {
+        try {
+          const response = await get(
+            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=museum&count=6`,
+            {
+              'Content-Type': 'application/json',
+            }
+          );
+          setCulture(response.data);
+        } catch (error) {
+          console.error('Error fetching Culture:', error);
+        }
+      }
+    };
+    fetchCulture();
+  }, [province]);
+
+  useEffect(() => {
+    const fetchFreeAir = async () => {
+      if (province) {
+        try {
+          const response = await get(
+            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=park&count=6`,
+            {
+              'Content-Type': 'application/json',
+            }
+          );
+          setFreeAir(response.data);
+        } catch (error) {
+          console.error('Error fetching FreeAir:', error);
+        }
+      }
+    };
+    fetchFreeAir();
   }, [province]);
 
   const toggleReviews = () => {
@@ -315,6 +360,148 @@ const ExpectedDestination = () => {
                 }}
               >
                 {gastronomyPlace.map((article) => (
+                  article.reviews?.[0]?.photos?.[0] && (
+                    <SwiperSlide key={article.id}>
+                      <div className="w-80">
+                        <Link to={`/lugar-esperado/${article.googleId}`}>
+                          <ArticleCard
+                            title={article.name}
+                            image={article.reviews[0].photos[0]}
+                            rating={article.rating}
+                            address={article.address}
+                          />
+                        </Link>
+                      </div>
+                    </SwiperSlide>
+                  )
+                ))}
+              </Swiper>
+              <div className="swiper-button-prev hidden"></div>
+              <div className="hidden swiper-button-next"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* Cultura */}
+      <section className="my-10">
+        <div className="sm:w-10/12 m-auto mt-10">
+          <h3
+            onClick={() => setShowedCulture(!showedCulture)}
+            className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer"
+          >
+            Cultura
+            <div className="icons">
+              <svg
+                className={`${!showedCulture ? 'block' : 'hidden'}`}
+                xmlns="http://www.w3.org/2000/svg"
+                height="50px"
+                viewBox="0 -960 960 960"
+                width="50px"
+                fill="#FFFFFF"
+              >
+                <path d="M480-360 280-560h400L480-360Z" />
+              </svg>
+              <svg
+                className={`${showedCulture ? 'block' : 'hidden'}`}
+                xmlns="http://www.w3.org/2000/svg"
+                height="50px"
+                viewBox="0 -960 960 960"
+                width="50px"
+                fill="#FFFFFF"
+              >
+                <path d="m280-400 200-200 200 200H280Z" />
+              </svg>
+            </div>
+          </h3>
+          <div className={`${showedCulture ? 'block' : 'hidden'}`}>
+            <div className="relative px-1 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
+              <Swiper
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={5}
+                slidesPerView={'auto'}
+                navigation={{
+                  nextEl: '.swiper-button-next',
+                  prevEl: '.swiper-button-prev',
+                }}
+                breakpoints={{
+                  300: { slidesPerView: 1 },
+                  480: { slidesPerView: 2 },
+                  768: { slidesPerView: 3 },
+                  1024: { slidesPerView: 4 },
+                }}
+              >
+                {culturePlaces.map((article) => (
+                  article.reviews?.[0]?.photos?.[0] && (
+                    <SwiperSlide key={article.id}>
+                      <div className="w-80">
+                        <Link to={`/lugar-esperado/${article.googleId}`}>
+                          <ArticleCard
+                            title={article.name}
+                            image={article.reviews[0].photos[0]}
+                            rating={article.rating}
+                            address={article.address}
+                          />
+                        </Link>
+                      </div>
+                    </SwiperSlide>
+                  )
+                ))}
+              </Swiper>
+              <div className="swiper-button-prev hidden"></div>
+              <div className="hidden swiper-button-next"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* Aire Libre */}
+      <section className="my-10">
+        <div className="sm:w-10/12 m-auto mt-10">
+          <h3
+            onClick={() => setShowedFreeAir(!showedFreeAir)}
+            className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer"
+          >
+            Aire Libre
+            <div className="icons">
+              <svg
+                className={`${!showedFreeAir ? 'block' : 'hidden'}`}
+                xmlns="http://www.w3.org/2000/svg"
+                height="50px"
+                viewBox="0 -960 960 960"
+                width="50px"
+                fill="#FFFFFF"
+              >
+                <path d="M480-360 280-560h400L480-360Z" />
+              </svg>
+              <svg
+                className={`${showedFreeAir? 'block' : 'hidden'}`}
+                xmlns="http://www.w3.org/2000/svg"
+                height="50px"
+                viewBox="0 -960 960 960"
+                width="50px"
+                fill="#FFFFFF"
+              >
+                <path d="m280-400 200-200 200 200H280Z" />
+              </svg>
+            </div>
+          </h3>
+          <div className={`${showedFreeAir ? 'block' : 'hidden'}`}>
+            <div className="relative px-1 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
+              <Swiper
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={5}
+                slidesPerView={'auto'}
+                navigation={{
+                  nextEl: '.swiper-button-next',
+                  prevEl: '.swiper-button-prev',
+                }}
+                breakpoints={{
+                  300: { slidesPerView: 1 },
+                  480: { slidesPerView: 2 },
+                  768: { slidesPerView: 3 },
+                  1024: { slidesPerView: 4 },
+                }}
+              >
+                {FreeAirPlaces.map((article) => (
                   article.reviews?.[0]?.photos?.[0] && (
                     <SwiperSlide key={article.id}>
                       <div className="w-80">
