@@ -77,7 +77,7 @@ const Notifications = () => {
   };
 
   const fetchNotifications = async () => {
-    const response = await get('http://localhost:3001/notifications-detail/byUser', {
+    const response = await get('https://api-turistear.koyeb.app/notifications-detail/byUser', {
       'Content-Type': 'application/json',
       credentials: 'include',
     });
