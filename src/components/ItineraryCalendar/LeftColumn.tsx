@@ -11,6 +11,7 @@ import { AddParticipantModal } from '../AddParticipantModal/AddParticipantModal'
 import { io } from 'socket.io-client';
 import SharedExpenses from '../../pages/SharedExpenses';
 import useAddActivities from '../../utilities/useAddActivities';
+import { get } from '../../utilities/http.util';
 
 type User = {
   id: number;
@@ -31,7 +32,9 @@ export const LeftColumn = ({
   events,
   setEvents,
   deleteEvent,
+  onDelete
 }) => {
+  
   const [selectedPlace, setSelectedPlace] = useState('');
   const [showPlaces, setShowPlaces] = useState(false);
   const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
@@ -49,6 +52,24 @@ export const LeftColumn = ({
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
   const socket = io('https://api-turistear.koyeb.app');
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const session = await get('https://api-turistear.koyeb.app/session', {
+        contentType: 'application/json',
+      });
+
+      if (session.statusCode !== 200) {
+        window.location.href = '/login';
+        return;
+      }
+
+      setUser(session.user);
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     socket.on('usersUpdated', (data) => {
@@ -60,7 +81,7 @@ export const LeftColumn = ({
 
       setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
     });
-    socket.on('usersAdddItinerary', (data) => {
+    socket.on('usersAddItinerary', (data) => {
       console.log('socket add', data.updatedItinerary);
       const owner = {
         ...data.updatedItinerary.user,
@@ -88,7 +109,7 @@ export const LeftColumn = ({
     return () => {
       socket.off('usersUpdated');
       socket.off('userRemoved');
-      socket.off('usersAdddItinerary');
+      socket.off('usersAddItinerary');
       socket.off('activityRemoved');
     };
   }, []);
@@ -140,6 +161,15 @@ export const LeftColumn = ({
     setUsersOldNav(updatedUsers);
   };
 
+  const deleteItinerary = async (id: number) => {
+    const socket = io('https://api-turistear.koyeb.app');
+    socket.emit('deleteItinerary', {
+      itineraryId: id,
+      userId: user.id,
+    });
+    onDelete()
+  }
+
   return (
     <aside className="order-2 lg:order-1 col-span-1 p-4 flex">
       <div className="flex flex-col h-full w-full">
@@ -185,11 +215,20 @@ export const LeftColumn = ({
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => setIsShowExpanse(true)}
+              onClick={() => (window.location.href = `/gastosCompartidos/${itineraryId}`)}
             >
               <Receipt className="stroke-primary" strokeWidth={1} />
               <p className="text-sm">Gastos compartidos</p>
             </div>
+           {user && itinerary && user.id == itinerary.user.id && (
+              <div
+                className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+                onClick={() => deleteItinerary(itineraryId)}
+              >
+                <Trash2 strokeWidth={1} color="red" />
+                <p className="text-sm">Eliminar</p>
+              </div>
+            )}
           </div>
         </div>
         <div className="flex flex-col gap-4 my-4 border-gray">
@@ -305,9 +344,6 @@ export const LeftColumn = ({
         </div>
         {isShowExpanse ? (
           <SharedExpenses
-            itineraryId={itineraryId}
-            itineraryName={itinerary.name}
-            onClose={() => setIsShowExpanse(false)}
           ></SharedExpenses>
         ) : (
           ''

@@ -24,7 +24,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   onSelect,
 }) => {
   return (
-    <div className="h-[350px] sm:h-auto max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[900px] m-auto bg-white border border-primary-3 rounded-lg shadow relative group overflow-hidden transform transition-transform duration-300 hover:shadow-sm hover:shadow-gray hover:-translate-y-1.5 mt-6 flex flex-col md:flex-row">
+    <div className="h-[350px] sm:max-h-[450px] max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[950px] m-auto bg-white border border-primary-3 rounded-lg shadow relative group overflow-hidden transform transition-transform duration-300 hover:shadow-sm hover:shadow-gray hover:-translate-y-1.5 mt-6 flex flex-col md:flex-row">
       {/* Img */}
       <div className="relative z-30 w-full md:w-1/2">
         <div className="h-[80px] sm:h-full max-w-full w-full overflow-hidden">

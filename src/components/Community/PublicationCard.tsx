@@ -1,25 +1,30 @@
 import { ImageGallery } from '../ImageGallery/ImageGallery';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { post } from '../../utilities/http.util';
 import Carousel from '../Destinations/Carousel';
 import { Link } from 'react-router-dom';
 import io from 'socket.io-client';
-
-type User={
+import { reorderDate } from '../../utilities/reorderDate';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+type User = {
   id: number;
-  name: string,
-  profilePicture: string,
-  description: string,
-  birthdate: string,
-  coverPicture: string,
-  location: string
-}
+  name: string;
+  profilePicture: string;
+  description: string;
+  birthdate: string;
+  coverPicture: string;
+  location: string;
+};
 
 type Comment = {
   createdAt: string;
   description: string;
-  user : User | null;
-}
+  user: User | null;
+};
 
 type Category = {
   id: number;
@@ -28,16 +33,16 @@ type Category = {
 };
 
 type Place = {
-  id: number,
-  name: string,
-  googleId: string,
+  id: number;
+  name: string;
+  googleId: string;
 };
 
 type Activity = {
-  id: number,
-  name: string,
-  place: Place
-  images: string[]
+  id: number;
+  name: string;
+  place: Place;
+  images: string[];
 };
 
 type Publication = {
@@ -46,27 +51,43 @@ type Publication = {
   category: Category | null;
   createdAt: string;
   user: User | null;
-  likes : User[]
-  reposts : User[]
-  saved : User[]
-  comments : Comment[]
-  activities: Activity[]
+  likes: User[];
+  reposts: User[];
+  saved: User[];
+  comments: Comment[];
+  activities: Activity[];
 };
 
 export function PublicationCard(props: {
-  publication : Publication | null,
-  user: User
-  onDelete: () => void,
+  publication: Publication | null;
+  user: User;
+  onDelete: () => void;
 }) {
   let { publication, user, onDelete } = props;
 
-  const [isLike, setIsLike] = useState<boolean | undefined>(publication.likes.some(item => item.id === user.id));
-  const [isSave, setIsSave] = useState<boolean | null>(publication.saved.some(item => item.id === user.id));
-  const [isRepost, setIsRepost] = useState<boolean | null>(publication.reposts.some(item => item.id === user.id));
+  const [isLike, setIsLike] = useState<boolean | undefined>(
+    publication.likes.some((item) => item.id === user.id),
+  );
+  const [isSave, setIsSave] = useState<boolean | null>(
+    publication.saved.some((item) => item.id === user.id),
+  );
+  const [isRepost, setIsRepost] = useState<boolean | null>(
+    publication.reposts.some((item) => item.id === user.id),
+  );
   const [likes, setLikes] = useState<number | null>(publication.likes.length);
   const [saved, setSaved] = useState<number | null>(publication.saved.length);
   const [reposts, setReposts] = useState<number | null>(publication.reposts.length);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean | null>(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [initialSlide, setInitialSlide] = useState(0);
+  const swiperRef = useRef(null);
+
+  const openLightbox = (indexImg) => {
+    setInitialSlide(indexImg);
+    setIsLightboxOpen(true);
+  };
+
+  const closeLightbox = () => setIsLightboxOpen(false);
 
   const handleLike = async (idPublication: number) => {
     setLikes(!isLike ? likes + 1 : likes - 1);
@@ -92,24 +113,16 @@ export function PublicationCard(props: {
     });
   };
 
-  const reorderDate = (dateString: string) => {
-    const formatDate = (date) => {
-      const [year, month, day] = date.split('-');
-      return `${day}-${month}-${year}`;
-    };
-
-    return formatDate(dateString);
-  };
-
   const deletePublication = async (id) => {
     const socket = io('https://api-turistear.koyeb.app');
     socket.emit('deletePublication', {
       publicationId: id,
       userId: user.id,
     });
-    onDelete()
+    onDelete();
     setIsDropdownOpen(false);
   };
+  const indexImg = 0;
 
   return (
     <>
@@ -171,7 +184,48 @@ export function PublicationCard(props: {
           </div>
         </details>
 
-        <ImageGallery images={publication.activities.flatMap((activity) => activity.images)} />
+        {isLightboxOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[999]">
+            <div className="relative w-full h-full max-w-4xl">
+              <button
+                onClick={closeLightbox}
+                className="absolute top-4 right-4 text-white text-3xl font-bold cursor-pointer z-10"
+              >
+                &times;
+              </button>
+              <Swiper
+                ref={swiperRef}
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                navigation
+                pagination={{ clickable: true }}
+                slidesPerView={1}
+                initialSlide={initialSlide}
+                onSwiper={(swiper) => {
+                  if (swiperRef.current) swiperRef.current = swiper;
+                }}
+                className="w-full h-full"
+              >
+                {publication.activities
+                  .flatMap((activity) => activity.images)
+                  .map((image, index) => (
+                    <SwiperSlide key={index}>
+                      <img
+                        src={image}
+                        alt="Imagen ampliada"
+                        className="w-full h-full object-contain"
+                      />
+                    </SwiperSlide>
+                  ))}
+              </Swiper>
+            </div>
+          </div>
+        )}
+
+        <ImageGallery
+          openLightbox={openLightbox}
+          images={publication.activities.flatMap((activity) => activity.images)}
+          indexImg={indexImg}
+        />
         <div>
           <div className="text-gray-500 dark:text-gray-400 flex mt-3 justify-around">
             <div className="flex items-center mr-6">
@@ -215,6 +269,7 @@ export function PublicationCard(props: {
             </div>
             <div className="flex items-center mr-6">
               <svg
+                className="cursor-pointer"
                 onClick={() => {
                   handleRepost(publication.id);
                 }}

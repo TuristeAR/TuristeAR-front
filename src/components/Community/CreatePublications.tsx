@@ -57,7 +57,7 @@ export const CreatePublications = () => {
           credentials: 'include',
         });
 
-        if (!itinerariesResponse.ok) throw new Error('Error al obtener categorías');
+        if (!itinerariesResponse.ok) throw new Error('Error al obtener itinerarios');
 
         const itinerariesData = await itinerariesResponse.json();
         setItineraries(itinerariesData.data);
@@ -140,7 +140,7 @@ export const CreatePublications = () => {
           >
             <img
               src={'/assets/createPublications.svg'}
-              className={'lg:w-[70px] w-[45px] lg:m-6 m-3'}
+              className={'lg:w-[55px] w-[45px] lg:m-6 m-3'}
               alt={'Crear post'}
             />
           </div>
@@ -178,15 +178,20 @@ export const CreatePublications = () => {
                           onChange={handleChange}
                         >
                           <option value={'0'}>Seleccionar</option>
-                          {itineraries?.map((itinerary) => (
-                            <option value={itinerary.id} key={itinerary.id}>
-                              {itinerary.name}
-                            </option>
-                          ))}
+                          {itineraries
+                            ?.filter(itinerary =>
+                              itinerary.activities.some(activity => activity.images && activity.images.length > 0)
+                            )
+                            .map(itinerary => (
+                              <option value={itinerary.id} key={itinerary.id}>
+                                {itinerary.name}
+                              </option>
+                            ))}
+
                         </select>
                       </div>
                       <p className={'text-[#999999] text-sm'}>
-                        *Solo puede utilizar actividades con imágenes
+                        *Solo puede utilizar itinerarios y actividades con imágenes
                       </p>
                     </div>
                     <div className={'flex lg:flex-row flex-col lg:gap-x-4 lg:gap-y-0 gap-y-2 items-center'}>

@@ -350,3 +350,37 @@
     transition: transform 0.3s, box-shadow 0.3s;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.formPublicationEvent {
+    position: fixed; /* Fija el div en la pantalla */
+    width: 300px;
+    background-color: #0056b3;
+    top: 50%; /* Posición vertical al 50% de la pantalla */
+    left: 50%; /* Posición horizontal al 50% de la pantalla */
+    transform: translate(-50%, -50%); /* Centra el div alrededor del punto (50%, 50%) */
+    padding: 20px; /* Añade algo de padding para hacer el popup más espacioso */
+    border-radius: 8px; /* Añade bordes redondeados opcionales */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Añade sombra para resaltar el popup */
+    color: white; /* Cambia el color del texto */
+}
+
+.createEventButton{
+    position: fixed;
+    background-color: #ffb842;
+    bottom: 14%;
+    border-radius: 100%;
+}
+
+.divContentCreateEvent{
+    width: 500px;
+}
+.formDivCreateEvent input, .formDivCreateEvent textarea, .formDivCreateEvent select{
+    border:2px solid #009fe3;
+    padding: 2px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.formDivCreateEvent{
+    margin-bottom: 5px;
+}
