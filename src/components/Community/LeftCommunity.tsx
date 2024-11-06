@@ -1,6 +1,6 @@
 import { is } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 type User = {
   id: number;
@@ -41,6 +41,11 @@ export const LeftCommunity = (props: {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
   const [error, setError] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
+  const location = useLocation();
+  const showCategories =
+    !location.pathname.includes('/forum/') &&
+    !location.pathname.includes('/publication/') &&
+    !location.pathname.includes('/notifications');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,7 +101,7 @@ export const LeftCommunity = (props: {
         {isOpen ? <X size={26} /> : <Menu size={28} />}
       </button>
       <div
-        className={`relative md:static z-40 bg-white   ${
+        className={`relative md:static z-40 bg-white md:w-[330px] ${
           isOpen || window.innerWidth >= 768 ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0`}
       >
@@ -119,66 +124,72 @@ export const LeftCommunity = (props: {
               <p>Foro y preguntas</p>
             </Link>
           </div>
-          <hr className="border border-[#999999] my-4"></hr>
-          <div className="flex flex-col gap-y-4">
-            <h2 className="text-xl font-bold">Categorías</h2>
-            <form className="flex flex-col gap-4">
-              <input
-                type="text"
-                onInput={(e) =>
-                  setDescription(
-                    //@ts-ignore
-                    e.target.value,
-                  )
-                }
-                className="border border-[#999999] pl-2"
-                placeholder="Buscar"
-                autoComplete="off"
-              />
-            </form>
-            <div className="overflow-y-scroll h-[230px] scrollbar-hidden">
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <button
-                    onClick={() => {
-                      setCategorySelected(null);
-                      handleClick(activeItem == 'itineraries' ? 'posts' : activeItem);
-                    }}
-                    className={`flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${null == categorySelected ? 'bg-[#c0daeb]' : ''}`}
-                  >
-                    <div className="flex items-center">
-                      <p className="">General</p>
-                    </div>
-                  </button>
-                </div>
-              </div>
-              {categories
-                ?.filter((c) => {
-                  return (
-                    description == null ||
-                    c.description.toLowerCase().includes(description.toLowerCase())
-                  );
-                })
-                .slice(0, 24)
-                .map((category, index) => (
-                  <div className="space-y-4" key={index}>
+          {showCategories && (
+            <>
+              <hr className="border border-[#999999] my-4"></hr>
+
+              <div className="flex flex-col gap-y-4">
+                <h2 className="text-xl font-bold">Categorías</h2>
+                <form className="flex flex-col gap-4">
+                  <input
+                    type="text"
+                    onInput={(e) =>
+                      setDescription(
+                        //@ts-ignore
+                        e.target.value,
+                      )
+                    }
+                    className="border border-[#999999] pl-2"
+                    placeholder="Buscar"
+                    autoComplete="off"
+                  />
+                </form>
+                <div className="overflow-y-scroll h-[230px] md:h-full scrollbar-hidden">
+                  <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <button
                         onClick={() => {
-                          setCategorySelected(category.id);
+                          setCategorySelected(null);
                           handleClick(activeItem == 'itineraries' ? 'posts' : activeItem);
                         }}
-                        className={`flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${category.id == categorySelected ? 'bg-[#c0daeb]' : ''}`}
+                        className={`flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${null == categorySelected ? 'bg-[#c0daeb]' : ''}`}
                       >
                         <div className="flex items-center">
-                          <p className="">{category.description}</p>
+                          <p className="">General</p>
                         </div>
                       </button>
                     </div>
                   </div>
-                ))}
-            </div>
-          </div>
+                  {categories
+                    ?.filter((c) => {
+                      return (
+                        description == null ||
+                        c.description.toLowerCase().includes(description.toLowerCase())
+                      );
+                    })
+                    .sort((a, b) => a.description.localeCompare(b.description))
+                    .slice(0, 24)
+                    .map((category, index) => (
+                      <div className="space-y-4" key={index}>
+                        <div className="flex justify-between items-center">
+                          <button
+                            onClick={() => {
+                              setCategorySelected(category.id);
+                              handleClick(activeItem == 'itineraries' ? 'posts' : activeItem);
+                            }}
+                            className={`flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${category.id == categorySelected ? 'bg-[#c0daeb]' : ''}`}
+                          >
+                            <div className="flex items-center">
+                              <p className="">{category.description}</p>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>
