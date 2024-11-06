@@ -8,6 +8,7 @@ export const Nav = () => {
   const location = useLocation();
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpenNotification, setIsDropdownOpenNotification] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -22,7 +23,7 @@ export const Nav = () => {
   };
 
   const fetchUser = async () => {
-    const response = await get('https://api-turistear.koyeb.app/session', {
+    const response = await get(' https://api-turistear.koyeb.app/session', {
       'Content-Type': 'application/json',
     });
 
@@ -82,6 +83,37 @@ export const Nav = () => {
         </Link>
       ) : (
         <div className="hidden mt-auto md:flex items-center gap-x-4">
+
+          <img
+          className="w-[3em] h-[3em] mt-4 md:mt-auto md:mb-0 border-white rounded-full cursor-pointer"
+          src="https://img.icons8.com/?size=100&id=0qxdKWVkmxjy&format=png&color=FFFFFF" alt=""
+          onClick={() => setIsDropdownOpenNotification(!isDropdownOpenNotification)}
+          />
+          <div
+          className="numberNotification"
+          >
+            22
+          </div>
+
+        {isDropdownOpenNotification && (
+            <div className="absolute top-16 right-40 bg-white shadow-lg rounded-lg my-3 w-70 z-50">
+
+              <button
+                className="block w-full text-left px-4 py-2 text-gray-700 font-medium hover:bg-primary rounded-md transition duration-200 ease-in-out"
+                onClick={handleLogout}
+              >
+                Aqui mis notificaciones
+              </button>
+
+              <button
+                className="block w-full text-left px-4 py-2 text-gray-700 font-medium hover:bg-primary rounded-md transition duration-200 ease-in-out"
+                onClick={handleLogout}
+              >
+                Aqui mis notificaciones
+              </button>
+            </div>
+          )}
+
           <img
             src={user.profilePicture}
             className="w-[3em] h-[3em] border-2 mt-4 md:mt-auto md:mb-0 border-white rounded-full cursor-pointer"
