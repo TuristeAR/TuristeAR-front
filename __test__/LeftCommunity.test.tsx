@@ -37,6 +37,8 @@ describe('Left Community', () => {
             categorySelected={1}
             handleClick={null}
             setCategorySelected={null}
+            isOpen={false}
+            setIsOpen={null}
           />
         </BrowserRouter>,
       );

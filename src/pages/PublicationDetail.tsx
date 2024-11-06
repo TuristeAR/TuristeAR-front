@@ -114,6 +114,8 @@ const PublicationDetail = () => {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
     <>
       {isLoading ? (
@@ -130,8 +132,10 @@ const PublicationDetail = () => {
               setCategorySelected={setCategorySelected}
               activeItem={null}
               handleClick={handleClick}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
             />
-            <div className="lg:w-[80%] w-[100%] pt-10 pb-10 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
+            <div className="absolute md:static lg:w-[80%] w-[100%] pt-10 pb-10 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
               {/* Create posts */}
               <CreatePublications />
               <div
