@@ -60,7 +60,7 @@ describe('Create Forums', () => {
     fireEvent.click(screen.getByRole('button', { name: /Abrir pop up para crear foro/i }));
     fireEvent.click(screen.getByRole('button', { name: 'Crear foro' }));
 
-    expect(await screen.findByText('Ingrese una descripción!')).toBeInTheDocument();
+    expect(await screen.findByText('Ingrese un nombre!')).toBeInTheDocument();
   });
 
   test('shows error message when category is not selected', async () => {

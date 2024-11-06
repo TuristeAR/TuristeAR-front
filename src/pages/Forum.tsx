@@ -1,11 +1,12 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { CreateForums } from '../components/Community/CreateForums';
 import { MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Forum = () => {
   type Category = {
