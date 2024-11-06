@@ -30,7 +30,7 @@ export const ItineraryMap = () => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
-console.log(activities)
+  console.log(activities);
   return (
     <>
       <Header />
@@ -39,18 +39,21 @@ console.log(activities)
         <div className="mx-auto w-full lg:w-[90%] flex flex-col lg:flex-row justify-center z-30 relative p-4">
           <div className="w-full lg:w-[70%]">
             <div className="flex gap-x-4 mb-4">
-              <div className="flex items-center p-1 gap-x-2 cursor-pointer">
+              <Link
+                className="flex justify-center items-center p-1 gap-x-1"
+                to={`/itineraryCalendar/${itineraryId}`}
+              >
                 <img src={calendarIcon} alt="" />
-                <Link to={`/itineraryCalendar/${itineraryId}`}>
-                  <p className="text-sm">Calendario</p>
-                </Link>
-              </div>
-              <div className="flex items-center gap-x-2 cursor-pointer">
+                <p className="text-sm">Calendario</p>
+              </Link>
+              <Link
+                className="flex items-center gap-x-1 cursor-pointer"
+                to={`/itineraryDetail/${itineraryId}`}
+              >
                 <img src={alignIcon} alt="" />
-                <Link to={`/itineraryDetail/${itineraryId}`}>
-                  <p className="text-sm">Resumen</p>
-                </Link>
-              </div>
+
+                <p className="text-sm">Resumen</p>
+              </Link>
             </div>
             <GoogleMapComponentForItinerary activities={activities} />
           </div>
@@ -85,9 +88,15 @@ console.log(activities)
                 }
 
                 return (
-                  <div key={index} className="my-2 lg:my-4 flex items-center option-card hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg">
+                  <div
+                    key={index}
+                    className="my-2 lg:my-4 flex items-center option-card hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+                  >
                     <p className="w-[10%] text-md">{index + 1}.</p>
-                    <Link to={`/lugar-esperado/${activity.place.googleId}`} className="w-[65%] text-md ">
+                    <Link
+                      to={`/lugar-esperado/${activity.place.googleId}`}
+                      className="w-[65%] text-md "
+                    >
                       {activity.name.replace(/ - \d{1,2} \w+\./, '')}
                     </Link>
                     {distance && <p className="w-1/4 text-md text-end">{distance} km</p>}
@@ -95,7 +104,7 @@ console.log(activities)
                 );
               })}
               <div className="mt-4 lg:mt-8">
-                <span className="text-xl text-center font-bold">
+                <span className="text-lg text-center font-semibold">
                   📍 En total vas a recorrer {totalDistance.toFixed(2)} km
                 </span>
               </div>
