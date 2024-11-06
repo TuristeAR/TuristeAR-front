@@ -2,7 +2,7 @@ import { ArticleCard } from '../components/Destinations/ArticleCard';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import { PostCard } from '../components/Destinations/PostCard';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { get } from '../utilities/http.util';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
@@ -13,7 +13,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
-import { BedDouble, Building2, School, Ticket, Trees, UtensilsCrossed } from 'lucide-react';
+import { BedDouble, Building2, Ticket, UtensilsCrossed } from 'lucide-react';
 
 type Province = {
   id: number;
@@ -58,43 +58,23 @@ type PlaceCard = {
 const ExpectedDestination = () => {
   const [showedLugares, setShowedLugares] = useState(false);
   const [showedGastronomia, setShowedGastronomia] = useState(false);
-  const [showedAirFree, setShowedAirFree] = useState(false);
-  const [showedCulture, setShowedCulture] = useState(false);
-  const [showedAtraction, setShowedAtraction] = useState(false);
-
   const [visibleCount, setVisibleCount] = useState(3);
-  const {nombreDeLaProvincia} = useParams();
-
+  const { nombreDeLaProvincia } = useParams();
   const [province, setProvince] = useState<Province>();
-  
   const [gastronomyPlace, setGastronomyPlace] = useState<PlaceCard[]>([]);
   const [pointsInterest, setPointsInterest] = useState<PlaceCard[]>([]);
-  const [airFreePlace, setAirFreePlace] = useState<PlaceCard[]>([]);
-  const [culturePlace, setCulturePlace] = useState<PlaceCard[]>([]);
-  const [atractionPlace, setAtractionPlace] = useState<PlaceCard[]>([]);
-
-  const gastronomyRef = useRef(null);
-  const cultureRef = useRef(null);
-  const airFreeRef = useRef(null);
-  const lugaresRef = useRef(null);  
-  const atractionRef = useRef(null);
-
-  const handleScrollToSection = (sectionRef, setShowSection) => {
-    setShowSection((prev) => !prev); // Cambia el estado de despliegue
-    sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  };
 
   useEffect(() => {
     const fetchProvince = async () => {
       try {
-        const responseProvince = await get(
+        const response = await get(
           `https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}`,
           {
             'Content-Type': 'application/json',
           },
         );
-        console.log('Province:', responseProvince);
-        setProvince(responseProvince);
+
+        setProvince(response);
       } catch (error) {
         console.error('Error fetching province:', error);
       }
@@ -108,97 +88,44 @@ const ExpectedDestination = () => {
     const fetchGastronomyPlace = async () => {
       if (province) {
         try {
-          const responseGastronomy = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=restaurant&count=10`,
+          const response = await get(
+            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=restaurant&types=food&count=6`,
             {
               'Content-Type': 'application/json',
             },
           );
-          
-          console.log('gastronomia:', responseGastronomy.data);
-          setGastronomyPlace(responseGastronomy.data);
 
+          setGastronomyPlace(response.data);
         } catch (error) {
           console.error('Error fetching GastronomyPlace:', error);
         }
       }
     };
-  
+
     fetchGastronomyPlace();
   }, [province]);
 
-  // airfree 
+  // points of interest
   useEffect(() => {
-    const fetchAirFreePlace = async () => {
+    const fetchPointsInterest = async () => {
       if (province) {
         try {
-          //change value count on url, to receive more places
-          const responseAirFree = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=park&count=10`,
+          const response = await get(
+            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&count=6`,
             {
               'Content-Type': 'application/json',
             },
           );
-          console.log('Air Free Data:', responseAirFree.data);
-          setAirFreePlace(responseAirFree.data);
 
+          setPointsInterest(response.data);
         } catch (error) {
-          console.error('Error fetching AirFreePlace:', error);
+          console.error('Error fetching GastronomyPlace:', error);
         }
       }
     };
 
-    fetchAirFreePlace();
+    fetchPointsInterest();
   }, [province]);
-
-  // culture 
-  useEffect(() => {
-    const fetchCulturePlace = async () => {
-      if (province) {
-        try {
-          //change value count on url, to receive more places
-          const responseCulture = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=museum&count=10`,
-            {
-              'Content-Type': 'application/json',
-            },
-          );
-          console.log("culture",responseCulture.data);
-          setCulturePlace(responseCulture.data);
-
-        } catch (error) {
-          console.error('Error fetching CulturePlace:', error);
-        }
-      }
-    };
-
-    fetchCulturePlace();
-  }, [province]);
-
-  // atraction
-  useEffect(() => {
-    const fetchAtractionPlace = async () => {
-      if (province) {
-        try {
-          //change value count on url, to receive more places
-          const responseAtraction = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=tourist_attraction&count=10`,
-            {
-              'Content-Type': 'application/json',
-            },
-          );
-          console.log('atraction Data:', responseAtraction.data);
-          setAtractionPlace(responseAtraction.data);
-
-        } catch (error) {
-          console.error('Error fetching AtractionPlace:', error);
-        }
-      }
-    };
-
-    fetchAtractionPlace();
-  }, [province]);
-
 
   const toggleReviews = () => {
     setVisibleCount((prevCount) => prevCount + 3);
@@ -223,29 +150,22 @@ const ExpectedDestination = () => {
               {province.description}
             </p>
           </div>
-          
           <div className="flex flex-wrap justify-center gap-6 mt-3">
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
-            onClick={() => handleScrollToSection(cultureRef, setShowedCulture)}>
-              <School width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
-              <span className="sm:text-xl font-medium text-center">Cultura</span>
+            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300">
+              <BedDouble width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
+              <span className="sm:text-xl font-medium text-center mx-auto">Alojamiento</span>
             </div>
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
-            onClick={() => handleScrollToSection(airFreeRef, setShowedAirFree)}>
-              <Trees width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
-              <span className="sm:text-xl font-medium text-center mx-auto">Aire Libre</span>
-            </div>
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
-            onClick={() => handleScrollToSection(lugaresRef, setShowedLugares)}>
+            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300">
               <Ticket width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
               <span className="sm:text-xl font-medium text-center">Atracciones</span>
             </div>
-            
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300" 
-            onClick={() => handleScrollToSection(gastronomyRef, setShowedGastronomia)}>
+            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300">
+              <Building2 width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
+              <span className="sm:text-xl font-medium text-center">Ciudad</span>
+            </div>
+            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300">
               <UtensilsCrossed width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
-              <span className="sm:text-xl font-medium text-center">Gastronomia</span>
-              
+              <span className="sm:text-xl font-medium text-center">Restaurant</span>
             </div>
           </div>
         </div>
@@ -257,7 +177,7 @@ const ExpectedDestination = () => {
             Descubrí lo que cuentan nuestros usuarios
           </h3>
           <hr />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
             {province.places.slice(0, visibleCount).map((userPost, index) => (
               <PostCard
                 key={index}
@@ -283,14 +203,13 @@ const ExpectedDestination = () => {
           </div>
         </div>
       </section>
-
-{/* Puntos de interes */}
-
-      <section  ref={lugaresRef} className="my-10">
+      {/* Puntos de interes */}
+      <section className="my-10">
         <div className="sm:w-10/12 m-auto mt-10">
           <h3
             onClick={() => setShowedLugares(!showedLugares)}
-            className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer">
+            className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer"
+          >
             Lugares
             <div className="icons">
               <svg
@@ -299,7 +218,8 @@ const ExpectedDestination = () => {
                 height="50px"
                 viewBox="0 -960 960 960"
                 width="50px"
-                fill="#FFFFFF">
+                fill="#FFFFFF"
+              >
                 <path d="M480-360 280-560h400L480-360Z" />
               </svg>
               <svg
@@ -308,7 +228,8 @@ const ExpectedDestination = () => {
                 height="50px"
                 viewBox="0 -960 960 960"
                 width="50px"
-                fill="#FFFFFF">
+                fill="#FFFFFF"
+              >
                 <path d="m280-400 200-200 200 200H280Z" />
               </svg>
             </div>
@@ -338,12 +259,13 @@ const ExpectedDestination = () => {
                   1024: {
                     slidesPerView: 4,
                   },
-                }}>
+                }}
+              >
                 {pointsInterest.map(
-                  (article) =>
+                  (article, index) =>
                     article.reviews.length > 0 &&
                     article.reviews[0].photos.length > 0 && (
-                      <div className="w-80" key={article.id}>
+                      <div className="w-80" key={index}>
                         <SwiperSlide>
                           <Link to={`/lugar-esperado/${article.googleId}`}>
                             <ArticleCard
@@ -362,317 +284,98 @@ const ExpectedDestination = () => {
               <div className="swiper-button-prev hidden"></div>
               <div className="hidden swiper-button-next"></div>
             </div>
+            <div className="text-center my-6">
+              <button className="btn-blue">Ver más</button>
+            </div>
           </div>
         </div>
       </section>
-
-{/* Cultura */}
-
-<section ref={cultureRef} className="my-10">
-  <div className="sm:w-10/12 m-auto mt-10">
-    <h3
-      onClick={() => setShowedCulture(!showedCulture)}
-      className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer">
-      Cultura
-      <div className="icons">
-        <svg
-          className={`${!showedCulture ? 'block' : 'hidden'}`}
-          xmlns="http://www.w3.org/2000/svg"
-          height="50px"
-          viewBox="0 -960 960 960"
-          width="50px"
-          fill="#FFFFFF" >
-          <path d="M480-360 280-560h400L480-360Z" />
-        </svg>
-        <svg
-          className={`${showedCulture ? 'block' : 'hidden'}`}
-          xmlns="http://www.w3.org/2000/svg"
-          height="50px"
-          viewBox="0 -960 960 960"
-          width="50px"
-          fill="#FFFFFF">
-          <path d="m280-400 200-200 200 200H280Z" />
-        </svg>
-      </div>
-    </h3>
-    <div className={`${showedCulture ? 'block' : 'hidden'}`}>
-      <div className="relative px-2 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
-        <Swiper
-          modules={[Navigation, Pagination, Scrollbar, A11y]}
-          slidesPerView={'auto'}
-          navigation={{
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          }}
-          breakpoints={{
-            300: {
-              slidesPerView: 1,
-            },
-            480: {
-              slidesPerView: 2,
-            },
-            768: {
-              slidesPerView: 3,
-            },
-            1024: {
-              slidesPerView: 4,
-            },
-          }}>
-        {culturePlace.map((article) => (
-         article.reviews.length > 0 && article.reviews[0].photos.length > 0 && (
-        <div className="w-80" key={article.id}>
-          <SwiperSlide>
-          <Link to={`/lugar-esperado/${article.googleId}`}>
-          <ArticleCard
-            title={article.name}
-            image={article.reviews[0].photos[0]}
-            rating={article.rating}
-            address={article.address}
-          />
-          </Link>
-          </SwiperSlide>
+      {/* Gastronomía */}
+      <section className="my-10">
+        <div className="sm:w-10/12 m-auto mt-10">
+          <h3
+            onClick={() => setShowedGastronomia(!showedGastronomia)}
+            className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer"
+          >
+            Gastronomía
+            <div className="icons">
+              <svg
+                className={`${!showedGastronomia ? 'block' : 'hidden'}`}
+                xmlns="http://www.w3.org/2000/svg"
+                height="50px"
+                viewBox="0 -960 960 960"
+                width="50px"
+                fill="#FFFFFF"
+              >
+                <path d="M480-360 280-560h400L480-360Z" />
+              </svg>
+              <svg
+                className={`${showedGastronomia ? 'block' : 'hidden'}`}
+                xmlns="http://www.w3.org/2000/svg"
+                height="50px"
+                viewBox="0 -960 960 960"
+                width="50px"
+                fill="#FFFFFF"
+              >
+                <path d="m280-400 200-200 200 200H280Z" />
+              </svg>
+            </div>
+          </h3>
+          <div className={`${showedGastronomia ? 'block' : 'hidden'}`}>
+            <div className={`relative px-2 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap`}>
+              <Swiper
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                slidesPerView={'auto'}
+                navigation={{
+                  nextEl: '.swiper-button-next',
+                  prevEl: '.swiper-button-prev',
+                }}
+                onSwiper={(swiper) => console.log(swiper)}
+                onSlideChange={() => console.log('slide change')}
+                breakpoints={{
+                  300: {
+                    slidesPerView: 1,
+                  },
+                  480: {
+                    slidesPerView: 2,
+                  },
+                  768: {
+                    slidesPerView: 3,
+                  },
+                  1024: {
+                    slidesPerView: 4,
+                  },
+                }}
+              >
+                {gastronomyPlace.map(
+                  (article, index) =>
+                    article.reviews.length > 0 &&
+                    article.reviews[0].photos.length > 0 && (
+                      <div className="w-80" key={index}>
+                        <SwiperSlide>
+                          <Link to={`/lugar-esperado/${article.googleId}`}>
+                            <ArticleCard
+                              key={article.id}
+                              title={article.name}
+                              image={article.reviews[0].photos[0]}
+                              rating={article.rating}
+                              address={article.address}
+                            />
+                          </Link>
+                        </SwiperSlide>
+                      </div>
+                    ),
+                )}
+              </Swiper>
+              <div className="swiper-button-next"></div>
+              <div className="swiper-button-prev"></div>
+            </div>
+            <div className="text-center my-6">
+              <button className="btn-blue">Ver más</button>
+            </div>
+          </div>
         </div>
-        )
-        ))}
-        </Swiper>
-        <div className="swiper-button-next"></div>
-        <div className="swiper-button-prev"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-{/* Aire Libre */}
-
-<section ref={airFreeRef} className="my-10">
-  <div className="sm:w-10/12 m-auto mt-10">
-    <h3
-      onClick={() => setShowedAirFree(!showedAirFree)}
-      className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer">
-      Aire Libre
-      <div className="icons">
-        <svg
-          className={`${!showedAirFree ? 'block' : 'hidden'}`}
-          xmlns="http://www.w3.org/2000/svg"
-          height="50px"
-          viewBox="0 -960 960 960"
-          width="50px"
-          fill="#FFFFFF" >
-          <path d="M480-360 280-560h400L480-360Z" />
-        </svg>
-        <svg
-          className={`${showedAirFree ? 'block' : 'hidden'}`}
-          xmlns="http://www.w3.org/2000/svg"
-          height="50px"
-          viewBox="0 -960 960 960"
-          width="50px"
-          fill="#FFFFFF">
-          <path d="m280-400 200-200 200 200H280Z" />
-        </svg>
-      </div>
-    </h3>
-    <div className={`${showedAirFree ? 'block' : 'hidden'}`}>
-      <div className="relative px-2 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
-        <Swiper
-          modules={[Navigation, Pagination, Scrollbar, A11y]}
-          slidesPerView={'auto'}
-          navigation={{
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          }}
-          breakpoints={{
-            300: {
-              slidesPerView: 1,
-            },
-            480: {
-              slidesPerView: 2,
-            },
-            768: {
-              slidesPerView: 3,
-            },
-            1024: {
-              slidesPerView: 4,
-            },
-          }}>
-        {airFreePlace.map((article) => (
-         article.reviews.length > 0 && article.reviews[0].photos.length > 0 && (
-        <div className="w-80" key={article.id}>
-          <SwiperSlide>
-          <Link to={`/lugar-esperado/${article.googleId}`}>
-          <ArticleCard
-            title={article.name}
-            image={article.reviews[0].photos[0]}
-            rating={article.rating}
-            address={article.address}
-          />
-          </Link>
-          </SwiperSlide>
-        </div>
-        )
-        ))}
-        </Swiper>
-        <div className="swiper-button-next"></div>
-        <div className="swiper-button-prev"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-{/* Atracciones */}
-
-<section ref={atractionRef} className="my-10">
-  <div className="sm:w-10/12 m-auto mt-10">
-    <h3
-      onClick={() => setShowedAtraction(!showedAtraction)}
-      className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer">
-      Atracciones
-      <div className="icons">
-        <svg
-          className={`${!showedAtraction ? 'block' : 'hidden'}`}
-          xmlns="http://www.w3.org/2000/svg"
-          height="50px"
-          viewBox="0 -960 960 960"
-          width="50px"
-          fill="#FFFFFF" >
-          <path d="M480-360 280-560h400L480-360Z" />
-        </svg>
-        <svg
-          className={`${showedAtraction ? 'block' : 'hidden'}`}
-          xmlns="http://www.w3.org/2000/svg"
-          height="50px"
-          viewBox="0 -960 960 960"
-          width="50px"
-          fill="#FFFFFF">
-          <path d="m280-400 200-200 200 200H280Z" />
-        </svg>
-      </div>
-    </h3>
-    <div className={`${showedAtraction ? 'block' : 'hidden'}`}>
-      <div className="relative px-2 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
-        <Swiper
-          modules={[Navigation, Pagination, Scrollbar, A11y]}
-          slidesPerView={'auto'}
-          navigation={{
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          }}
-          breakpoints={{
-            300: {
-              slidesPerView: 1,
-            },
-            480: {
-              slidesPerView: 2,
-            },
-            768: {
-              slidesPerView: 3,
-            },
-            1024: {
-              slidesPerView: 4,
-            },
-          }}>
-        {atractionPlace.map((article) => (
-         article.reviews.length > 0 && article.reviews[0].photos.length > 0 && (
-        <div className="w-80" key={article.id}>
-          <SwiperSlide>
-          <Link to={`/lugar-esperado/${article.googleId}`}>
-          <ArticleCard
-            title={article.name}
-            image={article.reviews[0].photos[0]}
-            rating={article.rating}
-            address={article.address}
-          />
-          </Link>
-          </SwiperSlide>
-        </div>
-        )
-        ))}
-        </Swiper>
-        <div className="swiper-button-next"></div>
-        <div className="swiper-button-prev"></div>
-      </div>
-    </div>
-  </div>
-</section>
-      
-{/* gastronomia */}
-
-<section ref={gastronomyRef} className="my-10">
-  <div className="sm:w-10/12 m-auto mt-10">
-    <h3
-      onClick={() => setShowedGastronomia(!showedGastronomia)}
-      className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer">
-      Gastronomía
-      <div className="icons">
-        <svg
-          className={`${!showedGastronomia ? 'block' : 'hidden'}`}
-          xmlns="http://www.w3.org/2000/svg"
-          height="50px"
-          viewBox="0 -960 960 960"
-          width="50px"
-          fill="#FFFFFF" >
-          <path d="M480-360 280-560h400L480-360Z" />
-        </svg>
-        <svg
-          className={`${showedGastronomia ? 'block' : 'hidden'}`}
-          xmlns="http://www.w3.org/2000/svg"
-          height="50px"
-          viewBox="0 -960 960 960"
-          width="50px"
-          fill="#FFFFFF">
-          <path d="m280-400 200-200 200 200H280Z" />
-        </svg>
-      </div>
-    </h3>
-    <div className={`${showedGastronomia ? 'block' : 'hidden'}`}>
-      <div className="relative px-2 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
-        <Swiper
-          modules={[Navigation, Pagination, Scrollbar, A11y]}
-          slidesPerView={'auto'}
-          navigation={{
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          }}
-          breakpoints={{
-            300: {
-              slidesPerView: 1,
-            },
-            480: {
-              slidesPerView: 2,
-            },
-            768: {
-              slidesPerView: 3,
-            },
-            1024: {
-              slidesPerView: 4,
-            },
-          }}>
-        {gastronomyPlace.map((article) => (
-         article.reviews.length > 0 && article.reviews[0].photos.length > 0 && (
-        <div className="w-80" key={article.id}>
-          <SwiperSlide>
-          <Link to={`/lugar-esperado/${article.googleId}`}>
-          <ArticleCard
-            title={article.name}
-            image={article.reviews[0].photos[0]}
-            rating={article.rating}
-            address={article.address}
-          />
-          </Link>
-          </SwiperSlide>
-        </div>
-        )
-        ))}
-        </Swiper>
-        <div className="swiper-button-next"></div>
-        <div className="swiper-button-prev"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
-      
+      </section>{' '}
     </>
   );
 };
