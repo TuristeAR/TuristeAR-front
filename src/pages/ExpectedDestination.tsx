@@ -109,7 +109,7 @@ const ExpectedDestination = () => {
       if (province) {
         try {
           const responseGastronomy = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=restaurant&types=food&count=10`,
+            `http://localhost:3001/places/province?provinceId=${province.id}&types=restaurant&types=food&count=10`,
             {
               'Content-Type': 'application/json',
             },
@@ -134,7 +134,7 @@ const ExpectedDestination = () => {
         try {
           //change value count on url, to receive more places
           const responseAirFree = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=hiking_area&types=campground&types=national_park&types=park&count=10`,
+            `http://localhost:3001/places/province?provinceId=${province.id}&types=hiking_area&types=campground&types=national_park&types=park&count=10`,
             {
               'Content-Type': 'application/json',
             },
@@ -158,7 +158,7 @@ const ExpectedDestination = () => {
         try {
           //change value count on url, to receive more places
           const responseCulture = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=library&types=museum&types=political&count=10`,
+            `http://localhost:3001/places/province?provinceId=${province.id}&types=library&types=museum&types=political&count=10`,
             {
               'Content-Type': 'application/json',
             },
@@ -182,7 +182,7 @@ const ExpectedDestination = () => {
         try {
           //change value count on url, to receive more places
           const responseAtraction = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=tourist_attraction&types=bar&types=night_club&types=stadium&count=10`,
+            `http://localhost:3001/places/province?provinceId=${province.id}&types=tourist_attraction&types=bar&types=night_club&types=stadium&count=10`,
             {
               'Content-Type': 'application/json',
             },
@@ -205,7 +205,7 @@ const ExpectedDestination = () => {
       if (province) {
         try {
           const responsePointIenterest = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&count=10`,
+            `http://localhost:3001/places/province?provinceId=${province.id}&types=hiking_area&types=national_park&types=museum&types=park&types=library&count=10`,
             {
               'Content-Type': 'application/json',
             },
