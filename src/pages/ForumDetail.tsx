@@ -80,14 +80,13 @@ const ForumDetail = () => {
         }
 
         setLoading(false);
-
-
       } catch (error) {
         console.error('Error fetching forum data:', error);
       }
     };
     fetchData();
   }, [id]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <>
@@ -98,17 +97,21 @@ const ForumDetail = () => {
       ) : (
         <>
           <Header containerStyles={'relative top-0 z-[60]'} />
-          <div className="flex h-[100vh]">
+          <div
+            className={`flex justify-between h-[100vh] relative ${isOpen ? 'overflow-hidden' : ''}`}
+          >
             <LeftCommunity
               vista={'forum'}
               activeItem={'posts'}
               categorySelected={categorySelected}
               handleClick={null}
               setCategorySelected={setCategorySelected}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
             />
-            <div className="lg:w-[80%] w-[100%] flex flex-col overflow-scroll scrollbar-hidden">
+            <div className="absolute md:static lg:w-[80%] w-[100%] flex flex-col overflow-scroll scrollbar-hidden">
               <div
-                className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex flex-col p-4'}
+                className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex flex-col p-6'}
               >
                 <h1 className="text-3xl">{forum?.name}</h1>
                 <h3 className={'text-[#999999]'}>{forum.category.description}</h3>
@@ -119,7 +122,6 @@ const ForumDetail = () => {
 
               <CreateMessage user={user} forum={forum} setForum={setForum} />
             </div>
-
           </div>
         </>
       )}
