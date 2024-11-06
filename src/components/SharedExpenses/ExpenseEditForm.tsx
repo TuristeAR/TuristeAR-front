@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
 import { ArrowLeft } from 'lucide-react';
 
-const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
+const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => {
   const [date, setDate] = useState(expense.date);
   const onDateChangeHandler = useCallback((date) => setDate(date), [date]);
   const [distributionType, setDistributionType] = useState(expense.distributionType);
@@ -16,6 +16,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
   const [participatingUsers, setParticipatingUsers] = useState(expense.participatingUsers);
   const [totalAmount, setTotalAmount] = useState(expense.totalAmount);
   const [validationError, setValidationError] = useState('');
+  
   useEffect(() => {
     if (expense) {
       setDate(new Date(expense.date));
@@ -27,7 +28,6 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
       setIndividualPercentages(expense.individualPercentages);
       setParticipatingUsers(expense.participatingUsers);
       participatingUsers.map((u) => toggleParticipatingUser(u.id));
-      console.log(expense.participatingUsers);
     }
   }, [expense]);
 
@@ -47,7 +47,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
     setTotalAmount(e.target.value);
   };
   const handleIndividualAmountChange = (userId, value) => {
-    console.log("Cambio de monto para el usuario:", userId, "Nuevo valor:", value); 
+    console.log('Cambio de monto para el usuario:', userId, 'Nuevo valor:', value);
 
     setIndividualAmounts((prev) => ({
       ...prev,
@@ -95,7 +95,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
   };
 
   const handleSubmit = async (e) => {
-    console.log("--", expense)
+    console.log('--', expense);
     e.preventDefault();
     setValidationError('');
     if (!validateAmounts()) {
@@ -132,6 +132,8 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
 
       const result = await response.json();
       console.log('Gasto guardado:', result);
+      onExpenseUpdated(result);
+      onBack()
     } catch (error) {
       console.log(error.message);
     }
@@ -139,7 +141,10 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
 
   return (
     <div className="bg-white p-6 rounded-sm shadow-lg max-w-lg mx-auto">
-      <ArrowLeft onClick={onClose} className="cursor-pointer" />
+      <button className='flex' onClick={onBack}>
+          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[20px] my-auto'}/>
+          <div className='text-sm font-bold text-primary-3'>Volver A La Lista De Gastos</div>
+        </button>
       <h3 className="font-bold text-3xl lead-10 text-black mb-9">Editar Gasto</h3>
       <form>
         <div className="mb-4">
@@ -162,6 +167,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
             onChange={onDateChangeHandler}
             showIcon
             className="w-full px-4 py-2 border rounded-lg"
+            dateFormat="dd/MM/yyyy" 
           />
         </div>
 
@@ -215,7 +221,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
             onChange={handleDistributionChange}
             className="w-full px-4 py-2 border rounded-lg"
           >
-            <option value="equivalente">Equivalente</option>
+            <option value="equivalente">En Partes Iguales</option>
             <option value="montos">Por Montos Exactos</option>
             <option value="porcentajes">Porcentajes</option>
           </select>
@@ -224,7 +230,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onClose }) => {
         {distributionType === 'equivalente' && (
           <div className="mb-4">
             <label className="block font-semibold text-gray-700 mb-2">
-              Monto Equivalente por Persona
+              Montos Iguales por Persona
             </label>
             {usersOldNav.map(
               (user) =>
