@@ -128,7 +128,12 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
               Añadir Gasto
             </button>
           </div>
-          {Object.keys(groupedExpenses).map((date) => (
+          {Object.keys(groupedExpenses).length === 0 ? (
+            <div className="text-center text-lg text-gray-500">
+              No hay gastos registrados para este itinerario.
+            </div>
+          ) : (
+          Object.keys(groupedExpenses).map((date) => (
             <div key={date} className="mt-4">
               <details key={date} className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-md">
                 <summary className="text-2xl font-semibold text-primary-3 cursor-pointer hover:text-primary-4">
@@ -208,7 +213,8 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
 
               
             </div>
-          ))}
+          ))
+)}
         </div>
       )}
     </>
