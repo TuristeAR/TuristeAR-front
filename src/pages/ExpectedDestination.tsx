@@ -2,7 +2,7 @@ import { ArticleCard } from '../components/Destinations/ArticleCard';
 import { Header } from '../components/Header/Header';
 import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import { PostCard } from '../components/Destinations/PostCard';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { get } from '../utilities/http.util';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
@@ -13,7 +13,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
-import { BedDouble, Building2, Ticket, UtensilsCrossed } from 'lucide-react';
+import { BedDouble, Building2, School, Ticket, Trees, UtensilsCrossed } from 'lucide-react';
 
 type Province = {
   id: number;
@@ -49,6 +49,7 @@ type PlaceCard = {
   types: string[];
   rating: number;
   address: string;
+  province: Province;
   reviews: {
     id: number;
     photos: string[];
@@ -60,16 +61,59 @@ const ExpectedDestination = () => {
   const [showedGastronomia, setShowedGastronomia] = useState(false);
   const [showedCulture, setShowedCulture] = useState(false);
   const [showedFreeAir, setShowedFreeAir] = useState(false);
+  
+  const [reviews, setReviews] = useState<any[]>([]);
 
   const [visibleCount, setVisibleCount] = useState(3);
 
   const { nombreDeLaProvincia } = useParams();
   const [province, setProvince] = useState<Province>();
+  
 
   const [gastronomyPlace, setGastronomyPlace] = useState<PlaceCard[]>([]);
   const [pointsInterest, setPointsInterest] = useState<PlaceCard[]>([]);
   const [culturePlaces, setCulture] = useState<PlaceCard[]>([]);
   const [FreeAirPlaces, setFreeAir] = useState<PlaceCard[]>([]);
+
+  const gastronomyRef = useRef(null);
+  const cultureRef = useRef(null);
+  const airFreeRef = useRef(null);
+  const lugaresRef = useRef(null);  
+ 
+
+  useEffect(() => {
+    if (culturePlaces.length > 0) {
+      const fetchReviewsForActivity = (googleId: string) => {
+        return get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
+          'Content-Type': 'application/json',
+        });
+      };
+
+      const fetchData = async () => {
+        try {
+          const reviewsPromises = culturePlaces.map((activity) =>
+            fetchReviewsForActivity(activity.googleId),
+          );
+          const allReviews = await Promise.all(reviewsPromises);
+          setReviews(allReviews.flat());
+          console.log("revies: ", reviews);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+      fetchData();
+    }
+  }, [culturePlaces]);
+
+  const randomImages = useMemo(() => {
+    const getRandomImages = () => {
+      const allPhotos = reviews.flatMap((review) => review.photos);
+      const shuffledPhotos = allPhotos.sort(() => 0.5 - Math.random());
+      return shuffledPhotos.slice(0, 1);
+    };
+
+    return getRandomImages();
+  }, [reviews]);
 
   useEffect(() => {
     const fetchProvince = async () => {
@@ -88,18 +132,19 @@ const ExpectedDestination = () => {
 
     fetchProvince();
   }, [nombreDeLaProvincia]);
-
+//gastronomy
   useEffect(() => {
     const fetchGastronomyPlace = async () => {
       if (province) {
         try {
-          const response = await get(
+          const responseGastronomy = await get(
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=restaurant&count=6`,
             {
               'Content-Type': 'application/json',
             }
           );
-          setGastronomyPlace(response.data);
+          console.log("gastronomy list: ",responseGastronomy);
+          setGastronomyPlace(responseGastronomy.data);
         } catch (error) {
           console.error('Error fetching GastronomyPlace:', error);
         }
@@ -107,18 +152,19 @@ const ExpectedDestination = () => {
     };
     fetchGastronomyPlace();
   }, [province]);
-
+//pointInterest
   useEffect(() => {
     const fetchPointsInterest = async () => {
       if (province) {
         try {
-          const response = await get(
+          const responsePointInterest = await get(
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=tourist_attraction&count=6`,
             {
               'Content-Type': 'application/json',
             }
           );
-          setPointsInterest(response.data);
+          console.log("point interest list: ",responsePointInterest);
+          setPointsInterest(responsePointInterest.data);
         } catch (error) {
           console.error('Error fetching PointsInterest:', error);
         }
@@ -126,18 +172,19 @@ const ExpectedDestination = () => {
     };
     fetchPointsInterest();
   }, [province]);
-
+//culture
   useEffect(() => {
     const fetchCulture = async () => {
       if (province) {
         try {
-          const response = await get(
+          const responseCulture = await get(
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=museum&count=6`,
             {
               'Content-Type': 'application/json',
             }
           );
-          setCulture(response.data);
+          console.log("culture list: ",responseCulture);
+          setCulture(responseCulture.data);
         } catch (error) {
           console.error('Error fetching Culture:', error);
         }
@@ -145,18 +192,19 @@ const ExpectedDestination = () => {
     };
     fetchCulture();
   }, [province]);
-
+//freeair
   useEffect(() => {
     const fetchFreeAir = async () => {
       if (province) {
         try {
-          const response = await get(
+          const responseFreeAir = await get(
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=park&count=6`,
             {
               'Content-Type': 'application/json',
             }
           );
-          setFreeAir(response.data);
+          console.log("free air list:", responseFreeAir);
+          setFreeAir(responseFreeAir.data);
         } catch (error) {
           console.error('Error fetching FreeAir:', error);
         }
@@ -175,6 +223,12 @@ const ExpectedDestination = () => {
         <Lottie className="w-[20rem] m-auto" animationData={logoAnimado} />
       </div>
     );
+
+    const handleScrollToSection = (sectionRef, setShowSection) => {
+      setShowSection((prev) => !prev); // Cambia el estado de despliegue
+      sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
   return (
     <>
       <Header />
@@ -188,21 +242,26 @@ const ExpectedDestination = () => {
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-6 mt-3">
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300">
-              <BedDouble width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
-              <span className="sm:text-xl font-medium text-center mx-auto">Alojamiento</span>
+            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
+            onClick={() => handleScrollToSection(cultureRef, setShowedCulture)}>
+              <School width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
+              <span className="sm:text-xl font-medium text-center">Cultura</span>
             </div>
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300">
+            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
+            onClick={() => handleScrollToSection(airFreeRef, setShowedFreeAir)}>
+              <Trees width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
+              <span className="sm:text-xl font-medium text-center mx-auto">Aire Libre</span>
+            </div>
+            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
+            onClick={() => handleScrollToSection(lugaresRef, setShowedLugares)}>
               <Ticket width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
               <span className="sm:text-xl font-medium text-center">Atracciones</span>
             </div>
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300">
-              <Building2 width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
-              <span className="sm:text-xl font-medium text-center">Ciudad</span>
-            </div>
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300">
+
+            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300" 
+            onClick={() => handleScrollToSection(gastronomyRef, setShowedGastronomia)}>
               <UtensilsCrossed width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
-              <span className="sm:text-xl font-medium text-center">Restaurant</span>
+              <span className="sm:text-xl font-medium text-center">Gastronomia</span>
             </div>
           </div>
         </div>
@@ -241,7 +300,7 @@ const ExpectedDestination = () => {
         </div>
       </section>
       {/* Puntos de interes */}
-      <section className="my-10">
+      <section ref={lugaresRef} className="my-10">
         <div className="sm:w-10/12 m-auto mt-10">
           <h3
             onClick={() => setShowedLugares(!showedLugares)}
@@ -289,20 +348,18 @@ const ExpectedDestination = () => {
                 }}
               >
                 {pointsInterest.map((article) => (
-                  article.reviews?.[0]?.photos?.[0] && (
                     <SwiperSlide key={article.id}>
                       <div className="w-80">
                         <Link to={`/lugar-esperado/${article.googleId}`}>
                           <ArticleCard
                             title={article.name}
-                            image={article.reviews[0].photos[0]}
+                            image={article.reviews[0].photos[0] || article.province.images[0]}
                             rating={article.rating}
                             address={article.address}
                           />
                         </Link>
                       </div>
                     </SwiperSlide>
-                  )
                 ))}
               </Swiper>
               <div className="swiper-button-prev hidden"></div>
@@ -312,7 +369,7 @@ const ExpectedDestination = () => {
         </div>
       </section>
       {/* gastronomia */}
-      <section className="my-10">
+      <section ref={gastronomyRef} className="my-10">
         <div className="sm:w-10/12 m-auto mt-10">
           <h3
             onClick={() => setShowedGastronomia(!showedGastronomia)}
@@ -360,20 +417,19 @@ const ExpectedDestination = () => {
                 }}
               >
                 {gastronomyPlace.map((article) => (
-                  article.reviews?.[0]?.photos?.[0] && (
                     <SwiperSlide key={article.id}>
                       <div className="w-80">
                         <Link to={`/lugar-esperado/${article.googleId}`}>
                           <ArticleCard
                             title={article.name}
-                            image={article.reviews[0].photos[0]}
+                            image={article.reviews?.[0]?.photos?.[0] || article.province?.images?.[0]}
                             rating={article.rating}
                             address={article.address}
                           />
                         </Link>
                       </div>
                     </SwiperSlide>
-                  )
+                  
                 ))}
               </Swiper>
               <div className="swiper-button-prev hidden"></div>
@@ -383,7 +439,7 @@ const ExpectedDestination = () => {
         </div>
       </section>
       {/* Cultura */}
-      <section className="my-10">
+      <section ref={cultureRef} className="my-10">
         <div className="sm:w-10/12 m-auto mt-10">
           <h3
             onClick={() => setShowedCulture(!showedCulture)}
@@ -426,26 +482,32 @@ const ExpectedDestination = () => {
                 breakpoints={{
                   300: { slidesPerView: 1 },
                   480: { slidesPerView: 2 },
-                  768: { slidesPerView: 3 },
+                  720: { slidesPerView: 3 },
                   1024: { slidesPerView: 4 },
                 }}
               >
-                {culturePlaces.map((article) => (
-                  article.reviews?.[0]?.photos?.[0] && (
-                    <SwiperSlide key={article.id}>
-                      <div className="w-80">
-                        <Link to={`/lugar-esperado/${article.googleId}`}>
-                          <ArticleCard
-                            title={article.name}
-                            image={article.reviews[0].photos[0]}
-                            rating={article.rating}
-                            address={article.address}
-                          />
-                        </Link>
-                      </div>
-                    </SwiperSlide>
-                  )
-                ))}
+                {culturePlaces.map((article) => {
+  // Selecciona una imagen aleatoria específica para este artículo
+  const randomImage = article.reviews?.[0]?.photos?.[0] || 
+                      (reviews.length > 0 ? reviews[Math.floor(Math.random() * reviews.length)].photos?.[0] : '');
+
+  return (
+    <SwiperSlide key={article.id}>
+      <div className="w-full"> {/* Cambia w-80 por w-full */}
+        <Link to={`/lugar-esperado/${article.googleId}`}>
+          <ArticleCard
+            title={article.name}
+            image={randomImage} // Imagen específica para este artículo
+            rating={article.rating}
+            address={article.address}
+          />
+        </Link>
+      </div>
+    </SwiperSlide>
+  );
+})}
+                  
+              
               </Swiper>
               <div className="swiper-button-prev hidden"></div>
               <div className="hidden swiper-button-next"></div>
@@ -454,7 +516,7 @@ const ExpectedDestination = () => {
         </div>
       </section>
       {/* Aire Libre */}
-      <section className="my-10">
+      <section ref={airFreeRef} className="my-10">
         <div className="sm:w-10/12 m-auto mt-10">
           <h3
             onClick={() => setShowedFreeAir(!showedFreeAir)}
@@ -502,20 +564,20 @@ const ExpectedDestination = () => {
                 }}
               >
                 {FreeAirPlaces.map((article) => (
-                  article.reviews?.[0]?.photos?.[0] && (
+                  
                     <SwiperSlide key={article.id}>
                       <div className="w-80">
                         <Link to={`/lugar-esperado/${article.googleId}`}>
                           <ArticleCard
                             title={article.name}
-                            image={article.reviews[0].photos[0]}
+                            image={article.reviews?.[0]?.photos?.[0] || article.province?.images?.[0]}
                             rating={article.rating}
                             address={article.address}
                           />
                         </Link>
                       </div>
                     </SwiperSlide>
-                  )
+                  
                 ))}
               </Swiper>
               <div className="swiper-button-prev hidden"></div>
