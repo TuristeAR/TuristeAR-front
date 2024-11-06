@@ -444,6 +444,26 @@ const FormQuestions = () => {
     return data ? JSON.parse(data) : null;
   };
 
+  const renderPriceLevel = () => {
+    const priceLevelMap = {
+      PRICE_LEVEL_FREE: 0,
+      PRICE_LEVEL_INEXPENSIVE: 0,
+      PRICE_LEVEL_MODERATE: 1,
+      PRICE_LEVEL_EXPENSIVE: 2,
+      PRICE_LEVEL_VERY_EXPENSIVE: 2,
+    };
+
+    const index = priceLevelMap[formData.priceLevel[0]];
+    const option = questions[2].options[index];
+
+    return (
+      <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 border border-gray">
+        {option.src}
+        {option.alt}
+      </div>
+    );
+  };
+
   useEffect(() => {
     const savedFormData = getFormDataFromLocalStorage();
 
@@ -585,20 +605,7 @@ const FormQuestions = () => {
                         </strong>
                       </span>
                       <div className="flex flex-wrap justify-center gap-5 my-2">
-                        {formData.priceLevel.map((type) => {
-                          const option = questions[3].options.find(
-                            (option) => option.data.toString() === type,
-                          );
-                          return (
-                            <div
-                              key={type}
-                              className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 border border-gray"
-                            >
-                              {option?.src}
-                              {option?.alt}
-                            </div>
-                          );
-                        })}
+                        {renderPriceLevel()}
                         {formData.types.map((type) => {
                           const option = questions[3].options.find(
                             (option) => option.data.toString() === type,

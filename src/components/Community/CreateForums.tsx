@@ -4,8 +4,8 @@ import logoAnimado from '../../assets/logoAnimado.json';
 
 export const CreateForums = () => {
   type Category = {
-    id: number,
-    description: string
+    id: number;
+    description: string;
   };
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -14,7 +14,7 @@ export const CreateForums = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    categoryId: undefined
+    categoryId: undefined,
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -23,8 +23,7 @@ export const CreateForums = () => {
       try {
         const categoriesResponse = await fetch('https://api-turistear.koyeb.app/categories', {
           method: 'GET',
-          credentials:
-            'include',
+          credentials: 'include',
         });
 
         if (!categoriesResponse.ok) throw new Error('Error al obtener categorías');
@@ -39,12 +38,14 @@ export const CreateForums = () => {
     fetchData();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
-      setFormData(prevData => ({
-        ...prevData,
-        [name]: value,
-      }));
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const createForums = async (e: React.FormEvent) => {
@@ -52,17 +53,17 @@ export const CreateForums = () => {
     setError(null);
 
     if (!formData.name) {
-      setError("Ingrese un nombre!");
+      setError('Ingrese un nombre!');
       return;
     }
 
     if (!formData.description) {
-      setError("Ingrese una descripción!");
+      setError('Ingrese una descripción!');
       return;
     }
 
     if (formData.categoryId === undefined) {
-      setError("Seleccione una categoría!");
+      setError('Seleccione una categoría!');
       return;
     }
 
@@ -74,19 +75,19 @@ export const CreateForums = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name : formData.name,
-          description : formData.description,
-          categoryId: formData.categoryId
+          name: formData.name,
+          description: formData.description,
+          categoryId: formData.categoryId,
         }),
         credentials: 'include',
       });
 
       if (!response.ok) throw new Error('Error en la solicitud');
       setError('');
-      const idRedirect=response.json();
-      idRedirect.then((data) =>{
+      const idRedirect = response.json();
+      idRedirect.then((data) => {
         window.location.href = `/forum/${data.data.id}`;
-      })
+      });
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -110,7 +111,11 @@ export const CreateForums = () => {
             className="fixed bottom-4 right-4 bg-[#49a2ec] rounded-full flex flex-col justify-evenly"
             id={'crearForum'}
           >
-            <img src={'/assets/createForum.svg'} className={'lg:w-[70px] w-[45px] lg:m-6 m-3'} alt={'Abrir pop up para crear foro'} />
+            <img
+              src={'/assets/createForum.svg'}
+              className={'lg:w-[70px] w-[45px] lg:m-6 m-3'}
+              alt={'Abrir pop up para crear foro'}
+            />
           </button>
           {isOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 lg:z-50 z-[80] border border-gray-50 rounded-lg">
@@ -146,6 +151,7 @@ export const CreateForums = () => {
                           type={'text'}
                           className={'border border-[#999999] rounded-xl pl-2'}
                           placeholder={'Ingrese el nombre'}
+                          autoComplete="off"
                         />
                       </div>
                       <div className={'flex flex-col'}>
