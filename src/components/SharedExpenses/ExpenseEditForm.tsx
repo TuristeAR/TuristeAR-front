@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
 import { ArrowLeft } from 'lucide-react';
 
-const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
+const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => {
   const [date, setDate] = useState(expense.date);
   const onDateChangeHandler = useCallback((date) => setDate(date), [date]);
   const [distributionType, setDistributionType] = useState(expense.distributionType);
@@ -132,6 +132,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
 
       const result = await response.json();
       console.log('Gasto guardado:', result);
+      onExpenseUpdated(result);
       onBack()
     } catch (error) {
       console.log(error.message);

@@ -38,6 +38,20 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
     setSelectedExpenseId(null);
   };
 
+  const handleExpenseUpdated = (updatedExpense: Expense) => {
+    setGroupedExpenses((prevGroupedExpenses) => {
+      const updatedExpenses = { ...prevGroupedExpenses };
+      
+      Object.keys(updatedExpenses).forEach((date) => {
+        updatedExpenses[date] = updatedExpenses[date].map((expense: Expense) =>
+          expense.id === updatedExpense.id ? updatedExpense : expense
+        );
+      });
+      
+      return updatedExpenses;
+    });
+  };
+  
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
@@ -113,6 +127,8 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
           expense={expense}
           onBack={() => setShowForm(false)}
           itineraryId={itineraryId}
+          onExpenseUpdated={handleExpenseUpdated}
+
         />
       ) : (
         <div className="bg-white w-full mx-auto">
