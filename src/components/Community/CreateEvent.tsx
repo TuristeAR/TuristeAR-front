@@ -157,7 +157,6 @@ export const CreateEvent = (props: { user: User }) => {
                       id="name"
                       required
                       onChange={(e) => setName(e.target.value)}
-                      autoComplete="off"
                     />
                   </div>
 
