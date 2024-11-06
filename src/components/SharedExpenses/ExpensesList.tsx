@@ -27,7 +27,11 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
   const [expense, setExpense] = useState(false);
 
   const handleOpenModal = (expenseId: number) => {
-    setSelectedExpenseId(expenseId);
+    if (selectedExpenseId === expenseId) {
+      setSelectedExpenseId(null);
+    } else {
+      setSelectedExpenseId(expenseId); 
+    }
   };
 
   const handleCloseModal = () => {
@@ -126,14 +130,16 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
           </div>
           {Object.keys(groupedExpenses).map((date) => (
             <div key={date} className="mt-4">
-              <h2 className="text-2xl font-semibold mb-3">{date}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
+              <details key={date} className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-md">
+                <summary className="text-2xl font-semibold text-primary-3 cursor-pointer hover:text-primary-4">
+                  {date}
+                </summary>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
                 {groupedExpenses[date].map((expense: Expense) => {
                   const payer: User | undefined = usersOldNav.find(
                     (user) => user.id === expense.payer.id,
                   );
                   const isSelected = selectedExpenseId === expense.id;
-
 
                   return (
                     <div className="max-w-xxl" key={expense.id}>
@@ -148,17 +154,23 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
                             <h5 className="font-semibold sm:text-xl leading-9 text-black mb-1">
                               {expense.description}
                             </h5>
-                            <p className="text-sm text-gray-600">
-                              Pagado por{' '}
-                              {payer && payer.profilePicture && (
-                                <img
-                                  src={payer.profilePicture}
-                                  className="w-5 rounded-full inline-flex"
-                                />
-                              )}
-                              <span className="font-bold">
-                                {payer ? payer.name : 'Desconocido'}
-                              </span>
+                            <p className="text-sm">{new Date(expense.date).toLocaleTimeString()}</p>
+
+                            <p className="text-sm text-gray-600 flex gap-1 flex-wrap">
+                              <span>Pagado por </span>
+                              <div className="flex">
+                                {payer && payer.profilePicture && (
+                                  <div className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
+                                    <img
+                                      src={payer.profilePicture}
+                                      className="w-full object-cover"
+                                    />{' '}
+                                  </div>
+                                )}
+                                <span className="font-bold">
+                                  {payer ? payer.name : 'Desconocido'}
+                                </span>
+                              </div>
                             </p>
                           </div>
                         </div>
@@ -192,6 +204,9 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
                   );
                 })}
               </div>
+              </details>
+
+              
             </div>
           ))}
         </div>

@@ -154,7 +154,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
             <label className="block font-semibold text-gray-700 mb-2">Descripción</label>
             <input
               type="text"
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded border-primary "
               placeholder="Ejemplo: Cena en restaurante"
               value={description}
               onChange={handleDescriptionChange}
@@ -170,7 +170,8 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
               selected={date}
               onChange={onDateChangeHandler}
               showIcon
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded border-primary "
+              dateFormat="dd/MM/yyyy" 
             />
           </div>
 
@@ -179,7 +180,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
             <select
               value={payerId}
               onChange={handlePayerChange}
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded border-primary"
             >
               <option value="">Selecciona el pagador</option>
               {usersOldNav.map((user) => (
@@ -210,7 +211,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
             <label className="block font-semibold text-gray-700 mb-2">Monto Total</label>
             <input
               type="number"
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded border-primary "
               placeholder="Ejemplo: 100"
               value={totalAmount}
               onChange={handleTotalAmountChange}
@@ -223,7 +224,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
             <select
               value={distributionType}
               onChange={handleDistributionChange}
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded border-primary "
             >
               <option value="equivalente">En Partes Iguales</option>
               <option value="montos">Por Montos Exactos</option>
@@ -258,7 +259,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
                       <span className="w-1/2 text-gray-600">{user.name}</span>
                       <input
                         type="number"
-                        className="w-1/2 px-4 py-2 border rounded-lg"
+                        className="w-1/2 px-4 py-2 border rounded border-primary "
                         placeholder="Monto"
                         value={individualAmounts[user.id] || ''}
                         onChange={(e) => handleIndividualAmountChange(user.id, e.target.value)}

@@ -19,6 +19,7 @@ import ItineraryChat from './pages/ItineraryChat';
 import { ItineraryMap } from './pages/ItineraryMap';
 import PublicationDetail from './pages/PublicationDetail';
 import { SharedGallery } from './pages/SharedGallery';
+import SharedExpenses from './pages/SharedExpenses';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
