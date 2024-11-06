@@ -19,6 +19,7 @@ import ItineraryChat from './pages/ItineraryChat';
 import { ItineraryMap } from './pages/ItineraryMap';
 import PublicationDetail from './pages/PublicationDetail';
 import { SharedGallery } from './pages/SharedGallery';
+import SharedExpenses from './pages/SharedExpenses';
 
 const root = createRoot(document.getElementsByTagName('main')[0]);
 
@@ -48,6 +49,7 @@ root.render(
       <Route path="lugares/:provinceName" element={<Places />} />
       <Route path="lugares/:provinceName/:lat/:lon" element={<Places />} />
       <Route path="/sharedGallery/:itineraryId" element={<SharedGallery />} />
+      <Route path="/gastosCompartidos/:itineraryId" element={<SharedExpenses />} />
     </Routes>
   </BrowserRouter>,
 );

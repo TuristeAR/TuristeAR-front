@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
 import { ArrowLeft } from 'lucide-react';
 
-const ExpensesForm = ({ onBack, itineraryId, onClose }) => {
+const ExpensesForm = ({ onBack, itineraryId }) => {
   const [date, setDate] = useState(new Date());
   const onDateChangeHandler = useCallback((date) => setDate(date), [date]);
   const [distributionType, setDistributionType] = useState('equivalente');
@@ -131,6 +131,8 @@ const ExpensesForm = ({ onBack, itineraryId, onClose }) => {
       setDistributionType('equivalente');
       setIndividualAmounts({});
       setIndividualPercentages({});
+
+      onBack();
     } catch (error) {
       setError(error.message);
     } finally {
@@ -140,15 +142,19 @@ const ExpensesForm = ({ onBack, itineraryId, onClose }) => {
 
   return (
     <>
-      <div className="bg-white p-6 rounded-sm shadow-lg max-w-lg mx-auto">
-        <ArrowLeft onClick={onClose} className="cursor-pointer" />
+      <div className="bg-white p-6 max-w-lg mx-auto">
+        <button className='flex' onClick={onBack}>
+          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[20px] my-auto'}/>
+          <div className='text-sm font-bold text-primary-3'>Volver A La Lista De Gastos</div>
+        </button>
+      
         <h3 className="font-bold text-3xl lead-10 text-black mb-9">Agregar Nuevo Gasto</h3>
         <form>
           <div className="mb-4">
             <label className="block font-semibold text-gray-700 mb-2">Descripción</label>
             <input
               type="text"
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded border-primary "
               placeholder="Ejemplo: Cena en restaurante"
               value={description}
               onChange={handleDescriptionChange}
@@ -164,7 +170,8 @@ const ExpensesForm = ({ onBack, itineraryId, onClose }) => {
               selected={date}
               onChange={onDateChangeHandler}
               showIcon
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded border-primary "
+              dateFormat="dd/MM/yyyy" 
             />
           </div>
 
@@ -173,7 +180,7 @@ const ExpensesForm = ({ onBack, itineraryId, onClose }) => {
             <select
               value={payerId}
               onChange={handlePayerChange}
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded border-primary"
             >
               <option value="">Selecciona el pagador</option>
               {usersOldNav.map((user) => (
@@ -204,7 +211,7 @@ const ExpensesForm = ({ onBack, itineraryId, onClose }) => {
             <label className="block font-semibold text-gray-700 mb-2">Monto Total</label>
             <input
               type="number"
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded border-primary "
               placeholder="Ejemplo: 100"
               value={totalAmount}
               onChange={handleTotalAmountChange}
@@ -217,9 +224,9 @@ const ExpensesForm = ({ onBack, itineraryId, onClose }) => {
             <select
               value={distributionType}
               onChange={handleDistributionChange}
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded border-primary "
             >
-              <option value="equivalente">Equivalente</option>
+              <option value="equivalente">En Partes Iguales</option>
               <option value="montos">Por Montos Exactos</option>
               <option value="porcentajes">Porcentajes</option>
             </select>
@@ -228,7 +235,7 @@ const ExpensesForm = ({ onBack, itineraryId, onClose }) => {
           {distributionType === 'equivalente' && (
             <div className="mb-4">
               <label className="block font-semibold text-gray-700 mb-2">
-                Monto Equivalente por Persona
+                Monto Igual por Persona
               </label>
               {usersOldNav.map(
                 (user) =>
@@ -252,7 +259,7 @@ const ExpensesForm = ({ onBack, itineraryId, onClose }) => {
                       <span className="w-1/2 text-gray-600">{user.name}</span>
                       <input
                         type="number"
-                        className="w-1/2 px-4 py-2 border rounded-lg"
+                        className="w-1/2 px-4 py-2 border rounded border-primary "
                         placeholder="Monto"
                         value={individualAmounts[user.id] || ''}
                         onChange={(e) => handleIndividualAmountChange(user.id, e.target.value)}

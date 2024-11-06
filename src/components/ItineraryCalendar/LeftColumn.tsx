@@ -213,7 +213,14 @@ export const LeftColumn = ({
               <img src={alignIcon} alt="" />
               <p className="text-sm">Resumen del viaje</p>
             </div>
-            {user && itinerary && user.id == itinerary.user.id && (
+            <div
+              className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
+              onClick={() => (window.location.href = `/gastosCompartidos/${itineraryId}`)}
+            >
+              <Receipt className="stroke-primary" strokeWidth={1} />
+              <p className="text-sm">Gastos compartidos</p>
+            </div>
+           {user && itinerary && user.id == itinerary.user.id && (
               <div
                 className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
                 onClick={() => deleteItinerary(itineraryId)}
@@ -337,9 +344,6 @@ export const LeftColumn = ({
         </div>
         {isShowExpanse ? (
           <SharedExpenses
-            itineraryId={itineraryId}
-            itineraryName={itinerary.name}
-            onClose={() => setIsShowExpanse(false)}
           ></SharedExpenses>
         ) : (
           ''
