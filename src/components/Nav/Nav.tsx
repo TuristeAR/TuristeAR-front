@@ -5,15 +5,16 @@ import { useEffect, useState } from 'react';
 import { get } from '../../utilities/http.util';
 
 type Notification={
-  id: number
+  id: number,
+  isRead: boolean,
 }
 
 export const Nav = () => {
   const location = useLocation();
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isDropdownOpenNotification, setIsDropdownOpenNotification] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [isDropdownOpenNotification, setIsDropdownOpenNotification] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -97,7 +98,7 @@ export const Nav = () => {
         </Link>
       ) : (
         <div className="hidden mt-auto md:flex items-center gap-x-4">
-          <div className={'relative'}>
+          <Link to={'/notifications'} className={'relative cursor-pointer'}>
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -117,12 +118,12 @@ export const Nav = () => {
                 ></path>
               </g>
             </svg>
-            {notifications.length > 0 && (
+            {notifications.filter(notification => !notification.isRead).length > 0 && (
               <div className="absolute bg-[#c0daeb] rounded-full w-[27px] h-[27px] flex items-center justify-center -left-3 -top-3">
-                <span className={'font-semibold text-sm'}>{notifications.length}</span>
+                <span className={'font-semibold text-sm'}>{notifications.filter(notification => !notification.isRead).length}</span>
               </div>
             )}
-          </div>
+          </Link>
 
           {isDropdownOpenNotification && (
             <div className="absolute top-16 right-40 bg-white shadow-lg rounded-lg my-3 w-70 z-50">
