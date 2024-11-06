@@ -71,9 +71,8 @@ const ExpectedDestination = () => {
           `https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}`,
           {
             'Content-Type': 'application/json',
-          },
+          }
         );
-
         setProvince(response);
       } catch (error) {
         console.error('Error fetching province:', error);
@@ -83,7 +82,6 @@ const ExpectedDestination = () => {
     fetchProvince();
   }, [nombreDeLaProvincia]);
 
-  // Gastronomy
   useEffect(() => {
     const fetchGastronomyPlace = async () => {
       if (province) {
@@ -92,20 +90,17 @@ const ExpectedDestination = () => {
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=restaurant&count=6`,
             {
               'Content-Type': 'application/json',
-            },
+            }
           );
-
           setGastronomyPlace(response.data);
         } catch (error) {
           console.error('Error fetching GastronomyPlace:', error);
         }
       }
     };
-
     fetchGastronomyPlace();
   }, [province]);
 
-  // points of interest
   useEffect(() => {
     const fetchPointsInterest = async () => {
       if (province) {
@@ -114,16 +109,14 @@ const ExpectedDestination = () => {
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=tourist_attraction&count=6`,
             {
               'Content-Type': 'application/json',
-            },
+            }
           );
-
           setPointsInterest(response.data);
         } catch (error) {
-          console.error('Error fetching GastronomyPlace:', error);
+          console.error('Error fetching PointsInterest:', error);
         }
       }
     };
-
     fetchPointsInterest();
   }, [province]);
 
@@ -137,7 +130,6 @@ const ExpectedDestination = () => {
         <Lottie className="w-[20rem] m-auto" animationData={logoAnimado} />
       </div>
     );
-
   return (
     <>
       <Header />
@@ -244,60 +236,44 @@ const ExpectedDestination = () => {
                   nextEl: '.swiper-button-next',
                   prevEl: '.swiper-button-prev',
                 }}
-                onSwiper={(swiper) => console.log(swiper)}
-                onSlideChange={() => console.log('slide change')}
                 breakpoints={{
-                  300: {
-                    slidesPerView: 1,
-                  },
-                  480: {
-                    slidesPerView: 2,
-                  },
-                  768: {
-                    slidesPerView: 3,
-                  },
-                  1024: {
-                    slidesPerView: 4,
-                  },
+                  300: { slidesPerView: 1 },
+                  480: { slidesPerView: 2 },
+                  768: { slidesPerView: 3 },
+                  1024: { slidesPerView: 4 },
                 }}
               >
-                {pointsInterest.map(
-                  (article, index) =>
-                    article.reviews.length > 0 &&
-                    article.reviews[0].photos.length > 0 && (
-                      <div className="w-80" key={index}>
-                        <SwiperSlide>
-                          <Link to={`/lugar-esperado/${article.googleId}`}>
-                            <ArticleCard
-                              key={article.id}
-                              title={article.name}
-                              image={article.reviews[0].photos[0]}
-                              rating={article.rating}
-                              address={article.address}
-                            />
-                          </Link>
-                        </SwiperSlide>
+                {pointsInterest.map((article) => (
+                  article.reviews?.[0]?.photos?.[0] && (
+                    <SwiperSlide key={article.id}>
+                      <div className="w-80">
+                        <Link to={`/lugar-esperado/${article.googleId}`}>
+                          <ArticleCard
+                            title={article.name}
+                            image={article.reviews[0].photos[0]}
+                            rating={article.rating}
+                            address={article.address}
+                          />
+                        </Link>
                       </div>
-                    ),
-                )}
+                    </SwiperSlide>
+                  )
+                ))}
               </Swiper>
               <div className="swiper-button-prev hidden"></div>
               <div className="hidden swiper-button-next"></div>
             </div>
-            <div className="text-center my-6">
-              <button className="btn-blue">Ver más</button>
-            </div>
           </div>
         </div>
       </section>
-      {/* Gastronomía */}
+      {/* gastronomia */}
       <section className="my-10">
         <div className="sm:w-10/12 m-auto mt-10">
           <h3
             onClick={() => setShowedGastronomia(!showedGastronomia)}
             className="text-xl sm:text-3xl pl-2 font-bold btn-drop-down-blue flex items-center cursor-pointer"
           >
-            Gastronomía
+            gastronomia
             <div className="icons">
               <svg
                 className={`${!showedGastronomia ? 'block' : 'hidden'}`}
@@ -322,60 +298,45 @@ const ExpectedDestination = () => {
             </div>
           </h3>
           <div className={`${showedGastronomia ? 'block' : 'hidden'}`}>
-            <div className={`relative px-2 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap`}>
+            <div className="relative px-1 sm:px-0 flex gap-2 mt-5 justify-around flex-wrap">
               <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={5}
                 slidesPerView={'auto'}
                 navigation={{
                   nextEl: '.swiper-button-next',
                   prevEl: '.swiper-button-prev',
                 }}
-                onSwiper={(swiper) => console.log(swiper)}
-                onSlideChange={() => console.log('slide change')}
                 breakpoints={{
-                  300: {
-                    slidesPerView: 1,
-                  },
-                  480: {
-                    slidesPerView: 2,
-                  },
-                  768: {
-                    slidesPerView: 3,
-                  },
-                  1024: {
-                    slidesPerView: 4,
-                  },
+                  300: { slidesPerView: 1 },
+                  480: { slidesPerView: 2 },
+                  768: { slidesPerView: 3 },
+                  1024: { slidesPerView: 4 },
                 }}
               >
-                {gastronomyPlace.map(
-                  (article, index) =>
-                    article.reviews.length > 0 &&
-                    article.reviews[0].photos.length > 0 && (
-                      <div className="w-80" key={index}>
-                        <SwiperSlide>
-                          <Link to={`/lugar-esperado/${article.googleId}`}>
-                            <ArticleCard
-                              key={article.id}
-                              title={article.name}
-                              image={article.reviews[0].photos[0]}
-                              rating={article.rating}
-                              address={article.address}
-                            />
-                          </Link>
-                        </SwiperSlide>
+                {gastronomyPlace.map((article) => (
+                  article.reviews?.[0]?.photos?.[0] && (
+                    <SwiperSlide key={article.id}>
+                      <div className="w-80">
+                        <Link to={`/lugar-esperado/${article.googleId}`}>
+                          <ArticleCard
+                            title={article.name}
+                            image={article.reviews[0].photos[0]}
+                            rating={article.rating}
+                            address={article.address}
+                          />
+                        </Link>
                       </div>
-                    ),
-                )}
+                    </SwiperSlide>
+                  )
+                ))}
               </Swiper>
-              <div className="swiper-button-next"></div>
-              <div className="swiper-button-prev"></div>
-            </div>
-            <div className="text-center my-6">
-              <button className="btn-blue">Ver más</button>
+              <div className="swiper-button-prev hidden"></div>
+              <div className="hidden swiper-button-next"></div>
             </div>
           </div>
         </div>
-      </section>{' '}
+      </section>
     </>
   );
 };
