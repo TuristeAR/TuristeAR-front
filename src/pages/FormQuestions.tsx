@@ -419,7 +419,7 @@ const FormQuestions = () => {
       );
 
       if (response.statusCode === 201) {
-        const itineraryId = response.data.id;
+        const itineraryId = response.itineraryId;
         navigate(`/itineraryCalendar/${itineraryId}`);
       }
     } catch (error) {
