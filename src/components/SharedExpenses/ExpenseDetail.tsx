@@ -26,7 +26,16 @@ const ExpenseDetail = ({ expense, onClose }) => {
 
   const calculateAmountOwed = (participant) => {
     if (distributionType === 'equivalente') {
-      return (totalAmount / participatingUsers.length).toFixed(2);
+        const baseAmount = totalAmount / participatingUsers.length;
+        const roundedAmount = Math.floor(baseAmount * 100) / 100;
+  
+        const totalDistributed = roundedAmount * (participatingUsers.length - 1);
+        const remainingAmount = totalAmount - totalDistributed;
+        const amountOwed = participant.id === participatingUsers[participatingUsers.length - 1].id
+          ? remainingAmount.toFixed(2)
+          : roundedAmount.toFixed(2);
+  
+        return amountOwed;
     } else if (distributionType === 'montos') {
       console.log(individualAmounts);
       return individualAmounts[participant.id] || 0;
