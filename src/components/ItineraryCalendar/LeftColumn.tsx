@@ -32,9 +32,8 @@ export const LeftColumn = ({
   events,
   setEvents,
   deleteEvent,
-  onDelete
+  onDelete,
 }) => {
-  
   const [selectedPlace, setSelectedPlace] = useState('');
   const [showPlaces, setShowPlaces] = useState(false);
   const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
@@ -44,15 +43,15 @@ export const LeftColumn = ({
     setActivities,
   );
 
-  const btnHandleAddActivity = () => {
-    handleAddActivity();
-    setIsAddingActivity(false);
-  };
-
   const activityByProvince = useFetchPlacesByProvince(itinerary);
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
   const socket = io('https://api-turistear.koyeb.app');
   const [user, setUser] = useState<User | null>(null);
+
+  const btnHandleAddActivity = () => {
+    handleAddActivity();
+    setIsAddingActivity(false);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -156,7 +155,6 @@ export const LeftColumn = ({
       });
   };
 
-  //users updated in parent
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
   };
@@ -167,8 +165,8 @@ export const LeftColumn = ({
       itineraryId: id,
       userId: user.id,
     });
-    onDelete()
-  }
+    onDelete();
+  };
 
   return (
     <aside className="order-2 lg:order-1 col-span-1 p-4 flex">
@@ -220,7 +218,7 @@ export const LeftColumn = ({
               <Receipt className="stroke-primary" strokeWidth={1} />
               <p className="text-sm">Gastos compartidos</p>
             </div>
-           {user && itinerary && user.id == itinerary.user.id && (
+            {user && itinerary && user.id == itinerary.user.id && (
               <div
                 className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
                 onClick={() => deleteItinerary(itineraryId)}
@@ -342,12 +340,7 @@ export const LeftColumn = ({
             </>
           )}
         </div>
-        {isShowExpanse ? (
-          <SharedExpenses
-          ></SharedExpenses>
-        ) : (
-          ''
-        )}
+        {isShowExpanse ? <SharedExpenses></SharedExpenses> : ''}
         {/* Eliminar actividad */}
         <div className="flex flex-col gap-4 md:my-4">
           <h2 className="font-medium tracking-[-0.5px] leading-none">Eliminar eventos</h2>
