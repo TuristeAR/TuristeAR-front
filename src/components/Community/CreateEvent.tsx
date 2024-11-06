@@ -7,33 +7,19 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-type Category = {
-    id: number,
-    name: string,
+type User = {
+    id: number;
+    name: string;
+    profilePicture: string;
+    description: string;
+    birthdate: string;
+    coverPicture: string;
+    location: string;
 };
 
-type Province = {
-    id: number,
-    name: string,
-    categories: Category[]
-};
+export const CreateEvent =  (props: {user: User}) => {
 
-type Place = {
-    id: number,
-    name: string,
-    googleId: string,
-    place: Province
-};
-
-type Activity = {
-    id: number,
-    name: string,
-    place: Place
-    images: string[]
-};
-
-export const CreateEvent =  () => {
-
+    const { user } = props;
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -42,11 +28,7 @@ export const CreateEvent =  () => {
     const [toDate, setToDate] = useState<string | null>(null);
     const [province, setProvince] = useState<string | null>(null);
     const [locality, setLocality] = useState<string | null>(null);
-    const [eventImages, setEventImages] = useState<File | null>(null);
     const [description, setDescription] = useState<string | null>(null);
-
-
-
     const [error, setError] = useState<string | null>(null);
 
 
@@ -81,27 +63,15 @@ export const CreateEvent =  () => {
         e.preventDefault();
         setError(null);
 
-
         if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
             setError("La fecha de inicio no puede ser posterior a la fecha de fin.");
             return;
         }
 
         setIsLoading(true);
-        console.log(
-          " name: " + name +
-          " \n fromDate: " + fromDate +
-          " \n toDate: " + toDate +
-          " \n province: " + province +
-          " \n locality: " + locality +
-          " \n description: " + description +
-          " \n eventImages: " + eventImages.name
-        )
-
-        console.log(eventImages)
 
         try {
-            const response = await fetch('https://api-turistear.koyeb.app/createEventTemp', {
+            const response = await fetch('http://localhost:3001/createEventTemp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -113,7 +83,7 @@ export const CreateEvent =  () => {
                     province: province,
                     locality: locality,
                     description: description,
-                    image: eventImages.name
+                    image: null
                 }),
                 credentials: 'include',
             });
@@ -153,7 +123,7 @@ export const CreateEvent =  () => {
                     />
                 </div>
                 {isOpen && (
-                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 lg:z-[50] z-[80] border border-gray-50 rounded-lg">
+                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 lg:z-[90] z-[80] border border-gray-50 rounded-lg">
                       <div className="divContentCreateEvent bg-white rounded-2xl md:py-6 py-4 lg:px-10 px-6 flex flex-col justify-evenly relative md:max-w-[70%] max-w-[90%] min-w-[60%] max-h-[90%]">
                           <button
                             className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
@@ -180,7 +150,7 @@ export const CreateEvent =  () => {
                               <div>
                                   <label id="name" className={'font-semibold'}>Nombre del evento</label>
                                   <input
-                                    className={'border border-[#999999] rounded-xl w-[100%]'}
+                                    className={'border border-[#999999] rounded-xl w-[100%] pl-2'}
                                     type="text"
                                     name="name"
                                     id="name"
@@ -194,7 +164,6 @@ export const CreateEvent =  () => {
                                   <input
                                     className={'max-w-[100%]'}
                                     type="file"
-                                    onChange={(e) => setEventImages(e.target.files[0])}
                                   />
                               </div>
 
@@ -222,19 +191,7 @@ export const CreateEvent =  () => {
                                   />
                               </div>
 
-                              <div className="flex flex-col">
-                                  <label id="province" className={'font-semibold'}>Provincia</label>
-                                  <select
-                                    className={'border border-[#999999] rounded-xl px-2'}
-                                    name="province"
-                                    id="province"
-                                    required
-                                    onChange={(e) => setProvince(e.target.value)}
-                                  >
-                                      <option value="1">Buenos Aires</option>
-                                      <option value="2">Ciudad Autónoma de Buenos Aires</option>
-                                  </select>
-                              </div>
+
 
                               <div className={'flex flex-col'}>
                                   <label id="locality" className={'font-semibold'}>Localidad</label>
@@ -251,7 +208,7 @@ export const CreateEvent =  () => {
                               </div>
 
                               <div className="flex flex-col">
-                                  <label id="description" className={'font-semibold'}>Descripcion</label>
+                                  <label id="description" className={'font-semibold'}>Descripción</label>
                                   <textarea
                                     className={'border border-[#999999] rounded-xl px-2'}
                                     name="description"
@@ -262,11 +219,8 @@ export const CreateEvent =  () => {
                                   ></textarea>
                               </div>
 
-                              <div className={`flex flex-col lg:mt-6 mt-4 lg:gap-2`}>
-                                  <button
-                                    type="submit"
-                                    className="btn-blue lg:w-[60%] w-[90%] mx-auto"
-                                  >
+                              <div className={`flex flex-col mt-4 lg:gap-2 col-span-2`}>
+                                  <button type="submit" className="btn-blue lg:w-[60%] w-[90%] mx-auto">
                                       Crear evento
                                   </button>
                                   {error && (

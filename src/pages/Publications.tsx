@@ -146,7 +146,7 @@ const Publications = () => {
               {/* Create posts */}
               <CreatePublications />
               {/* Posts */}
-              <CreateEvent />
+              <CreateEvent user={user} />
               <div className="flex flex-col gap-6 lg:w-[80%] w-[90%] mx-auto">
                 {publications
                   ?.filter((publication) => {
