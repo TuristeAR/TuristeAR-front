@@ -4,11 +4,16 @@ import arrowRight from '/assets/arrow-right.svg';
 import { useEffect, useState } from 'react';
 import { get } from '../../utilities/http.util';
 
+type Notification={
+  id: number
+}
+
 export const Nav = () => {
   const location = useLocation();
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDropdownOpenNotification, setIsDropdownOpenNotification] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const handleLogout = async () => {
     try {
@@ -30,6 +35,19 @@ export const Nav = () => {
     if (response.statusCode === 200) {
       localStorage.setItem('user', JSON.stringify(response.user));
       setUser(response.user);
+    } else {
+      localStorage.removeItem('user');
+    }
+  };
+
+  const fetchNotifications = async () => {
+    const response = await get('http://localhost:3001/notifications/byUser', {
+      'Content-Type': 'application/json',
+      credentials: 'include',
+    });
+
+    if (response.statusCode === 200) {
+      setNotifications(response)
     } else {
       localStorage.removeItem('user');
     }
@@ -103,9 +121,11 @@ export const Nav = () => {
                 ></path>
               </g>
             </svg>
-            <div className="absolute bg-[#c0daeb] rounded-full w-[35px] h-[35px] flex items-center justify-center -left-5 -top-5">
-              <span className={'font-semibold'}>22</span>
-            </div>
+            {notifications.length > 0 && (
+              <div className="absolute bg-[#c0daeb] rounded-full w-[35px] h-[35px] flex items-center justify-center -left-5 -top-5">
+                <span className={'font-semibold'}>{notifications.length}</span>
+              </div>
+            )}
           </div>
 
           {isDropdownOpenNotification && (
