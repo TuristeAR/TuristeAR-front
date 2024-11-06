@@ -61,8 +61,8 @@ const Publications = () => {
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [publications, setPublications] = useState<Publication[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [publications, setPublications] = useState<Publication[] | null>(null);
 
   const handleClick = (name: string) => {
     if (contentRef.current) {

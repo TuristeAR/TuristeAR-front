@@ -12,6 +12,8 @@ import useDownloadPdf from '../utilities/useDownloadPdf';
 import { UploadImageSharedGallery } from '../components/ItineraryCalendar/UploadImageSharedGallery';
 import { formatDate } from '../utilities/formatDate';
 import { reorderDate } from '../utilities/reorderDate';
+import { io } from 'socket.io-client';
+import useFetchParticipants from '../utilities/useFetchParticipants';
 
 type User = {
   id: number;
@@ -24,11 +26,42 @@ export const ItineraryDetail = () => {
   const { itineraryId } = useParams();
   const { itinerary, activities, events } = useFetchItinerary(itineraryId || null);
   const { downloadPDF } = useDownloadPdf();
+  const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
 
   const [reviews, setReviews] = useState<any[]>([]);
   const [activitiesByNeighborhoodAndDay, setActivitiesByNeighborhoodAndDay] = useState({});
   const [activitiesAndEventsByDate, setActivitiesAndEventsByDate] = useState({});
-  let [usersOldNav, setUsersOldNav] = useState<User[]>([]);
+  const socket = io('https://api-turistear.koyeb.app');
+
+  useEffect(() => {
+    socket.on('usersUpdated', (data) => {
+      const owner = {
+        ...data.itineraryParticipants.user,
+        isOwner: true,
+      };
+      setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
+    });
+    socket.on('usersAddItinerary', (data) => {
+      console.log('socket add', data.updatedItinerary);
+      const owner = {
+        ...data.updatedItinerary.user,
+        isOwner: true,
+      };
+      setUsersOldNav([owner, ...data.updatedItinerary.participants]);
+    });
+
+    socket.on('userRemoved', ({ participantId }) => {
+      setUsersOldNav((prevUsersOldNav) =>
+        prevUsersOldNav.filter((user) => user.id !== participantId),
+      );
+    });
+
+    return () => {
+      socket.off('usersUpdated');
+      socket.off('usersAddItinerary');
+      socket.off('userRemoved');
+    };
+  }, []);
 
   useEffect(() => {
     if (activities.length > 0) {
@@ -68,12 +101,9 @@ export const ItineraryDetail = () => {
     const options = { hour: '2-digit', minute: '2-digit', hour12: false } as const;
     return date.toLocaleTimeString([], options);
   };
-
+  
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
-    usersOldNav = updatedUsers;
-    console.log('Usuarios actualizados en el padre:', updatedUsers);
-    console.log('UserNav new: ', usersOldNav);
   };
 
   const fetchNeighborhoods = async (latitude: number, longitude: number) => {
@@ -109,8 +139,6 @@ export const ItineraryDetail = () => {
 
       const settlementsData = await settlementsResponse.json();
 
-      console.log(settlementsData);
-
       const settlements = settlementsData?.asentamientos;
 
       if (!settlements || settlements.length === 0) {
@@ -142,22 +170,6 @@ export const ItineraryDetail = () => {
       return 'Error al buscar barrio';
     }
   };
-
-  useEffect(() => {
-    const fetchSuburbs = async () => {
-      if (activities && activities.length > 0) {
-        try {
-          activities.map((activity) =>
-            fetchNeighborhoods(activity.place.latitude, activity.place.longitude),
-          );
-        } catch (error) {
-          console.error('Error al obtener barrios:', error);
-        }
-      }
-    };
-
-    fetchSuburbs();
-  }, [activities]);
 
   useEffect(() => {
     const fetchSuburbsAndGroupActivitiesAndEvents = async () => {
@@ -239,7 +251,7 @@ export const ItineraryDetail = () => {
                 <div className="flex flex-col md:flex-row gap-4">
                   {/* Participants */}
                   <div className="w-full flex  gap-2 mb-2">
-                    <div className="">
+                    <div>
                       <AddParticipantModal
                         itinerary={Number(itineraryId)}
                         tap={1}
