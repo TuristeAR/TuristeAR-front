@@ -350,17 +350,7 @@
     transition: transform 0.3s, box-shadow 0.3s;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-.numberNotification{
-    background-color: #009fe3;
-    position: absolute;
-    width: 30px;
-    text-align: center;
-    color: rgb(255, 255, 255);
-    border-radius: 50%;
-    bottom: 35px;
-    right: 230px;
-    font-weight: 600;
-}
+
 .formPublicationEvent {
     position: fixed; /* Fija el div en la pantalla */
     width: 300px;
