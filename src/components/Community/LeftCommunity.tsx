@@ -181,7 +181,7 @@ export const LeftCommunity = (props: {
                             className={`flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${category.id == categorySelected ? 'bg-[#c0daeb]' : ''}`}
                           >
                             <div className="flex items-center">
-                              <p className="">{category.description}</p>
+                              <p className="">{category.description === 'Ciudad Autónoma de Buenos Aires' ? 'CABA' : category.description}</p>
                             </div>
                           </button>
                         </div>

@@ -50,7 +50,6 @@ type Notification={
 }
 
 const Notifications = () => {
-
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -66,15 +65,22 @@ const Notifications = () => {
   };
 
   const fetchUser = async () => {
-    const response = await get(' https://api-turistear.koyeb.app/session', {
+    const response = await get('https://api-turistear.koyeb.app/session', {
       'Content-Type': 'application/json',
     });
 
     if (response.statusCode === 200) {
       setUser(response.user);
     } else {
-      window.location.href='/login'
+      window.location.href = '/login';
     }
+  };
+
+  const updateNotifications = async () => {
+    await fetch('https://api-turistear.koyeb.app/markNotificationsAsRead', {
+      method: 'PUT',
+      credentials: 'include'
+    });
   };
 
   const fetchNotifications = async () => {
@@ -82,13 +88,14 @@ const Notifications = () => {
       'Content-Type': 'application/json',
       credentials: 'include',
     });
-    setNotifications(response)
-    setIsLoading(false)
+    setNotifications(response);
+    setIsLoading(false);
   };
 
   useEffect(() => {
     fetchUser();
-    fetchNotifications()
+    fetchNotifications();
+    updateNotifications()
   }, []);
 
   return (
@@ -117,25 +124,50 @@ const Notifications = () => {
               <div className={`flex flex-col gap-6 w-[97%] mx-auto`}>
                 {notifications.map((notification, index) => (
                   <Link
-                    to={notification.publication ? `/publication/${notification.publication.id}` : `/itineraryCalendar/ ${notification.itinerary.id}`}
+                    to={
+                      notification.publication
+                        ? `/publication/${notification.publication.id}`
+                        : `/itineraryCalendar/${notification.itinerary.id}`
+                    }
                     key={index}
                     className={
-                      `lg:w-[100%] lg:mb-0 mb-6 p-4 mx-auto rounded-2xl ${notification.isRead ? 'bg-white hover:bg-[#d9d9d9]' : 'bg-[#c0daeb] hover:bg-[#009fe3]'} ` +
+                      `lg:w-auto lg:mb-0 mb-6 p-4 rounded-2xl ${notification.isRead ? 'bg-white hover:bg-[#d9d9d9]' : 'bg-[#c0daeb] hover:bg-[#009fe3]'} ` +
                       'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col relative transition-transform duration-300 hover:-translate-y-1.5 '
                     }
                   >
-                    <div className={'flex flex-col gap-2'}>
-                      {notification.publication.likes.slice(0, 3).map((like, index) => (
-                        <img
-                          key={index}
-                          src={like.profilePicture}
-                          alt={like.name}
-                          className="w-[25px] h-[25px] rounded-full"
-                        />
-                      ))}
-                      <h1 className={'font-bold text-[18px]'}>{notification.description}</h1>
-                      <p className={`text-sm ${notification.isRead && 'text-[#999999]'}`}>{notification.publication && (notification.publication.description.slice(0,100))}</p>
-                    </div>
+                    {notification.publication ? (
+                      <div className={'flex flex-col gap-2'}>
+                        <div className={'flex gap-x-2 items-center'}>
+                          {notification.publication.likes.slice(0, 3).map((like, index) => (
+                            <img
+                              key={index}
+                              src={like.profilePicture}
+                              alt={like.name}
+                              className="w-[25px] h-[25px] rounded-full"
+                            />
+                          ))}
+                          <h1 className={'font-bold text-[18px]'}>{notification.description}</h1>
+                        </div>
+                        <p className={`text-l ${notification.isRead && 'text-[#484b56]'}`}>
+                          {notification.publication.description.slice(0, 100)}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className={'flex flex-col gap-2'}>
+                        <div className={'flex gap-x-2 items-center'}>
+                          <img
+                            key={index}
+                            src={notification.itinerary.user.profilePicture}
+                            alt={notification.itinerary.user.name}
+                            className="w-[25px] h-[25px] rounded-full"
+                          />
+                          <h1 className={'font-bold text-[18px]'}>{notification.description}</h1>
+                        </div>
+                        <p className={`text-l ${notification.isRead && 'text-[#484b56]'}`}>
+                          {notification.itinerary.name}
+                        </p>
+                      </div>
+                    )}
                   </Link>
                 ))}
               </div>
@@ -145,6 +177,6 @@ const Notifications = () => {
       )}
     </>
   );
-}
+};
 
 export default Notifications;
