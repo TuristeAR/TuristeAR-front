@@ -45,6 +45,7 @@ export const LeftCommunity = (props: {
   const showCategories =
     !location.pathname.includes('/forum/') &&
     !location.pathname.includes('/publication/') &&
+    !location.pathname.includes('/profile/') &&
     !location.pathname.includes('/notifications');
 
   useEffect(() => {

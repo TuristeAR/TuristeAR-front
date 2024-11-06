@@ -61,14 +61,13 @@ const ExpectedDestination = () => {
   const [showedGastronomia, setShowedGastronomia] = useState(false);
   const [showedCulture, setShowedCulture] = useState(false);
   const [showedFreeAir, setShowedFreeAir] = useState(false);
-  
+
   const [reviews, setReviews] = useState<any[]>([]);
 
   const [visibleCount, setVisibleCount] = useState(3);
 
   const { nombreDeLaProvincia } = useParams();
   const [province, setProvince] = useState<Province>();
-  
 
   const [gastronomyPlace, setGastronomyPlace] = useState<PlaceCard[]>([]);
   const [pointsInterest, setPointsInterest] = useState<PlaceCard[]>([]);
@@ -78,8 +77,7 @@ const ExpectedDestination = () => {
   const gastronomyRef = useRef(null);
   const cultureRef = useRef(null);
   const airFreeRef = useRef(null);
-  const lugaresRef = useRef(null);  
- 
+  const lugaresRef = useRef(null);
 
   useEffect(() => {
     if (culturePlaces.length > 0) {
@@ -96,7 +94,7 @@ const ExpectedDestination = () => {
           );
           const allReviews = await Promise.all(reviewsPromises);
           setReviews(allReviews.flat());
-          console.log("revies: ", reviews);
+          console.log('revies: ', reviews);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -122,7 +120,7 @@ const ExpectedDestination = () => {
           `https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}`,
           {
             'Content-Type': 'application/json',
-          }
+          },
         );
         setProvince(response);
       } catch (error) {
@@ -132,7 +130,7 @@ const ExpectedDestination = () => {
 
     fetchProvince();
   }, [nombreDeLaProvincia]);
-//gastronomy
+  //gastronomy
   useEffect(() => {
     const fetchGastronomyPlace = async () => {
       if (province) {
@@ -141,9 +139,9 @@ const ExpectedDestination = () => {
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=restaurant&count=6`,
             {
               'Content-Type': 'application/json',
-            }
+            },
           );
-          console.log("gastronomy list: ",responseGastronomy);
+          console.log('gastronomy list: ', responseGastronomy);
           setGastronomyPlace(responseGastronomy.data);
         } catch (error) {
           console.error('Error fetching GastronomyPlace:', error);
@@ -152,7 +150,7 @@ const ExpectedDestination = () => {
     };
     fetchGastronomyPlace();
   }, [province]);
-//pointInterest
+  //pointInterest
   useEffect(() => {
     const fetchPointsInterest = async () => {
       if (province) {
@@ -161,9 +159,9 @@ const ExpectedDestination = () => {
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=tourist_attraction&count=6`,
             {
               'Content-Type': 'application/json',
-            }
+            },
           );
-          console.log("point interest list: ",responsePointInterest);
+          console.log('point interest list: ', responsePointInterest);
           setPointsInterest(responsePointInterest.data);
         } catch (error) {
           console.error('Error fetching PointsInterest:', error);
@@ -172,7 +170,7 @@ const ExpectedDestination = () => {
     };
     fetchPointsInterest();
   }, [province]);
-//culture
+  //culture
   useEffect(() => {
     const fetchCulture = async () => {
       if (province) {
@@ -181,9 +179,9 @@ const ExpectedDestination = () => {
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=museum&count=6`,
             {
               'Content-Type': 'application/json',
-            }
+            },
           );
-          console.log("culture list: ",responseCulture);
+          console.log('culture list: ', responseCulture);
           setCulture(responseCulture.data);
         } catch (error) {
           console.error('Error fetching Culture:', error);
@@ -192,7 +190,7 @@ const ExpectedDestination = () => {
     };
     fetchCulture();
   }, [province]);
-//freeair
+  //freeair
   useEffect(() => {
     const fetchFreeAir = async () => {
       if (province) {
@@ -201,9 +199,9 @@ const ExpectedDestination = () => {
             `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=park&count=6`,
             {
               'Content-Type': 'application/json',
-            }
+            },
           );
-          console.log("free air list:", responseFreeAir);
+          console.log('free air list:', responseFreeAir);
           setFreeAir(responseFreeAir.data);
         } catch (error) {
           console.error('Error fetching FreeAir:', error);
@@ -224,10 +222,10 @@ const ExpectedDestination = () => {
       </div>
     );
 
-    const handleScrollToSection = (sectionRef, setShowSection) => {
-      setShowSection((prev) => !prev); // Cambia el estado de despliegue
-      sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    };
+  const handleScrollToSection = (sectionRef, setShowSection) => {
+    setShowSection((prev) => !prev); // Cambia el estado de despliegue
+    sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
 
   return (
     <>
@@ -242,26 +240,36 @@ const ExpectedDestination = () => {
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-6 mt-3">
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
-            onClick={() => handleScrollToSection(cultureRef, setShowedCulture)}>
-              <School width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
-              <span className="sm:text-xl font-medium text-center">Cultura</span>
-            </div>
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
-            onClick={() => handleScrollToSection(airFreeRef, setShowedFreeAir)}>
+            <div
+              className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
+              onClick={() => handleScrollToSection(airFreeRef, setShowedFreeAir)}
+            >
               <Trees width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
               <span className="sm:text-xl font-medium text-center mx-auto">Aire Libre</span>
             </div>
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
-            onClick={() => handleScrollToSection(lugaresRef, setShowedLugares)}>
+
+            <div
+              className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
+              onClick={() => handleScrollToSection(lugaresRef, setShowedLugares)}
+            >
               <Ticket width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
               <span className="sm:text-xl font-medium text-center">Atracciones</span>
             </div>
 
-            <div className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300" 
-            onClick={() => handleScrollToSection(gastronomyRef, setShowedGastronomia)}>
+            <div
+              className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
+              onClick={() => handleScrollToSection(cultureRef, setShowedCulture)}
+            >
+              <School width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
+              <span className="sm:text-xl font-medium text-center">Cultura</span>
+            </div>
+
+            <div
+              className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 p-4 border border-gray cursor-pointer hover:bg-primary hover:bg-opacity-50 transition duration-300"
+              onClick={() => handleScrollToSection(gastronomyRef, setShowedGastronomia)}
+            >
               <UtensilsCrossed width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />
-              <span className="sm:text-xl font-medium text-center">Gastronomia</span>
+              <span className="sm:text-xl font-medium text-center">Gastronomía</span>
             </div>
           </div>
         </div>
@@ -348,18 +356,18 @@ const ExpectedDestination = () => {
                 }}
               >
                 {pointsInterest.map((article) => (
-                    <SwiperSlide key={article.id}>
-                      <div className="w-80">
-                        <Link to={`/lugar-esperado/${article.googleId}`}>
-                          <ArticleCard
-                            title={article.name}
-                            image={article.reviews[0].photos[0] || article.province.images[0]}
-                            rating={article.rating}
-                            address={article.address}
-                          />
-                        </Link>
-                      </div>
-                    </SwiperSlide>
+                  <SwiperSlide key={article.id}>
+                    <div className="w-80">
+                      <Link to={`/lugar-esperado/${article.googleId}`}>
+                        <ArticleCard
+                          title={article.name}
+                          image={article.reviews[0].photos[0] || article.province.images[0]}
+                          rating={article.rating}
+                          address={article.address}
+                        />
+                      </Link>
+                    </div>
+                  </SwiperSlide>
                 ))}
               </Swiper>
               <div className="swiper-button-prev hidden"></div>
@@ -417,19 +425,18 @@ const ExpectedDestination = () => {
                 }}
               >
                 {gastronomyPlace.map((article) => (
-                    <SwiperSlide key={article.id}>
-                      <div className="w-80">
-                        <Link to={`/lugar-esperado/${article.googleId}`}>
-                          <ArticleCard
-                            title={article.name}
-                            image={article.reviews?.[0]?.photos?.[0] || article.province?.images?.[0]}
-                            rating={article.rating}
-                            address={article.address}
-                          />
-                        </Link>
-                      </div>
-                    </SwiperSlide>
-                  
+                  <SwiperSlide key={article.id}>
+                    <div className="w-80">
+                      <Link to={`/lugar-esperado/${article.googleId}`}>
+                        <ArticleCard
+                          title={article.name}
+                          image={article.reviews?.[0]?.photos?.[0] || article.province?.images?.[0]}
+                          rating={article.rating}
+                          address={article.address}
+                        />
+                      </Link>
+                    </div>
+                  </SwiperSlide>
                 ))}
               </Swiper>
               <div className="swiper-button-prev hidden"></div>
@@ -487,27 +494,30 @@ const ExpectedDestination = () => {
                 }}
               >
                 {culturePlaces.map((article) => {
-  // Selecciona una imagen aleatoria específica para este artículo
-  const randomImage = article.reviews?.[0]?.photos?.[0] || 
-                      (reviews.length > 0 ? reviews[Math.floor(Math.random() * reviews.length)].photos?.[0] : '');
+                  // Selecciona una imagen aleatoria específica para este artículo
+                  const randomImage =
+                    article.reviews?.[0]?.photos?.[0] ||
+                    (reviews.length > 0
+                      ? reviews[Math.floor(Math.random() * reviews.length)].photos?.[0]
+                      : '');
 
-  return (
-    <SwiperSlide key={article.id}>
-      <div className="w-full"> {/* Cambia w-80 por w-full */}
-        <Link to={`/lugar-esperado/${article.googleId}`}>
-          <ArticleCard
-            title={article.name}
-            image={randomImage} // Imagen específica para este artículo
-            rating={article.rating}
-            address={article.address}
-          />
-        </Link>
-      </div>
-    </SwiperSlide>
-  );
-})}
-                  
-              
+                  return (
+                    <SwiperSlide key={article.id}>
+                      <div className="w-full">
+                        {' '}
+                        {/* Cambia w-80 por w-full */}
+                        <Link to={`/lugar-esperado/${article.googleId}`}>
+                          <ArticleCard
+                            title={article.name}
+                            image={randomImage} // Imagen específica para este artículo
+                            rating={article.rating}
+                            address={article.address}
+                          />
+                        </Link>
+                      </div>
+                    </SwiperSlide>
+                  );
+                })}
               </Swiper>
               <div className="swiper-button-prev hidden"></div>
               <div className="hidden swiper-button-next"></div>
@@ -535,7 +545,7 @@ const ExpectedDestination = () => {
                 <path d="M480-360 280-560h400L480-360Z" />
               </svg>
               <svg
-                className={`${showedFreeAir? 'block' : 'hidden'}`}
+                className={`${showedFreeAir ? 'block' : 'hidden'}`}
                 xmlns="http://www.w3.org/2000/svg"
                 height="50px"
                 viewBox="0 -960 960 960"
@@ -564,20 +574,18 @@ const ExpectedDestination = () => {
                 }}
               >
                 {FreeAirPlaces.map((article) => (
-                  
-                    <SwiperSlide key={article.id}>
-                      <div className="w-80">
-                        <Link to={`/lugar-esperado/${article.googleId}`}>
-                          <ArticleCard
-                            title={article.name}
-                            image={article.reviews?.[0]?.photos?.[0] || article.province?.images?.[0]}
-                            rating={article.rating}
-                            address={article.address}
-                          />
-                        </Link>
-                      </div>
-                    </SwiperSlide>
-                  
+                  <SwiperSlide key={article.id}>
+                    <div className="w-80">
+                      <Link to={`/lugar-esperado/${article.googleId}`}>
+                        <ArticleCard
+                          title={article.name}
+                          image={article.reviews?.[0]?.photos?.[0] || article.province?.images?.[0]}
+                          rating={article.rating}
+                          address={article.address}
+                        />
+                      </Link>
+                    </div>
+                  </SwiperSlide>
                 ))}
               </Swiper>
               <div className="swiper-button-prev hidden"></div>
