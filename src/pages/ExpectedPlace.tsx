@@ -12,7 +12,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { get } from '../utilities/http.util';
-import { FaArrowLeft } from 'react-icons/fa';
 
 type Departamento = {
   id: string;
