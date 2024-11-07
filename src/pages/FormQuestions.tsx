@@ -35,7 +35,7 @@ import { EventCard } from '../components/FormQuestions/EventCard';
 import { getJsonUrl } from '../utilities/getJsonUrl';
 
 interface FormData {
-  provinceId: number;
+  provinces: Province[];
   localities: string[];
   events: number[];
   fromDate: string;
@@ -163,14 +163,14 @@ const FormQuestions = () => {
   const [resumedItinerary, setResumedItinerary] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [dialogWindowOpen, setDialogWindowOpen] = useState(false);
-  const [selectedProvince, setSelectedProvince] = useState<Province>();
+  const [selectedProvinces, setSelectedProvinces] = useState<Province[]>([]);
   const [localities, setLocalities] = useState<any[]>([]);
   const [selectedLocalities, setSelectedLocalities] = useState<string[]>([]);
   const [searchLocality, setSearchLocality] = useState('');
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [formData, setFormData] = useState<FormData>({
-    provinceId: null,
+    provinces: [],
     localities: [],
     events: [],
     fromDate: '',
@@ -234,14 +234,23 @@ const FormQuestions = () => {
 
   const handleProvinceClick = (id: number) => {
     setLoadingLocalities(true);
-
     setLoadingEvents(true);
 
     const province = provinces.find((p) => p.id === id);
 
-    setSelectedProvince(province);
+    setSelectedProvinces((prev) => {
+      const isSelected = prev.some((prov) => prov.id === id);
+      const updatedProvinces = isSelected
+        ? prev.filter((prov) => prov.id !== id)
+        : [...prev, province];
 
-    formData.provinceId = province.id;
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        provinces: updatedProvinces,
+      }));
+
+      return updatedProvinces;
+    });
 
     const url = getJsonUrl(province.id);
 
@@ -304,13 +313,13 @@ const FormQuestions = () => {
   const handleNextQuestion = async () => {
     switch (currentQuestion) {
       case 0:
-        if (!formData.provinceId) {
-          setErrorMessage('Tenés que seleccionar una provincia');
+        if (selectedProvinces.length === 0 && formData.provinces.length === 0) {
+          setErrorMessage('Tenés que seleccionar al menos una provincia para visitar');
           return;
         }
 
         if (selectedLocalities.length === 0 && formData.localities.length === 0) {
-          setErrorMessage('Tenés que seleccionar un lugar para visitar');
+          setErrorMessage('Tenés que seleccionar al menos un lugar para visitar');
           return;
         }
 
@@ -375,6 +384,7 @@ const FormQuestions = () => {
 
         break;
       case 4:
+        console.log(formData);
         if (!formData.company) {
           setErrorMessage('Tenés que seleccionar una opción');
           return;
@@ -431,7 +441,7 @@ const FormQuestions = () => {
 
   const saveFormDataToLocalStorage = (data: FormData) => {
     localStorage.setItem('formData', JSON.stringify(data));
-    localStorage.setItem('selectedProvince', JSON.stringify(selectedProvince));
+    localStorage.setItem('selectedProvinces', JSON.stringify(selectedProvinces));
   };
 
   const getFormDataFromLocalStorage = (): FormData | null => {
@@ -439,8 +449,8 @@ const FormQuestions = () => {
     return data ? JSON.parse(data) : null;
   };
 
-  const getSelectedProvinceFromLocalStorage = (): Province | null => {
-    const data = localStorage.getItem('selectedProvince');
+  const getSelectedProvincesFromLocalStorage = (): Province[] | null => {
+    const data = localStorage.getItem('selectedProvinces');
     return data ? JSON.parse(data) : null;
   };
 
@@ -468,9 +478,9 @@ const FormQuestions = () => {
     const savedFormData = getFormDataFromLocalStorage();
 
     if (savedFormData) {
-      const savedProvince = getSelectedProvinceFromLocalStorage();
+      const savedProvinces = getSelectedProvincesFromLocalStorage();
       setFormData(savedFormData);
-      setSelectedProvince(savedProvince);
+      setSelectedProvinces(savedProvinces);
       setPendingItinerary(true);
       localStorage.removeItem('formData');
       localStorage.removeItem('selectedProvince');
@@ -506,12 +516,12 @@ const FormQuestions = () => {
   const [carouselEvents, setCarouselEvents] = useState<any[]>([]);
 
   useEffect(() => {
-    if (selectedProvince?.id) {
-      fetchEvents(selectedProvince.id).then((data) => {
+    if (selectedProvinces.length > 0) {
+      fetchEvents(selectedProvinces[0].id).then((data) => {
         setCarouselEvents(data.data);
       });
     }
-  }, [selectedProvince]);
+  }, [selectedProvinces]);
 
   const swiperRef = useRef(null);
 
@@ -568,11 +578,20 @@ const FormQuestions = () => {
                       Resumen de tu viaje
                     </h2>
                     <div className="flex flex-col">
-                      {selectedProvince && (
+                      {selectedProvinces && (
                         <span className="text-center text-xl my-1">
-                          Provincia:{' '}
+                          Provincias:{' '}
                           <strong>
-                            {provinces.find((p) => p.id === selectedProvince.id)?.name}
+                            {selectedProvinces.map((province, index) => (
+                              <strong key={province.id}>
+                                {province.name}
+                                {index < selectedProvinces.length - 2
+                                  ? ', '
+                                  : index === selectedProvinces.length - 2
+                                    ? ' y '
+                                    : ''}
+                              </strong>
+                            ))}
                           </strong>
                         </span>
                       )}
@@ -674,19 +693,25 @@ const FormQuestions = () => {
                 <ProgressBar currentStep={currentStep} />
                 {questions[currentQuestion].type === 'map' ? (
                   <div className="flex flex-col gap-y-4 justify-center items-center w-full">
-                    <h2 className="text-2xl sm:text-3xl font-semibold text-primary-4 mb-6">
+                    <h2 className="text-2xl sm:text-3xl font-semibold text-primary-4 mb-6 lg:w-[900px] lg:text-center">
                       Armemos tu próxima aventura a
-                      {selectedProvince?.name ? (
-                        <>
-                          <span className="text-primary-2"> {selectedProvince.name}</span>
-                        </>
-                      ) : (
-                        '...'
-                      )}
+                      {selectedProvinces.length > 0
+                        ? selectedProvinces.map((province, index) => (
+                            <span key={province.id} className="text-primary-2">
+                              {' '}
+                              {province.name}
+                              {index < selectedProvinces.length - 2
+                                ? ', '
+                                : index === selectedProvinces.length - 2
+                                  ? ' y '
+                                  : ''}
+                            </span>
+                          ))
+                        : '...'}
                     </h2>
                     <div className="w-full flex flex-col md:flex-row justify-start">
                       <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:justify-end md:items-end">
-                        <MapaArg onProvinceClick={handleProvinceClick} />
+                        <MapaArg onProvinceClick={handleProvinceClick} multipleSelection={true} />
                       </div>
                       <div className="w-full md:w-1/2 flex flex-col items-center gap-x-4">
                         {localities.length > 0 ? (
@@ -815,7 +840,17 @@ const FormQuestions = () => {
                 ) : questions[currentQuestion].type === 'calendar' ? (
                   <div className="flex flex-col gap-y-4 justify-center items-center w-full">
                     <h2 className="w-full md:w-[700px] text-center text-2xl sm:text-3xl font-semibold text-primary-4 mb-6">
-                      Definí la fecha para tu viaje a {selectedProvince?.name}
+                      Definí la fecha para tu viaje a{' '}
+                      {selectedProvinces.map((province, index) => (
+                        <span key={province.id} className="text-primary-2">
+                          {province.name}
+                          {index < selectedProvinces.length - 2
+                            ? ', '
+                            : index === selectedProvinces.length - 2
+                              ? ' y '
+                              : ''}
+                        </span>
+                      ))}
                     </h2>
                     <div className="w-full max-w-[800px] flex flex-col md:flex-row md:justify-between">
                       <div className="flex flex-col items-start w-full md:w-2/5">
