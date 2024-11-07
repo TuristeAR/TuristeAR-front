@@ -101,7 +101,7 @@ export const ItineraryDetail = () => {
     const options = { hour: '2-digit', minute: '2-digit', hour12: false } as const;
     return date.toLocaleTimeString([], options);
   };
-  
+
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
   };
@@ -334,6 +334,13 @@ export const ItineraryDetail = () => {
                                   <Link
                                     to={`/lugar-esperado/${activity.place.googleId}`}
                                     className="font-semibold text-sm sm:text-base"
+                                    onClick={(e) => {
+                                      e.preventDefault(); // Prevenir la navegación predeterminada
+                                      window.open(
+                                        `/lugar-esperado/${activity.place.googleId}`,
+                                        '_blank',
+                                      ); // Abrir en nueva pestaña
+                                    }}
                                   >
                                     {activity.name?.split(' - ')[0]}
                                   </Link>
