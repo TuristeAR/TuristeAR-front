@@ -83,16 +83,17 @@ const Forum = () => {
                   .map((forum, index) => (
                     <div
                       key={index}
-                      className="w-[100%] mx-auto p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col gap-4"
+                      className="w-[100%] mx-auto h-fit p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col gap-4"
                     >
                       <h1 className={'text-2xl'}>{forum.name}</h1>
                       <p>{forum.description}</p>
-                      <div className="flex items-center gap-2">
-                        <MapPin name="info"  />
-                        <span className="text-sm text-gray">{forum.category.description}</span>
-                      </div>
-                      <div className={'flex justify-end items-end h-full'}>
-                        <div className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center">
+                      <div className={'flex justify-between items-center h-full'}>
+                        <div className="flex items-center gap-2">
+                          <MapPin name="info" />
+                          <span className="text-sm text-gray">{forum.category.description}</span>
+                        </div>
+                        <div
+                          className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center">
                           <a href={`/forum/${forum.id}`}>Ingresar</a>
                         </div>
                       </div>
