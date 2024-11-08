@@ -58,7 +58,7 @@ const ExpenseFileUpload = ({ onImagesSelect }) => {
             </svg>
             <p className="mb-2 text-sm text-gray-500">
               <span className="font-semibold">Hace clic para subir las imágenes</span> o arrastrá y
-              suelta
+              solta
             </p>
             <p className="text-xs text-gray-500">SVG, PNG o JPG</p>
           </div>
