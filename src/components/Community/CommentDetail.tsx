@@ -96,6 +96,7 @@ export const CommentDetail = (props: {
               value={`${commentContent ? commentContent : ''}`}
               className={'border border-[#999999] w-[90%] lg:h-[40px] h-[35px] rounded-2xl pl-2'}
               placeholder={'Escribe tu comentario...'}
+              autoComplete="off"
             />
             <svg
               className={'cursor-pointer lg:w-[57px] lg:h-[57px] w-[40px] h-[40px]'}

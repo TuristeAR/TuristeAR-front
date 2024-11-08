@@ -103,10 +103,10 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo, deleteEv
                   </span>
                   <Link
                     to={`/lugar-esperado/${eventInfo.extendedProps.googleId}`}
-                    className="flex items-center gap-x-2 text-md md:text-lg font-semibold whitespace-normal break-words text-gray/95 hover:text-gray/70 md:my-3 md:ml-7 cursor-pointer"
+                    className="flex items-center gap-x-2 text-md md:text-lg font-semibold whitespace-normal break-words text-primary hover:text-gray/70 md:my-3 md:ml-7 cursor-pointer"
                   >
                     <InfoIcon size={20} color="#49A2EC" />
-                    Sobre este lugar
+                    Más info de este lugar
                   </Link>
                   <div className="flex flex-col items-start gap-x-2 gap-y-2 w-full">
                     {eventInfo.extendedProps.address && (

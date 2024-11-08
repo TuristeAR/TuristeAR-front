@@ -111,10 +111,15 @@ const ForumDetail = () => {
             />
             <div className="absolute md:static lg:w-[80%] w-[100%] flex flex-col overflow-scroll scrollbar-hidden">
               <div
-                className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex flex-col p-6'}
+                className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex flex-col p-6 pb-8 gap-2'}
               >
-                <h1 className="text-3xl">{forum?.name}</h1>
-                <h3 className={'text-[#999999]'}>{forum.category.description}</h3>
+                <div className={'flex items-center justify-between'}>
+                  <h1 className="text-3xl">{forum?.name}</h1>
+                  <h3 className={'text-[#999999]'}>{forum.category.description}</h3>
+                </div>
+                <div className={''}>
+                  <p className={'text-sm text-[#484b56]'}>{forum.description}</p>
+                </div>
               </div>
               <div className="overflow-scroll scrollbar-hidden h-[90%] lg:px-4 px-2 py-6  flex flex-col gap-y-6">
                 <MessagesContainer forum={forum} user={user} />

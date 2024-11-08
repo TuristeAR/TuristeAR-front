@@ -8,7 +8,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { get } from '../utilities/http.util';
@@ -74,6 +74,12 @@ const ExpectedPlace = () => {
   const [address, setAddress] = useState<RespuestaGeoref>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   let photosHeader: string[] = [];
+
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    navigate(-1);
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -160,6 +166,9 @@ const ExpectedPlace = () => {
   return (
     <>
       <Header />
+      <button className='hidden md:block' onClick={handleBackClick}>
+        <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px]'} />
+      </button>
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">
           <div onClick={() => openModal()}>
@@ -169,6 +178,7 @@ const ExpectedPlace = () => {
               ''
             )}
           </div>
+
           {isModalOpen && (
             <FeaturedImageGalleryModal closeModal={closeModal} photos={photosHeader} />
           )}

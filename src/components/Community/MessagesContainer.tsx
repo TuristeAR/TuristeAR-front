@@ -49,7 +49,7 @@ export const MessagesContainer = (props: { forum : Forum, user: User }) => {
         >
           <div
             className={
-              'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:p-6 p-4 rounded-2xl lg:gap-4 gap-2 flex flex-col w-auto lg:max-w-[65%] max-w-[80%]'
+              `${user.id === message.user.id ? 'bg-[#c0daeb]' : 'bg-white'} shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:p-6 p-4 rounded-2xl lg:gap-4 gap-2 flex flex-col w-auto lg:max-w-[65%] max-w-[80%]`
             }
           >
             <div className="flex justify-between items-center lg:gap-20 gap-6 ">

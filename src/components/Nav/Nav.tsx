@@ -4,11 +4,17 @@ import arrowRight from '/assets/arrow-right.svg';
 import { useEffect, useState } from 'react';
 import { get } from '../../utilities/http.util';
 
+type Notification={
+  id: number,
+  isRead: boolean,
+}
+
 export const Nav = () => {
   const location = useLocation();
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isDropdownOpenNotification, setIsDropdownOpenNotification] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -35,10 +41,19 @@ export const Nav = () => {
     }
   };
 
+  const fetchNotifications = async () => {
+    const response = await get('https://api-turistear.koyeb.app/notifications/byUser', {
+      'Content-Type': 'application/json',
+      credentials: 'include',
+    });
+    setNotifications(response)
+  };
+
   useEffect(() => {
     const cachedUser = localStorage.getItem('user');
     setUser(cachedUser ? JSON.parse(cachedUser) : null);
     fetchUser();
+    fetchNotifications()
   }, []);
 
   return (
@@ -83,7 +98,7 @@ export const Nav = () => {
         </Link>
       ) : (
         <div className="hidden mt-auto md:flex items-center gap-x-4">
-          <div className={'relative'}>
+          <Link to={'/notifications'} className={'relative cursor-pointer'}>
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -103,10 +118,12 @@ export const Nav = () => {
                 ></path>
               </g>
             </svg>
-            <div className="absolute bg-[#c0daeb] rounded-full w-[35px] h-[35px] flex items-center justify-center -left-5 -top-5">
-              <span className={'font-semibold'}>22</span>
-            </div>
-          </div>
+            {notifications.filter(notification => !notification.isRead).length > 0 && (
+              <div className="absolute bg-[#c0daeb] rounded-full w-[27px] h-[27px] flex items-center justify-center -left-3 -top-3">
+                <span className={'font-semibold text-sm'}>{notifications.filter(notification => !notification.isRead).length}</span>
+              </div>
+            )}
+          </Link>
 
           {isDropdownOpenNotification && (
             <div className="absolute top-16 right-40 bg-white shadow-lg rounded-lg my-3 w-70 z-50">
