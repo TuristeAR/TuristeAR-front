@@ -14,7 +14,7 @@ const ExpenseFileUpload = ({ onImagesSelect }) => {
     const files = event.target.files;
     const imageFiles = Array.from(files).map((file) => URL.createObjectURL(file as File));
     setImages((prevImages) => [...prevImages, ...imageFiles]);
-    onImagesSelect(images);
+    onImagesSelect(files);
   };
 
   const handleRemoveImage = (index) => {
