@@ -2,23 +2,31 @@ import { useState } from 'react';
 
 const ExpenseFileUpload = ({ onImagesSelect }) => {
   const [images, setImages] = useState([]);
+  const [filesUpload, setFilesUpload] = useState([]);
 
   const handleDrop = (event) => {
     event.preventDefault();
     const files = event.dataTransfer.files;
     const imageFiles = Array.from(files).map((file) => URL.createObjectURL(file as File));
     setImages((prevImages) => [...prevImages, ...imageFiles]);
+    setFilesUpload((prevFiles) => [...prevFiles, ...files]);
+
+    onImagesSelect([...filesUpload, ...files]);
   };
 
   const handleFileChange = (event) => {
     const files = event.target.files;
     const imageFiles = Array.from(files).map((file) => URL.createObjectURL(file as File));
+    
     setImages((prevImages) => [...prevImages, ...imageFiles]);
-    onImagesSelect(images);
+    setFilesUpload((prevFiles) => [...prevFiles, ...files]);
+
+    onImagesSelect([...filesUpload, ...files]);
   };
 
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setFilesUpload((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
   return (
