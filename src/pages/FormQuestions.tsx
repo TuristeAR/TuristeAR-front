@@ -257,9 +257,20 @@ const FormQuestions = () => {
     getWithoutCredentials(url, {
       'Content-Type': 'application/json',
     }).then((r) => {
-      setLocalities(r);
+      setLocalities((prevLocalities) => {
+        const newLocalities = r.filter(
+          (locality) => !prevLocalities.some((loc) => loc.id === locality.id),
+        );
+        return [...prevLocalities, ...newLocalities];
+      });
+
       fetchEvents(province.id).then((events) => {
-        setEvents(events.data);
+        setEvents((prevEvents) => {
+          const newEvents = events.data.filter(
+            (event) => !prevEvents.some((ev) => ev.id === event.id),
+          );
+          return [...prevEvents, ...newEvents];
+        });
         setLoadingLocalities(false);
         setLoadingEvents(false);
       });
