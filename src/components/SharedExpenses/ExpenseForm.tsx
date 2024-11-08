@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
 import { ArrowLeft } from 'lucide-react';
+import ExpenseFileUpload from './ExpenseFileUpload';
 
 const ExpensesForm = ({ onBack, itineraryId }) => {
   const [date, setDate] = useState(new Date());
@@ -18,7 +19,11 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [validationError, setValidationError] = useState('');
+  const [uploadedImages, setUploadedImages] = useState([]);
 
+  const handleImagesUploaded = (images) => {
+    setUploadedImages(images);
+  };
   const handleDistributionChange = (e) => {
     setDistributionType(e.target.value);
   };
@@ -143,11 +148,11 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
   return (
     <>
       <div className="bg-white p-6 max-w-lg mx-auto">
-        <button className='flex' onClick={onBack}>
-          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[20px] my-auto'}/>
-          <div className='text-sm font-bold text-primary-3'>Volver A La Lista De Gastos</div>
+        <button className="flex" onClick={onBack}>
+          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[20px] my-auto'} />
+          <div className="text-sm font-bold text-primary-3">Volver A La Lista De Gastos</div>
         </button>
-      
+
         <h3 className="font-bold text-3xl lead-10 text-black mb-9">Agregar Nuevo Gasto</h3>
         <form>
           <div className="mb-4">
@@ -171,7 +176,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
               onChange={onDateChangeHandler}
               showIcon
               className="w-full px-4 py-2 border rounded border-primary "
-              dateFormat="dd/MM/yyyy" 
+              dateFormat="dd/MM/yyyy"
             />
           </div>
 
@@ -292,7 +297,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
               )}
             </div>
           )}
-
+          <ExpenseFileUpload onImagesSelect={handleImagesUploaded}></ExpenseFileUpload>
           {validationError && <div className="mb-4 text-[#ff0000]">{validationError}</div>}
 
           <button
