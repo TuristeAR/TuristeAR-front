@@ -5,6 +5,35 @@ import useFetchParticipants from '../../utilities/useFetchParticipants';
 import { ArrowLeft } from 'lucide-react';
 import ExpenseFileUpload from './ExpenseFileUpload';
 
+const uploadImage = async (image: File): Promise<any> => {
+  const formData = new FormData();
+  formData.append('image', image);
+
+  const url = 'https://api.imgur.com/3/image';
+  const options = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Client-ID 523c9b5cf859dce',
+    },
+    body: formData,
+  };
+
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Error de respuesta:', errorData);
+      throw new Error(errorData.data.error || 'Error al cargar la imagen');
+    }
+    const result = await response.json();
+    console.log('Imagen subida:', result);
+    return result.data.link; // Retorna el enlace de la imagen
+  } catch (error) {
+    console.error('Error en la carga de la imagen:', error);
+    throw error; // Lanza el error para manejarlo en createPublications
+  }
+};
+
 const ExpensesForm = ({ onBack, itineraryId }) => {
   const [date, setDate] = useState(new Date());
   const onDateChangeHandler = useCallback((date) => setDate(date), [date]);
@@ -19,11 +48,12 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [validationError, setValidationError] = useState('');
-  const [uploadedImages, setUploadedImages] = useState([]);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
 
   const handleImagesUploaded = (images) => {
-    setUploadedImages(images);
+    setSelectedImages(images);
   };
+
   const handleDistributionChange = (e) => {
     setDistributionType(e.target.value);
   };
@@ -110,6 +140,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
       individualPercentages,
       itineraryId: itineraryId,
     };
+    uploadImage(selectedImages[0])
     try {
       const response = await fetch('https://api-turistear.koyeb.app/expenses', {
         method: 'POST',

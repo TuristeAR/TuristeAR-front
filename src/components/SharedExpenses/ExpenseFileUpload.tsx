@@ -6,13 +6,13 @@ const ExpenseFileUpload = ({ onImagesSelect }) => {
   const handleDrop = (event) => {
     event.preventDefault();
     const files = event.dataTransfer.files;
-    const imageFiles = Array.from(files).map((file) => URL.createObjectURL(file as Blob));
+    const imageFiles = Array.from(files).map((file) => URL.createObjectURL(file as File));
     setImages((prevImages) => [...prevImages, ...imageFiles]);
   };
 
   const handleFileChange = (event) => {
     const files = event.target.files;
-    const imageFiles = Array.from(files).map((file) => URL.createObjectURL(file as Blob));
+    const imageFiles = Array.from(files).map((file) => URL.createObjectURL(file as File));
     setImages((prevImages) => [...prevImages, ...imageFiles]);
     onImagesSelect(images);
   };
