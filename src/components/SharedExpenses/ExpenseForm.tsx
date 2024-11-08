@@ -139,9 +139,20 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
       individualAmounts,
       individualPercentages,
       itineraryId: itineraryId,
+      imageUrls:[]
     };
-    uploadImage(selectedImages[0])
+    
     try {
+
+      const imageUrls = await Promise.all(
+        selectedImages.map(async (image) => {
+          const imageUrl = await uploadImage(image);
+          return imageUrl;
+        })
+      );
+      expenseData.imageUrls = imageUrls;
+
+
       const response = await fetch('https://api-turistear.koyeb.app/expenses', {
         method: 'POST',
         headers: {
