@@ -2,6 +2,7 @@ import { ex } from '@fullcalendar/core/internal-common';
 import { Receipt } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import ExpenseSummaryTable from './ExpenseSummaryTable';
+import { ImageGallery } from '../ImageGallery/ImageGallery';
 
 const ExpenseDetail = ({ expense, onClose }) => {
   const [distributionDescription, setDistributionDescription] = useState('');
@@ -82,6 +83,7 @@ const ExpenseDetail = ({ expense, onClose }) => {
             </li>
           ))}
         </ul>
+        <ImageGallery images={expense.imageUrls}></ImageGallery>
         {/* <ExpenseSummaryTable expense={expense}></ExpenseSummaryTable> */}
         <button className="btn-blue mt-2 mb-4" onClick={onClose}>
           Cerrar

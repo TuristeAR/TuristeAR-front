@@ -3,6 +3,36 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
 import { ArrowLeft } from 'lucide-react';
+import ExpenseFileUpload from './ExpenseFileUpload';
+
+const uploadImage = async (image: File): Promise<any> => {
+  const formData = new FormData();
+  formData.append('image', image);
+
+  const url = 'https://api.imgur.com/3/image';
+  const options = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Client-ID 523c9b5cf859dce',
+    },
+    body: formData,
+  };
+
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Error de respuesta:', errorData);
+      throw new Error(errorData.data.error || 'Error al cargar la imagen');
+    }
+    const result = await response.json();
+    console.log('Imagen subida:', result);
+    return result.data.link; // Retorna el enlace de la imagen
+  } catch (error) {
+    console.error('Error en la carga de la imagen:', error);
+    throw error; // Lanza el error para manejarlo en createPublications
+  }
+};
 
 const ExpensesForm = ({ onBack, itineraryId }) => {
   const [date, setDate] = useState(new Date());
@@ -18,6 +48,11 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [validationError, setValidationError] = useState('');
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+
+  const handleImagesUploaded = (images) => {
+    setSelectedImages(images);
+  };
 
   const handleDistributionChange = (e) => {
     setDistributionType(e.target.value);
@@ -104,8 +139,20 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
       individualAmounts,
       individualPercentages,
       itineraryId: itineraryId,
+      imageUrls:[]
     };
+    
     try {
+
+      const imageUrls = await Promise.all(
+        selectedImages.map(async (image) => {
+          const imageUrl = await uploadImage(image);
+          return imageUrl;
+        })
+      );
+      expenseData.imageUrls = imageUrls;
+
+
       const response = await fetch('https://api-turistear.koyeb.app/expenses', {
         method: 'POST',
         headers: {
@@ -143,11 +190,11 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
   return (
     <>
       <div className="bg-white p-6 max-w-lg mx-auto">
-        <button className='flex' onClick={onBack}>
-          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[20px] my-auto'}/>
-          <div className='text-sm font-bold text-primary-3'>Volver A La Lista De Gastos</div>
+        <button className="flex" onClick={onBack}>
+          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[20px] my-auto'} />
+          <div className="text-sm font-bold text-primary-3">Volver A La Lista De Gastos</div>
         </button>
-      
+
         <h3 className="font-bold text-3xl lead-10 text-black mb-9">Agregar Nuevo Gasto</h3>
         <form>
           <div className="mb-4">
@@ -171,7 +218,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
               onChange={onDateChangeHandler}
               showIcon
               className="w-full px-4 py-2 border rounded border-primary "
-              dateFormat="dd/MM/yyyy" 
+              dateFormat="dd/MM/yyyy"
             />
           </div>
 
@@ -292,7 +339,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
               )}
             </div>
           )}
-
+          <ExpenseFileUpload onImagesSelect={handleImagesUploaded}></ExpenseFileUpload>
           {validationError && <div className="mb-4 text-[#ff0000]">{validationError}</div>}
 
           <button
