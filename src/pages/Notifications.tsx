@@ -58,6 +58,28 @@ const Notifications = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
 
+  const getNotificationImages = (notification) => {
+    const { description, publication } = notification;
+    let users = [];
+
+    if (description.includes('me gusta')) {
+      users = publication.likes.slice(0, 3);
+    } else if (description.includes('guardado')) {
+      users = publication.saved.slice(0, 3);
+    } else {
+      users = publication.reposts.slice(0, 3);
+    }
+
+    return users.map((user, index) => (
+      <img
+        key={index}
+        src={user.profilePicture}
+        alt={user.name}
+        className="w-[25px] h-[25px] rounded-full"
+      />
+    ));
+  };
+
   const handleClick = (name: string) => {
     if (contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -136,34 +158,26 @@ const Notifications = () => {
                     }
                   >
                     {notification.publication ? (
-                      <div className={'flex flex-col gap-2'}>
-                        <div className={'flex gap-x-2 items-center'}>
-                          {notification.publication.likes.slice(0, 3).map((like, index) => (
-                            <img
-                              key={index}
-                              src={like.profilePicture}
-                              alt={like.name}
-                              className="w-[25px] h-[25px] rounded-full"
-                            />
-                          ))}
-                          <h1 className={'font-bold text-[18px]'}>{notification.description}</h1>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-x-2 items-center">
+                          {getNotificationImages(notification)}
+                          <h1 className="font-bold text-[18px]">{notification.description}</h1>
                         </div>
-                        <p className={`text-l ${notification.isRead && 'text-[#484b56]'}`}>
+                        <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
                           {notification.publication.description.slice(0, 100)}
                         </p>
                       </div>
                     ) : (
-                      <div className={'flex flex-col gap-2'}>
-                        <div className={'flex gap-x-2 items-center'}>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-x-2 items-center">
                           <img
-                            key={index}
                             src={notification.itinerary.user.profilePicture}
                             alt={notification.itinerary.user.name}
                             className="w-[25px] h-[25px] rounded-full"
                           />
-                          <h1 className={'font-bold text-[18px]'}>{notification.description}</h1>
+                          <h1 className="font-bold text-[18px]">{notification.description}</h1>
                         </div>
-                        <p className={`text-l ${notification.isRead && 'text-[#484b56]'}`}>
+                        <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
                           {notification.itinerary.name}
                         </p>
                       </div>
