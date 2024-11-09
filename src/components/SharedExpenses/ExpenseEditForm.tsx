@@ -3,7 +3,36 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
 import { ArrowLeft } from 'lucide-react';
+import ExpenseFileUpload from './ExpenseFileUpload';
 
+const uploadImage = async (image: File): Promise<any> => {
+  const formData = new FormData();
+  formData.append('image', image);
+
+  const url = 'https://api.imgur.com/3/image';
+  const options = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Client-ID 523c9b5cf859dce',
+    },
+    body: formData,
+  };
+
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Error de respuesta:', errorData);
+      throw new Error(errorData.data.error || 'Error al cargar la imagen');
+    }
+    const result = await response.json();
+    console.log('Imagen subida:', result);
+    return result.data.link; // Retorna el enlace de la imagen
+  } catch (error) {
+    console.error('Error en la carga de la imagen:', error);
+    throw error; // Lanza el error para manejarlo en createPublications
+  }
+};
 const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => {
   const [date, setDate] = useState(expense.date);
   const onDateChangeHandler = useCallback((date) => setDate(date), [date]);
@@ -16,7 +45,16 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
   const [participatingUsers, setParticipatingUsers] = useState(expense.participatingUsers);
   const [totalAmount, setTotalAmount] = useState(expense.totalAmount);
   const [validationError, setValidationError] = useState('');
-  
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imageUrls, setImageUrls] = useState<[]>(expense.imageUrls);
+
+  const handleImagesUploaded = (images) => {
+    setSelectedImages(images);
+  };
+  const handleImagesEdited = (images) => {
+    setImageUrls(images);
+  };
+
   useEffect(() => {
     if (expense) {
       setDate(new Date(expense.date));
@@ -114,8 +152,17 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
       individualAmounts,
       individualPercentages,
       itineraryId: itineraryId,
+      imageUrls:[]
     };
     try {
+      const imageNewUrls = await Promise.all(
+        selectedImages.map(async (image) => {
+          const imageUrl = await uploadImage(image);
+          return imageUrl;
+        })
+      );
+      expenseData.imageUrls = [...imageNewUrls, ...imageUrls];
+
       const response = await fetch(`https://api-turistear.koyeb.app/expenses/${expense.id}`, {
         method: 'PUT',
         headers: {
@@ -133,18 +180,19 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
       const result = await response.json();
       console.log('Gasto guardado:', result);
       onExpenseUpdated(result);
-      onBack()
+      onBack();
     } catch (error) {
       console.log(error.message);
     }
   };
+  console.log(expense.imageUrls);
 
   return (
     <div className="bg-white p-6 rounded-sm shadow-lg max-w-lg mx-auto">
-      <button className='flex' onClick={onBack}>
-          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[20px] my-auto'}/>
-          <div className='text-sm font-bold text-primary-3'>Volver A La Lista De Gastos</div>
-        </button>
+      <button className="flex" onClick={onBack}>
+        <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[20px] my-auto'} />
+        <div className="text-sm font-bold text-primary-3">Volver A La Lista De Gastos</div>
+      </button>
       <h3 className="font-bold text-3xl lead-10 text-black mb-9">Editar Gasto</h3>
       <form>
         <div className="mb-4">
@@ -167,7 +215,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
             onChange={onDateChangeHandler}
             showIcon
             className="w-full px-4 py-2 border rounded-lg"
-            dateFormat="dd/MM/yyyy" 
+            dateFormat="dd/MM/yyyy"
           />
         </div>
 
@@ -287,6 +335,11 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
             )}
           </div>
         )}
+        <ExpenseFileUpload
+          onImagesSelect={handleImagesUploaded}
+          imageEditUrls={imageUrls}
+          onImageUrls={handleImagesEdited}
+        ></ExpenseFileUpload>
 
         {validationError && <div className="mb-4 text-[#ff0000]">{validationError}</div>}
 
