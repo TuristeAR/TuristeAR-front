@@ -31,7 +31,11 @@ const ExpenseFileUpload = ({ onImagesSelect, imageEditUrls, onImageUrls }) => {
     setFilesUpload((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
   const handleRemoveImageUrl = (index) => {
-    setImageUrls((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImageUrls((prevImages) => {
+      const updatedImages = prevImages.filter((_, i) => i !== index);
+      onImageUrls(updatedImages); 
+      return updatedImages;
+    });
   };
   return (
     <div className="my-2 border-2 border-primary border-dashed rounded">
@@ -80,7 +84,9 @@ const ExpenseFileUpload = ({ onImagesSelect, imageEditUrls, onImageUrls }) => {
           <div key={index} className="relative">
             <img src={image} alt={`uploaded-${index}`} className="h-auto max-w-full rounded-lg" />
             <button
-              onClick={() => handleRemoveImageUrl(index)}
+              onClick={(e) => {
+                e.preventDefault(); 
+                handleRemoveImageUrl(index)}}
               className="absolute top-1 right-1 bg-black text-white rounded-full px-2 py-1 text-xs"
             >
               X
@@ -93,7 +99,11 @@ const ExpenseFileUpload = ({ onImagesSelect, imageEditUrls, onImageUrls }) => {
             <div key={index} className="relative">
               <img src={image} alt={`uploaded-${index}`} className="h-auto max-w-full rounded-lg" />
               <button
-                onClick={() => handleRemoveImage(index)}
+              
+              onClick={(e) => {
+                e.preventDefault(); 
+                handleRemoveImage(index);
+              }}
                 className="absolute top-1 right-1 bg-black text-white rounded-full px-2 py-1 text-xs"
               >
                 X
