@@ -46,10 +46,17 @@ export const CreateMessage = (props: {
     socket.on('receiveMessage', (newMessage) => {
       setForum((prevForum) => {
         if (!prevForum) return null;
-        return {
-          ...prevForum,
-          messages: [...prevForum.messages, newMessage as Message],
-        };
+        if (prevForum.id !== newMessage.forumId) {
+          return {
+            ...prevForum,
+            messages: [...prevForum.messages, null as Message],
+          };
+        }else {
+          return {
+            ...prevForum,
+            messages: [...prevForum.messages, newMessage as Message],
+          };
+        }
       });
     });
 

@@ -6,7 +6,6 @@ import { CreatePublications } from '../components/Community/CreatePublications';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import io from 'socket.io-client';
-import { CreateEvent } from '../components/Community/CreateEvent';
 
 type User = {
   id: number;
@@ -149,17 +148,26 @@ const Publications = () => {
                 {publications
                   ?.filter((publication) => {
                     return categorySelected == null || publication.category.id == categorySelected;
-                  })
-                  .map((publication, index) => (
-                    <PublicationCard
-                      key={index}
-                      publication={publication}
-                      user={user}
-                      onDelete={() =>
-                        setPublications((prev) => prev.filter((p) => p.id !== publication.id))
-                      }
-                    />
-                  ))}
+                  }).length > 0 ? (
+                  publications
+                    ?.filter((publication) => {
+                      return categorySelected == null || publication.category.id == categorySelected;
+                    })
+                    .map((publication, index) => (
+                      <PublicationCard
+                        key={index}
+                        publication={publication}
+                        user={user}
+                        onDelete={() =>
+                          setPublications((prev) => prev.filter((p) => p.id !== publication.id))
+                        }
+                      />
+                    ))
+                ): (
+                  <div className={'p-4 bg-[#c0daeb] rounded-2xl'}>
+                    <p className={'text-3xl font-bold'}>No hay publicaciones!</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
