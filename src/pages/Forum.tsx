@@ -79,6 +79,10 @@ const Forum = () => {
                 {forums
                   ?.filter((forum) => {
                     return categorySelected == null || forum.category.id == categorySelected;
+                  }).length > 0 ?
+                  (forums
+                  ?.filter((forum) => {
+                    return categorySelected == null || forum.category.id == categorySelected;
                   })
                   .map((forum, index) => (
                     <div
@@ -98,7 +102,11 @@ const Forum = () => {
                         </div>
                       </div>
                     </div>
-                  ))}
+                  ))): (
+                    <div className={'p-4 bg-[#c0daeb] rounded-2xl'}>
+                      <p className={'text-3xl font-bold'}>No hay foros en la categoría seleccionada!</p>
+                    </div>
+                  )}
               </div>
             </div>
           </div>
