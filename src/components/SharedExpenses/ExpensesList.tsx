@@ -179,19 +179,19 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
 
                             <p className="text-sm text-gray-600 flex gap-1 flex-wrap">
                               <span>Pagado por </span>
-                              <div className="flex">
+                              <span className="flex">
                                 {payer && payer.profilePicture && (
-                                  <div className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
+                                  <span className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
                                     <img
                                       src={payer.profilePicture}
                                       className="w-full object-cover"
                                     />{' '}
-                                  </div>
+                                  </span>
                                 )}
                                 <span className="font-bold">
                                   {payer ? payer.name : 'Desconocido'}
                                 </span>
-                              </div>
+                              </span>
                             </p>
                           </div>
                         </div>
