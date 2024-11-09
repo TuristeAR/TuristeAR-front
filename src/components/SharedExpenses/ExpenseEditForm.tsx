@@ -118,7 +118,6 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
       const totalIndividualAmounts = Object.keys(individualAmounts)
         .filter((userId) => participatingUsers[userId])
         .reduce((sum, userId) => sum + (individualAmounts[userId] || 0), 0);
-      console.log(totalIndividualAmounts, totalAmount);
       return totalIndividualAmounts == totalAmount;
     }
 
@@ -133,7 +132,6 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
   };
 
   const handleSubmit = async (e) => {
-    console.log('--', expense);
     e.preventDefault();
     setValidationError('');
     if (!validateAmounts()) {
@@ -162,7 +160,6 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
         })
       );
       expenseData.imageUrls = [...imageNewUrls, ...imageUrls];
-
       const response = await fetch(`https://api-turistear.koyeb.app/expenses/${expense.id}`, {
         method: 'PUT',
         headers: {
@@ -171,21 +168,18 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
         body: JSON.stringify(expenseData),
       });
 
-      console.log(response);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Error al guardar el gasto');
       }
 
       const result = await response.json();
-      console.log('Gasto guardado:', result);
       onExpenseUpdated(result);
       onBack();
     } catch (error) {
       console.log(error.message);
     }
   };
-  console.log(expense.imageUrls);
 
   return (
     <div className="bg-white p-6 rounded-sm shadow-lg max-w-lg mx-auto">
