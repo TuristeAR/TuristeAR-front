@@ -339,7 +339,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
               )}
             </div>
           )}
-          <ExpenseFileUpload onImagesSelect={handleImagesUploaded}></ExpenseFileUpload>
+          <ExpenseFileUpload onImagesSelect={handleImagesUploaded} imageEditUrls={[]} onImageUrls={""}></ExpenseFileUpload>
           {validationError && <div className="mb-4 text-[#ff0000]">{validationError}</div>}
 
           <button

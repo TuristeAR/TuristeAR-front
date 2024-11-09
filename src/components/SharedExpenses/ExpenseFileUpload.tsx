@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
-const ExpenseFileUpload = ({ onImagesSelect }) => {
+const ExpenseFileUpload = ({ onImagesSelect, imageEditUrls, onImageUrls }) => {
   const [images, setImages] = useState([]);
+  const [imageUrls, setImageUrls] = useState(imageEditUrls);
   const [filesUpload, setFilesUpload] = useState([]);
 
   const handleDrop = (event) => {
@@ -12,12 +13,13 @@ const ExpenseFileUpload = ({ onImagesSelect }) => {
     setFilesUpload((prevFiles) => [...prevFiles, ...files]);
 
     onImagesSelect([...filesUpload, ...files]);
+    onImageUrls(imageUrls)
   };
 
   const handleFileChange = (event) => {
     const files = event.target.files;
     const imageFiles = Array.from(files).map((file) => URL.createObjectURL(file as File));
-    
+
     setImages((prevImages) => [...prevImages, ...imageFiles]);
     setFilesUpload((prevFiles) => [...prevFiles, ...files]);
 
@@ -28,7 +30,9 @@ const ExpenseFileUpload = ({ onImagesSelect }) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
     setFilesUpload((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
-
+  const handleRemoveImageUrl = (index) => {
+    setImageUrls((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
   return (
     <div className="my-2 border-2 border-primary border-dashed rounded">
       <div
@@ -71,9 +75,21 @@ const ExpenseFileUpload = ({ onImagesSelect }) => {
           />
         </label>
       </div>
-      {images.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-5 p-1 mt-4">
-          {images.map((image, index) => (
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-5 p-1 mt-4">
+        {imageUrls && imageUrls.map((image, index) => (
+          <div key={index} className="relative">
+            <img src={image} alt={`uploaded-${index}`} className="h-auto max-w-full rounded-lg" />
+            <button
+              onClick={() => handleRemoveImageUrl(index)}
+              className="absolute top-1 right-1 bg-black text-white rounded-full px-2 py-1 text-xs"
+            >
+              X
+            </button>
+          </div>
+        ))}
+
+        {images.length > 0 &&
+          images.map((image, index) => (
             <div key={index} className="relative">
               <img src={image} alt={`uploaded-${index}`} className="h-auto max-w-full rounded-lg" />
               <button
@@ -84,8 +100,7 @@ const ExpenseFileUpload = ({ onImagesSelect }) => {
               </button>
             </div>
           ))}
-        </div>
-      )}
+      </div>
     </div>
   );
 };

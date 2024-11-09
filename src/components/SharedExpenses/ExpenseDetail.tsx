@@ -27,16 +27,17 @@ const ExpenseDetail = ({ expense, onClose }) => {
 
   const calculateAmountOwed = (participant) => {
     if (distributionType === 'equivalente') {
-        const baseAmount = totalAmount / participatingUsers.length;
-        const roundedAmount = Math.floor(baseAmount * 100) / 100;
-  
-        const totalDistributed = roundedAmount * (participatingUsers.length - 1);
-        const remainingAmount = totalAmount - totalDistributed;
-        const amountOwed = participant.id === participatingUsers[participatingUsers.length - 1].id
+      const baseAmount = totalAmount / participatingUsers.length;
+      const roundedAmount = Math.floor(baseAmount * 100) / 100;
+
+      const totalDistributed = roundedAmount * (participatingUsers.length - 1);
+      const remainingAmount = totalAmount - totalDistributed;
+      const amountOwed =
+        participant.id === participatingUsers[participatingUsers.length - 1].id
           ? remainingAmount.toFixed(2)
           : roundedAmount.toFixed(2);
-  
-        return amountOwed;
+
+      return amountOwed;
     } else if (distributionType === 'montos') {
       console.log(individualAmounts);
       return individualAmounts[participant.id] || 0;
@@ -60,8 +61,8 @@ const ExpenseDetail = ({ expense, onClose }) => {
             {new Date(expense.date).toLocaleTimeString()}
           </p>
           <p className="flex items-center gap-1">
-            <span>Pagado por{' '}</span>
-            <div className='flex items-center'>
+            <span>Pagado por </span>
+            <div className="flex items-center">
               <div className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
                 <img src={expense.payer.profilePicture} className="w-full object-cover" />{' '}
               </div>
@@ -83,7 +84,7 @@ const ExpenseDetail = ({ expense, onClose }) => {
             </li>
           ))}
         </ul>
-        <ImageGallery images={expense.imageUrls}></ImageGallery>
+        {expense.imageUrls && <ImageGallery images={expense.imageUrls}></ImageGallery>}
         {/* <ExpenseSummaryTable expense={expense}></ExpenseSummaryTable> */}
         <button className="btn-blue mt-2 mb-4" onClick={onClose}>
           Cerrar
