@@ -216,7 +216,7 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
                                     <span className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
                                       <img
                                         src={expense.payer.profilePicture}
-                                        className="w-full object-cover"
+                                        className="w-full h-full object-cover"
                                       />{' '}
                                     </span>
 
