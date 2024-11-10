@@ -1,7 +1,5 @@
-import { ex } from '@fullcalendar/core/internal-common';
 import { Receipt } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import ExpenseSummaryTable from './ExpenseSummaryTable';
 import { ImageGallery } from '../ImageGallery/ImageGallery';
 
 const ExpenseDetail = ({ expense, onClose }) => {
@@ -58,13 +56,13 @@ const ExpenseDetail = ({ expense, onClose }) => {
           <p className="font-semibold">${expense.totalAmount}</p>
           <p className="font-semibold">
             {new Date(expense.date).toLocaleDateString()} -{' '}
-            {new Date(expense.date).toLocaleTimeString()}
+            {new Date(expense.date).toLocaleTimeString()} hs
           </p>
           <p className="flex items-center gap-1">
             <span>Pagado por </span>
             <div className="flex items-center">
               <div className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
-                <img src={expense.payer.profilePicture} className="w-full object-cover" />{' '}
+                <img src={expense.payer.profilePicture} className="w-full h-full object-cover" />{' '}
               </div>
               <span className="font-semibold ">{expense.payer.name}</span>
             </div>
@@ -75,12 +73,32 @@ const ExpenseDetail = ({ expense, onClose }) => {
         <p className="font-semibold">{distributionDescription}</p>
         <ul>
           {expense.participatingUsers.map((participant) => (
-            <li className="flex items-center gap-1" key={participant.name}>
-              <div className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
-                <img src={participant.profilePicture} className="w-full object-cover" />{' '}
+            <li className="flex items-center gap-1 justify-between" key={participant.name}>
+              <div className="flex items-center gap-1">
+                <div className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
+                  <img src={participant.profilePicture} className="w-full h-full object-cover" />{' '}
+                </div>
+                <span className="font-semibold">{participant.name}</span>{' '}
               </div>
-              <span className="font-semibold">{participant.name}</span> Debe{' '}
-              <span className="font-semibold">${calculateAmountOwed(participant)}</span>
+
+              <div className='flex gap-1'>
+                 {participant.id === expense.payer.id ? (
+                <>
+                  <p> aportó </p>
+                  <span className="font-semibold text-[#24b424]">
+                    ${calculateAmountOwed(participant)}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <p> debe </p>
+                  <span className="font-semibold text-[#f00]">
+                    ${calculateAmountOwed(participant)}
+                  </span>
+                </>
+              )}
+              </div>
+             
             </li>
           ))}
         </ul>

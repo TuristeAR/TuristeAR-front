@@ -33,7 +33,7 @@ const uploadImage = async (image: File): Promise<any> => {
     throw error; // Lanza el error para manejarlo en createPublications
   }
 };
-const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => {
+const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
   const [date, setDate] = useState(expense.date);
   const onDateChangeHandler = useCallback((date) => setDate(date), [date]);
   const [distributionType, setDistributionType] = useState(expense.distributionType);
@@ -46,7 +46,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
   const [totalAmount, setTotalAmount] = useState(expense.totalAmount);
   const [validationError, setValidationError] = useState('');
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [imageUrls, setImageUrls] = useState<[]>(expense.imageUrls);
+  const [imageUrls, setImageUrls] = useState<[]>([]);
 
   const handleImagesUploaded = (images) => {
     setSelectedImages(images);
@@ -65,6 +65,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
       setIndividualAmounts(expense.individualAmounts);
       setIndividualPercentages(expense.individualPercentages);
       setParticipatingUsers(expense.participatingUsers);
+      setImageUrls(expense.imageUrls);
       participatingUsers.map((u) => toggleParticipatingUser(u.id));
     }
   }, [expense]);
@@ -134,6 +135,11 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setValidationError('');
+    if (!payerId) {
+      setValidationError('Por favor, selecciona un pagador.');
+      return;
+    }
+  
     if (!validateAmounts()) {
       setValidationError(`La suma de los ${distributionType} no coincide con el monto total.`);
       return;
@@ -150,16 +156,19 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
       individualAmounts,
       individualPercentages,
       itineraryId: itineraryId,
-      imageUrls:[]
+      imageUrls: [],
     };
     try {
-      const imageNewUrls = await Promise.all(
-        selectedImages.map(async (image) => {
-          const imageUrl = await uploadImage(image);
-          return imageUrl;
-        })
-      );
-      expenseData.imageUrls = [...imageNewUrls, ...imageUrls];
+      if (selectedImages.length > 0) {
+        const imageNewUrls = await Promise.all(
+          selectedImages.map(async (image) => {
+            const imageUrl = await uploadImage(image);
+            return imageUrl;
+          }),
+        );
+        expenseData.imageUrls = [...imageUrls, ...imageNewUrls];
+      }
+
       const response = await fetch(`https://api-turistear.koyeb.app/expenses/${expense.id}`, {
         method: 'PUT',
         headers: {
@@ -174,7 +183,6 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
       }
 
       const result = await response.json();
-      onExpenseUpdated(result);
       onBack();
     } catch (error) {
       console.log(error.message);
@@ -216,7 +224,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense, onExpenseUpdated }) => 
         <div className="mb-4">
           <label className="block font-semibold text-gray-700 mb-2">Usuario que paga</label>
           <select
-            value={expense.payer.id}
+            value={payerId}
             onChange={handlePayerChange}
             className="w-full px-4 py-2 border rounded-lg"
           >

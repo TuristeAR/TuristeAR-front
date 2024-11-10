@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
-import { ArrowLeft } from 'lucide-react';
 import ExpenseFileUpload from './ExpenseFileUpload';
 
 const uploadImage = async (image: File): Promise<any> => {
@@ -122,6 +121,11 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
     setLoading(true);
     setError(null);
     setValidationError('');
+    if (!payerId) {
+      setValidationError('Por favor, selecciona un pagador.');
+      return;
+    }
+  
     if (!validateAmounts()) {
       setValidationError(`La suma de los ${distributionType} no coincide con el monto total.`);
       setLoading(false);
