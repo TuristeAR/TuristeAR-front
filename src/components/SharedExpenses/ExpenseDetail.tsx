@@ -58,15 +58,17 @@ const ExpenseDetail = ({ expense, onClose }) => {
             {new Date(expense.date).toLocaleDateString()} -{' '}
             {new Date(expense.date).toLocaleTimeString()} hs
           </p>
-          <p className="flex items-center gap-1">
-            <span>Pagado por </span>
-            <div className="flex items-center">
-              <div className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
-                <img src={expense.payer.profilePicture} className="w-full h-full object-cover" />{' '}
+          <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1">
+              <span>Pagado por </span>
+              <div className="flex items-center">
+                <div className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
+                  <img src={expense.payer.profilePicture} className="w-full h-full object-cover" />
+                </div>
+                <span className="font-semibold ">{expense.payer.name}</span>
               </div>
-              <span className="font-semibold ">{expense.payer.name}</span>
             </div>
-          </p>
+          </div>
         </div>
       </div>
       <div className="ml-4 mt-2">
@@ -81,24 +83,23 @@ const ExpenseDetail = ({ expense, onClose }) => {
                 <span className="font-semibold">{participant.name}</span>{' '}
               </div>
 
-              <div className='flex gap-1'>
-                 {participant.id === expense.payer.id ? (
-                <>
-                  <p> aportó </p>
-                  <span className="font-semibold text-[#24b424]">
-                    ${calculateAmountOwed(participant)}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <p> debe </p>
-                  <span className="font-semibold text-[#f00]">
-                    ${calculateAmountOwed(participant)}
-                  </span>
-                </>
-              )}
+              <div className="flex gap-1">
+                {participant.id === expense.payer.id ? (
+                  <>
+                    <p> aportó </p>
+                    <span className="font-semibold text-[#24b424]">
+                      ${calculateAmountOwed(participant)}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <p> debe </p>
+                    <span className="font-semibold text-[#f00]">
+                      ${calculateAmountOwed(participant)}
+                    </span>
+                  </>
+                )}
               </div>
-             
             </li>
           ))}
         </ul>
