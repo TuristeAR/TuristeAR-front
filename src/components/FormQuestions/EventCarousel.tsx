@@ -6,7 +6,7 @@ import prevArrow from '/assets/arrow-prev.svg';
 import nextArrow from '/assets/arrow-next.svg';
 import { EventCard } from './EventCard';
 
-function EventCarousel({ events, selectedEvents, onEventSelect }) {
+function EventCarousel({ localities, events, selectedEvents, onEventSelect }) {
   const prevRef = useRef<HTMLDivElement>(null);
   const nextRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef(null);
@@ -50,13 +50,13 @@ function EventCarousel({ events, selectedEvents, onEventSelect }) {
         {events.map((event) => (
           <SwiperSlide key={event.id}>
             <EventCard
-              id={event.id}
               fromDate={event.fromDate}
               toDate={event.toDate}
               name={event.name}
-              locality={event.locality}
+              locality={localities.find((loc) => loc.name === event.locality)}
               description={event.description}
               image={event.image}
+              id={event.id}
               isSelected={selectedEvents.includes(event.id)}
               onSelect={onEventSelect}
             />

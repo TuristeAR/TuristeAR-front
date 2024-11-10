@@ -36,7 +36,7 @@ import { getJsonUrl } from '../utilities/getJsonUrl';
 
 interface FormData {
   provinces: Province[];
-  localities: string[];
+  localities: Locality[];
   events: number[];
   fromDate: string;
   toDate: string;
@@ -49,6 +49,11 @@ interface Province {
   id: number;
   name: string;
   georefId: string;
+}
+
+export interface Locality {
+  name: string;
+  province: Province;
 }
 
 const questions = [
@@ -165,7 +170,7 @@ const FormQuestions = () => {
   const [dialogWindowOpen, setDialogWindowOpen] = useState(false);
   const [selectedProvinces, setSelectedProvinces] = useState<Province[]>([]);
   const [localities, setLocalities] = useState<any[]>([]);
-  const [selectedLocalities, setSelectedLocalities] = useState<string[]>([]);
+  const [selectedLocalities, setSelectedLocalities] = useState<Locality[]>([]);
   const [searchLocality, setSearchLocality] = useState('');
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -198,10 +203,10 @@ const FormQuestions = () => {
     },
   ]);
 
-  const handleLocalitySelection = (locality: string) => {
+  const handleLocalitySelection = (locality: Locality) => {
     setSelectedLocalities((prev) => {
-      const updatedLocalities = prev.includes(locality)
-        ? prev.filter((loc) => loc !== locality)
+      const updatedLocalities = prev.some((loc) => loc.name === locality.name)
+        ? prev.filter((loc) => loc.name !== locality.name)
         : [...prev, locality];
 
       setFormData((prevFormData) => ({
@@ -258,9 +263,13 @@ const FormQuestions = () => {
       'Content-Type': 'application/json',
     }).then((r) => {
       setLocalities((prevLocalities) => {
-        const newLocalities = r.filter(
-          (locality) => !prevLocalities.some((loc) => loc.id === locality.id),
-        );
+        const newLocalities = r
+          .filter((locality) => !prevLocalities.some((loc) => loc.name === locality.nombre))
+          .map((locality) => ({
+            name: locality.nombre,
+            province: locality.provincia,
+          }));
+
         return [...prevLocalities, ...newLocalities];
       });
 
@@ -283,7 +292,7 @@ const FormQuestions = () => {
     });
   };
 
-  const handleEventSelect = (id: number, locality: string) => {
+  const handleEventSelect = (id: number, locality: Locality) => {
     setSelectedEvents((prevSelectedEvents) => {
       const isSelected = prevSelectedEvents.includes(id);
 
@@ -395,7 +404,6 @@ const FormQuestions = () => {
 
         break;
       case 4:
-        console.log(formData);
         if (!formData.company) {
           setErrorMessage('Tenés que seleccionar una opción');
           return;
@@ -432,7 +440,7 @@ const FormQuestions = () => {
 
     try {
       const response = await post(
-        'https://api-turistear.koyeb.app/formQuestion',
+        'http://localhost:3001/formQuestion',
         {
           'Content-Type': 'application/json',
         },
@@ -561,13 +569,13 @@ const FormQuestions = () => {
             {carouselEvents.map((event) => (
               <SwiperSlide key={event.id}>
                 <EventCard
-                  id={event.id}
                   fromDate={event.fromDate}
                   toDate={event.toDate}
                   name={event.name}
-                  locality={event.locality}
+                  locality={localities.find((loc) => loc.name === event.locality)}
                   description={event.description}
                   image={event.image}
+                  id={event.id}
                   isSelected={selectedEvents.includes(event.id)}
                   onSelect={handleEventSelect}
                   isLoading={true}
@@ -609,8 +617,8 @@ const FormQuestions = () => {
                       <span className="text-center text-xl my-1">
                         Lugares a visitar:{' '}
                         {formData.localities.map((locality, index) => (
-                          <strong key={locality}>
-                            {locality}
+                          <strong key={locality.name}>
+                            {locality.name}
                             {index < formData.localities.length - 1 && ', '}
                           </strong>
                         ))}
@@ -745,24 +753,24 @@ const FormQuestions = () => {
                                     <ul className="bg-slate-50 overflow-y-auto w-72 max-h-[200px] mb-4">
                                       {[
                                         ...new Map(
-                                          localities.map((item) => [item.nombre, item]),
+                                          localities.map((item) => [item.name, item]),
                                         ).values(),
                                       ]
                                         .filter((locality) =>
-                                          locality.nombre
+                                          locality.name
                                             .toLowerCase()
                                             .includes(searchLocality.toLowerCase()),
                                         )
                                         .map((locality) => (
                                           <li
-                                            key={locality.id}
+                                            key={locality.name}
                                             onClick={() => {
-                                              handleLocalitySelection(locality.nombre);
+                                              handleLocalitySelection(locality);
                                               setSearchLocality('');
                                             }}
                                             className="mx-1 p-1 cursor-pointer hover:bg-orange hover:text-white"
                                           >
-                                            {locality.nombre}
+                                            {locality.name}
                                           </li>
                                         ))}
                                     </ul>
@@ -772,14 +780,19 @@ const FormQuestions = () => {
                               <select
                                 className="w-72 h-10 border border-gray rounded-md px-2"
                                 onChange={(e) => {
-                                  handleLocalitySelection(e.target.value);
+                                  const selectedLocality = localities.find(
+                                    (locality) => locality.name === e.target.value,
+                                  );
+                                  if (selectedLocality) {
+                                    handleLocalitySelection(selectedLocality);
+                                  }
                                   e.target.value = '';
                                 }}
                               >
                                 <option value="">Seleccioná una localidad</option>
-                                {localities.map((locality) => (
-                                  <option key={locality.id} value={locality.nombre}>
-                                    {locality.nombre}
+                                {localities.map((locality, index) => (
+                                  <option key={index} value={locality.name}>
+                                    {locality.name}
                                   </option>
                                 ))}
                               </select>
@@ -787,10 +800,10 @@ const FormQuestions = () => {
                             <div className="flex flex-wrap my-4 gap-2">
                               {selectedLocalities.map((locality) => (
                                 <div
-                                  key={locality}
+                                  key={locality.name}
                                   className="w-fit px-3 py-1 bg-primary-2 text-white rounded flex items-center justify-between"
                                 >
-                                  {locality}
+                                  {locality.name}
                                   <button
                                     type="button"
                                     className="ml-2 text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center"
@@ -813,6 +826,7 @@ const FormQuestions = () => {
                                 events.length > 0 && (
                                   <div className="flex items-center mt-4">
                                     <EventCarousel
+                                      localities={localities}
                                       events={events}
                                       selectedEvents={selectedEvents}
                                       onEventSelect={handleEventSelect}
