@@ -37,10 +37,8 @@ const ExpenseDetail = ({ expense, onClose }) => {
 
       return amountOwed;
     } else if (distributionType === 'montos') {
-      console.log(individualAmounts);
       return individualAmounts[participant.id] || 0;
     } else if (distributionType === 'porcentajes') {
-      console.log(individualPercentages);
       return (
         `${((individualPercentages[participant.id] / 100) * totalAmount).toFixed(2)} %${individualPercentages[participant.id]}` ||
         0
