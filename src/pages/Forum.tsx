@@ -5,30 +5,67 @@ import React, { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { CreateForums } from '../components/Community/CreateForums';
-import { MapPin } from 'lucide-react';
+import { Edit2Icon, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { get } from '../utilities/http.util';
+import { EditForum } from '../components/Community/EditForum';
+
+type User = {
+  id: number;
+  name: string;
+  profilePicture: string;
+  description: string;
+  birthdate: string;
+  coverPicture: string;
+  location: string;
+};
+
+type Category = {
+  id: number;
+  description: string;
+};
+
+
+type Message = {
+  content: string;
+  images: string[];
+  user: User;
+  createdAt: string;
+};
+
+type Forum = {
+  id: number;
+  name: string;
+  description: string;
+  category: Category | null;
+  user: User;
+  messages: Message[];
+
+};
 
 const Forum = () => {
-  type Category = {
-    id: number;
-    description: string;
-  };
-
-  type Forum = {
-    id: number;
-    name: string;
-    description: string;
-    category: Category | null;
-  };
 
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [forums, setForums] = useState<Forum[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [description, setDescription] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const session = await get('https://api-turistear.koyeb.app/session', {
+          contentType: 'application/json',
+        });
+
+        if (session.statusCode !== 200) {
+          window.location.href = '/login';
+          return;
+        }
+
+        setUser(session.user);
+
         const forumsResponse = await fetch(`https://api-turistear.koyeb.app/forums`, {
           method: 'GET',
           credentials: 'include',
@@ -46,9 +83,6 @@ const Forum = () => {
 
     fetchData();
   }, []);
-  console.log(forums);
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <>
@@ -87,7 +121,7 @@ const Forum = () => {
                       )
                     }
                     className="border border-[#999999] pl-2 w-[45%]"
-                    placeholder="Buscar"
+                    placeholder="Buscar foro..."
                     autoComplete="off"
                   />
                 </form>
@@ -106,7 +140,12 @@ const Forum = () => {
                         key={index}
                         className="w-[100%] mx-auto h-fit p-4 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col gap-4"
                       >
-                        <h1 className={'text-2xl'}>{forum.name}</h1>
+                        <div className={'flex justify-between items-center'}>
+                          <h1 className={'text-2xl'}>{forum.name}</h1>
+                          {(user.id == forum.user.id && forum.messages.length < 1) && (
+                            <EditForum forum={forum}  />
+                          )}
+                        </div>
                         <p>{forum.description}</p>
                         <div className={'flex justify-between items-center h-full'}>
                           <div className="flex items-center gap-2">
@@ -122,7 +161,7 @@ const Forum = () => {
                 ) : (
                   <div className={'p-4 bg-[#c0daeb] rounded-2xl col-span-2'}>
                     <p className={'text-3xl font-bold'}>
-                      No hay foros en la categoría seleccionada!
+                      No se encontraron foros!
                     </p>
                   </div>
                 )}
