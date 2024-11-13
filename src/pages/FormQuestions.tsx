@@ -8,7 +8,7 @@ import { DateRangePicker } from 'react-date-range';
 import { es } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { get, getWithoutCredentials, post } from '../utilities/http.util';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import {
   Baby,
@@ -436,7 +436,12 @@ const FormQuestions = () => {
     setLoading(true);
 
     formData.fromDate = state[0].startDate.toISOString();
+
     formData.toDate = state[0].endDate.toISOString();
+
+    formData.localities = selectedLocalities.sort(
+      (a, b) => Number(a.province.id) - Number(b.province.id),
+    );
 
     try {
       const response = await post(
