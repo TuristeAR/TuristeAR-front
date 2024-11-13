@@ -273,7 +273,7 @@ const Notifications = () => {
                                   notification.participationRequest.id,
                                 )
                               }
-                              className="bg-primary text-white px-4 py-1 rounded-lg"
+                              className="bg-[#00a840] hover:bg-[#23922a] text-white px-4 py-1 rounded-lg"
                             >
                               Aceptar
                             </Link>
@@ -281,7 +281,7 @@ const Notifications = () => {
                               onClick={() =>
                                 rejectParticipationRequest(notification.participationRequest.id, notification.id)
                               }
-                              className="bg-[#f00] text-white px-4 py-1 rounded-lg"
+                              className="bg-[#f00] hover:bg-[#e00000] text-white px-4 py-1 rounded-lg"
                             >
                               Rechazar
                             </button>
