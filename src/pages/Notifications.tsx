@@ -116,7 +116,7 @@ const Notifications = () => {
     });
   };
 
-  const rejectParticipationRequest = async (participationRequestId: number) => {
+  const rejectParticipationRequest = async (participationRequestId: number, notificationId) => {
     try {
       const response = await fetch('https://api-turistear.koyeb.app/participation-request/reject', {
         method: 'POST',
@@ -124,7 +124,7 @@ const Notifications = () => {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ requestId: participationRequestId }),
+        body: JSON.stringify({ requestId: participationRequestId, notificationId }),
       });
 
       if (response.ok) {
@@ -279,7 +279,7 @@ const Notifications = () => {
                             </Link>
                             <button
                               onClick={() =>
-                                rejectParticipationRequest(notification.participationRequest.id)
+                                rejectParticipationRequest(notification.participationRequest.id, notification.id)
                               }
                               className="bg-[#f00] text-white px-4 py-1 rounded-lg"
                             >
