@@ -27,7 +27,6 @@ export const AddParticipantModal: React.FC<ParticipantTabsProps> = ({
   const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
 
   useEffect(() => {
-    console.log('Entro', localStorage.getItem('user'));
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);

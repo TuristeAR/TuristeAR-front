@@ -4,8 +4,16 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
+type ParticipationRequest = {
+  id: number;
+  itinerary: Itinerary;
+  participant: User;
+  sender: User;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: Date;
+};
 type User = {
   id: number;
   name: string;
@@ -41,13 +49,15 @@ type Itinerary = {
   user: User | null;
 };
 
-type Notification={
-  id: number
-  isRead: boolean
+type Notification = {
+  id: number;
+  isRead: boolean;
   description: string;
-  publication: Publication
-  itinerary: Itinerary
-}
+  publication: Publication;
+  itinerary: Itinerary;
+  participationRequest: ParticipationRequest;
+  user: User;
+};
 
 const Notifications = () => {
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
@@ -57,6 +67,7 @@ const Notifications = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
   const getNotificationImages = (notification) => {
     const { description, publication } = notification;
@@ -101,15 +112,70 @@ const Notifications = () => {
   const updateNotifications = async () => {
     await fetch('https://api-turistear.koyeb.app/markNotificationsAsRead', {
       method: 'PUT',
-      credentials: 'include'
+      credentials: 'include',
     });
   };
 
+  const rejectParticipationRequest = async (participationRequestId: number) => {
+    try {
+      const response = await fetch('https://api-turistear.koyeb.app/participation-request/reject', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ requestId: participationRequestId }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Participation request rejected successfully:', data);
+
+        setNotifications((prevNotifications) =>
+          prevNotifications.filter(
+            (notification) => notification.participationRequest.id !== participationRequestId,
+          ),
+        );
+      } else {
+        console.error('Error rejecting participation request');
+      }
+    } catch (error) {
+      console.error('Error making the request:', error);
+    }
+  };
+
+  const acceptParticipationRequest = async (itineraryId, participantId, participationRequestId) => {
+    try {
+      const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          itineraryId,
+          participantId,
+          participationRequestId,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        console.log('User successfully added to the itinerary', data);
+      } else {
+        console.error('Error adding user to itinerary');
+      }
+    } catch (error) {
+      console.error('Error making the request:', error);
+    }
+  };
   const fetchNotifications = async () => {
     const response = await get('https://api-turistear.koyeb.app/notifications-detail/byUser', {
       'Content-Type': 'application/json',
       credentials: 'include',
     });
+    console.log(response);
     setNotifications(response);
     setIsLoading(false);
   };
@@ -117,7 +183,7 @@ const Notifications = () => {
   useEffect(() => {
     fetchUser();
     fetchNotifications();
-    updateNotifications()
+    updateNotifications();
   }, []);
 
   return (
@@ -149,7 +215,9 @@ const Notifications = () => {
                     to={
                       notification.publication
                         ? `/publication/${notification.publication.id}`
-                        : `/itineraryCalendar/${notification.itinerary.id}`
+                        : notification.itinerary
+                          ? `/itineraryCalendar/${notification.itinerary.id}`
+                          : ''
                     }
                     key={index}
                     className={
@@ -167,7 +235,7 @@ const Notifications = () => {
                           {notification.publication.description.slice(0, 100)}
                         </p>
                       </div>
-                    ) : (
+                    ) : notification.itinerary ? (
                       <div className="flex flex-col gap-2">
                         <div className="flex gap-x-2 items-center">
                           <img
@@ -180,6 +248,47 @@ const Notifications = () => {
                         <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
                           {notification.itinerary.name}
                         </p>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-x-2 items-center">
+                          <img
+                            src={notification.participationRequest.sender.profilePicture}
+                            alt={notification.participationRequest.sender.name}
+                            className="w-[25px] h-[25px] rounded-full"
+                          />
+                          <h1 className="font-bold text-[18px]">{notification.description}</h1>
+                        </div>
+                        <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
+                          {notification.participationRequest.itinerary.name}
+                        </p>
+                        {notification.participationRequest.status != 'accepted' ? (
+                          <div className="flex gap-2 mt-2">
+                            <Link
+                              to={`/itineraryCalendar/${notification.participationRequest.itinerary.id}`}
+                              onClick={() =>
+                                acceptParticipationRequest(
+                                  notification.participationRequest.itinerary.id,
+                                  notification.user.id,
+                                  notification.participationRequest.id,
+                                )
+                              }
+                              className="bg-primary text-white px-4 py-1 rounded-lg"
+                            >
+                              Aceptar
+                            </Link>
+                            <button
+                              onClick={() =>
+                                rejectParticipationRequest(notification.participationRequest.id)
+                              }
+                              className="bg-[#f00] text-white px-4 py-1 rounded-lg"
+                            >
+                              Rechazar
+                            </button>
+                          </div>
+                        ) : (
+                          <p>📅 ✅ Aceptaste la invitación para unirte al itinerario 🤝🎉</p>
+                        )}
                       </div>
                     )}
                   </Link>
