@@ -133,7 +133,7 @@ const Notifications = () => {
 
         setNotifications((prevNotifications) =>
           prevNotifications.filter(
-            (notification) => notification.participationRequest.id !== participationRequestId,
+            (notification) => notification.id !== notificationId,
           ),
         );
       } else {
@@ -249,7 +249,7 @@ const Notifications = () => {
                           {notification.itinerary.name}
                         </p>
                       </div>
-                    ) : (
+                    ) : notification.participationRequest && (
                       <div className="flex flex-col gap-2">
                         <div className="flex gap-x-2 items-center">
                           <img
