@@ -56,6 +56,7 @@ type Publication = {
   comments: Comment[];
   activities: Activity[];
 };
+
 type Itinerary = {
   activities: any;
   id: number;
@@ -107,6 +108,8 @@ const Profile = () => {
       );
 
       setItineraries(itinerariesResponse.participants);
+
+      console.log(itinerariesResponse)
     };
 
     fetchData().then(() => setLoading(false));
@@ -289,25 +292,16 @@ const Profile = () => {
                       />
                     ))
                 ) : (
-                  <p className="text-center text-xl md:mt-4 md:text-2xl">No hay publicaciones</p>
+                  <p className="text-center te  xt-xl md:mt-4 md:text-2xl">No hay publicaciones</p>
                 ))}
               {activeItem === 'itineraries' &&
                 (itineraries && itineraries.length > 0 ? (
                   itineraries.map((itinerary, index) => {
-                    const imgProvince =
-                      itinerary.activities[0]?.place?.province?.images[0] ||
-                      '/assets/TuristeAR-logo.png';
-
                     return (
                       <ItineraryCard
                         key={index}
-                        imgProvince={imgProvince}
-                        province={itinerary.name}
-                        departure={itinerary.fromDate}
-                        arrival={itinerary.toDate}
                         userId={user.id}
-                        participants={itinerary.participants}
-                        id={itinerary.id}
+                        itinerary={itinerary}
                         onDelete={() =>
                           setItineraries((prev) => prev.filter((p) => p.id !== itinerary.id))
                         }
