@@ -8,7 +8,6 @@ import useFetchItinerary from '../utilities/useFetchItinerary';
 const SharedExpenses = ({}) => {
   const { itineraryId } = useParams();
   const { itinerary } = useFetchItinerary(itineraryId || null);
-  console.log(itinerary);
   const [showForm, setShowForm] = useState(false);
 
   return (

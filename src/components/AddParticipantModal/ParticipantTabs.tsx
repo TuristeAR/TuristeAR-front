@@ -101,9 +101,8 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   //Add user
   const handleAddUser = async (participantId) => {
     try {
-      onUsersOldUpdate([...usersOldNav, users.find((user) => user.id === participantId)]);
       handleRemoveUser(participantId);
-      const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-user', {
+      const response = await fetch('https://api-turistear.koyeb.app/participation-request', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,10 +118,9 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
       const data = await response.json();
 
       if (data.status === 'success') {
-        setUsersOld(data.data.participants);
-        console.log('Participantes actualizados:', data.data.participants);
+        console.log('Participation request sent successfully:', data.data);
       } else {
-        console.error('Error al agregar el usuario:', data.message);
+        console.error('Error adding the user:', data.message);
       }
     } catch (error) {
       console.error('Error in handleAddUser:', error);
