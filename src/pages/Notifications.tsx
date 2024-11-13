@@ -126,15 +126,15 @@ const Notifications = () => {
         credentials: 'include',
         body: JSON.stringify({ requestId: participationRequestId }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log('Participation request rejected successfully:', data);
-  
+
         setNotifications((prevNotifications) =>
           prevNotifications.filter(
-            (notification) => notification.participationRequest.id !== participationRequestId
-          )
+            (notification) => notification.participationRequest.id !== participationRequestId,
+          ),
         );
       } else {
         console.error('Error rejecting participation request');
@@ -143,7 +143,6 @@ const Notifications = () => {
       console.error('Error making the request:', error);
     }
   };
-  
 
   const acceptParticipationRequest = async (itineraryId, participantId, participationRequestId) => {
     try {
@@ -164,7 +163,6 @@ const Notifications = () => {
         const data = await response.json();
 
         console.log('User successfully added to the itinerary', data);
-        navigate(`/itineraryCalendar/${itineraryId}`);
       } else {
         console.error('Error adding user to itinerary');
       }
@@ -187,10 +185,6 @@ const Notifications = () => {
     fetchNotifications();
     updateNotifications();
   }, []);
-
-  function handleParticipationResponse(id: number, arg1: boolean): void {
-    throw new Error('Function not implemented.');
-  }
 
   return (
     <>
@@ -270,7 +264,8 @@ const Notifications = () => {
                         </p>
                         {notification.participationRequest.status != 'accepted' ? (
                           <div className="flex gap-2 mt-2">
-                            <button
+                            <Link
+                              to={`/itineraryCalendar/${notification.participationRequest.itinerary.id}`}
                               onClick={() =>
                                 acceptParticipationRequest(
                                   notification.participationRequest.itinerary.id,
@@ -281,12 +276,10 @@ const Notifications = () => {
                               className="bg-primary text-white px-4 py-1 rounded-lg"
                             >
                               Aceptar
-                            </button>
+                            </Link>
                             <button
                               onClick={() =>
-                                rejectParticipationRequest(
-                                  notification.participationRequest!.id
-                                )
+                                rejectParticipationRequest(notification.participationRequest.id)
                               }
                               className="bg-[#f00] text-white px-4 py-1 rounded-lg"
                             >
