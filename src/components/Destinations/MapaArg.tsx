@@ -3,19 +3,24 @@ import React, { useState, useEffect } from 'react';
 interface MapaProps {
   onProvinceClick: (provinceId: number) => void;
   defaultProvinceId?: number;
+  multipleSelection?: boolean;
 }
 
-export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceId }) => {
-  const [previousPath, setPreviousPath] = useState<SVGPathElement | null>(null);
-  const [originalColor, setOriginalColor] = useState<string>('');
+export const MapaArg: React.FC<MapaProps> = ({
+  onProvinceClick,
+  defaultProvinceId,
+  multipleSelection = false,
+}) => {
+  const [selectedPaths, setSelectedPaths] = useState<SVGPathElement[]>([]);
+  const [originalColors, setOriginalColors] = useState<Map<string, string>>(new Map());
 
   useEffect(() => {
     if (defaultProvinceId) {
       const path = document.getElementById(String(defaultProvinceId)) as unknown as SVGPathElement;
       if (path) {
-        setOriginalColor(path.getAttribute('fill') || '');
+        setOriginalColors((prev) => new Map(prev).set(path.id, path.getAttribute('fill') || ''));
         path.style.fill = '#FF8C00';
-        setPreviousPath(path);
+        setSelectedPaths([path]);
       }
     }
   }, [defaultProvinceId]);
@@ -24,14 +29,30 @@ export const MapaArg: React.FC<MapaProps> = ({ onProvinceClick, defaultProvinceI
     const path = e.target as SVGPathElement;
 
     if (path.tagName === 'path') {
-      if (previousPath) {
-        previousPath.style.fill = originalColor || '';
+      if (multipleSelection) {
+        setSelectedPaths((prev) => {
+          const isSelected = prev.includes(path);
+          if (isSelected) {
+            path.style.fill = originalColors.get(path.id) || '';
+            return prev.filter((p) => p !== path);
+          } else {
+            setOriginalColors((prevColors) =>
+              new Map(prevColors).set(path.id, path.getAttribute('fill') || ''),
+            );
+            path.style.fill = '#FF8C00';
+            return [...prev, path];
+          }
+        });
+      } else {
+        if (selectedPaths.length > 0) {
+          selectedPaths.forEach((p) => {
+            p.style.fill = originalColors.get(p.id) || '';
+          });
+        }
+        setOriginalColors(new Map().set(path.id, path.getAttribute('fill') || ''));
+        path.style.fill = '#FF8C00';
+        setSelectedPaths([path]);
       }
-
-      const currentOriginalColor = path.getAttribute('fill') || '';
-      setOriginalColor(currentOriginalColor);
-      path.style.fill = '#FF8C00';
-      setPreviousPath(path);
 
       onProvinceClick(Number(path.id));
     }

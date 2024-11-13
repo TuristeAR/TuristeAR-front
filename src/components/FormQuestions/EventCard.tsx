@@ -1,15 +1,16 @@
 import formatEventDate from '../../utilities/formatEventDate';
+import { Locality } from '../../pages/FormQuestions';
 
 interface EventCardProps {
   fromDate: Date;
   toDate: Date;
   name: string;
-  locality: string;
+  locality: Locality;
   description: string;
   image: string;
   id: number;
   isSelected: boolean;
-  onSelect: (id: number, locality: string) => void;
+  onSelect: (id: number, locality: Locality) => void;
   isLoading?: boolean;
 }
 
@@ -44,12 +45,10 @@ export const EventCard: React.FC<EventCardProps> = ({
               <h5 className="mb-2 text-base sm:text-xl font-bold tracking-tight text-gray-900">
                 {name}
               </h5>
-              <p className="italic text-sm sm:text-md font-light">{locality}</p>
+              <p className="italic text-sm sm:text-md font-light">{locality.name}</p>
             </div>
             <div className="my-2">
-              <p className="text-xs sm:text-lg text-gray-700">
-                {description}
-              </p>
+              <p className="text-xs sm:text-lg text-gray-700">{description}</p>
             </div>
             <div className="my-2">
               <p className="text-xs sm:text-sm text-gray-700 font-semibold">
@@ -77,7 +76,7 @@ export const EventCard: React.FC<EventCardProps> = ({
           <div className="flex flex-col justify-between h-[320px] relative z-20 p-5">
             <div>
               <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900">{name}</h5>
-              <p className="italic text-md mt-auto font-light">{locality}</p>
+              <p className="italic text-md mt-auto font-light">{locality.name}</p>
             </div>
             <div className="my-2">
               <p className="text-sm text-gray-700">
