@@ -116,6 +116,35 @@ const Notifications = () => {
     });
   };
 
+  const rejectParticipationRequest = async (participationRequestId: number) => {
+    try {
+      const response = await fetch('https://api-turistear.koyeb.app/participation-request/reject', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ requestId: participationRequestId }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Participation request rejected successfully:', data);
+  
+        setNotifications((prevNotifications) =>
+          prevNotifications.filter(
+            (notification) => notification.participationRequest.id !== participationRequestId
+          )
+        );
+      } else {
+        console.error('Error rejecting participation request');
+      }
+    } catch (error) {
+      console.error('Error making the request:', error);
+    }
+  };
+  
+
   const acceptParticipationRequest = async (itineraryId, participantId, participationRequestId) => {
     try {
       const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-user', {
@@ -255,9 +284,8 @@ const Notifications = () => {
                             </button>
                             <button
                               onClick={() =>
-                                handleParticipationResponse(
-                                  notification.participationRequest!.id,
-                                  false,
+                                rejectParticipationRequest(
+                                  notification.participationRequest!.id
                                 )
                               }
                               className="bg-[#f00] text-white px-4 py-1 rounded-lg"
