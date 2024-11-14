@@ -5,6 +5,7 @@ import logoAnimado from '../assets/logoAnimado.json';
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { Link, useNavigate } from 'react-router-dom';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 type ParticipationRequest = {
   id: number;
@@ -61,7 +62,7 @@ type Notification = {
 
 const Notifications = () => {
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
-  const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
+  const { user } = UseFetchSession();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -97,18 +98,6 @@ const Notifications = () => {
     }
   };
 
-  const fetchUser = async () => {
-    const response = await get('https://api-turistear.koyeb.app/session', {
-      'Content-Type': 'application/json',
-    });
-
-    if (response.statusCode === 200) {
-      setUser(response.user);
-    } else {
-      window.location.href = '/login';
-    }
-  };
-
   const updateNotifications = async () => {
     await fetch('https://api-turistear.koyeb.app/markNotificationsAsRead', {
       method: 'PUT',
@@ -116,7 +105,7 @@ const Notifications = () => {
     });
   };
 
-  const rejectParticipationRequest = async (participationRequestId: number) => {
+  const rejectParticipationRequest = async (participationRequestId: number, notificationId) => {
     try {
       const response = await fetch('https://api-turistear.koyeb.app/participation-request/reject', {
         method: 'POST',
@@ -124,7 +113,7 @@ const Notifications = () => {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ requestId: participationRequestId }),
+        body: JSON.stringify({ requestId: participationRequestId, notificationId }),
       });
 
       if (response.ok) {
@@ -132,9 +121,7 @@ const Notifications = () => {
         console.log('Participation request rejected successfully:', data);
 
         setNotifications((prevNotifications) =>
-          prevNotifications.filter(
-            (notification) => notification.participationRequest.id !== participationRequestId,
-          ),
+          prevNotifications.filter((notification) => notification.id !== notificationId),
         );
       } else {
         console.error('Error rejecting participation request');
@@ -175,13 +162,11 @@ const Notifications = () => {
       'Content-Type': 'application/json',
       credentials: 'include',
     });
-    console.log(response);
     setNotifications(response);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchUser();
     fetchNotifications();
     updateNotifications();
   }, []);
@@ -210,46 +195,24 @@ const Notifications = () => {
 
             <div className="absolute md:static lg:w-[80%] w-[100%] pt-10 pb-10 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
               <div className={`flex flex-col gap-6 w-[97%] mx-auto`}>
-                {notifications.map((notification, index) => (
-                  <Link
-                    to={
-                      notification.publication
-                        ? `/publication/${notification.publication.id}`
-                        : notification.itinerary
-                          ? `/itineraryCalendar/${notification.itinerary.id}`
-                          : ''
-                    }
-                    key={index}
-                    className={
-                      `lg:w-auto lg:mb-0 mb-6 p-4 rounded-2xl ${notification.isRead ? 'bg-white hover:bg-[#d9d9d9]' : 'bg-[#c0daeb] hover:bg-[#009fe3]'} ` +
-                      'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col relative transition-transform duration-300 hover:-translate-y-1.5 '
-                    }
-                  >
-                    {notification.publication ? (
-                      <div className="flex flex-col gap-2">
-                        <div className="flex gap-x-2 items-center">
-                          {getNotificationImages(notification)}
-                          <h1 className="font-bold text-[18px]">{notification.description}</h1>
-                        </div>
-                        <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
-                          {notification.publication.description.slice(0, 100)}
-                        </p>
-                      </div>
-                    ) : notification.itinerary ? (
-                      <div className="flex flex-col gap-2">
-                        <div className="flex gap-x-2 items-center">
-                          <img
-                            src={notification.itinerary.user.profilePicture}
-                            alt={notification.itinerary.user.name}
-                            className="w-[25px] h-[25px] rounded-full"
-                          />
-                          <h1 className="font-bold text-[18px]">{notification.description}</h1>
-                        </div>
-                        <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
-                          {notification.itinerary.name}
-                        </p>
-                      </div>
-                    ) : (
+                {notifications.map((notification, index) => {
+                  const isParticipationRequest = !!notification.participationRequest;
+
+                  // Define la ruta solo para publicaciones o itinerarios, excluyendo participationRequest
+                  const linkPath = notification.publication
+                    ? `/publication/${notification.publication.id}`
+                    : notification.itinerary
+                      ? `/itineraryCalendar/${notification.itinerary.id}`
+                      : '';
+
+                  return isParticipationRequest ? (
+                    <div
+                      key={index}
+                      className={
+                        `lg:w-auto lg:mb-0 mb-6 p-4 rounded-2xl ${notification.isRead ? 'bg-white hover:bg-[#d9d9d9]' : 'bg-[#c0daeb] hover:bg-[#009fe3]'} ` +
+                        'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col relative transition-transform duration-300 hover:-translate-y-1.5 '
+                      }
+                    >
                       <div className="flex flex-col gap-2">
                         <div className="flex gap-x-2 items-center">
                           <img
@@ -262,10 +225,9 @@ const Notifications = () => {
                         <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
                           {notification.participationRequest.itinerary.name}
                         </p>
-                        {notification.participationRequest.status != 'accepted' ? (
+                        {notification.participationRequest.status !== 'accepted' ? (
                           <div className="flex gap-2 mt-2">
-                            <Link
-                              to={`/itineraryCalendar/${notification.participationRequest.itinerary.id}`}
+                            <button
                               onClick={() =>
                                 acceptParticipationRequest(
                                   notification.participationRequest.itinerary.id,
@@ -273,15 +235,18 @@ const Notifications = () => {
                                   notification.participationRequest.id,
                                 )
                               }
-                              className="bg-primary text-white px-4 py-1 rounded-lg"
+                              className="bg-[#00a840] hover:bg-[#23922a] text-white px-4 py-1 rounded-lg"
                             >
                               Aceptar
-                            </Link>
+                            </button>
                             <button
                               onClick={() =>
-                                rejectParticipationRequest(notification.participationRequest.id)
+                                rejectParticipationRequest(
+                                  notification.participationRequest.id,
+                                  notification.id,
+                                )
                               }
-                              className="bg-[#f00] text-white px-4 py-1 rounded-lg"
+                              className="bg-[#f00] hover:bg-[#e00000] text-white px-4 py-1 rounded-lg"
                             >
                               Rechazar
                             </button>
@@ -290,9 +255,46 @@ const Notifications = () => {
                           <p>📅 ✅ Aceptaste la invitación para unirte al itinerario 🤝🎉</p>
                         )}
                       </div>
-                    )}
-                  </Link>
-                ))}
+                    </div>
+                  ) : (
+                    <Link
+                      to={linkPath}
+                      key={index}
+                      className={
+                        `lg:w-auto lg:mb-0 mb-6 p-4 rounded-2xl ${notification.isRead ? 'bg-white hover:bg-[#d9d9d9]' : 'bg-[#c0daeb] hover:bg-[#009fe3]'} ` +
+                        'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col relative transition-transform duration-300 hover:-translate-y-1.5 '
+                      }
+                    >
+                      {notification.publication ? (
+                        <div className="flex flex-col gap-2">
+                          <div className="flex gap-x-2 items-center">
+                            {getNotificationImages(notification)}
+                            <h1 className="font-bold text-[18px]">{notification.description}</h1>
+                          </div>
+                          <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
+                            {notification.publication.description.slice(0, 100)}
+                          </p>
+                        </div>
+                      ) : (
+                        notification.itinerary && (
+                          <div className="flex flex-col gap-2">
+                            <div className="flex gap-x-2 items-center">
+                              <img
+                                src={notification.itinerary.user.profilePicture}
+                                alt={notification.itinerary.user.name}
+                                className="w-[25px] h-[25px] rounded-full"
+                              />
+                              <h1 className="font-bold text-[18px]">{notification.description}</h1>
+                            </div>
+                            <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
+                              {notification.itinerary.name}
+                            </p>
+                          </div>
+                        )
+                      )}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>

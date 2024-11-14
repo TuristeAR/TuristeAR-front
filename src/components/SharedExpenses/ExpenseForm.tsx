@@ -26,10 +26,10 @@ const uploadImage = async (image: File): Promise<any> => {
     }
     const result = await response.json();
     console.log('Imagen subida:', result);
-    return result.data.link; // Retorna el enlace de la imagen
+    return result.data.link;
   } catch (error) {
     console.error('Error en la carga de la imagen:', error);
-    throw error; // Lanza el error para manejarlo en createPublications
+    throw error;
   }
 };
 

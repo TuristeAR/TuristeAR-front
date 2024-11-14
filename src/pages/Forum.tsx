@@ -9,6 +9,7 @@ import { Edit2Icon, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { get } from '../utilities/http.util';
 import { EditForum } from '../components/Community/EditForum';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 type User = {
   id: number;
@@ -25,6 +26,7 @@ type Category = {
   description: string;
 };
 
+
 type Message = {
   content: string;
   images: string[];
@@ -39,30 +41,21 @@ type Forum = {
   category: Category | null;
   user: User;
   messages: Message[];
+
 };
 
 const Forum = () => {
+
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [forums, setForums] = useState<Forum[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [description, setDescription] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = UseFetchSession();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const session = await get('https://api-turistear.koyeb.app/session', {
-          contentType: 'application/json',
-        });
-
-        if (session.statusCode !== 200) {
-          window.location.href = '/login';
-          return;
-        }
-
-        setUser(session.user);
-
         const forumsResponse = await fetch(`https://api-turistear.koyeb.app/forums`, {
           method: 'GET',
           credentials: 'include',
@@ -117,7 +110,7 @@ const Forum = () => {
                         e.target.value,
                       )
                     }
-                    className="border border-[#999999] rounded py-4 px-2 w-full max-w-[720px] focus:outline-none"
+                    className="border border-[#999999] pl-2 w-[45%]"
                     placeholder="Buscar foro..."
                     autoComplete="off"
                   />
@@ -126,21 +119,11 @@ const Forum = () => {
               <CreateForums />
               <div className={'grid lg:grid-cols-2 grid-cols-1 mx-4 gap-6'}>
                 {forums?.filter((forum) => {
-                  return (
-                    (categorySelected == null || forum.category.id == categorySelected) &&
-                    (description == null ||
-                      forum.description.toLowerCase().includes(description.toLowerCase()) ||
-                      forum.name.toLowerCase().includes(description.toLowerCase()))
-                  );
+                  return (categorySelected == null || forum.category.id == categorySelected) && (description == null || forum.description.toLowerCase().includes(description.toLowerCase()) || forum.name.toLowerCase().includes(description.toLowerCase())  );
                 }).length > 0 ? (
                   forums
                     ?.filter((forum) => {
-                      return (
-                        (categorySelected == null || forum.category.id == categorySelected) &&
-                        (description == null ||
-                          forum.description.toLowerCase().includes(description.toLowerCase()) ||
-                          forum.name.toLowerCase().includes(description.toLowerCase()))
-                      );
+                      return (categorySelected == null || forum.category.id == categorySelected) && (description == null || forum.description.toLowerCase().includes(description.toLowerCase()) || forum.name.toLowerCase().includes(description.toLowerCase()) );
                     })
                     .map((forum, index) => (
                       <div
@@ -149,8 +132,8 @@ const Forum = () => {
                       >
                         <div className={'flex justify-between items-center'}>
                           <h1 className={'text-2xl'}>{forum.name}</h1>
-                          {user.id == forum.user.id && forum.messages.length < 1 && (
-                            <EditForum forum={forum} />
+                          {(user && user.id == forum.user.id && forum.messages.length < 1) && (
+                            <EditForum forum={forum}  />
                           )}
                         </div>
                         <p>{forum.description}</p>
@@ -159,15 +142,17 @@ const Forum = () => {
                             <MapPin name="info" />
                             <span className="text-sm text-gray">{forum.category.description}</span>
                           </div>
-                          <div className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center">
-                            <a href={`/forum/${forum.id}`}>Ingresar</a>
-                          </div>
+                          <Link to={`/forum/${forum.id}`} className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center">
+                            Ingresar
+                          </Link>
                         </div>
                       </div>
                     ))
                 ) : (
                   <div className={'p-4 bg-[#c0daeb] rounded-2xl col-span-2'}>
-                    <p className={'text-3xl font-bold'}>No se encontraron foros!</p>
+                    <p className={'text-3xl font-bold'}>
+                      No se encontraron foros!
+                    </p>
                   </div>
                 )}
               </div>

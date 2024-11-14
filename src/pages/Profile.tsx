@@ -8,6 +8,7 @@ import logoAnimado from '../assets/logoAnimado.json';
 import Lottie from 'lottie-react';
 import { get } from '../utilities/http.util';
 import { reorderDate } from '../utilities/reorderDate';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 type User = {
   id: number;
@@ -69,30 +70,20 @@ type Itinerary = {
 };
 
 const Profile = () => {
+  const { user } = UseFetchSession();
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [publications, setPublications] = useState<Publication[] | null>(null);
   const [likedPublications, setLikedPublications] = useState<Publication[] | null>(null);
   const [savedPublications, setSavedPublications] = useState<Publication[] | null>(null);
   const [itineraries, setItineraries] = useState<Itinerary[] | null>(null);
-  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const session = await get('https://api-turistear.koyeb.app/session', {
-        contentType: 'application/json',
-      });
-
-      if (session.statusCode !== 200) {
-        window.location.href = '/login';
-        return;
-      }
-
-      setUser(session.user);
 
       const publications = await get(
-        `https://api-turistear.koyeb.app/publications/${session.user.id}`,
+        `https://api-turistear.koyeb.app/publications/${user.id}`,
         {
           contentType: 'application/json',
         },
@@ -101,19 +92,17 @@ const Profile = () => {
       setPublications(publications);
 
       const itinerariesResponse = await get(
-        `https://api-turistear.koyeb.app/itinerary/byUser/${session.user.id}`,
+        `https://api-turistear.koyeb.app/itinerary/byUser/${user.id}`,
         {
           contentType: 'application/json',
         },
       );
 
       setItineraries(itinerariesResponse.participants);
-
-      console.log(itinerariesResponse)
     };
 
-    fetchData().then(() => setLoading(false));
-  }, []);
+    if(user) fetchData().then(() => setLoading(false));
+  }, [user]);
 
   const [activeItem, setActiveItem] = useState('posts');
 
