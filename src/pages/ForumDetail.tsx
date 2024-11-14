@@ -7,6 +7,7 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { CreateMessage } from '../components/Community/CreateMessage';
 import { MessagesContainer } from '../components/Community/MessagesContainer';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 type Category = {
   id: number;
@@ -41,27 +42,14 @@ type Forum = {
 const ForumDetail = () => {
   const { id } = useParams();
 
+  const { user } = UseFetchSession();
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [forum, setForum] = useState<Forum | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!sessionResponse.ok) {
-          window.location.href = '/login';
-          return;
-        }
-
-        const sessionData = await sessionResponse.json();
-        setUser(sessionData.user);
-
         if (!id || id === 'undefined') {
           console.error('forumId is undefined or invalid');
           return;
@@ -78,12 +66,12 @@ const ForumDetail = () => {
           const forumData = await forumResponse.json();
           setForum(forumData);
         }
-
         setLoading(false);
       } catch (error) {
         console.error('Error fetching forum data:', error);
       }
     };
+
     fetchData();
   }, [id]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -121,10 +109,16 @@ const ForumDetail = () => {
                   <p className={'lg:text-sm text-[10px] text-[#484b56]'}>{forum.description}</p>
                 </div>
               </div>
-              <div className="overflow-scroll scrollbar-hidden h-[75%] lg:px-4 px-2 py-6  flex flex-col gap-y-6">
-                <MessagesContainer forum={forum} user={user} />
-              </div>
-              <CreateMessage user={user} forum={forum} setForum={setForum} />
+
+              {user && (
+                <>
+                  <div className="overflow-scroll scrollbar-hidden h-[75%] lg:px-4 px-2 py-6  flex flex-col gap-y-6">
+                    <MessagesContainer forum={forum} user={user} />
+                  </div>
+                  <CreateMessage user={user} forum={forum} setForum={setForum} />
+                </>
+              )
+              }
             </div>
           </div>
         </>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import provinciasData from '../data/provinces-data.json';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 type Province = {
   id: string;
@@ -11,17 +12,18 @@ type Province = {
 
 const provinces: Province[] = provinciasData;
 
+type User = {
+  id: number;
+  name: string;
+  profilePicture: string;
+  description: string;
+  birthdate: string;
+  coverPicture: string;
+  location: string;
+};
+
 const EditProfile = () => {
-  type User = {
-    id: number;
-    name: string;
-    profilePicture: string;
-    description: string;
-    birthdate: string;
-    coverPicture: string;
-    location: string;
-  };
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = UseFetchSession();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     description: '',
@@ -31,25 +33,6 @@ const EditProfile = () => {
     coverPicture: null as File | null,
   });
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch('https://api-turistear.koyeb.app/session', {
-      method: 'GET',
-      credentials: 'include',
-    })
-      .then((response) => {
-        if (!response.ok) {
-          window.location.href = '/';
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setUser(data.user);
-      })
-      .catch(() => {
-        window.location.href = '/';
-      });
-  }, []);
 
   useEffect(() => {
     if (user) {

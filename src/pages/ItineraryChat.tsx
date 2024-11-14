@@ -7,6 +7,7 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { CreateMessage } from '../components/Community/CreateMessage';
 import { MessagesContainer } from '../components/Community/MessagesContainer';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 type Category = {
   id: number;
@@ -49,24 +50,11 @@ const ItineraryChat = () => {
   const [forum, setForum] = useState<Forum | null>(null);
   const [itinerary, setItinerary] = useState<Itinerary | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = UseFetchSession();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!sessionResponse.ok) {
-          window.location.href = '/login';
-          return;
-        }
-
-        const sessionData = await sessionResponse.json();
-        setUser(sessionData.user);
-
         if (!itineraryId || itineraryId === 'undefined') {
           console.error('forumId is undefined or invalid');
           return;

@@ -9,6 +9,7 @@ import { Edit2Icon, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { get } from '../utilities/http.util';
 import { EditForum } from '../components/Community/EditForum';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 type User = {
   id: number;
@@ -50,22 +51,11 @@ const Forum = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [description, setDescription] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = UseFetchSession();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const session = await get('https://api-turistear.koyeb.app/session', {
-          contentType: 'application/json',
-        });
-
-        if (session.statusCode !== 200) {
-          window.location.href = '/login';
-          return;
-        }
-
-        setUser(session.user);
-
         const forumsResponse = await fetch(`https://api-turistear.koyeb.app/forums`, {
           method: 'GET',
           credentials: 'include',
@@ -142,7 +132,7 @@ const Forum = () => {
                       >
                         <div className={'flex justify-between items-center'}>
                           <h1 className={'text-2xl'}>{forum.name}</h1>
-                          {(user.id == forum.user.id && forum.messages.length < 1) && (
+                          {(user && user.id == forum.user.id && forum.messages.length < 1) && (
                             <EditForum forum={forum}  />
                           )}
                         </div>
