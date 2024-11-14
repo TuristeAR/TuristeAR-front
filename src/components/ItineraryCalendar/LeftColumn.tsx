@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
+import { Receipt, Trash2 } from 'lucide-react';
 import plusIcon from '/assets/add.svg';
 import chatIcon from '/assets/chat.svg';
 import galleryIcon from '/assets/gallery.svg';
 import alignIcon from '/assets/align.svg';
-import { Receipt, Trash2 } from 'lucide-react';
 import mapIcon from '/assets/map-icon.svg';
+import pencilIcon from '/assets/pencil.svg';
 import useFetchPlacesByProvince from '../../utilities/useFetchPlacesByProvince';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
 import { AddParticipantModal } from '../AddParticipantModal/AddParticipantModal';
@@ -23,19 +24,24 @@ type User = {
 export const LeftColumn = ({
   itinerary,
   itineraryId,
+  isEditingItineraryName,
+  setIsEditingItineraryName,
   isAddingActivity,
   setIsAddingActivity,
   activities,
   setActivities,
   isShowExpanse,
-  setIsShowExpanse,
   events,
   setEvents,
   deleteEvent,
   onDelete,
 }) => {
+  const [validItinerary, setValidItinerary] = useState(null);
+
   const [selectedPlace, setSelectedPlace] = useState('');
+
   const [showPlaces, setShowPlaces] = useState(false);
+
   const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
 
   const { handleAddActivity, newActivity, setNewActivity } = useAddActivities(
@@ -44,14 +50,23 @@ export const LeftColumn = ({
   );
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
+
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
+
   const socket = io('https://api-turistear.koyeb.app');
+
   const [user, setUser] = useState<User | null>(null);
 
   const btnHandleAddActivity = () => {
     handleAddActivity();
     setIsAddingActivity(false);
   };
+
+  useEffect(() => {
+    if (itinerary) {
+      setValidItinerary(itinerary);
+    }
+  }, [itinerary]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -168,13 +183,43 @@ export const LeftColumn = ({
     onDelete();
   };
 
+  const updateItineraryName = (itineraryName: string) => {
+    validItinerary.name = itineraryName;
+
+    setIsEditingItineraryName(false);
+
+    fetch(`https://api-turistear.koyeb.app/itinerary/${itineraryId}/name`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ name: itineraryName }),
+    });
+  };
+
   return (
     <aside className="order-2 lg:order-1 col-span-1 p-4 flex">
       <div className="flex flex-col h-full w-full">
-        <div className="flex flex-col justify-center  border-gray">
-          <h2 className="font-medium tracking-[-0.5px] leading-none mb-2">
-            {(itinerary as any)?.name}
-          </h2>
+        <div className="flex flex-col justify-center border-gray">
+          <div className="flex flex-col justify-center border-gray">
+            <div className="flex items-center justify-between">
+              {validItinerary && validItinerary.name === '' ? (
+                <p className="text-sm italic px-2">¡Agregá un nombre para tu itinerario!</p>
+              ) : (
+                <h2 className="text-lg font-medium tracking-[-0.5px] px-2">
+                  {validItinerary ? validItinerary.name : ''}
+                </h2>
+              )}
+              <img
+                src={pencilIcon}
+                alt=""
+                className="cursor-pointer"
+                onClick={() => setIsEditingItineraryName(true)}
+              />
+            </div>
+          </div>
+          <hr className="my-2 md:my-4 border-[#aaaaaa] w-full" />
           <div className="flex flex-col p-2 gap-4">
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
@@ -248,15 +293,73 @@ export const LeftColumn = ({
           </div>
         </div>
         {/* Formulario para agregar actividad */}
+        {isEditingItineraryName && (
+          <>
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"></div>
+            <div className="fixed top-0 left-0 right-0 flex justify-center items-center h-screen z-50">
+              <div className="bg-white w-auto md:w-[450px] h-auto flex flex-col mx-auto p-4 rounded shadow-lg">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-semibold text-black text-2xl text-start mb-4">
+                    Editar nombre del itinerario
+                  </h3>
+                  <button className="mb-4" onClick={() => setIsEditingItineraryName(false)}>
+                    &#x2716;
+                  </button>
+                </div>
+                <input
+                  id="itinerary-name"
+                  type="text"
+                  placeholder="Nombre del itinerario"
+                  defaultValue={validItinerary !== '' ? validItinerary.name : ''}
+                  className="w-full p-2 border border-primary rounded mb-2 outline-none"
+                  autoComplete="off"
+                />
+                <div className="flex gap-x-2 justify-center">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      updateItineraryName(
+                        (document.getElementById('itinerary-name') as HTMLInputElement).value,
+                      );
+                    }}
+                    className="btn-question"
+                  >
+                    Guardar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
         {isAddingActivity && (
           <>
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"></div>
 
             <div className="fixed top-0 left-0 right-0 flex justify-center items-center h-screen z-50">
-              <div className="bg-white w-auto md:w-[450px] h-auto flex flex-col  mx-auto p-4  rounded shadow-lg">
+              <div className="bg-white w-auto md:w-[450px] h-auto flex flex-col mx-auto p-4 rounded shadow-lg">
                 <h3 className="font-semibold text-black text-2xl text-start mb-4">
                   Agregar nueva actividad
                 </h3>
+                <input
+                  type="text"
+                  placeholder="Nombre de la actividad"
+                  value={newActivity.name}
+                  onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
+                  className="w-full p-2 border border-primary rounded mb-2 outline-none"
+                  autoComplete="off"
+                />
+                <input
+                  type="datetime-local"
+                  value={newActivity.fromDate}
+                  onChange={(e) => setNewActivity({ ...newActivity, fromDate: e.target.value })}
+                  className="w-full p-2 border border-primary rounded mb-2 outline-none"
+                />
+                <input
+                  type="datetime-local"
+                  value={newActivity.toDate}
+                  onChange={(e) => setNewActivity({ ...newActivity, toDate: e.target.value })}
+                  className="w-full p-2 border border-primary rounded mb-2 outline-none"
+                />
                 <div className="relative w-full">
                   <input
                     type="text"
