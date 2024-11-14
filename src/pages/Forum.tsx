@@ -109,7 +109,7 @@ const Forum = () => {
               className="absolute md:static lg:w-[80%] w-[100%] pb-10 pt-6 flex flex-col gap-10 ${
                 scrollbar-hidden"
             >
-              <div className={'w-[97%] mx-auto flex flex-col gap-4'}>
+              <div className={'lg:w-[97%] w-[90%] mx-auto flex flex-col gap-4 lg:mt-0 mt-4'}>
                 <h2 className="text-xl font-bold">Buscar foro</h2>
                 <form className="flex flex-col gap-4">
                   <input
@@ -152,9 +152,9 @@ const Forum = () => {
                             <MapPin name="info" />
                             <span className="text-sm text-gray">{forum.category.description}</span>
                           </div>
-                          <div className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center">
-                            <a href={`/forum/${forum.id}`}>Ingresar</a>
-                          </div>
+                          <Link to={`/forum/${forum.id}`} className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center">
+                            Ingresar
+                          </Link>
                         </div>
                       </div>
                     ))

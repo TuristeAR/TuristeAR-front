@@ -116,7 +116,7 @@ const ItineraryChat = () => {
                 </Link>
                 <h1 className="text-3xl">{itinerary?.name}</h1>
               </div>
-              <div className="overflow-scroll scrollbar-hidden lg:px-4 px-2 py-6 h-[86%]  flex flex-col gap-y-6">
+              <div className="overflow-scroll scrollbar-hidden h-[81%] lg:px-4 px-2 py-6  flex flex-col gap-y-6">
                 <MessagesContainer forum={forum} user={user} />
               </div>
               <div className="flex justify-center">

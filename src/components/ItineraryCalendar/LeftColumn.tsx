@@ -257,26 +257,6 @@ export const LeftColumn = ({
                 <h3 className="font-semibold text-black text-2xl text-start mb-4">
                   Agregar nueva actividad
                 </h3>
-                <input
-                  type="text"
-                  placeholder="Nombre de la actividad"
-                  value={newActivity.name}
-                  onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
-                  className="w-full p-2 border border-primary  rounded mb-2 outline-none"
-                  autoComplete="off"
-                />
-                <input
-                  type="datetime-local"
-                  value={newActivity.fromDate}
-                  onChange={(e) => setNewActivity({ ...newActivity, fromDate: e.target.value })}
-                  className="w-full p-2 border border-primary  rounded mb-2 outline-none"
-                />
-                <input
-                  type="datetime-local"
-                  value={newActivity.toDate}
-                  onChange={(e) => setNewActivity({ ...newActivity, toDate: e.target.value })}
-                  className="w-full p-2 border border-primary rounded mb-2 outline-none"
-                />
                 <div className="relative w-full">
                   <input
                     type="text"
@@ -303,7 +283,26 @@ export const LeftColumn = ({
                     </div>
                   )}
                 </div>
-
+                <input
+                  type="text"
+                  placeholder="Nombre de la actividad"
+                  value={newActivity.name}
+                  onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
+                  className="w-full p-2 border border-primary  rounded mb-2 outline-none"
+                  autoComplete="off"
+                />
+                <input
+                  type="datetime-local"
+                  value={newActivity.fromDate}
+                  onChange={(e) => setNewActivity({ ...newActivity, fromDate: e.target.value })}
+                  className="w-full p-2 border border-primary  rounded mb-2 outline-none"
+                />
+                <input
+                  type="datetime-local"
+                  value={newActivity.toDate}
+                  onChange={(e) => setNewActivity({ ...newActivity, toDate: e.target.value })}
+                  className="w-full p-2 border border-primary rounded mb-2 outline-none"
+                />
                 <div className="flex gap-x-2 justify-center">
                   <button onClick={btnHandleAddActivity} className="btn-question">
                     Agregar

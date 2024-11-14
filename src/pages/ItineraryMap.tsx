@@ -66,43 +66,45 @@ export const ItineraryMap = () => {
                 <p className="text-lg text-primary-2">Distancia</p>
               </div>
               <hr className="border-gray mb-2" />
-              {activities.map((activity, index) => {
-                const activityCoordinates = {
-                  lat: activity.place.latitude,
-                  lng: activity.place.longitude,
-                };
+              <div className={'overflow-scroll scrollbar-hidden max-h-[548px]'}>
+                {activities.map((activity, index) => {
+                  const activityCoordinates = {
+                    lat: activity.place.latitude,
+                    lng: activity.place.longitude,
+                  };
 
-                const nextActivity = activities[index + 1];
+                  const nextActivity = activities[index + 1];
 
-                const nextActivityCoordinates = {
-                  lat: nextActivity?.place.latitude,
-                  lng: nextActivity?.place.longitude,
-                };
+                  const nextActivityCoordinates = {
+                    lat: nextActivity?.place.latitude,
+                    lng: nextActivity?.place.longitude,
+                  };
 
-                const distance = nextActivity
-                  ? haversineDistance(activityCoordinates, nextActivityCoordinates).toFixed(2)
-                  : null;
+                  const distance = nextActivity
+                    ? haversineDistance(activityCoordinates, nextActivityCoordinates).toFixed(2)
+                    : null;
 
-                if (distance) {
-                  totalDistance += parseFloat(distance);
-                }
+                  if (distance) {
+                    totalDistance += parseFloat(distance);
+                  }
 
-                return (
-                  <div
-                    key={index}
-                    className="my-2 lg:my-4 flex items-center option-card hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-                  >
-                    <p className="w-[10%] text-md">{index + 1}.</p>
-                    <Link
-                      to={`/lugar-esperado/${activity.place.googleId}`}
-                      className="w-[65%] text-md "
+                  return (
+                    <div
+                      key={index}
+                      className="my-2 lg:my-4 flex items-center option-card hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
                     >
-                      {activity.name.replace(/ - \d{1,2} \w+\./, '')}
-                    </Link>
-                    {distance && <p className="w-1/4 text-md text-end">{distance} km</p>}
-                  </div>
-                );
-              })}
+                      <p className="w-[10%] text-md">{index + 1}.</p>
+                      <Link
+                        to={`/lugar-esperado/${activity.place.googleId}`}
+                        className="w-[65%] text-md "
+                      >
+                        {activity.name.replace(/ - \d{1,2} \w+\./, '')}
+                      </Link>
+                      {distance && <p className="w-1/4 text-md text-end">{distance} km</p>}
+                    </div>
+                  );
+                })}
+              </div>
               <div className="mt-4 lg:mt-8">
                 <span className="text-lg text-center font-semibold">
                   📍 En total vas a recorrer {totalDistance.toFixed(2)} km
