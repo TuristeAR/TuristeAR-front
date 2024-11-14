@@ -13,16 +13,6 @@ type Province = {
 
 const provinces: Province[] = provinciasData;
 
-type User = {
-  id: number;
-  name: string;
-  profilePicture: string;
-  description: string;
-  birthdate: string;
-  coverPicture: string;
-  location: string;
-};
-
 const EditProfile = () => {
   const { user } = UseFetchSession();
   const [isLoading, setIsLoading] = useState<boolean>(false);
