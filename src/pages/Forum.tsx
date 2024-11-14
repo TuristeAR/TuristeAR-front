@@ -9,6 +9,7 @@ import { Edit2Icon, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { get } from '../utilities/http.util';
 import { EditForum } from '../components/Community/EditForum';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 type User = {
   id: number;
@@ -50,22 +51,11 @@ const Forum = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [description, setDescription] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = UseFetchSession();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const session = await get('https://api-turistear.koyeb.app/session', {
-          contentType: 'application/json',
-        });
-
-        if (session.statusCode !== 200) {
-          window.location.href = '/login';
-          return;
-        }
-
-        setUser(session.user);
-
         const forumsResponse = await fetch(`https://api-turistear.koyeb.app/forums`, {
           method: 'GET',
           credentials: 'include',
@@ -109,7 +99,7 @@ const Forum = () => {
               className="absolute md:static lg:w-[80%] w-[100%] pb-10 pt-6 flex flex-col gap-10 ${
                 scrollbar-hidden"
             >
-              <div className={'w-[97%] mx-auto flex flex-col gap-4'}>
+              <div className={'lg:w-[97%] w-[90%] mx-auto flex flex-col gap-4 lg:mt-0 mt-4'}>
                 <h2 className="text-xl font-bold">Buscar foro</h2>
                 <form className="flex flex-col gap-4">
                   <input
@@ -142,7 +132,7 @@ const Forum = () => {
                       >
                         <div className={'flex justify-between items-center'}>
                           <h1 className={'text-2xl'}>{forum.name}</h1>
-                          {(user.id == forum.user.id && forum.messages.length < 1) && (
+                          {(user && user.id == forum.user.id && forum.messages.length < 1) && (
                             <EditForum forum={forum}  />
                           )}
                         </div>
@@ -152,9 +142,9 @@ const Forum = () => {
                             <MapPin name="info" />
                             <span className="text-sm text-gray">{forum.category.description}</span>
                           </div>
-                          <div className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center">
-                            <a href={`/forum/${forum.id}`}>Ingresar</a>
-                          </div>
+                          <Link to={`/forum/${forum.id}`} className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center">
+                            Ingresar
+                          </Link>
                         </div>
                       </div>
                     ))

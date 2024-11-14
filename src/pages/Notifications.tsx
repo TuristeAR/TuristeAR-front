@@ -5,6 +5,7 @@ import logoAnimado from '../assets/logoAnimado.json';
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { Link, useNavigate } from 'react-router-dom';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 type ParticipationRequest = {
   id: number;
@@ -61,7 +62,7 @@ type Notification = {
 
 const Notifications = () => {
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
-  const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
+  const { user } = UseFetchSession();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -94,18 +95,6 @@ const Notifications = () => {
   const handleClick = (name: string) => {
     if (contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const fetchUser = async () => {
-    const response = await get('https://api-turistear.koyeb.app/session', {
-      'Content-Type': 'application/json',
-    });
-
-    if (response.statusCode === 200) {
-      setUser(response.user);
-    } else {
-      window.location.href = '/login';
     }
   };
 
@@ -173,13 +162,11 @@ const Notifications = () => {
       'Content-Type': 'application/json',
       credentials: 'include',
     });
-    console.log(response);
     setNotifications(response);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchUser();
     fetchNotifications();
     updateNotifications();
   }, []);

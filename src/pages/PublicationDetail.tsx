@@ -8,6 +8,7 @@ import { CreatePublications } from '../components/Community/CreatePublications';
 import { CommentDetail } from '../components/Community/CommentDetail';
 import { PublicationDetailCard } from '../components/Community/PublicationDetailCard';
 import io from 'socket.io-client';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 
 type User={
@@ -64,25 +65,11 @@ const PublicationDetail = () => {
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [publication, setPublication] = useState<Publication | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = UseFetchSession();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!sessionResponse.ok) {
-          window.location.href = '/login';
-          return;
-        }
-
-        const sessionData = await sessionResponse.json();
-        setUser(sessionData.user);
-
-        // Segundo fetch - Obtener las publicaciones solo si se obtuvo el usuario
         const publicationsResponse = await fetch(
           `https://api-turistear.koyeb.app/publication/${publicationId}`,
           {

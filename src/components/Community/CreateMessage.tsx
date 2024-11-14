@@ -128,7 +128,11 @@ export const CreateMessage = (props: {
   };
 
   return (
-    <div className="w-[80%] mx-auto fixed bottom-0 overflow-scroll scrollbar-hidden lg:px-4 p-2 md:py-4 flex flex-col gap-y-6 bg-white z-99">
+    <div
+      className={
+        `${location.pathname.includes('/forum/') ? 'lg:w-[80%] w-[100%]' : 'w-[100%]'} mx-auto fixed bottom-0 overflow-scroll scrollbar-hidden flex flex-col gap-y-6 bg-white z-99`
+      }
+    >
       <form
         onSubmit={createMessage}
         className={'border-t border-[#999999] py-2 flex justify-around items-center'}
@@ -154,7 +158,7 @@ export const CreateMessage = (props: {
             <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
           </label>
         </div>
-        <div className={'flex w-[80%] items-center'}>
+        <div className={'flex w-[80%] items-center justify-between'}>
           <input
             onInput={(e) => {
               //@ts-ignore
