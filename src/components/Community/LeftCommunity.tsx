@@ -116,7 +116,7 @@ export const LeftCommunity = (props: {
                         e.target.value,
                       )
                     }
-                    className="border border-[#999999] pl-2"
+                    className="border border-[#999999] rounded p-2 focus:outline-none"
                     placeholder="Buscar"
                     autoComplete="off"
                   />
@@ -157,7 +157,11 @@ export const LeftCommunity = (props: {
                             className={`flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${category.id == categorySelected ? 'bg-[#c0daeb]' : ''}`}
                           >
                             <div className="flex items-center">
-                              <p className="">{category.description === 'Ciudad Autónoma de Buenos Aires' ? 'CABA' : category.description}</p>
+                              <p className="">
+                                {category.description === 'Ciudad Autónoma de Buenos Aires'
+                                  ? 'CABA'
+                                  : category.description}
+                              </p>
                             </div>
                           </button>
                         </div>

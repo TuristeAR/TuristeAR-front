@@ -125,7 +125,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
       setValidationError('Por favor, selecciona un pagador.');
       return;
     }
-  
+
     if (!validateAmounts()) {
       setValidationError(`La suma de los ${distributionType} no coincide con el monto total.`);
       setLoading(false);
@@ -143,19 +143,17 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
       individualAmounts,
       individualPercentages,
       itineraryId: itineraryId,
-      imageUrls:[]
+      imageUrls: [],
     };
-    
-    try {
 
+    try {
       const imageUrls = await Promise.all(
         selectedImages.map(async (image) => {
           const imageUrl = await uploadImage(image);
           return imageUrl;
-        })
+        }),
       );
       expenseData.imageUrls = imageUrls;
-
 
       const response = await fetch('https://api-turistear.koyeb.app/expenses', {
         method: 'POST',
@@ -194,9 +192,11 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
   return (
     <>
       <div className="bg-white p-6 max-w-lg mx-auto">
-        <button className="flex" onClick={onBack}>
-          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[20px] my-auto'} />
-          <div className="text-sm font-bold text-primary-3">Volver A La Lista De Gastos</div>
+        <button className="flex items-center md:mr-10" onClick={onBack}>
+          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px] my-auto'} />
+          <div className="text-sm md:text-md font-bold text-primary-3">
+            Volver A La Lista De Gastos
+          </div>
         </button>
 
         <h3 className="font-bold text-3xl lead-10 text-black mb-9">Agregar Nuevo Gasto</h3>
@@ -343,7 +343,11 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
               )}
             </div>
           )}
-          <ExpenseFileUpload onImagesSelect={handleImagesUploaded} imageEditUrls={[]} onImageUrls={""}></ExpenseFileUpload>
+          <ExpenseFileUpload
+            onImagesSelect={handleImagesUploaded}
+            imageEditUrls={[]}
+            onImageUrls={''}
+          ></ExpenseFileUpload>
           {validationError && <div className="mb-4 text-[#ff0000]">{validationError}</div>}
 
           <button

@@ -99,8 +99,8 @@ const Forum = () => {
               className="absolute md:static lg:w-[80%] w-[100%] pb-10 pt-6 flex flex-col gap-10 ${
                 scrollbar-hidden"
             >
-              <div className={'lg:w-[97%] w-[90%] mx-auto flex flex-col gap-4 lg:mt-0 mt-4'}>
-                <h2 className="text-xl font-bold">Buscar foro</h2>
+              <div className={'w-[97%] mx-auto flex flex-col gap-4'}>
+                <h2 className="my-4 md:my-1 text-2xl font-bold">Buscar foro</h2>
                 <form className="flex flex-col gap-4">
                   <input
                     type="text"

@@ -139,7 +139,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
       setValidationError('Por favor, selecciona un pagador.');
       return;
     }
-  
+
     if (!validateAmounts()) {
       setValidationError(`La suma de los ${distributionType} no coincide con el monto total.`);
       return;
@@ -191,8 +191,8 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
 
   return (
     <div className="bg-white p-6 rounded-sm shadow-lg max-w-lg mx-auto">
-      <button className="flex" onClick={onBack}>
-        <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[20px] my-auto'} />
+      <button className="flex items-center md:mr-10" onClick={onBack}>
+        <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px] my-auto'} />
         <div className="text-sm font-bold text-primary-3">Volver A La Lista De Gastos</div>
       </button>
       <h3 className="font-bold text-3xl lead-10 text-black mb-9">Editar Gasto</h3>
