@@ -14,8 +14,8 @@ const SharedExpenses = ({}) => {
     <>
       <Header></Header>
       <div className="border-b p-4 mb-4 border-gray-50 flex items-center">
-        <Link to={`/itineraryCalendar/${itineraryId}`}>
-          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px]'} />
+        <Link to={`/itineraryCalendar/${itineraryId}`} className="md:mr-10">
+          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[50px]'} />
         </Link>
         <h2 className="text-2xl font-bold text-primary-3">{itinerary?.name}</h2>
       </div>
