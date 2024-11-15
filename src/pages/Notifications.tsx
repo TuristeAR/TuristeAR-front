@@ -144,8 +144,8 @@ const Notifications = () => {
 
       if (response.ok) {
         const data = await response.json();
-
         console.log('User successfully added to the itinerary', data);
+        window.location.href=`/itineraryCalendar/${data.data.updatedItinerary.id}`
       } else {
         console.error('Error adding user to itinerary');
       }

@@ -39,7 +39,6 @@ type Forum = {
   category: Category | null;
   user: User;
   messages: Message[];
-
 };
 
 const Forum = () => {
