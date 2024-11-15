@@ -38,12 +38,12 @@ type Place = {
   reviews: Review[];
   types: String[];
   localidad?: String;
-  departamento?: String
+  departamento?: String;
 };
 const getLocationDetails = async (lat, lng) => {
   try {
     const response = await fetch(
-      `https://apis.datos.gob.ar/georef/api/ubicacion?lat=${lat}&lon=${lng}`,
+      `${process.env.VITE_GEOREF_API_URL}/ubicacion?lat=${lat}&lon=${lng}`,
     );
     const data = await response.json();
 
@@ -61,7 +61,6 @@ const getLocationDetails = async (lat, lng) => {
 
   return { localidad: null, departamento: null };
 };
-
 
 const Places = () => {
   const [placesFound, setPlacesFound] = useState<Place[]>([]);
@@ -92,7 +91,7 @@ const Places = () => {
 
     const fetchProvinces = async () => {
       try {
-        const response = await get(`https://api-turistear.koyeb.app/provinces/${provinceName}`, {
+        const response = await get(`${process.env.VITE_API_URL}/provinces/${provinceName}`, {
           'Content-Type': 'application/json',
         });
         setProvince(response);
@@ -109,24 +108,25 @@ const Places = () => {
       if (province) {
         try {
           const response = await fetch(
-            `https://api-turistear.koyeb.app/province/places/${province.id}`,
+            `${process.env.VITE_API_URL}/province/places/${province.id}`,
           );
           const data = await response.json();
 
-          const dataPlaceDepartamentoLocalidad = data.map(async p =>{
-            const locationDetails = await getLocationDetails(p.latitude, p.longitude)
+          const dataPlaceDepartamentoLocalidad = data.map(async (p) => {
+            const locationDetails = await getLocationDetails(p.latitude, p.longitude);
 
-            p.departamento = locationDetails.departamento; 
+            p.departamento = locationDetails.departamento;
             p.localidad = locationDetails.localidad;
-          })
-          console.log("Location",dataPlaceDepartamentoLocalidad)
+          });
+          console.log('Location', dataPlaceDepartamentoLocalidad);
           setPlacesFound(dataPlaceDepartamentoLocalidad);
-          console.log(localidad)
-          if(localidad){
-            const dataFoundLocalidad = dataPlaceDepartamentoLocalidad
-            .filter((place) => place.localidad == localidad); 
+          console.log(localidad);
+          if (localidad) {
+            const dataFoundLocalidad = dataPlaceDepartamentoLocalidad.filter(
+              (place) => place.localidad == localidad,
+            );
             setDisplayedPlaces(dataFoundLocalidad.slice(0, count));
-          }else{
+          } else {
             setDisplayedPlaces(data.slice(0, count));
           }
 
@@ -143,8 +143,8 @@ const Places = () => {
   }, [province, count]);
 
   const handleSearch = ({ localidad, provincia }) => {
-    localidad=localidad;
-    provincia=provincia
+    localidad = localidad;
+    provincia = provincia;
   };
 
   const handleLoadMore = () => {
@@ -197,7 +197,10 @@ const Places = () => {
     <>
       <Header />
 
-      <SearchHeroSection onSearch={handleSearch} title={`Puntos de interés de ${province.name} - ${departamento} - ${localidad}`} />
+      <SearchHeroSection
+        onSearch={handleSearch}
+        title={`Puntos de interés de ${province.name} - ${departamento} - ${localidad}`}
+      />
 
       <section className="py-5 relative">
         <div className="w-full max-w-7xl mx-auto px-4 md:px-8">

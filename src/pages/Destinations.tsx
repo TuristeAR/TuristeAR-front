@@ -62,7 +62,7 @@ const Destinations = () => {
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
-        const response = await get('https://api-turistear.koyeb.app/province', {
+        const response = await get(`${process.env.VITE_API_URL}/province`, {
           'Content-Type': 'application/json',
         });
         setProvinces(response.data);
@@ -78,7 +78,7 @@ const Destinations = () => {
 
   const fetchReviews = async (provinceName: string) => {
     try {
-      const response = await get(`https://api-turistear.koyeb.app/provinces/${provinceName}/4`, {
+      const response = await get(`${process.env.VITE_API_URL}/provinces/${provinceName}/4`, {
         'Content-Type': 'application/json',
       });
       setReviews(response.places);
@@ -88,7 +88,7 @@ const Destinations = () => {
   };
 
   const handleProvinceClick = (id: number) => {
-    console.log(provinces)
+    console.log(provinces);
     const province = provinces.find((p) => p.id === id) || null;
     fetchReviews(province.name);
     setSelectedProvince(province);
@@ -148,7 +148,8 @@ const Destinations = () => {
                     <>
                       <div
                         className="flex flex-col gap-y-4 p-4 mx-6 mb-6 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)]"
-                        key={index}>
+                        key={index}
+                      >
                         <div className="flex justify-between items-center px-2 text-gray">
                           <div className="flex items-center gap-4">
                             <div className="rounded-full p-2 border border-1 border-black">
@@ -186,7 +187,6 @@ const Destinations = () => {
                         </Link>
                       </div>
                     </>
-
                   );
                 })}
             </Carousel>

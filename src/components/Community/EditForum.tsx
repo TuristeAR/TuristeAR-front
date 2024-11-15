@@ -26,7 +26,7 @@ type Forum = {
   user: User;
 };
 
-export const EditForum = (props: {forum : Forum})=>{
+export const EditForum = (props: { forum: Forum }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const forum = props.forum as Forum | null;
@@ -41,7 +41,7 @@ export const EditForum = (props: {forum : Forum})=>{
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await fetch('https://api-turistear.koyeb.app/categories', {
+        const categoriesResponse = await fetch(`${process.env.VITE_API_URL}/categories`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -58,7 +58,7 @@ export const EditForum = (props: {forum : Forum})=>{
     fetchData();
   }, []);
 
-  const editForum = async (e : React.FormEvent)=> {
+  const editForum = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
@@ -79,7 +79,7 @@ export const EditForum = (props: {forum : Forum})=>{
 
     setIsLoading(true);
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/editForum', {
+      const response = await fetch(`${process.env.VITE_API_URL}/editForum`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ export const EditForum = (props: {forum : Forum})=>{
           name: formData.name,
           description: formData.description,
           categoryId: formData.categoryId,
-          forumId: forum.id
+          forumId: forum.id,
         }),
         credentials: 'include',
       });
@@ -101,7 +101,7 @@ export const EditForum = (props: {forum : Forum})=>{
     } finally {
       setIsOpen(false);
     }
-  }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -124,10 +124,7 @@ export const EditForum = (props: {forum : Forum})=>{
         </div>
       ) : (
         <>
-          <button
-            onClick={() => setIsOpen(true)}
-            id={'crearForum'}
-          >
+          <button onClick={() => setIsOpen(true)} id={'crearForum'}>
             <Edit2Icon size={20} color="#49A2EC" />
           </button>
           {isOpen && (
@@ -213,4 +210,4 @@ export const EditForum = (props: {forum : Forum})=>{
       )}
     </>
   );
-}
+};

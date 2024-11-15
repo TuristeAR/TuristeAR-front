@@ -46,7 +46,7 @@ export const CommentDetail = (props: {
   const [commentContent, setCommentContent] = useState<string | null>(null);
 
   useEffect(() => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io(process.env.VITE_API_URL);
 
     socket.on('receiveComment', (newComment) => {
       setPublication((prevPublication) => {
@@ -66,7 +66,7 @@ export const CommentDetail = (props: {
   const createComment = async () => {
     if (commentContent && publication && user) {
       setWasSent(true);
-      const socket = io('https://api-turistear.koyeb.app');
+      const socket = io(process.env.VITE_API_URL);
       socket.emit('createComment', {
         content: commentContent,
         userId: user.id,

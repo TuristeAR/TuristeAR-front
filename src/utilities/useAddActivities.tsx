@@ -1,16 +1,14 @@
-import { useState,useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import io from 'socket.io-client';
 
-const API_URL = 'https://api-turistear.koyeb.app/itinerary/add-activity';
-const SOCKET_URL = 'https://api-turistear.koyeb.app';
 const EVENT_ADD_ACTIVITY = 'addActivity';
 
 const useAddActivities = (itineraryId, setActivities) => {
-  const socket = io(SOCKET_URL);
+  const socket = io(process.env.VITE_API_URL);
   const [newActivity, setNewActivity] = useState({ name: '', fromDate: '', toDate: '', place: '' });
 
   const handleAddActivity = () => {
-    fetch(API_URL, {
+    fetch(`${process.env.VITE_API_URL}/itinerary/add-activity`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ itineraryId, createActivityDto: newActivity }),

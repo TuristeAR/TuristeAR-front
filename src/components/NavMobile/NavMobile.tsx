@@ -6,7 +6,7 @@ export const NavMobile = () => {
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
 
   const fetchUser = async () => {
-    const response = await get('https://api-turistear.koyeb.app/session', {
+    const response = await get(`${process.env.VITE_API_URL}/session`, {
       'Content-Type': 'application/json',
     });
 
@@ -26,7 +26,7 @@ export const NavMobile = () => {
 
   const handleLogout = async () => {
     try {
-      await get('https://api-turistear.koyeb.app/logout', {
+      await get(`${process.env.VITE_API_URL}/logout`, {
         'Content-Type': 'application/json',
       });
       setUser(null);

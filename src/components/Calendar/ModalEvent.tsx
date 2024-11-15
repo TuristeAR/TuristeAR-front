@@ -18,7 +18,7 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo, deleteEv
     if (isActivity) {
       const fetchReviews = () => {
         return get(
-          `https://api-turistear.koyeb.app/reviews/place/${eventInfo.extendedProps.googleId}`,
+          `${process.env.VITE_API_URL}/reviews/place/${eventInfo.extendedProps.googleId}`,
           {
             'Content-Type': 'application/json',
           },

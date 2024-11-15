@@ -60,7 +60,7 @@ export const Calendar = ({
   ];
 
   useEffect(() => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io(process.env.VITE_API_URL);
 
     socket.on('activityUpdated', (data) => {
       setActivities((prevActivities) =>
@@ -88,7 +88,7 @@ export const Calendar = ({
 
   const updateActivityInBackend = async (activityId: number, start: Date, end: Date) => {
     try {
-      await fetch('https://api-turistear.koyeb.app/itinerary/update-activity', {
+      await fetch(`${process.env.VITE_API_URL}/itinerary/update-activity`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -115,14 +115,14 @@ export const Calendar = ({
   }, [itinerary]);
 
   const fetchEvents = async (provinceId: number) => {
-    return await get(`https://api-turistear.koyeb.app/events/${provinceId}`, {
+    return await get(`${process.env.VITE_API_URL}/events/${provinceId}`, {
       'Content-Type': 'application/json',
     });
   };
 
   const addEventToItinerary = async (itineraryId, eventId) => {
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-event', {
+      const response = await fetch(`${process.env.VITE_API_URL}/itinerary/add-event`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
