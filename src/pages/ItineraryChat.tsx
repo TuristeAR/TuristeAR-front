@@ -61,7 +61,7 @@ const ItineraryChat = () => {
         }
 
         const itineraryResponse = await fetch(
-          `https://api-turistear.koyeb.app/itinerary/${itineraryId}`,
+          `${process.env.VITE_API_URL}/itinerary/${itineraryId}`,
           {
             method: 'GET',
             credentials: 'include',

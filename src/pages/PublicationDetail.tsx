@@ -10,22 +10,21 @@ import { PublicationDetailCard } from '../components/Community/PublicationDetail
 import io from 'socket.io-client';
 import { UseFetchSession } from '../utilities/useFetchSession';
 
-
-type User={
+type User = {
   id: number;
-  name: string,
-  profilePicture: string,
-  description: string,
-  birthdate: string,
-  coverPicture: string,
-  location: string
-}
+  name: string;
+  profilePicture: string;
+  description: string;
+  birthdate: string;
+  coverPicture: string;
+  location: string;
+};
 
 type Comment = {
   createdAt: string;
   description: string;
-  user : User | null;
-}
+  user: User | null;
+};
 
 type Category = {
   id: number;
@@ -34,16 +33,16 @@ type Category = {
 };
 
 type Place = {
-  id: number,
-  name: string,
-  googleId: string,
+  id: number;
+  name: string;
+  googleId: string;
 };
 
 type Activity = {
-  id: number,
-  name: string,
-  place: Place
-  images: string[]
+  id: number;
+  name: string;
+  place: Place;
+  images: string[];
 };
 
 type Publication = {
@@ -52,11 +51,11 @@ type Publication = {
   category: Category | null;
   createdAt: string;
   user: User | null;
-  likes : User[]
-  reposts : User[]
-  saved : User[]
-  comments : Comment[]
-  activities: Activity[]
+  likes: User[];
+  reposts: User[];
+  saved: User[];
+  comments: Comment[];
+  activities: Activity[];
 };
 const PublicationDetail = () => {
   const { publicationId } = useParams();
@@ -71,7 +70,7 @@ const PublicationDetail = () => {
     const fetchData = async () => {
       try {
         const publicationsResponse = await fetch(
-          `https://api-turistear.koyeb.app/publication/${publicationId}`,
+          `${process.env.VITE_API_URL}/publication/${publicationId}`,
           {
             method: 'GET',
             credentials: 'include',
@@ -84,7 +83,7 @@ const PublicationDetail = () => {
         const publicationsData = await publicationsResponse.json();
         setPublication(publicationsData);
 
-        const socket = io('https://api-turistear.koyeb.app');
+        const socket = io(process.env.VITE_API_URL);
         socket.on('receiveDelete', () => {
           window.location.href = '/publications';
         });
@@ -131,7 +130,9 @@ const PublicationDetail = () => {
                 <PublicationDetailCard
                   publication={publication}
                   user={user}
-                  onDelete={() => { window.location.href = '/publications'}}
+                  onDelete={() => {
+                    window.location.href = '/publications';
+                  }}
                 />
                 <CommentDetail publication={publication} user={user} key={publication.id} />
               </div>

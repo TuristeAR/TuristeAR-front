@@ -41,7 +41,7 @@ export const CreateMessage = (props: {
   const [wasSent, setWasSent] = useState<boolean>(false);
 
   useEffect(() => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io(process.env.VITE_API_URL);
 
     socket.on('receiveMessage', (newMessage) => {
       setForum((prevForum) => {
@@ -51,7 +51,7 @@ export const CreateMessage = (props: {
             ...prevForum,
             messages: [...prevForum.messages, null as Message],
           };
-        }else {
+        } else {
           return {
             ...prevForum,
             messages: [...prevForum.messages, newMessage as Message],
@@ -80,11 +80,11 @@ export const CreateMessage = (props: {
     const formData = new FormData();
     formData.append('image', image);
 
-    const url = 'https://api.imgur.com/3/image';
+    const url = `${process.env.VITE_IMGUR_API_URL}/3/image`;
     const options = {
       method: 'POST',
       headers: {
-        Authorization: 'Client-ID 523c9b5cf859dce',
+        Authorization: `Client-ID ${process.env.VITE_IMGUR_CLIENT_ID}`,
       },
       body: formData,
     };
@@ -110,7 +110,7 @@ export const CreateMessage = (props: {
     if (message && user) {
       setWasSent(true);
       const imageUrl = selectedImage ? await uploadImage(selectedImage) : null;
-      const socket = io('https://api-turistear.koyeb.app');
+      const socket = io(process.env.VITE_API_URL);
       socket.emit('createMessage', {
         content: message,
         images: imageUrl,
@@ -129,9 +129,7 @@ export const CreateMessage = (props: {
 
   return (
     <div
-      className={
-        `${location.pathname.includes('/forum/') ? 'lg:w-[80%] w-[100%]' : 'w-[100%]'} mx-auto fixed bottom-0 overflow-scroll scrollbar-hidden flex flex-col gap-y-6 bg-white z-99`
-      }
+      className={`${location.pathname.includes('/forum/') ? 'lg:w-[80%] w-[100%]' : 'w-[100%]'} mx-auto fixed bottom-0 overflow-scroll scrollbar-hidden flex flex-col gap-y-6 bg-white z-99`}
     >
       <form
         onSubmit={createMessage}

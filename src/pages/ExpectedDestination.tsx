@@ -82,7 +82,7 @@ const ExpectedDestination = () => {
   useEffect(() => {
     if (culturePlaces.length > 0) {
       const fetchReviewsForActivity = (googleId: string) => {
-        return get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
+        return get(`${process.env.VITE_API_URL}/reviews/place/${googleId}`, {
           'Content-Type': 'application/json',
         });
       };
@@ -116,12 +116,9 @@ const ExpectedDestination = () => {
   useEffect(() => {
     const fetchProvince = async () => {
       try {
-        const response = await get(
-          `https://api-turistear.koyeb.app/provinces/${nombreDeLaProvincia}`,
-          {
-            'Content-Type': 'application/json',
-          },
-        );
+        const response = await get(`${process.env.VITE_API_URL}/provinces/${nombreDeLaProvincia}`, {
+          'Content-Type': 'application/json',
+        });
         setProvince(response);
       } catch (error) {
         console.error('Error fetching province:', error);
@@ -136,7 +133,7 @@ const ExpectedDestination = () => {
       if (province) {
         try {
           const responseGastronomy = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=restaurant&count=6`,
+            `${process.env.VITE_API_URL}/places/province?provinceId=${province.id}&types=restaurant&count=6`,
             {
               'Content-Type': 'application/json',
             },
@@ -156,7 +153,7 @@ const ExpectedDestination = () => {
       if (province) {
         try {
           const responsePointInterest = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=tourist_attraction&count=6`,
+            `${process.env.VITE_API_URL}/places/province?provinceId=${province.id}&types=tourist_attraction&count=6`,
             {
               'Content-Type': 'application/json',
             },
@@ -176,7 +173,7 @@ const ExpectedDestination = () => {
       if (province) {
         try {
           const responseCulture = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=museum&count=6`,
+            `${process.env.VITE_API_URL}/places/province?provinceId=${province.id}&types=museum&count=6`,
             {
               'Content-Type': 'application/json',
             },
@@ -196,7 +193,7 @@ const ExpectedDestination = () => {
       if (province) {
         try {
           const responseFreeAir = await get(
-            `https://api-turistear.koyeb.app/places/province?provinceId=${province.id}&types=park&count=6`,
+            `${process.env.VITE_API_URL}/places/province?provinceId=${province.id}&types=park&count=6`,
             {
               'Content-Type': 'application/json',
             },

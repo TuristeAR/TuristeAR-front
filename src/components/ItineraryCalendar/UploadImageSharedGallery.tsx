@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import logoAnimado from '../../assets/logoAnimado.json';
 
-export const UploadImageSharedGallery = (props : {activities : any[]}) => {
-  const {activities} = props;
+export const UploadImageSharedGallery = (props: { activities: any[] }) => {
+  const { activities } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
@@ -12,16 +12,18 @@ export const UploadImageSharedGallery = (props : {activities : any[]}) => {
   });
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
     // @ts-ignore
     const { name, value, type, files } = e.target;
     if (type === 'file') {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
-        images: files ? files : null
+        images: files ? files : null,
       }));
     } else {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
@@ -32,11 +34,11 @@ export const UploadImageSharedGallery = (props : {activities : any[]}) => {
     const formData = new FormData();
     formData.append('image', image);
 
-    const url = 'https://api.imgur.com/3/image';
+    const url = `${process.env.VITE_IMGUR_API_URL}/3/image`;
     const options = {
       method: 'POST',
       headers: {
-        Authorization: 'Client-ID 523c9b5cf859dce',
+        Authorization: `Client-ID ${process.env.VITE_IMGUR_CLIENT_ID}`,
       },
       body: formData,
     };
@@ -57,30 +59,30 @@ export const UploadImageSharedGallery = (props : {activities : any[]}) => {
     }
   };
 
-  const addImagesToActivity = async (e)=>{
+  const addImagesToActivity = async (e) => {
     e.preventDefault();
     setError(null);
 
     if (!formData.activityId) {
-      setError("Seleccione una actividad!");
+      setError('Seleccione una actividad!');
       return;
     }
 
-    if (formData.images.length<1) {
-      setError("Selecciones imágenes!");
+    if (formData.images.length < 1) {
+      setError('Selecciones imágenes!');
       return;
     }
 
     setIsLoading(true);
     try {
-      let imagesUrl=[]
+      let imagesUrl = [];
 
       for (const image of formData.images) {
-        const imageUrl = formData.images ? await uploadImage(image) : "";
+        const imageUrl = formData.images ? await uploadImage(image) : '';
         imagesUrl.push(imageUrl);
       }
 
-      const response = await fetch('https://api-turistear.koyeb.app/addImagesToActivity', {
+      const response = await fetch(`${process.env.VITE_API_URL}/addImagesToActivity`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -101,7 +103,7 @@ export const UploadImageSharedGallery = (props : {activities : any[]}) => {
       setIsLoading(false);
       setIsOpen(false);
     }
-  }
+  };
 
   return (
     <>
@@ -203,4 +205,4 @@ export const UploadImageSharedGallery = (props : {activities : any[]}) => {
       )}
     </>
   );
-}
+};

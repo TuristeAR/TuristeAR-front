@@ -9,11 +9,11 @@ const uploadImage = async (image: File): Promise<any> => {
   const formData = new FormData();
   formData.append('image', image);
 
-  const url = 'https://api.imgur.com/3/image';
+  const url = `${process.env.VITE_IMGUR_API_URL}/3/image`;
   const options = {
     method: 'POST',
     headers: {
-      Authorization: 'Client-ID 523c9b5cf859dce',
+      Authorization: `Client-ID ${process.env.VITE_IMGUR_CLIENT_ID}`,
     },
     body: formData,
   };
@@ -169,7 +169,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
         expenseData.imageUrls = [...imageUrls, ...imageNewUrls];
       }
 
-      const response = await fetch(`https://api-turistear.koyeb.app/expenses/${expense.id}`, {
+      const response = await fetch(`${process.env.VITE_API_URL}/expenses/${expense.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

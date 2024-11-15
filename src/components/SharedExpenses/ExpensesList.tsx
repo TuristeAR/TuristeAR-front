@@ -2,7 +2,15 @@ import { useEffect, useState } from 'react';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
 import ExpenseDetail from './ExpenseDetail';
 
-import { CalendarRange, CircleDollarSign, CircleX, Edit2Icon, Hash, Plus, Receipt } from 'lucide-react';
+import {
+  CalendarRange,
+  CircleDollarSign,
+  CircleX,
+  Edit2Icon,
+  Hash,
+  Plus,
+  Receipt,
+} from 'lucide-react';
 import ExpenseEditForm from './ExpenseEditForm';
 
 type Expense = {
@@ -45,7 +53,7 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
     const fetchExpenses = async () => {
       try {
         const response = await fetch(
-          `https://api-turistear.koyeb.app/expenses/${itineraryId as number}`,
+          `${process.env.VITE_API_URL}/expenses/${itineraryId as number}`,
         );
         if (!response.ok) {
           throw new Error('Error al obtener los gastos');
@@ -89,7 +97,7 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
 
   const handleDeleteExpense = async (expenseId: number) => {
     try {
-      const response = await fetch(`https://api-turistear.koyeb.app/expenses/${expenseId}`, {
+      const response = await fetch(`${process.env.VITE_API_URL}/expenses/${expenseId}`, {
         method: 'DELETE',
       });
 
@@ -149,17 +157,17 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
           {Object.keys(groupedExpenses).length > 0 && (
             <div className="text-center text-xl mt-6 flex flex-col sm:flex-row justify-around  h-max">
               <div className="my-1 w-62">
-              <CircleDollarSign className='mx-auto' color='#616161'/>
+                <CircleDollarSign className="mx-auto" color="#616161" />
                 <p className="text-lg text-[#616161]">Total de Gastos</p>
                 <span className="font-semibold text-2xl">${totalAmount}</span>
               </div>
-              <div className='my-1 w-62'>
-              <Hash className='mx-auto' color='#616161'/>
-              <p className="text-lg text-[#616161]">Cantidad de Gastos</p>
+              <div className="my-1 w-62">
+                <Hash className="mx-auto" color="#616161" />
+                <p className="text-lg text-[#616161]">Cantidad de Gastos</p>
                 <span className="font-semibold text-2xl">{totalPurchases}</span>
               </div>
               <div className="my-1 w-62">
-              <CalendarRange className='mx-auto' color='#616161'/>
+                <CalendarRange className="mx-auto" color="#616161" />
                 <p className="text-lg text-[#616161]">Rango de Fechas</p>
                 <span className="font-semibold text-2xl">
                   {firstPurchaseDate} a {lastPurchaseDate}

@@ -4,21 +4,21 @@ import { post } from '../../utilities/http.util';
 import io from 'socket.io-client';
 import { reorderDate } from '../../utilities/reorderDate';
 
-type User={
+type User = {
   id: number;
-  name: string,
-  profilePicture: string,
-  description: string,
-  birthdate: string,
-  coverPicture: string,
-  location: string
-}
+  name: string;
+  profilePicture: string;
+  description: string;
+  birthdate: string;
+  coverPicture: string;
+  location: string;
+};
 
 type Comment = {
   createdAt: string;
   description: string;
-  user : User | null;
-}
+  user: User | null;
+};
 
 type Category = {
   id: number;
@@ -27,16 +27,16 @@ type Category = {
 };
 
 type Place = {
-  id: number,
-  name: string,
-  googleId: string,
+  id: number;
+  name: string;
+  googleId: string;
 };
 
 type Activity = {
-  id: number,
-  name: string,
-  place: Place
-  images: string[]
+  id: number;
+  name: string;
+  place: Place;
+  images: string[];
 };
 
 type Publication = {
@@ -45,23 +45,29 @@ type Publication = {
   category: Category | null;
   createdAt: string;
   user: User | null;
-  likes : User[]
-  reposts : User[]
-  saved : User[]
-  comments : Comment[]
-  activities: Activity[]
+  likes: User[];
+  reposts: User[];
+  saved: User[];
+  comments: Comment[];
+  activities: Activity[];
 };
 
 export function PublicationDetailCard(props: {
-  publication: Publication,
-  user: User
-  onDelete: () => void
+  publication: Publication;
+  user: User;
+  onDelete: () => void;
 }) {
   let { publication, user, onDelete } = props;
 
-  const [isLike, setIsLike] = useState<boolean | undefined>(publication.likes.some(item => item.id === user.id));
-  const [isSave, setIsSave] = useState<boolean | null>(publication.saved.some(item => item.id === user.id));
-  const [isRepost, setIsRepost] = useState<boolean | null>(publication.reposts.some(item => item.id === user.id));
+  const [isLike, setIsLike] = useState<boolean | undefined>(
+    publication.likes.some((item) => item.id === user.id),
+  );
+  const [isSave, setIsSave] = useState<boolean | null>(
+    publication.saved.some((item) => item.id === user.id),
+  );
+  const [isRepost, setIsRepost] = useState<boolean | null>(
+    publication.reposts.some((item) => item.id === user.id),
+  );
   const [likes, setLikes] = useState<number | null>(publication.likes.length);
   const [saved, setSaved] = useState<number | null>(publication.saved.length);
   const [reposts, setReposts] = useState<number | null>(publication.reposts.length);
@@ -70,7 +76,7 @@ export function PublicationDetailCard(props: {
   const handleLike = async (idPublication: number) => {
     setLikes(!isLike ? likes + 1 : likes - 1);
     setIsLike(!isLike);
-    await post(`https://api-turistear.koyeb.app/handleLike/${idPublication}`, {
+    await post(`${process.env.VITE_API_URL}/handleLike/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
@@ -78,7 +84,7 @@ export function PublicationDetailCard(props: {
   const handleSaved = async (idPublication: number) => {
     setSaved(!isSave ? saved + 1 : saved - 1);
     setIsSave(!isSave);
-    await post(`https://api-turistear.koyeb.app/handleSaved/${idPublication}`, {
+    await post(`${process.env.VITE_API_URL}/handleSaved/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
@@ -86,18 +92,18 @@ export function PublicationDetailCard(props: {
   const handleRepost = async (idPublication: number) => {
     setReposts(!isRepost ? reposts + 1 : reposts - 1);
     setIsRepost(!isRepost);
-    await post(`https://api-turistear.koyeb.app/handleReposts/${idPublication}`, {
+    await post(`${process.env.VITE_API_URL}/handleReposts/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
 
   const deletePublication = async (id) => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io(process.env.VITE_API_URL);
     socket.emit('deletePublication', {
       publicationId: id,
       userId: user.id,
     });
-    onDelete()
+    onDelete();
     setIsDropdownOpen(false);
   };
 
@@ -107,7 +113,11 @@ export function PublicationDetailCard(props: {
         <div className="flex justify-between items-center relative">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
-              <img className="w-8 h-8 rounded-full" src={publication.user.profilePicture} alt="person" />
+              <img
+                className="w-8 h-8 rounded-full"
+                src={publication.user.profilePicture}
+                alt="person"
+              />
             </div>
             <div className={'flex flex-col'}>
               <p className={'font-semibold '}>{publication.user.name}</p>

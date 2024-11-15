@@ -2,11 +2,11 @@ export const uploadImage = async (image: File) => {
   const formData = new FormData();
   formData.append('image', image);
 
-  const url = 'https://api.imgur.com/3/image';
+  const url = `${process.env.VITE_IMGUR_API_URL}/3/image`;
   const options = {
     method: 'POST',
     headers: {
-      Authorization: 'Client-ID 523c9b5cf859dce',
+      Authorization: `Client-ID ${process.env.VITE_IMGUR_CLIENT_ID}`,
     },
     body: formData,
   };

@@ -56,111 +56,6 @@ export interface Locality {
   province: Province;
 }
 
-const questions = [
-  {
-    question: 'Destino',
-    type: 'map',
-  },
-  {
-    question: 'Fecha del viaje y Duración del viaje',
-    type: 'calendar',
-  },
-  {
-    question: '¿Qué nivel de comodidad se ajusta a tu presupuesto?',
-    options: [
-      {
-        src: <HandCoins width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Económico',
-        data: ['PRICE_LEVEL_FREE', 'PRICE_LEVEL_INEXPENSIVE'],
-      },
-      {
-        src: <Banknote width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Moderado',
-        data: ['PRICE_LEVEL_MODERATE'],
-      },
-      {
-        src: <Gem width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Lujoso',
-        data: ['PRICE_LEVEL_EXPENSIVE', 'PRICE_LEVEL_VERY_EXPENSIVE'],
-      },
-    ],
-    type: 'icon',
-    name: 'priceLevel',
-    multipleSelection: false,
-  },
-  {
-    question: '¿Qué tipo de actividades te gusta hacer?',
-    options: [
-      {
-        src: <Binoculars width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Atracción turística',
-        data: 'tourist_attraction,landmark,scenic_viewpoint,natural_feature,historical_landmark',
-      },
-      {
-        src: <Utensils width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Comida',
-        data: 'restaurant,cafe,coffee_shop,bakery,food,food_court',
-      },
-      {
-        src: <Book width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Cultura',
-        data: 'library,museum,political,art_gallery,cultural_center,theater,city_hall,church,place_of_worship,embassy',
-      },
-      {
-        src: <Trophy width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Deporte',
-        data: 'sports_complex,stadium,climbing_area,skate_park,ice_skating_rink,ski_resort,surf_spot',
-      },
-      {
-        src: <PartyPopper width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Fiesta',
-        data: 'bar,night_club,music_venue,dance_club,cocktail_bar,event_venue,beer_hall,pub,karaoke',
-      },
-      {
-        src: <Mountain width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Montaña',
-        data: 'hiking_area,mountain,campground,scenic_point,trailhead,national_forest,wilderness_area,climbing_area',
-      },
-      {
-        src: <TreePine width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Naturaleza',
-        data: 'campground,national_park,park,lake,beach,forest,waterfall,botanical_garden,nature_reserve,wildlife_reserve',
-      },
-    ],
-    type: 'icon',
-    name: 'activities',
-    multipleSelection: true,
-  },
-  {
-    question: '¿Con quién vas a emprender tu nueva aventura?',
-    options: [
-      {
-        src: <PersonStanding width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Sólo',
-        data: 1,
-      },
-      {
-        src: <Heart width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'En pareja',
-        data: 2,
-      },
-      {
-        src: <Handshake width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Amigos',
-        data: 3,
-      },
-      {
-        src: <Baby width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Familia',
-        data: 4,
-      },
-    ],
-    type: 'icon',
-    name: 'company',
-    multipleSelection: false,
-  },
-];
-
 const FormQuestions = () => {
   const navigate = useNavigate();
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -190,6 +85,8 @@ const FormQuestions = () => {
   const [loadingEvents, setLoadingEvents] = useState(false);
   const [events, setEvents] = useState<any[]>([]);
   const [selectedEvents, setSelectedEvents] = useState<number[]>([]);
+  const [types, setTypes] = useState<any[]>([]);
+  const [priceLevels, setPriceLevels] = useState<any[]>([]);
 
   const handleCloseDialogWindow = () => {
     setDialogWindowOpen(false);
@@ -287,10 +184,149 @@ const FormQuestions = () => {
   };
 
   const fetchEvents = async (provinceId: number) => {
-    return await get(`https://api-turistear.koyeb.app/events/${provinceId}`, {
+    return await get(`${process.env.VITE_API_URL}/events/${provinceId}`, {
       'Content-Type': 'application/json',
     });
   };
+
+  const fetchTypes = async () => {
+    try {
+      const response = await get(`${process.env.VITE_API_URL}/type`, {
+        'Content-Type': 'application/json',
+      });
+
+      setTypes(
+        response.data.map((type: any) => ({
+          description: type.description,
+          data: type.data.join(','),
+        })),
+      );
+    } catch (error) {
+      console.error('Error fetching types:', error);
+    }
+  };
+
+  const fetchPriceLevels = async () => {
+    try {
+      const response = await get(`${process.env.VITE_API_URL}/price-level`, {
+        'Content-Type': 'application/json',
+      });
+
+      setPriceLevels(
+        response.data.map((priceLevel: any) => ({
+          description: priceLevel.description,
+          data: priceLevel.data,
+        })),
+      );
+    } catch (error) {
+      console.error('Error fetching price levels:', error);
+    }
+  };
+
+  const questions = [
+    {
+      question: 'Destino',
+      type: 'map',
+    },
+    {
+      question: 'Fecha del viaje y Duración del viaje',
+      type: 'calendar',
+    },
+    {
+      question: '¿Qué nivel de comodidad se ajusta a tu presupuesto?',
+      options: [
+        {
+          src: <HandCoins width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: priceLevels[0]?.description,
+          data: priceLevels[0]?.data,
+        },
+        {
+          src: <Banknote width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: priceLevels[1]?.description,
+          data: priceLevels[1]?.data,
+        },
+        {
+          src: <Gem width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: priceLevels[2]?.description,
+          data: priceLevels[2]?.data,
+        },
+      ],
+      type: 'icon',
+      name: 'priceLevel',
+      multipleSelection: false,
+    },
+    {
+      question: '¿Qué tipo de actividades te gusta hacer?',
+      options: [
+        {
+          src: <Binoculars width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[0]?.description,
+          data: types[0]?.data,
+        },
+        {
+          src: <Utensils width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[1]?.description,
+          data: types[1]?.data,
+        },
+        {
+          src: <Book width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[2]?.description,
+          data: types[2]?.data,
+        },
+        {
+          src: <Trophy width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[3]?.description,
+          data: types[3]?.data,
+        },
+        {
+          src: <PartyPopper width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[4]?.description,
+          data: types[4]?.data,
+        },
+        {
+          src: <Mountain width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[5]?.description,
+          data: types[5]?.data,
+        },
+        {
+          src: <TreePine width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[6]?.description,
+          data: types[6]?.data,
+        },
+      ],
+      type: 'icon',
+      name: 'activities',
+      multipleSelection: true,
+    },
+    {
+      question: '¿Con quién vas a emprender tu nueva aventura?',
+      options: [
+        {
+          src: <PersonStanding width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: 'Sólo',
+          data: 1,
+        },
+        {
+          src: <Heart width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: 'En pareja',
+          data: 2,
+        },
+        {
+          src: <Handshake width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: 'Amigos',
+          data: 3,
+        },
+        {
+          src: <Baby width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: 'Familia',
+          data: 4,
+        },
+      ],
+      type: 'icon',
+      name: 'company',
+      multipleSelection: false,
+    },
+  ];
 
   const handleEventSelect = (id: number, locality: Locality) => {
     setSelectedEvents((prevSelectedEvents) => {
@@ -445,7 +481,7 @@ const FormQuestions = () => {
 
     try {
       const response = await post(
-        'https://api-turistear.koyeb.app/formQuestion',
+        `${process.env.VITE_API_URL}/formQuestion`,
         {
           'Content-Type': 'application/json',
         },
@@ -512,7 +548,7 @@ const FormQuestions = () => {
 
     const fetchProvinces = async () => {
       try {
-        const response = await get('https://api-turistear.koyeb.app/province', {
+        const response = await get(`${process.env.VITE_API_URL}/province`, {
           'Content-Type': 'application/json',
         });
 
@@ -524,8 +560,12 @@ const FormQuestions = () => {
 
     fetchProvinces();
 
+    fetchTypes();
+
+    fetchPriceLevels();
+
     const fetchSession = async () => {
-      const response = await get('https://api-turistear.koyeb.app/session', {
+      const response = await get(`${process.env.VITE_API_URL}/session`, {
         'Content-Type': 'application/json',
       });
 

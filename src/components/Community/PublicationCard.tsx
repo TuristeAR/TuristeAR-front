@@ -92,7 +92,7 @@ export function PublicationCard(props: {
   const handleLike = async (idPublication: number) => {
     setLikes(!isLike ? likes + 1 : likes - 1);
     setIsLike(!isLike);
-    await post(`https://api-turistear.koyeb.app/handleLike/${idPublication}`, {
+    await post(`${process.env.VITE_API_URL}/handleLike/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
@@ -100,7 +100,7 @@ export function PublicationCard(props: {
   const handleSaved = async (idPublication: number) => {
     setSaved(!isSave ? saved + 1 : saved - 1);
     setIsSave(!isSave);
-    await post(`https://api-turistear.koyeb.app/handleSaved/${idPublication}`, {
+    await post(`${process.env.VITE_API_URL}/handleSaved/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
@@ -108,13 +108,13 @@ export function PublicationCard(props: {
   const handleRepost = async (idPublication: number) => {
     setReposts(!isRepost ? reposts + 1 : reposts - 1);
     setIsRepost(!isRepost);
-    await post(`https://api-turistear.koyeb.app/handleReposts/${idPublication}`, {
+    await post(`${process.env.VITE_API_URL}/handleReposts/${idPublication}`, {
       'Content-Type': 'application/json',
     });
   };
 
   const deletePublication = async (id) => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io(process.env.VITE_API_URL);
     socket.emit('deletePublication', {
       publicationId: id,
       userId: user.id,
