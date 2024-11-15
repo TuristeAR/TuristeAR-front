@@ -2,37 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import useFetchParticipants from '../../utilities/useFetchParticipants';
-import { ArrowLeft } from 'lucide-react';
 import ExpenseFileUpload from './ExpenseFileUpload';
+import { uploadImage } from '../../utilities/uploadImage';
 
-const uploadImage = async (image: File): Promise<any> => {
-  const formData = new FormData();
-  formData.append('image', image);
-
-  const url = 'https://api.imgur.com/3/image';
-  const options = {
-    method: 'POST',
-    headers: {
-      Authorization: 'Client-ID 523c9b5cf859dce',
-    },
-    body: formData,
-  };
-
-  try {
-    const response = await fetch(url, options);
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Error de respuesta:', errorData);
-      throw new Error(errorData.data.error || 'Error al cargar la imagen');
-    }
-    const result = await response.json();
-    console.log('Imagen subida:', result);
-    return result.data.link; // Retorna el enlace de la imagen
-  } catch (error) {
-    console.error('Error en la carga de la imagen:', error);
-    throw error; // Lanza el error para manejarlo en createPublications
-  }
-};
 const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
   const [date, setDate] = useState(expense.date);
   const onDateChangeHandler = useCallback((date) => setDate(date), [date]);
@@ -162,8 +134,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
       if (selectedImages.length > 0) {
         const imageNewUrls = await Promise.all(
           selectedImages.map(async (image) => {
-            const imageUrl = await uploadImage(image);
-            return imageUrl;
+            return await uploadImage(image);
           }),
         );
         expenseData.imageUrls = [...imageUrls, ...imageNewUrls];

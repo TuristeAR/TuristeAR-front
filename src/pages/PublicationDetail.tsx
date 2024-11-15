@@ -6,9 +6,9 @@ import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
 import { CommentDetail } from '../components/Community/CommentDetail';
-import { PublicationDetailCard } from '../components/Community/PublicationDetailCard';
 import io from 'socket.io-client';
 import { UseFetchSession } from '../utilities/useFetchSession';
+import { PublicationCard } from '../components/Community/PublicationCard';
 
 
 type User={
@@ -96,7 +96,7 @@ const PublicationDetail = () => {
     fetchData();
   }, []);
 
-  const handleClick = (name: string) => {
+  const handleClick = () => {
     if (contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -128,7 +128,7 @@ const PublicationDetail = () => {
               <div
                 className={'w-[95%] mx-auto rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] '}
               >
-                <PublicationDetailCard
+                <PublicationCard
                   publication={publication}
                   user={user}
                   onDelete={() => { window.location.href = '/publications'}}

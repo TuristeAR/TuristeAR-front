@@ -29,7 +29,7 @@ type Forum = {
 export const EditForum = (props: {forum : Forum})=>{
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [forum, setForum] = useState<Forum | null>(props.forum as Forum | null);
+  const forum = props.forum as Forum | null;
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState({

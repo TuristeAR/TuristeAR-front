@@ -57,6 +57,7 @@ describe('Create Forums', () => {
         </BrowserRouter>,
       );
     });
+
     fireEvent.click(screen.getByRole('button', { name: /Abrir pop up para crear foro/i }));
     fireEvent.click(screen.getByRole('button', { name: 'Crear foro' }));
 
