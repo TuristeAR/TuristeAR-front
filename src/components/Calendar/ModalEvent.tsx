@@ -44,9 +44,6 @@ export const ModalActivity = ({ handleClose, deleteActivity, eventInfo, deleteEv
         {isActivity ? (
           <div className="flex flex-col justify-evenly md:justify-start gap-y-2 bg-white p-4 rounded-lg shadow-md text-center w-[90%] lg:max-w-[800px] h-[75vh] overflow-y-auto scrollbar-hidden relative">
             <div className="flex justify-end gap-x-6 w-full">
-              <button onClick={() => setIsEditing(true)}>
-                <Edit2Icon size={20} color="#49A2EC" />
-              </button>
               <button onClick={() => deleteActivity(Number(eventInfo.id))}>
                 <Trash2Icon size={20} color="#49A2EC" />
               </button>
