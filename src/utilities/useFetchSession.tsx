@@ -12,11 +12,11 @@ type User = {
 
 export const UseFetchSession = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Control de estado de carga
-  const [error, setError] = useState<string | null>(null); // Control de errores
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let isMounted = true; // Bandera para controlar el estado del montaje del componente
+    let isMounted = true;
 
     const fetchSession = async () => {
       try {
@@ -26,12 +26,11 @@ export const UseFetchSession = () => {
         });
 
         if (!sessionResponse.ok) {
-          // Redirigir solo después de manejar el error
           if (isMounted) {
             setError('No se pudo obtener la sesión. Redirigiendo...');
             setTimeout(() => {
               window.location.href = '/login';
-            }, 2000); // Tiempo para que el usuario vea el mensaje
+            }, 2000);
           }
           return;
         }
@@ -39,7 +38,7 @@ export const UseFetchSession = () => {
         const sessionData = await sessionResponse.json();
         if (isMounted) {
           setUser(sessionData.user);
-          setError(null); // Resetea el error si la llamada es exitosa
+          setError(null);
         }
       } catch (e) {
         if (isMounted) {
@@ -47,7 +46,7 @@ export const UseFetchSession = () => {
         }
       } finally {
         if (isMounted) {
-          setLoading(false); // Desactiva la carga
+          setLoading(false);
         }
       }
     };
@@ -55,7 +54,7 @@ export const UseFetchSession = () => {
     fetchSession();
 
     return () => {
-      isMounted = false; // Limpieza para evitar actualizaciones en componentes desmontados
+      isMounted = false;
     };
   }, []);
 

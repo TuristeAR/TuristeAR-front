@@ -63,8 +63,8 @@ export const CommentDetail = (props: {
     };
   }, []);
 
-  const createComment = async (publicationId: number) => {
-    if (commentContent && publicationId && user) {
+  const createComment = async () => {
+    if (commentContent && publication && user) {
       setWasSent(true);
       const socket = io(process.env.VITE_API_URL);
       socket.emit('createComment', {
@@ -100,9 +100,7 @@ export const CommentDetail = (props: {
             />
             <svg
               className={'cursor-pointer lg:w-[57px] lg:h-[57px] w-[40px] h-[40px]'}
-              onClick={() => {
-                createComment(Number(publication.id));
-              }}
+              onClick={createComment}
               viewBox="0 0 25.00 25.00"
               fill={'none'}
               xmlns="http://www.w3.org/2000/svg"

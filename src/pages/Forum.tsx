@@ -1,13 +1,11 @@
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
-import { ImageGallery } from '../components/ImageGallery/ImageGallery';
 import React, { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { CreateForums } from '../components/Community/CreateForums';
-import { Edit2Icon, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { get } from '../utilities/http.util';
 import { EditForum } from '../components/Community/EditForum';
 import { UseFetchSession } from '../utilities/useFetchSession';
 
@@ -107,7 +105,7 @@ const Forum = () => {
                         e.target.value,
                       )
                     }
-                    className="border border-[#999999] rounded py-4 px-2 w-full max-w-[720px] focus:outline-none"
+                    className="border border-[#999999] rounded p-2 w-full max-w-[720px] focus:outline-none"
                     placeholder="Buscar foro..."
                     autoComplete="off"
                   />

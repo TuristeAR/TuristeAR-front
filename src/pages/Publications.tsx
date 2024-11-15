@@ -64,7 +64,7 @@ const Publications = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [publications, setPublications] = useState<Publication[] | null>(null);
 
-  const handleClick = (name: string) => {
+  const handleClick = () => {
     if (contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
     }

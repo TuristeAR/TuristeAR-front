@@ -1,17 +1,6 @@
-import { is } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import { UseFetchSession } from '../../utilities/useFetchSession';
-type User = {
-  id: number;
-  name: string;
-  profilePicture: string;
-  description: string;
-  birthdate: string;
-  coverPicture: string;
-  location: string;
-};
 
 type Category = {
   id: number;

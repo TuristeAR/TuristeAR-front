@@ -4,8 +4,7 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { Header } from '../components/Header/Header';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
-import { Link, useNavigate } from 'react-router-dom';
-import { UseFetchSession } from '../utilities/useFetchSession';
+import { Link } from 'react-router-dom';
 
 type ParticipationRequest = {
   id: number;
@@ -62,17 +61,14 @@ type Notification = {
 
 const Notifications = () => {
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
-  const { user } = UseFetchSession();
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const navigate = useNavigate();
 
   const getNotificationImages = (notification) => {
     const { description, publication } = notification;
-    let users = [];
+    let users: any[];
 
     if (description.includes('me gusta')) {
       users = publication.likes.slice(0, 3);
@@ -92,7 +88,7 @@ const Notifications = () => {
     ));
   };
 
-  const handleClick = (name: string) => {
+  const handleClick = () => {
     if (contentRef.current) {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -148,8 +144,8 @@ const Notifications = () => {
 
       if (response.ok) {
         const data = await response.json();
-
         console.log('User successfully added to the itinerary', data);
+        window.location.href=`/itineraryCalendar/${data.data.updatedItinerary.id}`
       } else {
         console.error('Error adding user to itinerary');
       }
@@ -198,7 +194,6 @@ const Notifications = () => {
                 {notifications.map((notification, index) => {
                   const isParticipationRequest = !!notification.participationRequest;
 
-                  // Define la ruta solo para publicaciones o itinerarios, excluyendo participationRequest
                   const linkPath = notification.publication
                     ? `/publication/${notification.publication.id}`
                     : notification.itinerary
@@ -206,7 +201,7 @@ const Notifications = () => {
                       : '';
 
                   return isParticipationRequest ? (
-                    <div
+                    <Link to={notification.participationRequest.status === 'accepted' ? `/itineraryCalendar/${notification.itinerary.id}` : `/notifications`}
                       key={index}
                       className={
                         `lg:w-auto lg:mb-0 mb-6 p-4 rounded-2xl ${notification.isRead ? 'bg-white hover:bg-[#d9d9d9]' : 'bg-[#c0daeb] hover:bg-[#009fe3]'} ` +
@@ -255,7 +250,7 @@ const Notifications = () => {
                           <p>📅 ✅ Aceptaste la invitación para unirte al itinerario 🤝🎉</p>
                         )}
                       </div>
-                    </div>
+                    </Link>
                   ) : (
                     <Link
                       to={linkPath}
@@ -265,7 +260,7 @@ const Notifications = () => {
                         'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col relative transition-transform duration-300 hover:-translate-y-1.5 '
                       }
                     >
-                      {notification.publication ? (
+                      {notification.publication && (
                         <div className="flex flex-col gap-2">
                           <div className="flex gap-x-2 items-center">
                             {getNotificationImages(notification)}
@@ -275,22 +270,6 @@ const Notifications = () => {
                             {notification.publication.description.slice(0, 100)}
                           </p>
                         </div>
-                      ) : (
-                        notification.itinerary && (
-                          <div className="flex flex-col gap-2">
-                            <div className="flex gap-x-2 items-center">
-                              <img
-                                src={notification.itinerary.user.profilePicture}
-                                alt={notification.itinerary.user.name}
-                                className="w-[25px] h-[25px] rounded-full"
-                              />
-                              <h1 className="font-bold text-[18px]">{notification.description}</h1>
-                            </div>
-                            <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
-                              {notification.itinerary.name}
-                            </p>
-                          </div>
-                        )
                       )}
                     </Link>
                   );
