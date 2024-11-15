@@ -79,39 +79,57 @@ const ExpectedDestination = () => {
   const airFreeRef = useRef(null);
   const lugaresRef = useRef(null);
 
+
   useEffect(() => {
     if (culturePlaces.length > 0) {
-      const fetchReviewsForActivity = (googleId: string) => {
-        return get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
-          'Content-Type': 'application/json',
-        });
+      const fetchReviewsForActivity = async (googleId) => {
+        try {
+          const response = await get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
+            'Content-Type': 'application/json',
+          });
+          return response;
+        } catch (error) {
+          console.error(`Error fetching reviews for ${googleId}:`, error);
+          return [];
+        }
       };
-
+  
+      const fetchPhotoForActivity = async (googleId) => {
+        try {
+          const response = await get(`https://api-turistear.koyeb.app/reviews/photo/${googleId}`, {
+            'Content-Type': 'application/json',
+          });
+          return response.photoUrl;
+        } catch (error) {
+          console.error(`Error fetching photo for ${googleId}:`, error);
+          return null; // Devuelve null si no hay foto
+        }
+      };
+  
       const fetchData = async () => {
         try {
-          const reviewsPromises = culturePlaces.map((activity) =>
-            fetchReviewsForActivity(activity.googleId),
-          );
+          const reviewsPromises = culturePlaces.map(async (activity) => {
+            const reviews = await fetchReviewsForActivity(activity.googleId);
+  
+            // Si no tiene fotos, busca una
+            if (!activity.photos || activity.photos.length === 0) {
+              const photoUrl = await fetchPhotoForActivity(activity.googleId);
+              activity.photos = photoUrl ? [photoUrl] : ['URL_FOTO_PREDETERMINADA'];
+            }
+  
+            return reviews;
+          });
+  
           const allReviews = await Promise.all(reviewsPromises);
           setReviews(allReviews.flat());
-          console.log('revies: ', reviews);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       };
+  
       fetchData();
     }
   }, [culturePlaces]);
-
-  const randomImages = useMemo(() => {
-    const getRandomImages = () => {
-      const allPhotos = reviews.flatMap((review) => review.photos);
-      const shuffledPhotos = allPhotos.sort(() => 0.5 - Math.random());
-      return shuffledPhotos.slice(0, 1);
-    };
-
-    return getRandomImages();
-  }, [reviews]);
 
   useEffect(() => {
     const fetchProvince = async () => {
@@ -494,12 +512,14 @@ const ExpectedDestination = () => {
                 }}
               >
                 {culturePlaces.map((article) => {
+                  
+
                   // Selecciona una imagen aleatoria específica para este artículo
-                  const randomImage =
-                    article.reviews?.[0]?.photos?.[0] ||
-                    (reviews.length > 0
-                      ? reviews[Math.floor(Math.random() * reviews.length)].photos?.[0]
-                      : '');
+                  // const randomImage =
+                  //   article.reviews?.[0]?.photos?.[0] ||
+                  //   (reviews.length > 0
+                  //     ? reviews[Math.floor(Math.random() * reviews.length)].photos?.[0]
+                  //     : '');
 
                   return (
                     <SwiperSlide key={article.id}>
@@ -509,7 +529,8 @@ const ExpectedDestination = () => {
                         <Link to={`/lugar-esperado/${article.googleId}`}>
                           <ArticleCard
                             title={article.name}
-                            image={randomImage} // Imagen específica para este artículo
+                            // image={randomImage} // Imagen específica para este artículo
+                            image={article.reviews?.[0]?.photos?.[0]}
                             rating={article.rating}
                             address={article.address}
                           />
