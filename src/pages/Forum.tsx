@@ -24,7 +24,6 @@ type Category = {
   description: string;
 };
 
-
 type Message = {
   content: string;
   images: string[];
@@ -42,7 +41,6 @@ type Forum = {
 };
 
 const Forum = () => {
-
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [forums, setForums] = useState<Forum[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -96,8 +94,8 @@ const Forum = () => {
               className="absolute md:static lg:w-[80%] w-[100%] pb-10 pt-6 flex flex-col gap-10 ${
                 scrollbar-hidden"
             >
-              <div className={'lg:w-[97%] w-[90%] mx-auto flex flex-col gap-4 lg:mt-0 mt-4'}>
-                <h2 className="text-xl font-bold">Buscar foro</h2>
+              <div className={'w-[97%] mx-auto flex flex-col gap-4'}>
+                <h2 className="my-4 md:my-1 text-2xl font-bold">Buscar foro</h2>
                 <form className="flex flex-col gap-4">
                   <input
                     type="text"
@@ -107,7 +105,7 @@ const Forum = () => {
                         e.target.value,
                       )
                     }
-                    className="border border-[#999999] pl-2 w-[45%]"
+                    className="border border-[#999999] rounded py-4 px-2 w-full max-w-[720px] focus:outline-none"
                     placeholder="Buscar foro..."
                     autoComplete="off"
                   />
@@ -116,11 +114,21 @@ const Forum = () => {
               <CreateForums />
               <div className={'grid lg:grid-cols-2 grid-cols-1 mx-4 gap-6'}>
                 {forums?.filter((forum) => {
-                  return (categorySelected == null || forum.category.id == categorySelected) && (description == null || forum.description.toLowerCase().includes(description.toLowerCase()) || forum.name.toLowerCase().includes(description.toLowerCase())  );
+                  return (
+                    (categorySelected == null || forum.category.id == categorySelected) &&
+                    (description == null ||
+                      forum.description.toLowerCase().includes(description.toLowerCase()) ||
+                      forum.name.toLowerCase().includes(description.toLowerCase()))
+                  );
                 }).length > 0 ? (
                   forums
                     ?.filter((forum) => {
-                      return (categorySelected == null || forum.category.id == categorySelected) && (description == null || forum.description.toLowerCase().includes(description.toLowerCase()) || forum.name.toLowerCase().includes(description.toLowerCase()) );
+                      return (
+                        (categorySelected == null || forum.category.id == categorySelected) &&
+                        (description == null ||
+                          forum.description.toLowerCase().includes(description.toLowerCase()) ||
+                          forum.name.toLowerCase().includes(description.toLowerCase()))
+                      );
                     })
                     .map((forum, index) => (
                       <div
@@ -129,8 +137,8 @@ const Forum = () => {
                       >
                         <div className={'flex justify-between items-center'}>
                           <h1 className={'text-2xl'}>{forum.name}</h1>
-                          {(user && user.id == forum.user.id && forum.messages.length < 1) && (
-                            <EditForum forum={forum}  />
+                          {user && user.id == forum.user.id && forum.messages.length < 1 && (
+                            <EditForum forum={forum} />
                           )}
                         </div>
                         <p>{forum.description}</p>
@@ -139,7 +147,10 @@ const Forum = () => {
                             <MapPin name="info" />
                             <span className="text-sm text-gray">{forum.category.description}</span>
                           </div>
-                          <Link to={`/forum/${forum.id}`} className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center">
+                          <Link
+                            to={`/forum/${forum.id}`}
+                            className="lg:btn-blue px-4 py-2 bg-primary hover:bg-primary-3 text-white rounded-2xl flex items-center justify-center"
+                          >
                             Ingresar
                           </Link>
                         </div>
@@ -147,9 +158,7 @@ const Forum = () => {
                     ))
                 ) : (
                   <div className={'p-4 bg-[#c0daeb] rounded-2xl col-span-2'}>
-                    <p className={'text-3xl font-bold'}>
-                      No se encontraron foros!
-                    </p>
+                    <p className={'text-3xl font-bold'}>No se encontraron foros!</p>
                   </div>
                 )}
               </div>

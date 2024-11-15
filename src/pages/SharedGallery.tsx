@@ -31,8 +31,8 @@ export const SharedGallery = () => {
       <UploadImageSharedGallery activities={activities} />
 
       <div className="border-b p-4 mb-4 border-gray-50 flex items-center">
-        <Link to={`/itineraryCalendar/${itineraryId}`}>
-          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px]'}/>
+        <Link to={`/itineraryCalendar/${itineraryId}`} className="md:mr-10">
+          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[50px]'} />
         </Link>
         <h2 className="text-2xl font-bold text-primary-3">{itinerary?.name}</h2>
       </div>
@@ -41,7 +41,8 @@ export const SharedGallery = () => {
         {activities.map((activity, index) => (
           <details key={index} className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-md">
             <summary className="text-xl font-semibold text-primary-3 cursor-pointer hover:text-primary-4">
-              {activity.name + ' | ' + activity.images.length} {activity.images.length!=1 ? ' imágenes' : ' imagen'}
+              {activity.name + ' | ' + activity.images.length}{' '}
+              {activity.images.length != 1 ? ' imágenes' : ' imagen'}
             </summary>
 
             <Swiper
@@ -66,7 +67,7 @@ export const SharedGallery = () => {
                 ))
               ) : (
                 <div className="flex items-center justify-center text-gray-400 text-xl">
-                  No hay imágenes para mostrar sobre  {activity.name.split('-')[0]}
+                  No hay imágenes para mostrar sobre {activity.name.split('-')[0]}
                 </div>
               )}
             </Swiper>
