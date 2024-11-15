@@ -71,7 +71,7 @@ const PublicationDetail = () => {
     const fetchData = async () => {
       try {
         const publicationsResponse = await fetch(
-          `https://api-turistear.koyeb.app/publication/${publicationId}`,
+          `${process.env.VITE_API_URL}/publication/${publicationId}`,
           {
             method: 'GET',
             credentials: 'include',
@@ -84,7 +84,7 @@ const PublicationDetail = () => {
         const publicationsData = await publicationsResponse.json();
         setPublication(publicationsData);
 
-        const socket = io('https://api-turistear.koyeb.app');
+        const socket = io(process.env.VITE_API_URL);
         socket.on('receiveDelete', () => {
           window.location.href = '/publications';
         });

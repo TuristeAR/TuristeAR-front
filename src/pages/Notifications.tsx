@@ -95,7 +95,7 @@ const Notifications = () => {
   };
 
   const updateNotifications = async () => {
-    await fetch('https://api-turistear.koyeb.app/markNotificationsAsRead', {
+    await fetch(`${process.env.VITE_API_URL}/markNotificationsAsRead`, {
       method: 'PUT',
       credentials: 'include',
     });
@@ -103,7 +103,7 @@ const Notifications = () => {
 
   const rejectParticipationRequest = async (participationRequestId: number, notificationId) => {
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/participation-request/reject', {
+      const response = await fetch(`${process.env.VITE_API_URL}/participation-request/reject`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const Notifications = () => {
 
   const acceptParticipationRequest = async (itineraryId, participantId, participationRequestId) => {
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-user', {
+      const response = await fetch(`${process.env.VITE_API_URL}/itinerary/add-user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ const Notifications = () => {
     }
   };
   const fetchNotifications = async () => {
-    const response = await get('https://api-turistear.koyeb.app/notifications-detail/byUser', {
+    const response = await get(`${process.env.VITE_API_URL}/notifications-detail/byUser`, {
       'Content-Type': 'application/json',
       credentials: 'include',
     });
@@ -201,7 +201,7 @@ const Notifications = () => {
                       : '';
 
                   return isParticipationRequest ? (
-                    <div
+                    <Link to={notification.participationRequest.status === 'accepted' ? `/itineraryCalendar/${notification.itinerary.id}` : `/notifications`}
                       key={index}
                       className={
                         `lg:w-auto lg:mb-0 mb-6 p-4 rounded-2xl ${notification.isRead ? 'bg-white hover:bg-[#d9d9d9]' : 'bg-[#c0daeb] hover:bg-[#009fe3]'} ` +
@@ -250,7 +250,7 @@ const Notifications = () => {
                           <p>📅 ✅ Aceptaste la invitación para unirte al itinerario 🤝🎉</p>
                         )}
                       </div>
-                    </div>
+                    </Link>
                   ) : (
                     <Link
                       to={linkPath}
@@ -260,7 +260,7 @@ const Notifications = () => {
                         'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col relative transition-transform duration-300 hover:-translate-y-1.5 '
                       }
                     >
-                      {notification.publication ? (
+                      {notification.publication && (
                         <div className="flex flex-col gap-2">
                           <div className="flex gap-x-2 items-center">
                             {getNotificationImages(notification)}
@@ -270,22 +270,6 @@ const Notifications = () => {
                             {notification.publication.description.slice(0, 100)}
                           </p>
                         </div>
-                      ) : (
-                        notification.itinerary && (
-                          <div className="flex flex-col gap-2">
-                            <div className="flex gap-x-2 items-center">
-                              <img
-                                src={notification.itinerary.user.profilePicture}
-                                alt={notification.itinerary.user.name}
-                                className="w-[25px] h-[25px] rounded-full"
-                              />
-                              <h1 className="font-bold text-[18px]">{notification.description}</h1>
-                            </div>
-                            <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
-                              {notification.itinerary.name}
-                            </p>
-                          </div>
-                        )
                       )}
                     </Link>
                   );

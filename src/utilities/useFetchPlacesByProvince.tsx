@@ -9,7 +9,7 @@ const useFetchPlacesByProvince = (itinerary) => {
         if (itinerary && itinerary.name) {
           const province = itinerary.name.split(' a ')[1];
           const response = await fetch(
-            `https://api-turistear.koyeb.app/fetch-activities-places/${province}`,
+            `${process.env.VITE_API_URL}/fetch-activities-places/${province}`,
             { method: 'GET', credentials: 'include' },
           );
 

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
+import EnvironmentPlugin from 'vite-plugin-environment';
 
 export default defineConfig(() => {
   return {
@@ -11,7 +12,7 @@ export default defineConfig(() => {
     build: {
       target: 'esnext',
     },
-    plugins: [react()],
+    plugins: [react(), EnvironmentPlugin('all')],
     server: {
       watch: {
         usePolling: true,

@@ -1,10 +1,10 @@
 export const ContinueWithGoogle = () => {
   const goToGoogleAuth = () => {
-    window.location.href = 'https://api-turistear.koyeb.app/auth/google';
+    window.location.href = `${process.env.VITE_API_URL}/auth/google`;
   };
 
-  //obtener coordenadas del navegador 
-   const getCoordinates = async () => {
+  //obtener coordenadas del navegador
+  const getCoordinates = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
@@ -13,10 +13,10 @@ export const ContinueWithGoogle = () => {
       });
     }
   };
-//enviar coordenadas al back 
-  const sendCoordinates= async (lat, lon) => {
+  //enviar coordenadas al back
+  const sendCoordinates = async (lat, lon) => {
     try {
-     await fetch('https://api-turistear.koyeb.app/auth/google', { // Cambia la URL si es necesario ...
+      await fetch(`${process.env.VITE_API_URL}/auth/google`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

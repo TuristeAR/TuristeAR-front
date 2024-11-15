@@ -31,7 +31,7 @@ export const ItineraryDetail = () => {
   const [reviews, setReviews] = useState<any[]>([]);
   const [activitiesByNeighborhoodAndDay, setActivitiesByNeighborhoodAndDay] = useState({});
   const [activitiesAndEventsByDate, setActivitiesAndEventsByDate] = useState({});
-  const socket = io('https://api-turistear.koyeb.app');
+  const socket = io(process.env.VITE_API_URL);
 
   useEffect(() => {
     socket.on('usersUpdated', (data) => {
@@ -66,7 +66,7 @@ export const ItineraryDetail = () => {
   useEffect(() => {
     if (activities.length > 0) {
       const fetchReviewsForActivity = (googleId: string) => {
-        return get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
+        return get(`${process.env.VITE_API_URL}/reviews/place/${googleId}`, {
           'Content-Type': 'application/json',
         });
       };
@@ -101,7 +101,7 @@ export const ItineraryDetail = () => {
     const options = { hour: '2-digit', minute: '2-digit', hour12: false } as const;
     return date.toLocaleTimeString([], options);
   };
-  
+
   const handleUpdateUsersOld = (updatedUsers: User[]) => {
     setUsersOldNav(updatedUsers);
   };
@@ -110,7 +110,7 @@ export const ItineraryDetail = () => {
     try {
       // Paso 1: Obtén la provincia a partir de las coordenadas
       const response = await fetch(
-        `https://apis.datos.gob.ar/georef/api/ubicacion?lat=${latitude}&lon=${longitude}`,
+        `${process.env.VITE_GEOREF_API_URL}/ubicacion?lat=${latitude}&lon=${longitude}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ export const ItineraryDetail = () => {
 
       // Paso 2: Obtén los asentamientos de la provincia
       const settlementsResponse = await fetch(
-        `https://apis.datos.gob.ar/georef/api/asentamientos?provincia=${provinciaId}&max=2000`,
+        `${process.env.VITE_GEOREF_API_URL}/asentamientos?provincia=${provinciaId}&max=2000`,
         {
           headers: { 'Content-Type': 'application/json' },
         },

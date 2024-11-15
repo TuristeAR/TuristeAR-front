@@ -10,7 +10,7 @@ const MapComponent = ({ lat, lon }) => {
         const existingScript = document.getElementById('google-maps-script');
         if (!existingScript) {
           const script = document.createElement('script');
-          script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCndlOUUXZiAKyaS4FtLNdIkeZnwPfe2Jc&callback=initMap&libraries=maps3d`;
+          script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.VITE_GOOGLE_MAPS_API_KEY}&callback=initMap&libraries=maps3d`;
           script.id = 'google-maps-script';
           script.async = true;
           script.defer = true;

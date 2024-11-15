@@ -51,7 +51,7 @@ const Forum = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const forumsResponse = await fetch(`https://api-turistear.koyeb.app/forums`, {
+        const forumsResponse = await fetch(`${process.env.VITE_API_URL}/forums`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -105,7 +105,7 @@ const Forum = () => {
                         e.target.value,
                       )
                     }
-                    className="border border-[#999999] rounded py-4 px-2 w-full max-w-[720px] focus:outline-none"
+                    className="border border-[#999999] rounded p-2 w-full max-w-[720px] focus:outline-none"
                     placeholder="Buscar foro..."
                     autoComplete="off"
                   />
