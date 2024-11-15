@@ -1,7 +1,6 @@
 import { ImageGallery } from '../ImageGallery/ImageGallery';
-import { useEffect, useRef, useState } from 'react';
+import {  useRef, useState } from 'react';
 import { post } from '../../utilities/http.util';
-import Carousel from '../Destinations/Carousel';
 import { Link } from 'react-router-dom';
 import io from 'socket.io-client';
 import { reorderDate } from '../../utilities/reorderDate';
@@ -89,31 +88,31 @@ export function PublicationCard(props: {
 
   const closeLightbox = () => setIsLightboxOpen(false);
 
-  const handleLike = async (idPublication: number) => {
+  const handleLike = async () => {
     setLikes(!isLike ? likes + 1 : likes - 1);
     setIsLike(!isLike);
-    await post(`${process.env.VITE_API_URL}/handleLike/${idPublication}`, {
+    await post(`${process.env.VITE_API_URL}/handleLike/${publication.id}`, {
       'Content-Type': 'application/json',
     });
   };
 
-  const handleSaved = async (idPublication: number) => {
+  const handleSaved = async () => {
     setSaved(!isSave ? saved + 1 : saved - 1);
     setIsSave(!isSave);
-    await post(`${process.env.VITE_API_URL}/handleSaved/${idPublication}`, {
+    await post(`${process.env.VITE_API_URL}/handleSaved/${publication.id}`, {
       'Content-Type': 'application/json',
     });
   };
 
-  const handleRepost = async (idPublication: number) => {
+  const handleRepost = async () => {
     setReposts(!isRepost ? reposts + 1 : reposts - 1);
     setIsRepost(!isRepost);
-    await post(`${process.env.VITE_API_URL}/handleReposts/${idPublication}`, {
+    await post(`${process.env.VITE_API_URL}/handleReposts/${publication.id}`, {
       'Content-Type': 'application/json',
     });
   };
 
-  const deletePublication = async (id) => {
+  const deletePublication = async (id : number) => {
     const socket = io(process.env.VITE_API_URL);
     socket.emit('deletePublication', {
       publicationId: id,
@@ -126,7 +125,7 @@ export function PublicationCard(props: {
 
   return (
     <>
-      <div className="w-full h-fit p-4 lg:mb-0 mb-6 rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] ">
+      <div className={`w-full h-fit p-4 lg:mb-0 mb-6 rounded-2xl ${!window.location.pathname.includes('/publication/') && 'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)]'}`}>
         <div className="flex justify-between items-center relative">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
@@ -231,9 +230,7 @@ export function PublicationCard(props: {
             <div className="flex items-center mr-6">
               <svg
                 className="cursor-pointer"
-                onClick={() => {
-                  handleLike(publication.id);
-                }}
+                onClick={handleLike}
                 width="25px"
                 height="25px"
                 viewBox="0 0 24 24"
@@ -270,9 +267,7 @@ export function PublicationCard(props: {
             <div className="flex items-center mr-6">
               <svg
                 className="cursor-pointer"
-                onClick={() => {
-                  handleRepost(publication.id);
-                }}
+                onClick={handleRepost}
                 xmlns="http://www.w3.org/2000/svg"
                 height="25px"
                 viewBox="0 -960 960 960"
@@ -286,9 +281,7 @@ export function PublicationCard(props: {
             <div className="flex items-center mr-6">
               <svg
                 className="cursor-pointer"
-                onClick={() => {
-                  handleSaved(publication.id);
-                }}
+                onClick={handleSaved}
                 width="25px"
                 height="25px"
                 viewBox="0 0 24 24"

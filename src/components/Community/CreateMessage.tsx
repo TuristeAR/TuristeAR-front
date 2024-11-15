@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import { uploadImage } from '../../utilities/uploadImage';
 type Category = {
   id: number;
   description: string;
@@ -51,7 +52,7 @@ export const CreateMessage = (props: {
             ...prevForum,
             messages: [...prevForum.messages, null as Message],
           };
-        } else {
+        }else {
           return {
             ...prevForum,
             messages: [...prevForum.messages, newMessage as Message],
@@ -73,34 +74,6 @@ export const CreateMessage = (props: {
         setSelectedImage(file);
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const uploadImage = async (image: File) => {
-    const formData = new FormData();
-    formData.append('image', image);
-
-    const url = `${process.env.VITE_IMGUR_API_URL}/3/image`;
-    const options = {
-      method: 'POST',
-      headers: {
-        Authorization: `Client-ID ${process.env.VITE_IMGUR_CLIENT_ID}`,
-      },
-      body: formData,
-    };
-
-    try {
-      const response = await fetch(url, options);
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error de respuesta:', errorData);
-        throw new Error(errorData.data.error || 'Error al cargar la imagen');
-      }
-      const result = await response.json();
-      return result.data.link;
-    } catch (error) {
-      console.error('Error en la carga de la imagen:', error);
-      throw error;
     }
   };
 
@@ -129,7 +102,9 @@ export const CreateMessage = (props: {
 
   return (
     <div
-      className={`${location.pathname.includes('/forum/') ? 'lg:w-[80%] w-[100%]' : 'w-[100%]'} mx-auto fixed bottom-0 overflow-scroll scrollbar-hidden flex flex-col gap-y-6 bg-white z-99`}
+      className={
+        `${location.pathname.includes('/forum/') ? 'lg:w-[80%] w-[100%]' : 'w-[100%]'} mx-auto fixed bottom-0 overflow-scroll scrollbar-hidden flex flex-col gap-y-6 bg-white z-99`
+      }
     >
       <form
         onSubmit={createMessage}
