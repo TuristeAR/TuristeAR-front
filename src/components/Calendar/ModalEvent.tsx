@@ -9,7 +9,6 @@ import { get } from '../../utilities/http.util';
 import formatFromDateAndToDate from '../../utilities/formatEventDate';
 
 export const ModalActivity = ({ handleClose, deleteActivity, eventInfo, deleteEvent }) => {
-  const [isEditing, setIsEditing] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [selectedTab, setSelectedTab] = useState('info');
   const isActivity = eventInfo._def.extendedProps.type === 'activity';

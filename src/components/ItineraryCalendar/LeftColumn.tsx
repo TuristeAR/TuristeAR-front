@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Receipt, Trash2 } from 'lucide-react';
 import plusIcon from '/assets/add.svg';
 import chatIcon from '/assets/chat.svg';
@@ -13,6 +13,7 @@ import { io } from 'socket.io-client';
 import SharedExpenses from '../../pages/SharedExpenses';
 import useAddActivities from '../../utilities/useAddActivities';
 import { get } from '../../utilities/http.util';
+import Select from 'react-select';
 
 type User = {
   id: number;
@@ -38,10 +39,6 @@ export const LeftColumn = ({
 }) => {
   const [validItinerary, setValidItinerary] = useState(null);
 
-  const [selectedPlace, setSelectedPlace] = useState('');
-
-  const [showPlaces, setShowPlaces] = useState(false);
-
   const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
 
   const { handleAddActivity, newActivity, setNewActivity } = useAddActivities(
@@ -50,8 +47,6 @@ export const LeftColumn = ({
   );
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
-
-  const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
 
   const socket = io(process.env.VITE_API_URL);
 
@@ -128,23 +123,13 @@ export const LeftColumn = ({
     };
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    setSelectedPlace(inputValue);
+  const placeOptions = activityByProvince.map((place) => ({
+    label: place.name, 
+    value: place.id, 
+  }));
 
-    // Filtra los lugares basados en el valor del input
-    const filtered = activityByProvince.filter((place) =>
-      place.name.toLowerCase().includes(inputValue.toLowerCase()),
-    );
-
-    setFilteredPlaces(filtered);
-    setShowPlaces(true); // Muestra la lista sin importar si hay coincidencias
-  };
-
-  const handlePlaceSelect = (placeName: string, placeId: string) => {
-    setSelectedPlace(placeName);
-    setNewActivity({ ...newActivity, place: placeId });
-    setShowPlaces(false); // Cierra la lista al seleccionar un lugar
+  const handleSelectChange = (selectedOption: any) => {
+    setNewActivity({ ...newActivity, place: selectedOption.value }); 
   };
 
   const deleteActivity = (activityId: number) => {
@@ -360,52 +345,36 @@ export const LeftColumn = ({
                   onChange={(e) => setNewActivity({ ...newActivity, toDate: e.target.value })}
                   className="w-full p-2 border border-primary rounded mb-2 outline-none"
                 />
-                <div className="relative w-full">
-                  <input
-                    type="text"
-                    placeholder="Lugar"
-                    value={selectedPlace || newActivity.place}
-                    onChange={handleInputChange}
-                    onFocus={() => setShowPlaces(true)}
-                    className="w-full p-2 border border-primary rounded mb-2 outline-none"
-                    autoComplete="off"
-                  />
 
-                  {showPlaces && (
-                    <div className="absolute left-0 right-0 max-h-48 bg-white rounded z-50 overflow-y-auto">
-                      {filteredPlaces.length > 0 &&
-                        filteredPlaces.map((place, index) => (
-                          <div
-                            key={index}
-                            className="p-2 hover:bg-gray-200 cursor-pointer"
-                            onClick={() => handlePlaceSelect(place.name, place.id)}
-                          >
-                            {place.name}
-                          </div>
-                        ))}
-                    </div>
-                  )}
+                <div className="relative w-full">
+                  <Select
+                    options={placeOptions}
+                    onChange={handleSelectChange}
+                    placeholder="Selecciona un lugar"
+                    className="w-full py-2  rounded mb-2"
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
+                        borderColor: '#4B5563',
+                        borderRadius: '8px',
+                        padding: '5px',
+                      }),
+                      menu: (provided) => ({
+                        ...provided,
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                      }),
+                      option: (provided, state) => ({
+                        ...provided,
+                        backgroundColor: state.isSelected ? 'blue' : 'white', // Fondo verde al seleccionar
+                        color: state.isSelected ? 'white' : 'black',
+                        padding: '10px',
+                        cursor: 'pointer',
+                      }),
+                    }}
+                  />
                 </div>
-                <input
-                  type="text"
-                  placeholder="Nombre de la actividad"
-                  value={newActivity.name}
-                  onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
-                  className="w-full p-2 border border-primary  rounded mb-2 outline-none"
-                  autoComplete="off"
-                />
-                <input
-                  type="datetime-local"
-                  value={newActivity.fromDate}
-                  onChange={(e) => setNewActivity({ ...newActivity, fromDate: e.target.value })}
-                  className="w-full p-2 border border-primary  rounded mb-2 outline-none"
-                />
-                <input
-                  type="datetime-local"
-                  value={newActivity.toDate}
-                  onChange={(e) => setNewActivity({ ...newActivity, toDate: e.target.value })}
-                  className="w-full p-2 border border-primary rounded mb-2 outline-none"
-                />
+
                 <div className="flex gap-x-2 justify-center">
                   <button onClick={btnHandleAddActivity} className="btn-question">
                     Agregar
