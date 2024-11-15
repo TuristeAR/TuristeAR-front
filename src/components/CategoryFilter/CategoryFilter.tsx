@@ -17,7 +17,7 @@ const CategoryFilter = ({
     const fetchMunicipios = async () => {
       try {
         const responseTotal = await fetch(
-          `https://apis.datos.gob.ar/georef/api/departamentos?provincia=${provinceName}&campos=nombre&formato=json`,
+          `${process.env.VITE_GEOREF_API_URL}/departamentos?provincia=${provinceName}&campos=nombre&formato=json`,
         );
         if (!responseTotal.ok) {
           throw new Error('Error fetching data');
@@ -26,7 +26,7 @@ const CategoryFilter = ({
 
         const totalDepartamentos = dataTotal.total;
         const response = await fetch(
-          `https://apis.datos.gob.ar/georef/api/departamentos?provincia=${provinceName}&campos=id,nombre&formato=json&max=${totalDepartamentos}`,
+          `${process.env.VITE_GEOREF_API_URL}/departamentos?provincia=${provinceName}&campos=id,nombre&formato=json&max=${totalDepartamentos}`,
         );
         if (!response.ok) {
           throw new Error('Error fetching data');
@@ -35,7 +35,7 @@ const CategoryFilter = ({
         setMunicipios(data.departamentos);
         if (departamento) {
           handleDepartamentClick(departamento);
-          setSelectedLocalidad(localidad)
+          setSelectedLocalidad(localidad);
         }
       } catch (err) {
         console.log(err.message);
@@ -43,19 +43,19 @@ const CategoryFilter = ({
     };
 
     fetchMunicipios();
-  }, [provinceName,localidad, departamento]);
+  }, [provinceName, localidad, departamento]);
 
   const fetchLocalidades = async (departamentoNombre) => {
     try {
       const responseTotal = await fetch(
-        `https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinceName}&departamento=${departamentoNombre}&campos=id&formato=json`,
+        `${process.env.VITE_GEOREF_API_URL}/localidades?provincia=${provinceName}&departamento=${departamentoNombre}&campos=id&formato=json`,
       );
       const dataTotal = await responseTotal.json();
 
       const totalLocalidades = dataTotal.total;
 
       const response = await fetch(
-        `https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinceName}&departamento=${departamentoNombre}&formato=json&max=${totalLocalidades}`,
+        `${process.env.VITE_GEOREF_API_URL}/localidades?provincia=${provinceName}&departamento=${departamentoNombre}&formato=json&max=${totalLocalidades}`,
       );
       if (!response.ok) {
         throw new Error('Error fetching data');

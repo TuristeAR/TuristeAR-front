@@ -54,7 +54,7 @@ const ForumDetail = () => {
           return;
         }
 
-        const forumResponse = await fetch(`https://api-turistear.koyeb.app/forum/${id}`, {
+        const forumResponse = await fetch(`${process.env.VITE_API_URL}/forum/${id}`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -98,11 +98,15 @@ const ForumDetail = () => {
             />
             <div className="absolute md:static lg:w-[80%] w-[100%] flex flex-col overflow-scroll scrollbar-hidden">
               <div
-                className={'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex flex-col lg:p-6 p-4 lg:pt-6 pt-10 lg:pb-6 pb-3 gap-2'}
+                className={
+                  'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex flex-col lg:p-6 p-4 lg:pt-6 pt-10 lg:pb-6 pb-3 gap-2'
+                }
               >
                 <div className={'flex items-center justify-between'}>
                   <h1 className="lg:text-3xl text-2xl">{forum?.name}</h1>
-                  <h3 className={'text-[#999999] lg:text-sm text-[12px]'}>{forum.category.description}</h3>
+                  <h3 className={'text-[#999999] lg:text-sm text-[12px]'}>
+                    {forum.category.description}
+                  </h3>
                 </div>
                 <div className={''}>
                   <p className={'lg:text-sm text-[10px] text-[#484b56]'}>{forum.description}</p>
@@ -116,8 +120,7 @@ const ForumDetail = () => {
                   </div>
                   <CreateMessage user={user} forum={forum} setForum={setForum} />
                 </>
-              )
-              }
+              )}
             </div>
           </div>
         </>

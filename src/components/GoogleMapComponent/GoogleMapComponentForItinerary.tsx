@@ -74,7 +74,7 @@ export const GoogleMapComponentForItinerary = ({ activities }) => {
   }, [activities]);
 
   return (
-    <LoadScript googleMapsApiKey={'AIzaSyCndlOUUXZiAKyaS4FtLNdIkeZnwPfe2Jc'}>
+    <LoadScript googleMapsApiKey={process.env.VITE_GOOGLE_MAPS_API_KEY}>
       <GoogleMap
         mapContainerClassName={'w-full h-[600px] lg:h-[730px] border border-gray rounded-md'}
         center={center}

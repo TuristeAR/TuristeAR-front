@@ -53,7 +53,7 @@ export const LeftColumn = ({
 
   const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
 
-  const socket = io('https://api-turistear.koyeb.app');
+  const socket = io(process.env.VITE_API_URL);
 
   const [user, setUser] = useState<User | null>(null);
 
@@ -70,7 +70,7 @@ export const LeftColumn = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const session = await get('https://api-turistear.koyeb.app/session', {
+      const session = await get(`${process.env.VITE_API_URL}/session`, {
         contentType: 'application/json',
       });
 
@@ -148,7 +148,7 @@ export const LeftColumn = ({
   };
 
   const deleteActivity = (activityId: number) => {
-    fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
+    fetch(`${process.env.VITE_API_URL}/itinerary/remove-activity`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -175,7 +175,7 @@ export const LeftColumn = ({
   };
 
   const deleteItinerary = async (id: number) => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io(process.env.VITE_API_URL);
     socket.emit('deleteItinerary', {
       itineraryId: id,
       userId: user.id,
@@ -188,7 +188,7 @@ export const LeftColumn = ({
 
     setIsEditingItineraryName(false);
 
-    fetch(`https://api-turistear.koyeb.app/itinerary/${itineraryId}/name`, {
+    fetch(`${process.env.VITE_API_URL}/itinerary/${itineraryId}/name`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

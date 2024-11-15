@@ -9,34 +9,34 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
 type Category = {
-  id: number,
-  name: string,
+  id: number;
+  name: string;
 };
 
 type Province = {
-  id: number,
-  name: string,
-  categories: Category[]
+  id: number;
+  name: string;
+  categories: Category[];
 };
 
 type Place = {
-  id: number,
-  name: string,
-  googleId: string,
-  place: Province
+  id: number;
+  name: string;
+  googleId: string;
+  place: Province;
 };
 
 type Activity = {
-  id: number,
-  name: string,
-  place: Place
-  images: string[]
+  id: number;
+  name: string;
+  place: Place;
+  images: string[];
 };
 
 type Itinerary = {
-  id: number,
-  name: string,
-  activities: Activity[]
+  id: number;
+  name: string;
+  activities: Activity[];
 };
 
 export const CreatePublications = () => {
@@ -52,7 +52,7 @@ export const CreatePublications = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const itinerariesResponse = await fetch('https://api-turistear.koyeb.app/user-itineraries', {
+        const itinerariesResponse = await fetch(`${process.env.VITE_API_URL}/user-itineraries`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -69,10 +69,15 @@ export const CreatePublications = () => {
     fetchData();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
     // @ts-ignore
     const { name, value } = e.target;
-    setActivities(itineraries.find(itinerary => itinerary.id == Number(name == 'itineraryId' ? value : null)).activities)
+    setActivities(
+      itineraries.find((itinerary) => itinerary.id == Number(name == 'itineraryId' ? value : null))
+        .activities,
+    );
     setSelectedActivities([]);
   };
 
@@ -80,26 +85,26 @@ export const CreatePublications = () => {
     e.preventDefault();
     setError(null);
 
-    if (description==null) {
-      setError("Ingrese una descripción!");
+    if (description == null) {
+      setError('Ingrese una descripción!');
       return;
     }
 
     if (selectedActivities.length < 0) {
-      setError("Seleccione actividades!");
+      setError('Seleccione actividades!');
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/createPublication', {
+      const response = await fetch(`${process.env.VITE_API_URL}/createPublication`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           description: description,
-          activities: selectedActivities
+          activities: selectedActivities,
         }),
         credentials: 'include',
       });
@@ -119,7 +124,7 @@ export const CreatePublications = () => {
     setSelectedActivities((prevSelected) =>
       prevSelected.includes(activityId)
         ? prevSelected.filter((id) => id !== activityId)
-        : [...prevSelected, activityId]
+        : [...prevSelected, activityId],
     );
   };
 
@@ -166,7 +171,9 @@ export const CreatePublications = () => {
                     />
                   </svg>
                 </button>
-                <h2 className="lg:text-2xl text-xl text-center font-bold lg:mb-4 mb-2">Crear publicación</h2>
+                <h2 className="lg:text-2xl text-xl text-center font-bold lg:mb-4 mb-2">
+                  Crear publicación
+                </h2>
                 <form onSubmit={createPublications}>
                   <div className={'flex flex-col gap-4'}>
                     <div className={'flex lg:flex-row flex-col gap-x-4 lg:items-end'}>
@@ -179,22 +186,27 @@ export const CreatePublications = () => {
                         >
                           <option value={'0'}>Seleccionar</option>
                           {itineraries
-                            ?.filter(itinerary =>
-                              itinerary.activities.some(activity => activity.images && activity.images.length > 0)
+                            ?.filter((itinerary) =>
+                              itinerary.activities.some(
+                                (activity) => activity.images && activity.images.length > 0,
+                              ),
                             )
-                            .map(itinerary => (
+                            .map((itinerary) => (
                               <option value={itinerary.id} key={itinerary.id}>
                                 {itinerary.name}
                               </option>
                             ))}
-
                         </select>
                       </div>
                       <p className={'text-[#999999] text-sm'}>
                         *Solo puede utilizar itinerarios y actividades con imágenes
                       </p>
                     </div>
-                    <div className={'flex lg:flex-row flex-col lg:gap-x-4 lg:gap-y-0 gap-y-2 items-center'}>
+                    <div
+                      className={
+                        'flex lg:flex-row flex-col lg:gap-x-4 lg:gap-y-0 gap-y-2 items-center'
+                      }
+                    >
                       <div className={'flex flex-col lg:w-[40%] w-[100%]'}>
                         <label className="lg:text-lg font-semibold">Descripción</label>
                         <textarea
@@ -256,7 +268,9 @@ export const CreatePublications = () => {
                                       ))}
                                     </Carousel>
 
-                                    <div className={`w-full text-center lg:py-2 lg:px-6 rounded-l-2xl`}>
+                                    <div
+                                      className={`w-full text-center lg:py-2 lg:px-6 rounded-l-2xl`}
+                                    >
                                       <h3 className="lg:text-lg text-sm font-semibold">
                                         {activity.name.slice(0, -10)}
                                       </h3>

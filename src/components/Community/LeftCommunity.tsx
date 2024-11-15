@@ -38,20 +38,18 @@ export const LeftCommunity = (props: {
   useEffect(() => {
     const fetchData = async () => {
       try {
-          const categoriesResponse = await fetch(`https://api-turistear.koyeb.app/categories`, {
-            method: 'GET',
-            credentials: 'include',
-          });
+        const categoriesResponse = await fetch(`${process.env.VITE_API_URL}/categories`, {
+          method: 'GET',
+          credentials: 'include',
+        });
 
-          if (!categoriesResponse.ok) {
-            console.log('Error al obtener publicaciones:', await categoriesResponse.json());
-          } else {
-            const categoriesData = await categoriesResponse.json();
-            setCategories(categoriesData);
-          }
-      } catch (error) {
-
-      }
+        if (!categoriesResponse.ok) {
+          console.log('Error al obtener publicaciones:', await categoriesResponse.json());
+        } else {
+          const categoriesData = await categoriesResponse.json();
+          setCategories(categoriesData);
+        }
+      } catch (error) {}
     };
 
     fetchData();

@@ -4,10 +4,10 @@ import arrowRight from '/assets/arrow-right.svg';
 import { useEffect, useState } from 'react';
 import { get } from '../../utilities/http.util';
 
-type Notification={
-  id: number,
-  isRead: boolean,
-}
+type Notification = {
+  id: number;
+  isRead: boolean;
+};
 
 export const Nav = () => {
   const location = useLocation();
@@ -18,7 +18,7 @@ export const Nav = () => {
 
   const handleLogout = async () => {
     try {
-      await get('https://api-turistear.koyeb.app/logout', {
+      await get(`${process.env.VITE_API_URL}/logout`, {
         'Content-Type': 'application/json',
       });
       setUser(null);
@@ -29,7 +29,7 @@ export const Nav = () => {
   };
 
   const fetchUser = async () => {
-    const response = await get(' https://api-turistear.koyeb.app/session', {
+    const response = await get(`${process.env.VITE_API_URL}/session`, {
       'Content-Type': 'application/json',
     });
 
@@ -42,18 +42,18 @@ export const Nav = () => {
   };
 
   const fetchNotifications = async () => {
-    const response = await get('https://api-turistear.koyeb.app/notifications/byUser', {
+    const response = await get(`${process.env.VITE_API_URL}/notifications/byUser`, {
       'Content-Type': 'application/json',
       credentials: 'include',
     });
-    setNotifications(response)
+    setNotifications(response);
   };
 
   useEffect(() => {
     const cachedUser = localStorage.getItem('user');
     setUser(cachedUser ? JSON.parse(cachedUser) : null);
     fetchUser();
-    fetchNotifications()
+    fetchNotifications();
   }, []);
 
   return (
@@ -118,9 +118,11 @@ export const Nav = () => {
                 ></path>
               </g>
             </svg>
-            {notifications.filter(notification => !notification.isRead).length > 0 && (
+            {notifications.filter((notification) => !notification.isRead).length > 0 && (
               <div className="absolute bg-[#c0daeb] rounded-full w-[27px] h-[27px] flex items-center justify-center -left-3 -top-3">
-                <span className={'font-semibold text-sm'}>{notifications.filter(notification => !notification.isRead).length}</span>
+                <span className={'font-semibold text-sm'}>
+                  {notifications.filter((notification) => !notification.isRead).length}
+                </span>
               </div>
             )}
           </Link>

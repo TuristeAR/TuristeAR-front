@@ -95,7 +95,7 @@ const Notifications = () => {
   };
 
   const updateNotifications = async () => {
-    await fetch('https://api-turistear.koyeb.app/markNotificationsAsRead', {
+    await fetch(`${process.env.VITE_API_URL}/markNotificationsAsRead`, {
       method: 'PUT',
       credentials: 'include',
     });
@@ -103,7 +103,7 @@ const Notifications = () => {
 
   const rejectParticipationRequest = async (participationRequestId: number, notificationId) => {
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/participation-request/reject', {
+      const response = await fetch(`${process.env.VITE_API_URL}/participation-request/reject`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const Notifications = () => {
 
   const acceptParticipationRequest = async (itineraryId, participantId, participationRequestId) => {
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-user', {
+      const response = await fetch(`${process.env.VITE_API_URL}/itinerary/add-user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ const Notifications = () => {
     }
   };
   const fetchNotifications = async () => {
-    const response = await get('https://api-turistear.koyeb.app/notifications-detail/byUser', {
+    const response = await get(`${process.env.VITE_API_URL}/notifications-detail/byUser`, {
       'Content-Type': 'application/json',
       credentials: 'include',
     });

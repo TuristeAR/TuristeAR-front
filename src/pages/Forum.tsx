@@ -51,7 +51,7 @@ const Forum = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const forumsResponse = await fetch(`https://api-turistear.koyeb.app/forums`, {
+        const forumsResponse = await fetch(`${process.env.VITE_API_URL}/forums`, {
           method: 'GET',
           credentials: 'include',
         });

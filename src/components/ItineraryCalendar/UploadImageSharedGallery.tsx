@@ -52,7 +52,7 @@ export const UploadImageSharedGallery = (props : {activities : any[]}) => {
         imagesUrl.push(imageUrl);
       }
 
-      const response = await fetch('https://api-turistear.koyeb.app/addImagesToActivity', {
+    const response = await fetch(`${process.env.VITE_API_URL}/addImagesToActivity`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
