@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Header } from '../components/Header/Header';
 import { MapaArg } from '../components/Destinations/MapaArg';
 import { ProgressBar } from '../components/Questions/ProgressBar';
@@ -33,28 +33,9 @@ import EventCarousel from '../components/FormQuestions/EventCarousel';
 import formatFromDateAndToDate from '../utilities/formatEventDate';
 import { EventCard } from '../components/FormQuestions/EventCard';
 import { getJsonUrl } from '../utilities/getJsonUrl';
-
-interface FormData {
-  provinces: Province[];
-  localities: Locality[];
-  events: number[];
-  fromDate: string;
-  toDate: string;
-  priceLevel: string[];
-  types: string[];
-  company: number | null;
-}
-
-interface Province {
-  id: number;
-  name: string;
-  georefId: string;
-}
-
-export interface Locality {
-  name: string;
-  province: Province;
-}
+import useFetchEvents from '../utilities/useFetchEvents';
+import useSelection from '../utilities/useSelection';
+import { Province, Locality, FormData } from '../utilities/types';
 
 const questions = [
   {
@@ -190,6 +171,14 @@ const FormQuestions = () => {
   const [loadingEvents, setLoadingEvents] = useState(false);
   const [events, setEvents] = useState<any[]>([]);
   const [selectedEvents, setSelectedEvents] = useState<number[]>([]);
+  const fetchEvents = useFetchEvents();
+  const { handleMultipleSelection, handleSingleSelection } = useSelection(
+    questions,
+    formData,
+    setFormData,
+  );
+  const [carouselEvents, setCarouselEvents] = useState<any[]>([]);
+  const swiperRef = useRef(null);
 
   const handleCloseDialogWindow = () => {
     setDialogWindowOpen(false);
@@ -286,12 +275,6 @@ const FormQuestions = () => {
     });
   };
 
-  const fetchEvents = async (provinceId: number) => {
-    return await get(`https://api-turistear.koyeb.app/events/${provinceId}`, {
-      'Content-Type': 'application/json',
-    });
-  };
-
   const handleEventSelect = (id: number, locality: Locality) => {
     setSelectedEvents((prevSelectedEvents) => {
       const isSelected = prevSelectedEvents.includes(id);
@@ -308,25 +291,6 @@ const FormQuestions = () => {
       handleLocalitySelection(locality);
 
       return updatedSelectedEvents;
-    });
-  };
-
-  const handleSingleSelection = (name: keyof FormData, value: number) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleMultipleSelection = (option: string) => {
-    setFormData((prev) => {
-      const alreadySelected = prev.types.includes(option);
-      let updatedActivities: any[];
-
-      if (alreadySelected) {
-        updatedActivities = prev.types.filter((activity) => activity !== option);
-      } else {
-        updatedActivities = [...prev.types, option];
-      }
-
-      return { ...prev, types: updatedActivities };
     });
   };
 
@@ -537,8 +501,6 @@ const FormQuestions = () => {
     fetchSession();
   }, []);
 
-  const [carouselEvents, setCarouselEvents] = useState<any[]>([]);
-
   useEffect(() => {
     if (selectedProvinces.length > 0) {
       fetchEvents(selectedProvinces[0].id).then((data) => {
@@ -546,8 +508,6 @@ const FormQuestions = () => {
       });
     }
   }, [selectedProvinces]);
-
-  const swiperRef = useRef(null);
 
   return (
     <>
