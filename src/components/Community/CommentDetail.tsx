@@ -49,13 +49,15 @@ export const CommentDetail = (props: {
     const socket = io(process.env.VITE_API_URL);
 
     socket.on('receiveComment', (newComment) => {
-      setPublication((prevPublication) => {
-        if (!prevPublication) return null;
-        return {
-          ...prevPublication,
-          comments: [...prevPublication.comments, newComment as Comment],
-        };
-      });
+      if(newComment.publication.id == publication.id){
+        setPublication((prevPublication) => {
+          if (!prevPublication) return null;
+          return {
+            ...prevPublication,
+            comments: [...prevPublication.comments, newComment as Comment],
+          };
+        });
+      }
     });
 
     return () => {
