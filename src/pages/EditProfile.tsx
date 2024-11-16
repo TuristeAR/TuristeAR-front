@@ -84,7 +84,7 @@ const EditProfile = () => {
         throw new Error('Error en la solicitud');
       }
 
-      window.location.href = '/profile';
+      window.location.href = '/perfil';
     } catch (err: any) {
       setError(err.message);
     }

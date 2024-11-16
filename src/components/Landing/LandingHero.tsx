@@ -2,7 +2,7 @@ import pathMap from '/assets/path-map.svg';
 
 export const LandingHero = () => {
   const goToArmaTuViaje = () => {
-    window.location.href = '/formQuestions';
+    window.location.href = '/crear-itinerario';
   };
 
   return (

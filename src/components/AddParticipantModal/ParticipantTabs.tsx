@@ -152,7 +152,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
       }
 
       if (currentUser === participantId) {
-        navigate('/profile');
+        navigate('/perfil');
       }
     } catch (error) {
       console.error('Error removing participant:', error);

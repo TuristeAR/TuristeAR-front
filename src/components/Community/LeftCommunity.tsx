@@ -30,10 +30,10 @@ export const LeftCommunity = (props: {
   const [description, setDescription] = useState<string | null>(null);
   const location = useLocation();
   const showCategories =
-    !location.pathname.includes('/forum/') &&
-    !location.pathname.includes('/publication/') &&
-    !location.pathname.includes('/profile/') &&
-    !location.pathname.includes('/notifications');
+    !location.pathname.includes('/foro/') &&
+    !location.pathname.includes('/publicacion/') &&
+    !location.pathname.includes('/perfil/') &&
+    !location.pathname.includes('/notificaciones');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,14 +74,14 @@ export const LeftCommunity = (props: {
         >
           <div className="flex flex-col gap-4 text-l font-semibold">
             <Link
-              to={'/publications'}
+              to={'/publicaciones'}
               className={`flex flex-row items-center gap-2 hover:bg-[#d9d9d9] rounded-xl py-2 px-4 shadow-md transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-lg ${vista == 'publications' ? 'bg-[#c0daeb]' : ''}`}
             >
               <img src="/assets/home.svg" alt="Publicaciones" className="w-[25px]" />
               <p>Publicaciones</p>
             </Link>
             <Link
-              to={'/forums'}
+              to={'/foro'}
               className={`flex flex-row items-center gap-2  hover:bg-[#d9d9d9] rounded-xl  py-2 px-4 shadow-md transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-lg ${vista == 'forum' ? 'bg-[#c0daeb]' : ''}`}
             >
               <img src="/assets/message.svg" alt="Foro y preguntas" className="w-[25px]" />

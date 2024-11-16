@@ -72,7 +72,7 @@ export const LeftColumn = ({
       });
 
       if (session.statusCode !== 200) {
-        window.location.href = '/login';
+        window.location.href = '/iniciar-sesion';
         return;
       }
 
@@ -222,35 +222,35 @@ export const LeftColumn = ({
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => (window.location.href = `/itineraryMap/${itineraryId}`)}
+              onClick={() => (window.location.href = `/itinerario/mapa/${itineraryId}`)}
             >
               <img src={mapIcon} alt="" />
               <p className="text-sm">Mapa</p>
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => (window.location.href = `/itineraryChat/${itineraryId}`)}
+              onClick={() => (window.location.href = `/itinerario/chat/${itineraryId}`)}
             >
               <img src={chatIcon} alt="" />
               <p className="text-sm">Chat</p>
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => (window.location.href = `/sharedGallery/${itineraryId}`)}
+              onClick={() => (window.location.href = `/itinerario/galeria/${itineraryId}`)}
             >
               <img src={galleryIcon} alt="" />
               <p className="text-sm">Galeria compartida</p>
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => (window.location.href = `/itineraryDetail/${itineraryId}`)}
+              onClick={() => (window.location.href = `/itinerario/detalle/${itineraryId}`)}
             >
               <img src={alignIcon} alt="" />
               <p className="text-sm">Resumen del viaje</p>
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => (window.location.href = `/gastosCompartidos/${itineraryId}`)}
+              onClick={() => (window.location.href = `/itinerario/gastos/${itineraryId}`)}
             >
               <Receipt className="stroke-primary" strokeWidth={1} />
               <p className="text-sm">Gastos compartidos</p>

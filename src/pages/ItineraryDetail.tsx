@@ -270,13 +270,13 @@ export const ItineraryDetail = () => {
                   <div className="flex flex-row md:flex-col w-full justify-around md:justify-center">
                     <div className="flex items-center p-1 gap-x-2 cursor-pointer">
                       <img src={calendarIcon} alt="" />
-                      <Link to={`/itineraryCalendar/${itineraryId}`}>
+                      <Link to={`/itinerario/calendario/${itineraryId}`}>
                         <p className="text-sm hover:underline">Calendario</p>
                       </Link>
                     </div>
                     <div className="flex items-center p-1 gap-x-2 cursor-pointer">
                       <img src={mapIcon} alt="" />
-                      <Link to={`/itineraryMap/${itineraryId}`}>
+                      <Link to={`/itinerario/mapa/${itineraryId}`}>
                         <p className="text-sm hover:underline">Mapa</p>
                       </Link>
                     </div>

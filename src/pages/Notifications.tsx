@@ -145,7 +145,7 @@ const Notifications = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('User successfully added to the itinerary', data);
-        window.location.href=`/itineraryCalendar/${data.data.updatedItinerary.id}`
+        window.location.href=`/itinerario/calendario/${data.data.updatedItinerary.id}`
       } else {
         console.error('Error adding user to itinerary');
       }
@@ -195,13 +195,13 @@ const Notifications = () => {
                   const isParticipationRequest = !!notification.participationRequest;
 
                   const linkPath = notification.publication
-                    ? `/publication/${notification.publication.id}`
+                    ? `/publicacion/${notification.publication.id}`
                     : notification.itinerary
-                      ? `/itineraryCalendar/${notification.itinerary.id}`
+                      ? `/itinerario/calendario/${notification.itinerary.id}`
                       : '';
 
                   return isParticipationRequest ? (
-                    <Link to={notification.participationRequest.status === 'accepted' ? `/itineraryCalendar/${notification.itinerary.id}` : `/notifications`}
+                    <Link to={notification.participationRequest.status === 'accepted' ? `/itinerario/calendario/${notification.itinerary.id}` : `/notificaciones`}
                       key={index}
                       className={
                         `lg:w-auto lg:mb-0 mb-6 p-4 rounded-2xl ${notification.isRead ? 'bg-white hover:bg-[#d9d9d9]' : 'bg-[#c0daeb] hover:bg-[#009fe3]'} ` +

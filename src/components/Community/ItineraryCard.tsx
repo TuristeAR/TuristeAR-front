@@ -104,7 +104,7 @@ export const ItineraryCard = (props: {
             </div>
           </details>
           <Link
-            to={'/itineraryCalendar/' + itinerary.id}
+            to={'/itinerario/calendario/' + itinerary.id}
             className="rounded-2xl py-2 bg-primary hover:bg-primary-3 text-white text-center w-[150px]"
           >
             <p>Ver más</p>

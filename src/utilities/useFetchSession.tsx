@@ -29,7 +29,7 @@ export const UseFetchSession = () => {
           if (isMounted) {
             setError('No se pudo obtener la sesión. Redirigiendo...');
             setTimeout(() => {
-              window.location.href = '/login';
+              window.location.href = '/iniciar-sesion';
             }, 2000);
           }
           return;

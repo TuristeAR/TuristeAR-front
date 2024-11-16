@@ -86,7 +86,7 @@ const PublicationDetail = () => {
 
         const socket = io(process.env.VITE_API_URL);
         socket.on('receiveDelete', () => {
-          window.location.href = '/publications';
+          window.location.href = '/publicaciones';
         });
 
         setIsLoading(false);
@@ -131,7 +131,7 @@ const PublicationDetail = () => {
                 <PublicationCard
                   publication={publication}
                   user={user}
-                  onDelete={() => { window.location.href = '/publications'}}
+                  onDelete={() => { window.location.href = '/publicaciones'}}
                 />
                 <CommentDetail publication={publication} user={user} key={publication.id} />
               </div>
