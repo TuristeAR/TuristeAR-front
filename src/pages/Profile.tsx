@@ -213,7 +213,7 @@ const Profile = () => {
                   </div>
                   <div className="-my-4 md:-my-0">
                     <a
-                      href={`/editProfile`}
+                      href={`/editar-perfil`}
                       className="lg:btn-blue px-4 py-2 text-sm bg-primary hover:bg-primary-3 text-white rounded-2xl"
                     >
                       Editar perfil

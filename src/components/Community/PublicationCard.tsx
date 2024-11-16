@@ -125,7 +125,7 @@ export function PublicationCard(props: {
 
   return (
     <>
-      <div className={`w-full h-fit p-4 lg:mb-0 mb-6 rounded-2xl ${!window.location.pathname.includes('/publication/') && 'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)]'}`}>
+      <div className={`w-full h-fit p-4 lg:mb-0 mb-6 rounded-2xl ${!window.location.pathname.includes('/publicacion/') && 'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)]'}`}>
         <div className="flex justify-between items-center relative">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
@@ -251,7 +251,7 @@ export function PublicationCard(props: {
               <span className="ml-3">{likes}</span>
             </div>
             <div className="flex items-center mr-6">
-              <a href={`/publication/${publication.id}`}>
+              <a href={`/publicacion/${publication.id}`}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="20px"

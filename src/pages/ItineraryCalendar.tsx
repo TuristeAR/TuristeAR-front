@@ -107,7 +107,7 @@ export const ItineraryCalendar = () => {
           setEvents={setEvents}
           deleteEvent={deleteEvent}
           onDelete={() => {
-            window.location.href = '/profile';
+            window.location.href = '/perfil';
           }}
         />
         <main className="order-1 lg:order-2 col-span-1 container mx-auto">

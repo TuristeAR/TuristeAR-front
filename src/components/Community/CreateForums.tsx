@@ -86,7 +86,7 @@ export const CreateForums = () => {
       setError('');
       const idRedirect = response.json();
       idRedirect.then((data) => {
-        window.location.href = `/forum/${data.data.id}`;
+        window.location.href = `/foro/${data.data.id}`;
       });
     } catch (err: any) {
       setError(err.message);

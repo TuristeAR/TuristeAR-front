@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header } from '../components/Header/Header';
 import { MapaArg } from '../components/Destinations/MapaArg';
 import { ProgressBar } from '../components/Questions/ProgressBar';
@@ -490,7 +490,7 @@ const FormQuestions = () => {
 
       if (response.statusCode === 201) {
         const itineraryId = response.itineraryId;
-        navigate(`/itineraryCalendar/${itineraryId}`);
+        navigate(`/itinerario/calendario/${itineraryId}`);
       }
     } catch (error) {
       console.error('Error:', error);
