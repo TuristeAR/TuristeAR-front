@@ -42,7 +42,7 @@ const useAddActivities = (itineraryId, setActivities, itinerary) => {
     ({ itinerary }) => {
       const activitiesList = itinerary?.activities || [];
       const lastActivity = activitiesList[activitiesList.length - 1];
-      if (lastActivity) {
+      if (lastActivity && itinerary.id == itineraryId) {
         setActivities((prevActivities) => [...prevActivities, lastActivity]);
         Swal.fire({
           icon: 'success',

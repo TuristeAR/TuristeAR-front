@@ -201,7 +201,7 @@ const Notifications = () => {
                       : '';
 
                   return isParticipationRequest ? (
-                    <Link to={notification.participationRequest.status === 'accepted' ? `/itinerario/calendario/${notification.itinerary.id}` : `/notificaciones`}
+                    <Link to={notification.participationRequest.status === 'accepted' ? `/itinerario/calendario/${notification.participationRequest.itinerary.id}` : `/notificaciones`}
                       key={index}
                       className={
                         `lg:w-auto lg:mb-0 mb-6 p-4 rounded-2xl ${notification.isRead ? 'bg-white hover:bg-[#d9d9d9]' : 'bg-[#c0daeb] hover:bg-[#009fe3]'} ` +

@@ -83,38 +83,49 @@ export const LeftColumn = ({
   }, []);
 
   useEffect(() => {
+
     socket.on('usersUpdated', (data) => {
       console.log('socket', data);
-      const owner = {
-        ...data.itineraryParticipants.user,
-        isOwner: true,
-      };
+      if(data.itineraryParticipants.id == itineraryId){
+        const owner = {
+          ...data.itineraryParticipants.user,
+          isOwner: true,
+        };
 
-      setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
+        setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
+      }
     });
     socket.on('usersAddItinerary', (data) => {
       console.log('socket add', data.updatedItinerary);
-      const owner = {
-        ...data.updatedItinerary.user,
-        isOwner: true,
-      };
-      setUsersOldNav([owner, ...data.updatedItinerary.participants]);
+      if(data.updatedItinerary == itineraryId) {
+        const owner = {
+          ...data.updatedItinerary.user,
+          isOwner: true,
+        };
+        setUsersOldNav([owner, ...data.updatedItinerary.participants]);
+      }
     });
 
-    socket.on('userRemoved', ({ participantId }) => {
-      setUsersOldNav((prevUsersOldNav) =>
-        prevUsersOldNav.filter((user) => user.id !== participantId),
-      );
+    socket.on('userRemoved', ({ itineraryId, participantId }) => {
+      if(itinerary.id == itineraryId) {
+        setUsersOldNav((prevUsersOldNav) =>
+          prevUsersOldNav.filter((user) => user.id !== participantId),
+        );
+      }
     });
 
     socket.on('activityRemoved', ({ itineraryId, activityId }) => {
-      setActivities((prevActivities) =>
-        prevActivities.filter((activity) => activity.id !== activityId),
-      );
+      if(itinerary.id == itineraryId) {
+        setActivities((prevActivities) =>
+          prevActivities.filter((activity) => activity.id !== activityId),
+        );
+      }
     });
 
     socket.on('eventRemoved', ({ itineraryId, eventId }) => {
-      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
+      if(itinerary.id == itineraryId) {
+        setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
+      }
     });
 
     return () => {
