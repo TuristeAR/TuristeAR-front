@@ -45,7 +45,7 @@ export const EventCard: React.FC<EventCardProps> = ({
               <h5 className="mb-2 text-base sm:text-xl font-bold tracking-tight text-gray-900">
                 {name}
               </h5>
-              <p className="italic text-sm sm:text-md font-light">{locality.name}</p>
+              <p className="italic text-sm sm:text-md font-light">{locality?.name}</p>
             </div>
             <div className="my-2">
               <p className="text-xs sm:text-lg text-gray-700">{description}</p>

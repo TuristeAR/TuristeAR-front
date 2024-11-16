@@ -8,8 +8,7 @@ import { DateRangePicker } from 'react-date-range';
 import { es } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { get, getWithoutCredentials, post } from '../utilities/http.util';
-import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+
 import {
   Baby,
   Banknote,
@@ -31,8 +30,9 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import EventCarousel from '../components/FormQuestions/EventCarousel';
 import formatFromDateAndToDate from '../utilities/formatEventDate';
-import { EventCard } from '../components/FormQuestions/EventCard';
 import { getJsonUrl } from '../utilities/getJsonUrl';
+import Loading from '../components/FormQuestions/Loading';
+import ItinerarySummary from '../components/FormQuestions/ItinerarySummary';
 
 interface FormData {
   provinces: Province[];
@@ -577,58 +577,18 @@ const FormQuestions = () => {
     fetchSession();
   }, []);
 
-  const [carouselEvents, setCarouselEvents] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (selectedProvinces.length > 0) {
-      fetchEvents(selectedProvinces[0].id).then((data) => {
-        setCarouselEvents(data.data);
-      });
-    }
-  }, [selectedProvinces]);
-
-  const swiperRef = useRef(null);
-
   return (
     <>
       <Header />
       <DialogWindow isOpen={dialogWindowOpen} onClose={handleCloseDialogWindow} />
       {loading ? (
-        <div className="w-[90%] md:w-full mx-auto min-h-[90vh] flex flex-col items-center justify-center">
-          <div className="h-full flex flex-col md:flex-row justify-center items-center gap-x-4 my-4">
-            <h2 className="text-4xl text-center text-primary-4 mx-auto mb-6 md:mb-0">
-              Estamos armando el viaje ideal para vos...
-            </h2>
-            <Lottie className="w-[6rem] md:w-[4rem] mx-auto" animationData={logoAnimado} />
-          </div>
-
-          <Swiper
-            ref={swiperRef}
-            className="w-full max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[650px] xl:max-w-[850px]"
-            modules={[Navigation, Pagination, Scrollbar, A11y]}
-            slidesPerView={1}
-            slidesPerGroup={1}
-            autoplay={{ delay: 5000, disableOnInteraction: false }}
-            loop={true}
-          >
-            {carouselEvents.map((event) => (
-              <SwiperSlide key={event.id}>
-                <EventCard
-                  fromDate={event.fromDate}
-                  toDate={event.toDate}
-                  name={event.name}
-                  locality={localities.find((loc) => loc.name === event.locality)}
-                  description={event.description}
-                  image={event.image}
-                  id={event.id}
-                  isSelected={selectedEvents.includes(event.id)}
-                  onSelect={handleEventSelect}
-                  isLoading={true}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+        <Loading
+          fetchEvents={fetchEvents}
+          selectedProvinces={selectedProvinces}
+          localities={localities}
+          selectedEvents={selectedEvents}
+          handleEventSelect={handleEventSelect}
+        />
       ) : (
         <section
           className={`min-h-[90vh] flex items-center justify-center ${dialogWindowOpen ? 'opacity-10' : 'bg-gray-100'} text-black`}
@@ -637,93 +597,14 @@ const FormQuestions = () => {
             {pendingItinerary ? (
               <div className="mx-auto">
                 {resumedItinerary ? (
-                  <>
-                    <h2 className="mb-4 md:mb-16 text-center text-2xl sm:text-5xl font-semibold text-primary-4">
-                      Resumen de tu viaje
-                    </h2>
-                    <div className="flex flex-col">
-                      {selectedProvinces && (
-                        <span className="text-center text-xl my-1">
-                          Provincias:{' '}
-                          <strong>
-                            {selectedProvinces.map((province, index) => (
-                              <strong key={province.id}>
-                                {province.name}
-                                {index < selectedProvinces.length - 2
-                                  ? ', '
-                                  : index === selectedProvinces.length - 2
-                                    ? ' y '
-                                    : ''}
-                              </strong>
-                            ))}
-                          </strong>
-                        </span>
-                      )}
-                      <span className="text-center text-xl my-1">
-                        Lugares a visitar:{' '}
-                        {formData.localities.map((locality, index) => (
-                          <strong key={locality.name}>
-                            {locality.name}
-                            {index < formData.localities.length - 1 && ', '}
-                          </strong>
-                        ))}
-                      </span>
-                      <span className="text-center text-xl my-1">
-                        Fecha de inicio:{' '}
-                        <strong>{new Date(formData.fromDate).toLocaleDateString('es-ES')}</strong>
-                      </span>
-                      <span className="text-center text-xl my-1">
-                        Fecha de finalización:{' '}
-                        <strong>{new Date(formData.toDate).toLocaleDateString('es-ES')}</strong>
-                      </span>
-                      <span className="text-center text-xl my-1">
-                        Duración:{' '}
-                        <strong>
-                          {Math.ceil(
-                            (new Date(formData.toDate).getTime() -
-                              new Date(formData.fromDate).getTime()) /
-                              (1000 * 60 * 60 * 24),
-                          )}{' '}
-                          días
-                        </strong>
-                      </span>
-                      <div className="flex flex-wrap justify-center gap-5 my-2">
-                        {renderPriceLevel()}
-                        {formData.types.map((type) => {
-                          const option = questions[3].options.find(
-                            (option) => option.data.toString() === type,
-                          );
-                          return (
-                            <div
-                              key={type}
-                              className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 border border-gray"
-                            >
-                              {option?.src}
-                              {option?.alt}
-                            </div>
-                          );
-                        })}
-                        <div
-                          key="company"
-                          className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 p-2 border border-gray"
-                        >
-                          {
-                            questions[4].options.find((option) => option.data === formData.company)
-                              ?.src
-                          }
-                          {
-                            questions[4].options.find((option) => option.data === formData.company)
-                              ?.alt
-                          }
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-full flex justify-center my-2">
-                      <button type="button" className="btn-question" onClick={submitFormData}>
-                        Finalizar
-                      </button>
-                    </div>
-                  </>
+                  <ItinerarySummary
+                    formData={formData}
+                    resumedItinerary={resumedItinerary}
+                    selectedProvinces={selectedProvinces}
+                    renderPriceLevel={renderPriceLevel}
+                    questions={questions}
+                    submitFormData={submitFormData}
+                  />
                 ) : (
                   <>
                     <h2 className="mb-4 md:mb-16 text-center text-2xl sm:text-5xl font-semibold text-primary-4">
