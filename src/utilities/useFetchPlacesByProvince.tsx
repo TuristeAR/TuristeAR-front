@@ -6,7 +6,7 @@ const useFetchPlacesByProvince = (itinerary) => {
   useEffect(() => {
     const fetchPlacesByProvince = async () => {
       try {
-        if (itinerary && itinerary.name) {
+        if (itinerary) {
           const province = itinerary.activities[0].place.province.name;
           const response = await fetch(
             `${process.env.VITE_API_URL}/fetch-activities-places/${province}`,

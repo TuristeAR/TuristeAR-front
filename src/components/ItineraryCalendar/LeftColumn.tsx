@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Receipt, Trash2 } from 'lucide-react';
 import plusIcon from '/assets/add.svg';
 import chatIcon from '/assets/chat.svg';
@@ -14,6 +14,7 @@ import SharedExpenses from '../../pages/SharedExpenses';
 import useAddActivities from '../../utilities/useAddActivities';
 import { get } from '../../utilities/http.util';
 import Select from 'react-select';
+import Swal from 'sweetalert2';
 
 type User = {
   id: number;
@@ -44,6 +45,7 @@ export const LeftColumn = ({
   const { handleAddActivity, newActivity, setNewActivity } = useAddActivities(
     itineraryId,
     setActivities,
+    itinerary
   );
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
@@ -124,12 +126,12 @@ export const LeftColumn = ({
   }, []);
 
   const placeOptions = activityByProvince.map((place) => ({
-    label: place.name, 
-    value: place.id, 
+    label: place.name,
+    value: place.id,
   }));
 
   const handleSelectChange = (selectedOption: any) => {
-    setNewActivity({ ...newActivity, place: selectedOption.value }); 
+    setNewActivity({ ...newActivity, place: selectedOption.value });
   };
 
   const deleteActivity = (activityId: number) => {
@@ -146,6 +148,11 @@ export const LeftColumn = ({
           setActivities((prevActivities) =>
             prevActivities.filter((activity) => activity.id !== activityId),
           );
+          Swal.fire({
+            icon: 'success',
+            title: 'Actividad eliminada',
+            text: 'La actividad se ha eliminado correctamente del itinerario.',
+          });
         } else {
           console.error('Error al eliminar la actividad:', data.message);
         }
