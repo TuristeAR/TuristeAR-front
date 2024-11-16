@@ -32,7 +32,8 @@ import EventCarousel from '../components/FormQuestions/EventCarousel';
 import formatFromDateAndToDate from '../utilities/formatEventDate';
 import { getJsonUrl } from '../utilities/getJsonUrl';
 import Loading from '../components/FormQuestions/Loading';
-import ItinerarySummary from '../components/FormQuestions/ItinerarySummary';
+import ProvisionalItinerary from '../components/FormQuestions/ProvisionalItinerary';
+import { useLocalities } from '../utilities/useLocalities';
 
 interface FormData {
   provinces: Province[];
@@ -65,8 +66,7 @@ const FormQuestions = () => {
   const [dialogWindowOpen, setDialogWindowOpen] = useState(false);
   const [selectedProvinces, setSelectedProvinces] = useState<Province[]>([]);
   const [localities, setLocalities] = useState<any[]>([]);
-  const [selectedLocalities, setSelectedLocalities] = useState<Locality[]>([]);
-  const [searchLocality, setSearchLocality] = useState('');
+
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [formData, setFormData] = useState<FormData>({
@@ -100,20 +100,13 @@ const FormQuestions = () => {
     },
   ]);
 
-  const handleLocalitySelection = (locality: Locality) => {
-    setSelectedLocalities((prev) => {
-      const updatedLocalities = prev.some((loc) => loc.name === locality.name)
-        ? prev.filter((loc) => loc.name !== locality.name)
-        : [...prev, locality];
-
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        localities: updatedLocalities,
-      }));
-
-      return updatedLocalities;
-    });
-  };
+  const {
+    searchLocality,
+    setSearchLocality,
+    filteredLocalities,
+    selectedLocalities,
+    handleLocalitySelection,
+  } = useLocalities(localities);
 
   const handleDateSelect = (rangesByKey: any) => {
     const selection = rangesByKey.selection;
@@ -595,44 +588,16 @@ const FormQuestions = () => {
         >
           <div className="container mx-auto flex flex-col md:flex-row justify-center z-30 relative">
             {pendingItinerary ? (
-              <div className="mx-auto">
-                {resumedItinerary ? (
-                  <ItinerarySummary
-                    formData={formData}
-                    resumedItinerary={resumedItinerary}
-                    selectedProvinces={selectedProvinces}
-                    renderPriceLevel={renderPriceLevel}
-                    questions={questions}
-                    submitFormData={submitFormData}
-                  />
-                ) : (
-                  <>
-                    <h2 className="mb-4 md:mb-16 text-center text-2xl sm:text-5xl font-semibold text-primary-4">
-                      ¡Tenés un viaje pendiente!
-                    </h2>
-                    <p className="my-4 text-xl text-center sm:text-2xl">
-                      Parece que tenés un viaje por realizar... ¿Querés continuar con el viaje
-                      anterior o comenzar uno nuevo?
-                    </p>
-                    <div className="flex flex-col items-center justify-center md:flex-row gap-x-4 mt-4 md:mt-16">
-                      <button
-                        type="button"
-                        className="btn-question mb-3 md:mb-0 w-72 md:w-96 text-sm md:text-md"
-                        onClick={() => setPendingItinerary(false)}
-                      >
-                        Comenzar un nuevo viaje
-                      </button>
-                      <button
-                        type="button"
-                        className="btn-question mt-3 md:mt-0 w-72 md:w-96 text-sm md:text-md"
-                        onClick={() => setResumedItinerary(true)}
-                      >
-                        Continuar con el viaje anterior
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
+              <ProvisionalItinerary
+                formData={formData}
+                resumedItinerary={resumedItinerary}
+                selectedProvinces={selectedProvinces}
+                renderPriceLevel={renderPriceLevel}
+                questions={questions}
+                submitFormData={submitFormData}
+                setPendingItinerary={setPendingItinerary}
+                setResumedItinerary={setResumedItinerary}
+              />
             ) : (
               <form className="flex flex-col w-full max-w-full items-center justify-center bg-white p-4 gap-y-6 md:gap-y-4 min-h-[500px]">
                 <ProgressBar currentStep={currentStep} />
