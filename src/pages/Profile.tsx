@@ -48,7 +48,7 @@ type Activity = {
 type Publication = {
   id: number;
   description: string;
-  category: Category | null;
+  categories: Category[];
   createdAt: string;
   user: User | null;
   likes: User[];
@@ -263,7 +263,7 @@ const Profile = () => {
                   publications
                     .filter((publication) => {
                       return (
-                        categorySelected == null || publication.category.id == categorySelected
+                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
                       );
                     })
                     .map((publication, index) => (
@@ -302,7 +302,7 @@ const Profile = () => {
                   likedPublications
                     .filter((publication) => {
                       return (
-                        categorySelected == null || publication.category.id == categorySelected
+                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
                       );
                     })
                     .map((publication, index) => (
@@ -323,7 +323,7 @@ const Profile = () => {
                   savedPublications
                     .filter((publication) => {
                       return (
-                        categorySelected == null || publication.category.id == categorySelected
+                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
                       );
                     })
                     .map((publication, index) => (

@@ -47,7 +47,7 @@ type Activity = {
 type Publication = {
   id: number;
   description: string;
-  category: Category | null;
+  categories: Category[];
   createdAt: string;
   user: User | null;
   likes: User[];
@@ -125,7 +125,9 @@ export function PublicationCard(props: {
 
   return (
     <>
-      <div className={`w-full h-fit p-4 lg:mb-0 mb-6 rounded-2xl ${!window.location.pathname.includes('/publicacion/') && 'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)]'}`}>
+      <div
+        className={`w-full h-fit p-4 lg:mb-0 mb-6 rounded-2xl ${!window.location.pathname.includes('/publicacion/') && 'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)]'}`}
+      >
         <div className="flex justify-between items-center relative">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
@@ -137,7 +139,18 @@ export function PublicationCard(props: {
             </div>
             <div className={'flex flex-col'}>
               <p className={'font-semibold '}>{publication.user.name}</p>
-              <p className={'text-[12px]'}>{publication.category.description}</p>
+              <div className={'flex gap-2 '}>
+                {publication.categories.map((category, index) => (
+                  <>
+                    {(publication.categories.length>1 && publication.categories.length-1 == index) &&(
+                      <p className={'text-[12px]'}>-</p>
+                    )}
+                    <p className={'text-[12px]'} key={index}>
+                      {category.description}
+                    </p>
+                  </>
+                ))}
+              </div>
             </div>
           </div>
           <div className={'flex items-center'}>
