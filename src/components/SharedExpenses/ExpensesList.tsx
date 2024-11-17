@@ -19,7 +19,7 @@ type User = {
   profilePicture: string;
 };
 
-const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
+const ExpensesList = ({ itineraryId }) => {
   const [groupedExpenses, setGroupedExpenses] = useState<{ [date: string]: Expense[] }>({});
   const { usersOldNav } = useFetchParticipants(itineraryId);
   const [selectedExpenseId, setSelectedExpenseId] = useState<number | null>(null);
@@ -45,7 +45,7 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
     const fetchExpenses = async () => {
       try {
         const response = await fetch(
-          `https://api-turistear.koyeb.app/expenses/${itineraryId as number}`,
+          `http://localhost:3001/expenses/${itineraryId as number}`,
         );
         if (!response.ok) {
           throw new Error('Error al obtener los gastos');
@@ -89,7 +89,7 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
 
   const handleDeleteExpense = async (expenseId: number) => {
     try {
-      const response = await fetch(`https://api-turistear.koyeb.app/expenses/${expenseId}`, {
+      const response = await fetch(`http://localhost:3001/expenses/${expenseId}`, {
         method: 'DELETE',
       });
 
@@ -133,19 +133,7 @@ const ExpensesList = ({ onAddExpense, itineraryId, itineraryName }) => {
           itineraryId={itineraryId}
         />
       ) : (
-        <div className=" w-full mx-auto bg-[ #F9FAFf]">
-          <h2 className="font-bold text-3xl lead-10 text-black mb-9">
-            Gastos Compartidos - {itineraryName}
-          </h2>
-          <div className="flex mb-4 flex-row gap-1">
-            <button
-              onClick={onAddExpense}
-              className="rounded-xl flex px-7 py-3 bg-primary text-white hover:text-black border border-primary font-semibold text-lg shadow-sm shadow-transparent transition-all duration-500 hover:shadow-primary hover:bg-slate-50"
-            >
-              <Plus className="my-auto" />
-              Añadir Gasto
-            </button>
-          </div>
+        <div className="w-full mx-auto bg-[ #F9FAFf]">
           {Object.keys(groupedExpenses).length > 0 && (
             <div className="text-center text-xl mt-6 flex flex-col sm:flex-row justify-around  h-max">
               <div className="my-1 w-62">

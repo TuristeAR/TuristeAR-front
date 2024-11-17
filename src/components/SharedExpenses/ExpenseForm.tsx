@@ -157,7 +157,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
       expenseData.imageUrls = imageUrls;
 
 
-      const response = await fetch('https://api-turistear.koyeb.app/expenses', {
+      const response = await fetch('http://localhost:3001/expenses', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -194,10 +194,6 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
   return (
     <>
       <div className="bg-white p-6 max-w-lg mx-auto">
-        <button className="flex" onClick={onBack}>
-          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[20px] my-auto'} />
-          <div className="text-sm font-bold text-primary-3">Volver A La Lista De Gastos</div>
-        </button>
 
         <h3 className="font-bold text-3xl lead-10 text-black mb-9">Agregar Nuevo Gasto</h3>
         <form>
