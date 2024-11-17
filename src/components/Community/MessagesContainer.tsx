@@ -39,6 +39,16 @@ export const MessagesContainer = (props: { forum : Forum, user: User }) => {
     }
   }, [forum?.messages]);
 
+  const isToday = (date: string) => {
+    const messageDate = new Date(date);
+    const today = new Date();
+    return (
+      messageDate.getDate() === today.getDate() &&
+      messageDate.getMonth() === today.getMonth() &&
+      messageDate.getFullYear() === today.getFullYear()
+    );
+  };
+
   return (
     <>
       {forum?.messages.map((message, index) => (
@@ -50,7 +60,7 @@ export const MessagesContainer = (props: { forum : Forum, user: User }) => {
           >
             <div
               className={
-                `${user.id === message.user.id ? 'bg-[#c0daeb]' : 'bg-white'} shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:p-6 p-4 rounded-2xl lg:gap-4 gap-2 flex flex-col w-auto lg:max-w-[65%] max-w-[80%]`
+                `${user.id === message.user.id ? 'bg-[#c0daeb]' : 'bg-white'} shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] lg:p-4 p-4 rounded-2xl lg:gap- gap-2 flex flex-col w-auto lg:max-w-[65%] max-w-[80%]`
               }
             >
               <div className="flex justify-between items-center lg:gap-20 gap-6 ">
@@ -66,10 +76,12 @@ export const MessagesContainer = (props: { forum : Forum, user: User }) => {
                     <p className={'font-semibold lg:text-[17px] text-[14px] '}>{message.user.name}</p>
                   </div>
                 </div>
-                <p className={'lg:text-[16px] text-[12px]'}>
-                  {new Date(new Date(message.createdAt).getTime() - 3 * 60 * 60 * 1000)
-                    .toISOString()
-                    .slice(11, 16)}
+                <p className={'lg:text-[16px] text-[12px] text-[#484b56]'}>
+                  {!isToday(message.createdAt)
+                    ? message.createdAt.slice(0,-14)
+                    : new Date(new Date(message.createdAt).getTime() - 3 * 60 * 60 * 1000)
+                      .toISOString()
+                      .slice(11, 16)}
                 </p>
               </div>
               <div>
@@ -86,7 +98,16 @@ export const MessagesContainer = (props: { forum : Forum, user: User }) => {
               ) : (
                 <></>
               )}
-            </div>
+
+                {!isToday(message.createdAt) &&
+                  (
+                    <div className="flex justify-end text-[#484b56]">
+                      {new Date(new Date(message.createdAt).getTime() - 3 * 60 * 60 * 1000)
+                        .toISOString()
+                        .slice(11, 16)}
+                    </div>
+                  )}
+              </div>
           </div>
         ) : (<></>)
       ))}
