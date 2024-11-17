@@ -15,7 +15,7 @@ const SettleDebt = ({ itineraryId }: { itineraryId: number }) => {
     const fetchDebts = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/expenses/debt/payer/itinerary/${itineraryId}`,
+          `https://api-turistear.koyeb.app/expenses/debt/payer/itinerary/${itineraryId}`,
           {
             credentials: 'include',
           },
