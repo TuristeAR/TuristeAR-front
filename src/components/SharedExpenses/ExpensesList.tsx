@@ -45,7 +45,7 @@ const ExpensesList = ({ itineraryId }) => {
     const fetchExpenses = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/expenses/${itineraryId as number}`,
+          `https://api-turistear.koyeb.app/expenses/${itineraryId as number}`,
         );
         if (!response.ok) {
           throw new Error('Error al obtener los gastos');
