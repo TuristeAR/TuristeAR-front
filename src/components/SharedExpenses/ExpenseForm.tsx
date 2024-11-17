@@ -95,6 +95,8 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
     setValidationError('');
     if (!payerId) {
       setValidationError('Por favor, selecciona un pagador.');
+      setLoading(false);
+
       return;
     }
 
@@ -326,8 +328,9 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
             onClick={handleSubmit}
             type="submit"
             className="ml-4 px-6 py-2 rounded-lg bg-orange text-white font-semibold hover:shadow-orange hover:bg-slate-50 hover:text-black hover:border hover:border-orange shadow-sm"
+            disabled={loading} 
           >
-            Guardar Gasto
+          {loading ? 'Procesando...' : 'Guardar Gasto'}
           </button>
         </form>
       </div>

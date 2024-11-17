@@ -19,6 +19,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
   const [validationError, setValidationError] = useState('');
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imageUrls, setImageUrls] = useState<[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const handleImagesUploaded = (images) => {
     setSelectedImages(images);
@@ -110,15 +111,18 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     setValidationError('');
     if (!payerId) {
       setValidationError('Por favor, selecciona un pagador.');
+      setLoading(false);
       return;
     }
 
     if (!validateAmounts()) {
       setValidationError(`La suma de los ${distributionType} no coincide con el monto total.`);
+      setLoading(false);
       return;
     }
     const expenseData = {
@@ -163,6 +167,8 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
       onBack();
     } catch (error) {
       console.log(error.message);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -333,9 +339,10 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
           onClick={handleSubmit}
           type="submit"
           className="ml-4 px-6 py-2 rounded-lg bg-orange text-white font-semibold hover:shadow-orange hover:bg-slate-50 hover:text-black hover:border hover:border-orange shadow-sm"
-        >
-          Guardar Cambios
-        </button>
+          disabled={loading} 
+          >
+          {loading ? 'Procesando...' : 'Editar Gasto'}
+          </button>
       </form>
     </div>
   );
