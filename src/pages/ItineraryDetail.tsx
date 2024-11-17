@@ -35,25 +35,31 @@ export const ItineraryDetail = () => {
 
   useEffect(() => {
     socket.on('usersUpdated', (data) => {
-      const owner = {
-        ...data.itineraryParticipants.user,
-        isOwner: true,
-      };
-      setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
+      if(data.itineraryParticipants.id == itineraryId) {
+        const owner = {
+          ...data.itineraryParticipants.user,
+          isOwner: true,
+        };
+        setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
+      }
     });
     socket.on('usersAddItinerary', (data) => {
       console.log('socket add', data.updatedItinerary);
-      const owner = {
-        ...data.updatedItinerary.user,
-        isOwner: true,
-      };
-      setUsersOldNav([owner, ...data.updatedItinerary.participants]);
+      if(data.updatedItinerary == itineraryId) {
+        const owner = {
+          ...data.updatedItinerary.user,
+          isOwner: true,
+        };
+        setUsersOldNav([owner, ...data.updatedItinerary.participants]);
+      }
     });
 
-    socket.on('userRemoved', ({ participantId }) => {
-      setUsersOldNav((prevUsersOldNav) =>
-        prevUsersOldNav.filter((user) => user.id !== participantId),
-      );
+    socket.on('userRemoved', ({itineraryId, participantId }) => {
+      if(itinerary.id == itineraryId) {
+        setUsersOldNav((prevUsersOldNav) =>
+          prevUsersOldNav.filter((user) => user.id !== participantId),
+        );
+      }
     });
 
     return () => {
