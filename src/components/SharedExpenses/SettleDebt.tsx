@@ -35,7 +35,7 @@ const SettleDebt = ({ itineraryId }: { itineraryId: number }) => {
 
     setIsProcessing((prev) => ({ ...prev, [userId]: true }));
     try {
-      const response = await fetch(`http://localhost:3001/expenses/settle`, {
+      const response = await fetch(`https://api-turistear.koyeb.app/expenses/settle`, {
         method: 'PATCH',
         credentials: 'include',
         headers: {

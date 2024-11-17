@@ -89,7 +89,7 @@ const ExpensesList = ({ itineraryId }) => {
 
   const handleDeleteExpense = async (expenseId: number) => {
     try {
-      const response = await fetch(`http://localhost:3001/expenses/${expenseId}`, {
+      const response = await fetch(`https://api-turistear.koyeb.app/expenses/${expenseId}`, {
         method: 'DELETE',
       });
 
