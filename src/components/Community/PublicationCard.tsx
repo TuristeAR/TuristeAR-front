@@ -47,7 +47,7 @@ type Activity = {
 type Publication = {
   id: number;
   description: string;
-  category: Category | null;
+  categories: Category[];
   createdAt: string;
   user: User | null;
   likes: User[];
@@ -91,7 +91,7 @@ export function PublicationCard(props: {
   const handleLike = async () => {
     setLikes(!isLike ? likes + 1 : likes - 1);
     setIsLike(!isLike);
-    await post(`https://api-turistear.koyeb.app/handleLike/${publication.id}`, {
+    await post(`${process.env.VITE_API_URL}/handleLike/${publication.id}`, {
       'Content-Type': 'application/json',
     });
   };
@@ -99,7 +99,7 @@ export function PublicationCard(props: {
   const handleSaved = async () => {
     setSaved(!isSave ? saved + 1 : saved - 1);
     setIsSave(!isSave);
-    await post(`https://api-turistear.koyeb.app/handleSaved/${publication.id}`, {
+    await post(`${process.env.VITE_API_URL}/handleSaved/${publication.id}`, {
       'Content-Type': 'application/json',
     });
   };
@@ -107,13 +107,13 @@ export function PublicationCard(props: {
   const handleRepost = async () => {
     setReposts(!isRepost ? reposts + 1 : reposts - 1);
     setIsRepost(!isRepost);
-    await post(`https://api-turistear.koyeb.app/handleReposts/${publication.id}`, {
+    await post(`${process.env.VITE_API_URL}/handleReposts/${publication.id}`, {
       'Content-Type': 'application/json',
     });
   };
 
   const deletePublication = async (id : number) => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io(process.env.VITE_API_URL);
     socket.emit('deletePublication', {
       publicationId: id,
       userId: user.id,
@@ -125,7 +125,9 @@ export function PublicationCard(props: {
 
   return (
     <>
-      <div className={`w-full h-fit p-4 lg:mb-0 mb-6 rounded-2xl ${!window.location.pathname.includes('/publication/') && 'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)]'}`}>
+      <div
+        className={`w-full h-fit p-4 lg:mb-0 mb-6 rounded-2xl ${!window.location.pathname.includes('/publicacion/') && 'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)]'}`}
+      >
         <div className="flex justify-between items-center relative">
           <div className="flex items-center gap-4">
             <div className="rounded-full  border border-1 border-black">
@@ -137,7 +139,18 @@ export function PublicationCard(props: {
             </div>
             <div className={'flex flex-col'}>
               <p className={'font-semibold '}>{publication.user.name}</p>
-              <p className={'text-[12px]'}>{publication.category.description}</p>
+              <div className={'flex gap-2 '}>
+                {publication.categories.map((category, index) => (
+                  <>
+                    {(publication.categories.length>1 && publication.categories.length-1 == index) &&(
+                      <p className={'text-[12px]'}>-</p>
+                    )}
+                    <p className={'text-[12px]'} key={index}>
+                      {category.description}
+                    </p>
+                  </>
+                ))}
+              </div>
             </div>
           </div>
           <div className={'flex items-center'}>
@@ -251,7 +264,7 @@ export function PublicationCard(props: {
               <span className="ml-3">{likes}</span>
             </div>
             <div className="flex items-center mr-6">
-              <a href={`/publication/${publication.id}`}>
+              <a href={`/publicacion/${publication.id}`}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="20px"

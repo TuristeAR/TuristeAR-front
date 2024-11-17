@@ -49,7 +49,7 @@ type Activity = {
 type Publication = {
   id: number;
   description: string;
-  category: Category | null;
+  categories: Category[];
   createdAt: string;
   user: User | null;
   likes : User[]
@@ -71,7 +71,7 @@ const PublicationDetail = () => {
     const fetchData = async () => {
       try {
         const publicationsResponse = await fetch(
-          `https://api-turistear.koyeb.app/publication/${publicationId}`,
+          `${process.env.VITE_API_URL}/publication/${publicationId}`,
           {
             method: 'GET',
             credentials: 'include',
@@ -84,9 +84,9 @@ const PublicationDetail = () => {
         const publicationsData = await publicationsResponse.json();
         setPublication(publicationsData);
 
-        const socket = io('https://api-turistear.koyeb.app');
+        const socket = io(process.env.VITE_API_URL);
         socket.on('receiveDelete', () => {
-          window.location.href = '/publications';
+          window.location.href = '/publicaciones';
         });
 
         setIsLoading(false);
@@ -131,7 +131,7 @@ const PublicationDetail = () => {
                 <PublicationCard
                   publication={publication}
                   user={user}
-                  onDelete={() => { window.location.href = '/publications'}}
+                  onDelete={() => { window.location.href = '/publicaciones'}}
                 />
                 <CommentDetail publication={publication} user={user} key={publication.id} />
               </div>

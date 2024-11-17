@@ -6,7 +6,7 @@ export const NavMobile = () => {
   const [user, setUser] = useState<{ name: string; profilePicture: string } | null>(null);
 
   const fetchUser = async () => {
-    const response = await get('https://api-turistear.koyeb.app/session', {
+    const response = await get(`${process.env.VITE_API_URL}/session`, {
       'Content-Type': 'application/json',
     });
 
@@ -26,7 +26,7 @@ export const NavMobile = () => {
 
   const handleLogout = async () => {
     try {
-      await get('https://api-turistear.koyeb.app/logout', {
+      await get(`${process.env.VITE_API_URL}/logout`, {
         'Content-Type': 'application/json',
       });
       setUser(null);
@@ -41,7 +41,7 @@ export const NavMobile = () => {
       <div className="container mx-auto h-full flex flex-col items-center justify-center">
         <ul className="flex flex-col gap-8 font-primary text-2xl font-semibold items-center uppercase ">
           {!user ? (
-            <Link to={'/login'} className="flex justify-center items-center ">
+            <Link to={'/iniciar-sesion'} className="flex justify-center items-center ">
               <p className=" text-2xl font-semibold  uppercase text-white hover:text-gray ">
                 Login
               </p>
@@ -58,7 +58,7 @@ export const NavMobile = () => {
               </div>
 
               {/* Opción de "Mi perfil" */}
-              <Link to={'/profile'} className="text-white hover:text-gray transition-all">
+              <Link to={'/perfil'} className="text-white hover:text-gray transition-all">
                 Mi perfil
               </Link>
 
@@ -69,13 +69,13 @@ export const NavMobile = () => {
             </>
           )}
 
-          <Link to={'/destinations'} className="  text-white hover:text-gray  transition-all ">
+          <Link to={'/destinos'} className="  text-white hover:text-gray  transition-all ">
             Destinos
           </Link>
-          <Link to={'/community'} className=" text-white hover:text-gray transition-all">
+          <Link to={'/comunidad'} className=" text-white hover:text-gray transition-all">
             Comunidad
           </Link>
-          <Link to={'/formQuestions'} className=" text-white hover:text-gray transition-all">
+          <Link to={'/crear-itinerario'} className=" text-white hover:text-gray transition-all">
             Armá tu viaje
           </Link>
         </ul>

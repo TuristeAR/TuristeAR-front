@@ -12,7 +12,7 @@ const useFetchParticipants = (itineraryId: any) => {
     const fetchParticipants = async () => {
       try {
         const response = await fetch(
-          `https://api-turistear.koyeb.app/itinerary/participants/${itineraryId}`,
+          `${process.env.VITE_API_URL}/itinerary/participants/${itineraryId}`,
           {
             method: 'GET',
             credentials: 'include',

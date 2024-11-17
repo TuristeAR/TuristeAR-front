@@ -13,6 +13,8 @@ import { io } from 'socket.io-client';
 import SharedExpenses from '../../pages/SharedExpenses';
 import useAddActivities from '../../utilities/useAddActivities';
 import { get } from '../../utilities/http.util';
+import Select from 'react-select';
+import Swal from 'sweetalert2';
 
 type User = {
   id: number;
@@ -38,22 +40,17 @@ export const LeftColumn = ({
 }) => {
   const [validItinerary, setValidItinerary] = useState(null);
 
-  const [selectedPlace, setSelectedPlace] = useState('');
-
-  const [showPlaces, setShowPlaces] = useState(false);
-
   const { usersOldNav, setUsersOldNav } = useFetchParticipants(itineraryId);
 
   const { handleAddActivity, newActivity, setNewActivity } = useAddActivities(
     itineraryId,
     setActivities,
+    itinerary
   );
 
   const activityByProvince = useFetchPlacesByProvince(itinerary);
 
-  const [filteredPlaces, setFilteredPlaces] = useState(activityByProvince);
-
-  const socket = io('https://api-turistear.koyeb.app');
+  const socket = io(process.env.VITE_API_URL);
 
   const [user, setUser] = useState<User | null>(null);
 
@@ -70,12 +67,12 @@ export const LeftColumn = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const session = await get('https://api-turistear.koyeb.app/session', {
+      const session = await get(`${process.env.VITE_API_URL}/session`, {
         contentType: 'application/json',
       });
 
       if (session.statusCode !== 200) {
-        window.location.href = '/login';
+        window.location.href = '/iniciar-sesion';
         return;
       }
 
@@ -86,38 +83,49 @@ export const LeftColumn = ({
   }, []);
 
   useEffect(() => {
+
     socket.on('usersUpdated', (data) => {
       console.log('socket', data);
-      const owner = {
-        ...data.itineraryParticipants.user,
-        isOwner: true,
-      };
+      if(data.itineraryParticipants.id == itineraryId){
+        const owner = {
+          ...data.itineraryParticipants.user,
+          isOwner: true,
+        };
 
-      setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
+        setUsersOldNav([owner, ...data.itineraryParticipants.participants]);
+      }
     });
     socket.on('usersAddItinerary', (data) => {
       console.log('socket add', data.updatedItinerary);
-      const owner = {
-        ...data.updatedItinerary.user,
-        isOwner: true,
-      };
-      setUsersOldNav([owner, ...data.updatedItinerary.participants]);
+      if(data.updatedItinerary == itineraryId) {
+        const owner = {
+          ...data.updatedItinerary.user,
+          isOwner: true,
+        };
+        setUsersOldNav([owner, ...data.updatedItinerary.participants]);
+      }
     });
 
-    socket.on('userRemoved', ({ participantId }) => {
-      setUsersOldNav((prevUsersOldNav) =>
-        prevUsersOldNav.filter((user) => user.id !== participantId),
-      );
+    socket.on('userRemoved', ({ itineraryId, participantId }) => {
+      if(itinerary.id == itineraryId) {
+        setUsersOldNav((prevUsersOldNav) =>
+          prevUsersOldNav.filter((user) => user.id !== participantId),
+        );
+      }
     });
 
     socket.on('activityRemoved', ({ itineraryId, activityId }) => {
-      setActivities((prevActivities) =>
-        prevActivities.filter((activity) => activity.id !== activityId),
-      );
+      if(itinerary.id == itineraryId) {
+        setActivities((prevActivities) =>
+          prevActivities.filter((activity) => activity.id !== activityId),
+        );
+      }
     });
 
     socket.on('eventRemoved', ({ itineraryId, eventId }) => {
-      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
+      if(itinerary.id == itineraryId) {
+        setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
+      }
     });
 
     return () => {
@@ -128,27 +136,17 @@ export const LeftColumn = ({
     };
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    setSelectedPlace(inputValue);
+  const placeOptions = activityByProvince.map((place) => ({
+    label: place.name,
+    value: place.id,
+  }));
 
-    // Filtra los lugares basados en el valor del input
-    const filtered = activityByProvince.filter((place) =>
-      place.name.toLowerCase().includes(inputValue.toLowerCase()),
-    );
-
-    setFilteredPlaces(filtered);
-    setShowPlaces(true); // Muestra la lista sin importar si hay coincidencias
-  };
-
-  const handlePlaceSelect = (placeName: string, placeId: string) => {
-    setSelectedPlace(placeName);
-    setNewActivity({ ...newActivity, place: placeId });
-    setShowPlaces(false); // Cierra la lista al seleccionar un lugar
+  const handleSelectChange = (selectedOption: any) => {
+    setNewActivity({ ...newActivity, place: selectedOption.value });
   };
 
   const deleteActivity = (activityId: number) => {
-    fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
+    fetch(`${process.env.VITE_API_URL}/itinerary/remove-activity`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -161,6 +159,11 @@ export const LeftColumn = ({
           setActivities((prevActivities) =>
             prevActivities.filter((activity) => activity.id !== activityId),
           );
+          Swal.fire({
+            icon: 'success',
+            title: 'Actividad eliminada',
+            text: 'La actividad se ha eliminado correctamente del itinerario.',
+          });
         } else {
           console.error('Error al eliminar la actividad:', data.message);
         }
@@ -175,7 +178,7 @@ export const LeftColumn = ({
   };
 
   const deleteItinerary = async (id: number) => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io(process.env.VITE_API_URL);
     socket.emit('deleteItinerary', {
       itineraryId: id,
       userId: user.id,
@@ -188,7 +191,7 @@ export const LeftColumn = ({
 
     setIsEditingItineraryName(false);
 
-    fetch(`https://api-turistear.koyeb.app/itinerary/${itineraryId}/name`, {
+    fetch(`${process.env.VITE_API_URL}/itinerary/${itineraryId}/name`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -230,35 +233,35 @@ export const LeftColumn = ({
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => (window.location.href = `/itineraryMap/${itineraryId}`)}
+              onClick={() => (window.location.href = `/itinerario/mapa/${itineraryId}`)}
             >
               <img src={mapIcon} alt="" />
               <p className="text-sm">Mapa</p>
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => (window.location.href = `/itineraryChat/${itineraryId}`)}
+              onClick={() => (window.location.href = `/itinerario/chat/${itineraryId}`)}
             >
               <img src={chatIcon} alt="" />
               <p className="text-sm">Chat</p>
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => (window.location.href = `/sharedGallery/${itineraryId}`)}
+              onClick={() => (window.location.href = `/itinerario/galeria/${itineraryId}`)}
             >
               <img src={galleryIcon} alt="" />
               <p className="text-sm">Galeria compartida</p>
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => (window.location.href = `/itineraryDetail/${itineraryId}`)}
+              onClick={() => (window.location.href = `/itinerario/detalle/${itineraryId}`)}
             >
               <img src={alignIcon} alt="" />
               <p className="text-sm">Resumen del viaje</p>
             </div>
             <div
               className="option-card cursor-pointer hover:bg-[#d9d9d9] hover:-translate-y-1.5 hover:shadow-lg"
-              onClick={() => (window.location.href = `/gastosCompartidos/${itineraryId}`)}
+              onClick={() => (window.location.href = `/itinerario/gastos/${itineraryId}`)}
             >
               <Receipt className="stroke-primary" strokeWidth={1} />
               <p className="text-sm">Gastos compartidos</p>
@@ -360,52 +363,36 @@ export const LeftColumn = ({
                   onChange={(e) => setNewActivity({ ...newActivity, toDate: e.target.value })}
                   className="w-full p-2 border border-primary rounded mb-2 outline-none"
                 />
-                <div className="relative w-full">
-                  <input
-                    type="text"
-                    placeholder="Lugar"
-                    value={selectedPlace || newActivity.place}
-                    onChange={handleInputChange}
-                    onFocus={() => setShowPlaces(true)}
-                    className="w-full p-2 border border-primary rounded mb-2 outline-none"
-                    autoComplete="off"
-                  />
 
-                  {showPlaces && (
-                    <div className="absolute left-0 right-0 max-h-48 bg-white rounded z-50 overflow-y-auto">
-                      {filteredPlaces.length > 0 &&
-                        filteredPlaces.map((place, index) => (
-                          <div
-                            key={index}
-                            className="p-2 hover:bg-gray-200 cursor-pointer"
-                            onClick={() => handlePlaceSelect(place.name, place.id)}
-                          >
-                            {place.name}
-                          </div>
-                        ))}
-                    </div>
-                  )}
+                <div className="relative w-full">
+                  <Select
+                    options={placeOptions}
+                    onChange={handleSelectChange}
+                    placeholder="Selecciona un lugar"
+                    className="w-full py-2  rounded mb-2"
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
+                        borderColor: '#4B5563',
+                        borderRadius: '8px',
+                        padding: '5px',
+                      }),
+                      menu: (provided) => ({
+                        ...provided,
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                      }),
+                      option: (provided, state) => ({
+                        ...provided,
+                        backgroundColor: state.isSelected ? 'blue' : 'white', // Fondo verde al seleccionar
+                        color: state.isSelected ? 'white' : 'black',
+                        padding: '10px',
+                        cursor: 'pointer',
+                      }),
+                    }}
+                  />
                 </div>
-                <input
-                  type="text"
-                  placeholder="Nombre de la actividad"
-                  value={newActivity.name}
-                  onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
-                  className="w-full p-2 border border-primary  rounded mb-2 outline-none"
-                  autoComplete="off"
-                />
-                <input
-                  type="datetime-local"
-                  value={newActivity.fromDate}
-                  onChange={(e) => setNewActivity({ ...newActivity, fromDate: e.target.value })}
-                  className="w-full p-2 border border-primary  rounded mb-2 outline-none"
-                />
-                <input
-                  type="datetime-local"
-                  value={newActivity.toDate}
-                  onChange={(e) => setNewActivity({ ...newActivity, toDate: e.target.value })}
-                  className="w-full p-2 border border-primary rounded mb-2 outline-none"
-                />
+
                 <div className="flex gap-x-2 justify-center">
                   <button onClick={btnHandleAddActivity} className="btn-question">
                     Agregar

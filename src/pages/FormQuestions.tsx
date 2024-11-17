@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header } from '../components/Header/Header';
 import { MapaArg } from '../components/Destinations/MapaArg';
 import { ProgressBar } from '../components/Questions/ProgressBar';
@@ -8,8 +8,7 @@ import { DateRangePicker } from 'react-date-range';
 import { es } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { get, getWithoutCredentials, post } from '../utilities/http.util';
-import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+
 import {
   Baby,
   Banknote,
@@ -31,8 +30,10 @@ import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import EventCarousel from '../components/FormQuestions/EventCarousel';
 import formatFromDateAndToDate from '../utilities/formatEventDate';
-import { EventCard } from '../components/FormQuestions/EventCard';
 import { getJsonUrl } from '../utilities/getJsonUrl';
+import Loading from '../components/FormQuestions/Loading';
+import ProvisionalItinerary from '../components/FormQuestions/ProvisionalItinerary';
+import { useLocalities } from '../utilities/useLocalities';
 
 interface FormData {
   provinces: Province[];
@@ -56,111 +57,6 @@ export interface Locality {
   province: Province;
 }
 
-const questions = [
-  {
-    question: 'Destino',
-    type: 'map',
-  },
-  {
-    question: 'Fecha del viaje y Duración del viaje',
-    type: 'calendar',
-  },
-  {
-    question: '¿Qué nivel de comodidad se ajusta a tu presupuesto?',
-    options: [
-      {
-        src: <HandCoins width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Económico',
-        data: ['PRICE_LEVEL_FREE', 'PRICE_LEVEL_INEXPENSIVE'],
-      },
-      {
-        src: <Banknote width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Moderado',
-        data: ['PRICE_LEVEL_MODERATE'],
-      },
-      {
-        src: <Gem width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Lujoso',
-        data: ['PRICE_LEVEL_EXPENSIVE', 'PRICE_LEVEL_VERY_EXPENSIVE'],
-      },
-    ],
-    type: 'icon',
-    name: 'priceLevel',
-    multipleSelection: false,
-  },
-  {
-    question: '¿Qué tipo de actividades te gusta hacer?',
-    options: [
-      {
-        src: <Binoculars width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Atracción turística',
-        data: 'tourist_attraction,landmark,scenic_viewpoint,natural_feature,historical_landmark',
-      },
-      {
-        src: <Utensils width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Comida',
-        data: 'restaurant,cafe,coffee_shop,bakery,food,food_court',
-      },
-      {
-        src: <Book width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Cultura',
-        data: 'library,museum,political,art_gallery,cultural_center,theater,city_hall,church,place_of_worship,embassy',
-      },
-      {
-        src: <Trophy width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Deporte',
-        data: 'sports_complex,stadium,climbing_area,skate_park,ice_skating_rink,ski_resort,surf_spot',
-      },
-      {
-        src: <PartyPopper width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Fiesta',
-        data: 'bar,night_club,music_venue,dance_club,cocktail_bar,event_venue,beer_hall,pub,karaoke',
-      },
-      {
-        src: <Mountain width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Montaña',
-        data: 'hiking_area,mountain,campground,scenic_point,trailhead,national_forest,wilderness_area,climbing_area',
-      },
-      {
-        src: <TreePine width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Naturaleza',
-        data: 'campground,national_park,park,lake,beach,forest,waterfall,botanical_garden,nature_reserve,wildlife_reserve',
-      },
-    ],
-    type: 'icon',
-    name: 'activities',
-    multipleSelection: true,
-  },
-  {
-    question: '¿Con quién vas a emprender tu nueva aventura?',
-    options: [
-      {
-        src: <PersonStanding width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Sólo',
-        data: 1,
-      },
-      {
-        src: <Heart width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'En pareja',
-        data: 2,
-      },
-      {
-        src: <Handshake width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Amigos',
-        data: 3,
-      },
-      {
-        src: <Baby width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
-        alt: 'Familia',
-        data: 4,
-      },
-    ],
-    type: 'icon',
-    name: 'company',
-    multipleSelection: false,
-  },
-];
-
 const FormQuestions = () => {
   const navigate = useNavigate();
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -170,8 +66,7 @@ const FormQuestions = () => {
   const [dialogWindowOpen, setDialogWindowOpen] = useState(false);
   const [selectedProvinces, setSelectedProvinces] = useState<Province[]>([]);
   const [localities, setLocalities] = useState<any[]>([]);
-  const [selectedLocalities, setSelectedLocalities] = useState<Locality[]>([]);
-  const [searchLocality, setSearchLocality] = useState('');
+
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [formData, setFormData] = useState<FormData>({
@@ -190,6 +85,8 @@ const FormQuestions = () => {
   const [loadingEvents, setLoadingEvents] = useState(false);
   const [events, setEvents] = useState<any[]>([]);
   const [selectedEvents, setSelectedEvents] = useState<number[]>([]);
+  const [types, setTypes] = useState<any[]>([]);
+  const [priceLevels, setPriceLevels] = useState<any[]>([]);
 
   const handleCloseDialogWindow = () => {
     setDialogWindowOpen(false);
@@ -203,20 +100,12 @@ const FormQuestions = () => {
     },
   ]);
 
-  const handleLocalitySelection = (locality: Locality) => {
-    setSelectedLocalities((prev) => {
-      const updatedLocalities = prev.some((loc) => loc.name === locality.name)
-        ? prev.filter((loc) => loc.name !== locality.name)
-        : [...prev, locality];
-
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        localities: updatedLocalities,
-      }));
-
-      return updatedLocalities;
-    });
-  };
+  const {
+    searchLocality,
+    setSearchLocality,
+    selectedLocalities,
+    handleLocalitySelection,
+  } = useLocalities(setFormData, formData);
 
   const handleDateSelect = (rangesByKey: any) => {
     const selection = rangesByKey.selection;
@@ -287,29 +176,168 @@ const FormQuestions = () => {
   };
 
   const fetchEvents = async (provinceId: number) => {
-    return await get(`https://api-turistear.koyeb.app/events/${provinceId}`, {
+    return await get(`${process.env.VITE_API_URL}/events/${provinceId}`, {
       'Content-Type': 'application/json',
     });
   };
 
-  const handleEventSelect = (id: number, locality: Locality) => {
-    setSelectedEvents((prevSelectedEvents) => {
-      const isSelected = prevSelectedEvents.includes(id);
+  const fetchTypes = async () => {
+    try {
+      const response = await get(`${process.env.VITE_API_URL}/type`, {
+        'Content-Type': 'application/json',
+      });
 
-      const updatedSelectedEvents = isSelected
-        ? prevSelectedEvents.filter((eventId) => eventId !== id)
-        : [...prevSelectedEvents, id];
-
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        events: updatedSelectedEvents,
-      }));
-
-      handleLocalitySelection(locality);
-
-      return updatedSelectedEvents;
-    });
+      setTypes(
+        response.data.map((type: any) => ({
+          description: type.description,
+          data: type.data.join(','),
+        })),
+      );
+    } catch (error) {
+      console.error('Error fetching types:', error);
+    }
   };
+
+  const fetchPriceLevels = async () => {
+    try {
+      const response = await get(`${process.env.VITE_API_URL}/price-level`, {
+        'Content-Type': 'application/json',
+      });
+
+      setPriceLevels(
+        response.data.map((priceLevel: any) => ({
+          description: priceLevel.description,
+          data: priceLevel.data,
+        })),
+      );
+    } catch (error) {
+      console.error('Error fetching price levels:', error);
+    }
+  };
+
+  const questions = [
+    {
+      question: 'Destino',
+      type: 'map',
+    },
+    {
+      question: 'Fecha del viaje y Duración del viaje',
+      type: 'calendar',
+    },
+    {
+      question: '¿Qué nivel de comodidad se ajusta a tu presupuesto?',
+      options: [
+        {
+          src: <HandCoins width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: priceLevels[0]?.description,
+          data: priceLevels[0]?.data,
+        },
+        {
+          src: <Banknote width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: priceLevels[1]?.description,
+          data: priceLevels[1]?.data,
+        },
+        {
+          src: <Gem width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: priceLevels[2]?.description,
+          data: priceLevels[2]?.data,
+        },
+      ],
+      type: 'icon',
+      name: 'priceLevel',
+      multipleSelection: false,
+    },
+    {
+      question: '¿Qué tipo de actividades te gusta hacer?',
+      options: [
+        {
+          src: <Binoculars width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[0]?.description,
+          data: types[0]?.data,
+        },
+        {
+          src: <Utensils width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[1]?.description,
+          data: types[1]?.data,
+        },
+        {
+          src: <Book width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[2]?.description,
+          data: types[2]?.data,
+        },
+        {
+          src: <Trophy width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[3]?.description,
+          data: types[3]?.data,
+        },
+        {
+          src: <PartyPopper width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[4]?.description,
+          data: types[4]?.data,
+        },
+        {
+          src: <Mountain width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[5]?.description,
+          data: types[5]?.data,
+        },
+        {
+          src: <TreePine width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: types[6]?.description,
+          data: types[6]?.data,
+        },
+      ],
+      type: 'icon',
+      name: 'activities',
+      multipleSelection: true,
+    },
+    {
+      question: '¿Con quién vas a emprender tu nueva aventura?',
+      options: [
+        {
+          src: <PersonStanding width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: 'Sólo',
+          data: 1,
+        },
+        {
+          src: <Heart width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: 'En pareja',
+          data: 2,
+        },
+        {
+          src: <Handshake width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: 'Amigos',
+          data: 3,
+        },
+        {
+          src: <Baby width={80} height={80} color={'#0F254CE6'} strokeWidth={1} />,
+          alt: 'Familia',
+          data: 4,
+        },
+      ],
+      type: 'icon',
+      name: 'company',
+      multipleSelection: false,
+    },
+  ];
+
+  const handleEventSelect = (id: number, locality: Locality) => {
+  setSelectedEvents((prevSelectedEvents) => {
+    const isSelected = prevSelectedEvents.includes(id);
+
+    const updatedSelectedEvents = isSelected
+      ? prevSelectedEvents.filter((eventId) => eventId !== id)
+      : [...prevSelectedEvents, id];
+
+    handleLocalitySelection(locality);
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      events: updatedSelectedEvents,
+    }));
+
+    return updatedSelectedEvents;
+  });
+};
 
   const handleSingleSelection = (name: keyof FormData, value: number) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -445,7 +473,7 @@ const FormQuestions = () => {
 
     try {
       const response = await post(
-        'https://api-turistear.koyeb.app/formQuestion',
+        `${process.env.VITE_API_URL}/formQuestion`,
         {
           'Content-Type': 'application/json',
         },
@@ -454,7 +482,7 @@ const FormQuestions = () => {
 
       if (response.statusCode === 201) {
         const itineraryId = response.itineraryId;
-        navigate(`/itineraryCalendar/${itineraryId}`);
+        navigate(`/itinerario/calendario/${itineraryId}`);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -512,7 +540,7 @@ const FormQuestions = () => {
 
     const fetchProvinces = async () => {
       try {
-        const response = await get('https://api-turistear.koyeb.app/province', {
+        const response = await get(`${process.env.VITE_API_URL}/province`, {
           'Content-Type': 'application/json',
         });
 
@@ -524,8 +552,12 @@ const FormQuestions = () => {
 
     fetchProvinces();
 
+    fetchTypes();
+
+    fetchPriceLevels();
+
     const fetchSession = async () => {
-      const response = await get('https://api-turistear.koyeb.app/session', {
+      const response = await get(`${process.env.VITE_API_URL}/session`, {
         'Content-Type': 'application/json',
       });
 
@@ -537,181 +569,34 @@ const FormQuestions = () => {
     fetchSession();
   }, []);
 
-  const [carouselEvents, setCarouselEvents] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (selectedProvinces.length > 0) {
-      fetchEvents(selectedProvinces[0].id).then((data) => {
-        setCarouselEvents(data.data);
-      });
-    }
-  }, [selectedProvinces]);
-
-  const swiperRef = useRef(null);
-
   return (
     <>
       <Header />
       <DialogWindow isOpen={dialogWindowOpen} onClose={handleCloseDialogWindow} />
       {loading ? (
-        <div className="w-[90%] md:w-full mx-auto min-h-[90vh] flex flex-col items-center justify-center">
-          <div className="h-full flex flex-col md:flex-row justify-center items-center gap-x-4 my-4">
-            <h2 className="text-4xl text-center text-primary-4 mx-auto mb-6 md:mb-0">
-              Estamos armando el viaje ideal para vos...
-            </h2>
-            <Lottie className="w-[6rem] md:w-[4rem] mx-auto" animationData={logoAnimado} />
-          </div>
-
-          <Swiper
-            ref={swiperRef}
-            className="w-full max-w-[90%] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[650px] xl:max-w-[850px]"
-            modules={[Navigation, Pagination, Scrollbar, A11y]}
-            slidesPerView={1}
-            slidesPerGroup={1}
-            autoplay={{ delay: 5000, disableOnInteraction: false }}
-            loop={true}
-          >
-            {carouselEvents.map((event) => (
-              <SwiperSlide key={event.id}>
-                <EventCard
-                  fromDate={event.fromDate}
-                  toDate={event.toDate}
-                  name={event.name}
-                  locality={localities.find((loc) => loc.name === event.locality)}
-                  description={event.description}
-                  image={event.image}
-                  id={event.id}
-                  isSelected={selectedEvents.includes(event.id)}
-                  onSelect={handleEventSelect}
-                  isLoading={true}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+        <Loading
+          fetchEvents={fetchEvents}
+          selectedProvinces={selectedProvinces}
+          localities={localities}
+          selectedEvents={selectedEvents}
+          handleEventSelect={handleEventSelect}
+        />
       ) : (
         <section
           className={`min-h-[90vh] flex items-center justify-center ${dialogWindowOpen ? 'opacity-10' : 'bg-gray-100'} text-black`}
         >
           <div className="container mx-auto flex flex-col md:flex-row justify-center z-30 relative">
             {pendingItinerary ? (
-              <div className="mx-auto">
-                {resumedItinerary ? (
-                  <>
-                    <h2 className="mb-4 md:mb-16 text-center text-2xl sm:text-5xl font-semibold text-primary-4">
-                      Resumen de tu viaje
-                    </h2>
-                    <div className="flex flex-col">
-                      {selectedProvinces && (
-                        <span className="text-center text-xl my-1">
-                          Provincias:{' '}
-                          <strong>
-                            {selectedProvinces.map((province, index) => (
-                              <strong key={province.id}>
-                                {province.name}
-                                {index < selectedProvinces.length - 2
-                                  ? ', '
-                                  : index === selectedProvinces.length - 2
-                                    ? ' y '
-                                    : ''}
-                              </strong>
-                            ))}
-                          </strong>
-                        </span>
-                      )}
-                      <span className="text-center text-xl my-1">
-                        Lugares a visitar:{' '}
-                        {formData.localities.map((locality, index) => (
-                          <strong key={locality.name}>
-                            {locality.name}
-                            {index < formData.localities.length - 1 && ', '}
-                          </strong>
-                        ))}
-                      </span>
-                      <span className="text-center text-xl my-1">
-                        Fecha de inicio:{' '}
-                        <strong>{new Date(formData.fromDate).toLocaleDateString('es-ES')}</strong>
-                      </span>
-                      <span className="text-center text-xl my-1">
-                        Fecha de finalización:{' '}
-                        <strong>{new Date(formData.toDate).toLocaleDateString('es-ES')}</strong>
-                      </span>
-                      <span className="text-center text-xl my-1">
-                        Duración:{' '}
-                        <strong>
-                          {Math.ceil(
-                            (new Date(formData.toDate).getTime() -
-                              new Date(formData.fromDate).getTime()) /
-                              (1000 * 60 * 60 * 24),
-                          )}{' '}
-                          días
-                        </strong>
-                      </span>
-                      <div className="flex flex-wrap justify-center gap-5 my-2">
-                        {renderPriceLevel()}
-                        {formData.types.map((type) => {
-                          const option = questions[3].options.find(
-                            (option) => option.data.toString() === type,
-                          );
-                          return (
-                            <div
-                              key={type}
-                              className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 border border-gray"
-                            >
-                              {option?.src}
-                              {option?.alt}
-                            </div>
-                          );
-                        })}
-                        <div
-                          key="company"
-                          className="w-40 h-40 flex flex-col items-center justify-center gap-y-2 mx-2 p-2 border border-gray"
-                        >
-                          {
-                            questions[4].options.find((option) => option.data === formData.company)
-                              ?.src
-                          }
-                          {
-                            questions[4].options.find((option) => option.data === formData.company)
-                              ?.alt
-                          }
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-full flex justify-center my-2">
-                      <button type="button" className="btn-question" onClick={submitFormData}>
-                        Finalizar
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <h2 className="mb-4 md:mb-16 text-center text-2xl sm:text-5xl font-semibold text-primary-4">
-                      ¡Tenés un viaje pendiente!
-                    </h2>
-                    <p className="my-4 text-xl text-center sm:text-2xl">
-                      Parece que tenés un viaje por realizar... ¿Querés continuar con el viaje
-                      anterior o comenzar uno nuevo?
-                    </p>
-                    <div className="flex flex-col items-center justify-center md:flex-row gap-x-4 mt-4 md:mt-16">
-                      <button
-                        type="button"
-                        className="btn-question mb-3 md:mb-0 w-72 md:w-96 text-sm md:text-md"
-                        onClick={() => setPendingItinerary(false)}
-                      >
-                        Comenzar un nuevo viaje
-                      </button>
-                      <button
-                        type="button"
-                        className="btn-question mt-3 md:mt-0 w-72 md:w-96 text-sm md:text-md"
-                        onClick={() => setResumedItinerary(true)}
-                      >
-                        Continuar con el viaje anterior
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
+              <ProvisionalItinerary
+                formData={formData}
+                resumedItinerary={resumedItinerary}
+                selectedProvinces={selectedProvinces}
+                renderPriceLevel={renderPriceLevel}
+                questions={questions}
+                submitFormData={submitFormData}
+                setPendingItinerary={setPendingItinerary}
+                setResumedItinerary={setResumedItinerary}
+              />
             ) : (
               <form className="flex flex-col w-full max-w-full items-center justify-center bg-white p-4 gap-y-6 md:gap-y-4 min-h-[500px]">
                 <ProgressBar currentStep={currentStep} />

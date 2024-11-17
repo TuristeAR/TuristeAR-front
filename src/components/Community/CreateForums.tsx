@@ -21,7 +21,7 @@ export const CreateForums = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await fetch('https://api-turistear.koyeb.app/categories', {
+        const categoriesResponse = await fetch(`${process.env.VITE_API_URL}/categories`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -69,7 +69,7 @@ export const CreateForums = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/createForum', {
+      const response = await fetch(`${process.env.VITE_API_URL}/createForum`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export const CreateForums = () => {
       setError('');
       const idRedirect = response.json();
       idRedirect.then((data) => {
-        window.location.href = `/forum/${data.data.id}`;
+        window.location.href = `/foro/${data.data.id}`;
       });
     } catch (err: any) {
       setError(err.message);

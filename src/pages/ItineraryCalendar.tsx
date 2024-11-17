@@ -18,7 +18,7 @@ export const ItineraryCalendar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShowExpanse, setIsShowExpanse] = useState(false);
 
-  const socket = io('https://api-turistear.koyeb.app');
+  const socket = io(process.env.VITE_API_URL);
 
   const handleEventClick = (eventInfo) => {
     setSelectedEventInfo(eventInfo);
@@ -41,7 +41,7 @@ export const ItineraryCalendar = () => {
   }, []);
 
   const deleteActivity = (activityId: number) => {
-    fetch('https://api-turistear.koyeb.app/itinerary/remove-activity', {
+    fetch(`${process.env.VITE_API_URL}/itinerary/remove-activity`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const ItineraryCalendar = () => {
   };
 
   const deleteEvent = (eventId: number) => {
-    fetch('https://api-turistear.koyeb.app/itinerary/remove-event', {
+    fetch(`${process.env.VITE_API_URL}/itinerary/remove-event`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ export const ItineraryCalendar = () => {
           setEvents={setEvents}
           deleteEvent={deleteEvent}
           onDelete={() => {
-            window.location.href = '/profile';
+            window.location.href = '/perfil';
           }}
         />
         <main className="order-1 lg:order-2 col-span-1 container mx-auto">

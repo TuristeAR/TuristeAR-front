@@ -29,29 +29,27 @@ root.render(
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="*" element={<Home />} />
-      <Route path="/destinations" element={<Destinations />} />
-      <Route path="/formQuestions" element={<FormQuestions />} />
+      <Route path="/destinos" element={<Destinations />} />
+      <Route path="/crear-itinerario" element={<FormQuestions />} />
       <Route path="/lugar-esperado/:googleId" element={<ExpectedPlace />} />
       <Route path="/destino-esperado/:nombreDeLaProvincia" element={<ExpectedDestination />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/editProfile" element={<EditProfile />} />
-      <Route path="/community" element={<Publications />} />
-      <Route path="/notifications" element={<Notifications />} />
-      <Route path="/publications" element={<Publications />} />
-      <Route path="/publication/:publicationId" element={<PublicationDetail />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/itineraryCalendar/:itineraryId" element={<ItineraryCalendar />} />
-      <Route path="/forums" element={<Forum />} />
-      <Route path="/forum/:id" element={<ForumDetail />} />
-      <Route path="/itineraryDetail/:itineraryId" element={<ItineraryDetail />} />
-      <Route path="/itineraryMap/:itineraryId" element={<ItineraryMap />} />
-      <Route path="lugares/:provinceName" element={<Places />} />
-      <Route path="/itineraryChat/:itineraryId" element={<ItineraryChat />} />
-      <Route path="lugares/:provinceName" element={<Places />} />
-      <Route path="lugares/:provinceName/:lat/:lon" element={<Places />} />
-      <Route path="/sharedGallery/:itineraryId" element={<SharedGallery />} />
-      <Route path="/gastosCompartidos/:itineraryId" element={<SharedExpenses />} />
+      <Route path="/iniciar-sesion" element={<Login />} />
+      <Route path="/perfil" element={<Profile />} />
+      <Route path="/editar-perfil" element={<EditProfile />} />
+      <Route path="/comunidad" element={<Publications />} />
+      <Route path="/notificaciones" element={<Notifications />} />
+      <Route path="/publicaciones" element={<Publications />} />
+      <Route path="/publicacion/:publicationId" element={<PublicationDetail />} />
+      <Route path="/foro" element={<Forum />} />
+      <Route path="/foro/:id" element={<ForumDetail />} />
+      <Route path="/itinerario/calendario/:itineraryId" element={<ItineraryCalendar />} />
+      <Route path="/itinerario/detalle/:itineraryId" element={<ItineraryDetail />} />
+      <Route path="/itinerario/mapa/:itineraryId" element={<ItineraryMap />} />
+      <Route path="/itinerario/chat/:itineraryId" element={<ItineraryChat />} />
+      <Route path="/itinerario/galeria/:itineraryId" element={<SharedGallery />} />
+      <Route path="/itinerario/gastos/:itineraryId" element={<SharedExpenses />} />
+      <Route path="/lugares/:provinceName" element={<Places />} />
+      <Route path="/lugares/:provinceName/:lat/:lon" element={<Places />} />
     </Routes>
   </BrowserRouter>,
 );

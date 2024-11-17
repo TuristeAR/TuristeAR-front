@@ -59,7 +59,7 @@ const ItineraryChat = () => {
         }
 
         const itineraryResponse = await fetch(
-          `https://api-turistear.koyeb.app/itinerary/${itineraryId}`,
+          `${process.env.VITE_API_URL}/itinerary/${itineraryId}`,
           {
             method: 'GET',
             credentials: 'include',
@@ -97,7 +97,7 @@ const ItineraryChat = () => {
                   'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex items-center p-4'
                 }
               >
-                <Link to={`/itineraryCalendar/${itineraryId}`} className="md:mr-10 md:pl-10">
+                <Link to={`/itinerario/calendario/${itineraryId}`} className="md:mr-10 md:pl-10">
                   <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[50px]'} />
                 </Link>
                 <h1 className="text-3xl">{itinerary?.name}</h1>

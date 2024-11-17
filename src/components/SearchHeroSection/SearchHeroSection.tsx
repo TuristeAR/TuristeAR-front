@@ -18,7 +18,7 @@ const SearchHeroSection = ({
   useEffect(() => {
     const fetchProvincias = async () => {
       try {
-        const response = await fetch('https://apis.datos.gob.ar/georef/api/provincias');
+        const response = await fetch(`${process.env.VITE_GEOREF_API_URL}/provincias`);
         const data = await response.json();
         setProvincias(data.provincias);
       } catch (error) {
@@ -28,7 +28,7 @@ const SearchHeroSection = ({
 
     const fetchLocalidades = async () => {
       try {
-        const response = await fetch('https://apis.datos.gob.ar/georef/api/localidades?max=5000');
+        const response = await fetch(`${process.env.VITE_GEOREF_API_URL}/localidades?max=5000`);
         const data = await response.json();
         setLocalidades(data.localidades);
       } catch (error) {

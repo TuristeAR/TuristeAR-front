@@ -4,10 +4,10 @@ import arrowRight from '/assets/arrow-right.svg';
 import { useEffect, useState } from 'react';
 import { get } from '../../utilities/http.util';
 
-type Notification={
-  id: number,
-  isRead: boolean,
-}
+type Notification = {
+  id: number;
+  isRead: boolean;
+};
 
 export const Nav = () => {
   const location = useLocation();
@@ -18,7 +18,7 @@ export const Nav = () => {
 
   const handleLogout = async () => {
     try {
-      await get('https://api-turistear.koyeb.app/logout', {
+      await get(`${process.env.VITE_API_URL}/logout`, {
         'Content-Type': 'application/json',
       });
       setUser(null);
@@ -29,7 +29,7 @@ export const Nav = () => {
   };
 
   const fetchUser = async () => {
-    const response = await get(' https://api-turistear.koyeb.app/session', {
+    const response = await get(`${process.env.VITE_API_URL}/session`, {
       'Content-Type': 'application/json',
     });
 
@@ -42,18 +42,18 @@ export const Nav = () => {
   };
 
   const fetchNotifications = async () => {
-    const response = await get('https://api-turistear.koyeb.app/notifications/byUser', {
+    const response = await get(`${process.env.VITE_API_URL}/notifications/byUser`, {
       'Content-Type': 'application/json',
       credentials: 'include',
     });
-    setNotifications(response)
+    setNotifications(response);
   };
 
   useEffect(() => {
     const cachedUser = localStorage.getItem('user');
     setUser(cachedUser ? JSON.parse(cachedUser) : null);
     fetchUser();
-    fetchNotifications()
+    fetchNotifications();
   }, []);
 
   return (
@@ -63,25 +63,25 @@ export const Nav = () => {
       </Link>
       <nav className="hidden mt-auto mb-0 text-white md:block md:ml-auto md:mr-auto text-lg font-semibold">
         <Link
-          to={'/destinations'}
+          to={'/destinos'}
           className={`mr-5 hover:text-gray-900 hover:text-hover cursor-pointer px-3 pt-1 pb-2.5 rounded-sm ${
-            location.pathname === '/destinations' ? 'bg-white text-black' : ''
+            location.pathname === '/destinos' ? 'bg-white text-black' : ''
           }`}
         >
           Destinos
         </Link>
         <Link
-          to={'/community'}
+          to={'/comunidad'}
           className={`mr-5 hover:text-gray-900 hover:text-hover cursor-pointer px-3 pt-1 pb-2.5 rounded-sm ${
-            location.pathname === '/community' ? 'bg-white text-black' : ''
+            location.pathname === '/comunidad' ? 'bg-white text-black' : ''
           }`}
         >
           Comunidad
         </Link>
         <Link
-          to={'/formQuestions'}
+          to={'/crear-itinerario'}
           className={`hover:text-gray-900 hover:text-hover cursor-pointer px-3 pt-1 pb-2.5  rounded-sm ${
-            location.pathname === '/formQuestions' ? 'bg-white text-black ' : ''
+            location.pathname === '/crear-itinerario' ? 'bg-white text-black ' : ''
           }`}
         >
           Armá tu viaje
@@ -90,7 +90,7 @@ export const Nav = () => {
       </nav>
       {!user ? (
         <Link
-          to={'/login'}
+          to={'/iniciar-sesion'}
           className="hidden md:flex justify-center items-center text-white text-lg mt-4 md:mt-auto md:mb-0 gap-x-2 hover:text-hover font-semibold"
         >
           <p>Iniciá sesión</p>
@@ -98,7 +98,7 @@ export const Nav = () => {
         </Link>
       ) : (
         <div className="hidden mt-auto md:flex items-center gap-x-4">
-          <Link to={'/notifications'} className={'relative cursor-pointer'}>
+          <Link to={'/notificaciones'} className={'relative cursor-pointer'}>
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -118,9 +118,11 @@ export const Nav = () => {
                 ></path>
               </g>
             </svg>
-            {notifications.filter(notification => !notification.isRead).length > 0 && (
+            {notifications.filter((notification) => !notification.isRead).length > 0 && (
               <div className="absolute bg-[#c0daeb] rounded-full w-[27px] h-[27px] flex items-center justify-center -left-3 -top-3">
-                <span className={'font-semibold text-sm'}>{notifications.filter(notification => !notification.isRead).length}</span>
+                <span className={'font-semibold text-sm'}>
+                  {notifications.filter((notification) => !notification.isRead).length}
+                </span>
               </div>
             )}
           </Link>
@@ -153,7 +155,7 @@ export const Nav = () => {
           {isDropdownOpen && (
             <div className="absolute top-16 right-8 bg-white shadow-lg rounded-lg my-3 w-44 z-50">
               <Link
-                to={'/profile'}
+                to={'/perfil'}
                 className="block w-full text-left px-4 py-2 text-gray-700 font-medium hover:bg-primary rounded-md transition duration-200 ease-in-out"
               >
                 Mi perfil

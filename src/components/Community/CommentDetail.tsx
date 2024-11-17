@@ -26,7 +26,7 @@ type Comment = {
 type Publication = {
   id: number;
   description: string;
-  category: Category | null;
+  categories: Category[];
   createdAt: string;
   user: User | null;
   likes: User[];
@@ -46,16 +46,18 @@ export const CommentDetail = (props: {
   const [commentContent, setCommentContent] = useState<string | null>(null);
 
   useEffect(() => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io(process.env.VITE_API_URL);
 
     socket.on('receiveComment', (newComment) => {
-      setPublication((prevPublication) => {
-        if (!prevPublication) return null;
-        return {
-          ...prevPublication,
-          comments: [...prevPublication.comments, newComment as Comment],
-        };
-      });
+      if(newComment.publication.id == publication.id){
+        setPublication((prevPublication) => {
+          if (!prevPublication) return null;
+          return {
+            ...prevPublication,
+            comments: [...prevPublication.comments, newComment as Comment],
+          };
+        });
+      }
     });
 
     return () => {
@@ -66,7 +68,7 @@ export const CommentDetail = (props: {
   const createComment = async () => {
     if (commentContent && publication && user) {
       setWasSent(true);
-      const socket = io('https://api-turistear.koyeb.app');
+      const socket = io(process.env.VITE_API_URL);
       socket.emit('createComment', {
         content: commentContent,
         userId: user.id,

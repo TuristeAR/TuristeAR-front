@@ -65,7 +65,7 @@ const EditProfile = () => {
         : '';
       const coverPictureUrl = formData.coverPicture ? await uploadImage(formData.coverPicture) : '';
 
-      const response = await fetch(`https://api-turistear.koyeb.app/editProfile`, {
+      const response = await fetch(`${process.env.VITE_API_URL}/editProfile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ const EditProfile = () => {
         throw new Error('Error en la solicitud');
       }
 
-      window.location.href = '/profile';
+      window.location.href = '/perfil';
     } catch (err: any) {
       setError(err.message);
     }

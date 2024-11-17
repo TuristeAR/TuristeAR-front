@@ -50,7 +50,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `https://api-turistear.koyeb.app/users/search?name=${searchTerm}&itineraryId=${itinerary}`,
+            `${process.env.VITE_API_URL}/users/search?name=${searchTerm}&itineraryId=${itinerary}`,
             {
               method: 'GET',
               credentials: 'include',
@@ -72,7 +72,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://api-turistear.koyeb.app/itinerary/participants/${itinerary}`,
+          `${process.env.VITE_API_URL}/itinerary/participants/${itinerary}`,
           {
             method: 'GET',
             credentials: 'include',
@@ -102,7 +102,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
   const handleAddUser = async (participantId) => {
     try {
       handleRemoveUser(participantId);
-      const response = await fetch('https://api-turistear.koyeb.app/participation-request', {
+      const response = await fetch(`${process.env.VITE_API_URL}/participation-request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
       setUsersOld(updatedUsersOld);
       onUsersOldUpdate(updatedUsersOldNav);
 
-      const response = await fetch('https://api-turistear.koyeb.app/itinerary/remove-user', {
+      const response = await fetch(`${process.env.VITE_API_URL}/itinerary/remove-user`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ const ParticipantTabs: React.FC<ParticipantTabsProps> = ({
       }
 
       if (currentUser === participantId) {
-        navigate('/profile');
+        navigate('/perfil');
       }
     } catch (error) {
       console.error('Error removing participant:', error);

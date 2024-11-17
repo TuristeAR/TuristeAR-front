@@ -18,7 +18,7 @@ const mockUser = {
 const mockPublication = {
   id: 1,
   description: "Viaje a Bs As",
-  category: null,
+  categories: [],
   createdAt: "2024-10-08",
   user: mockUser,
   likes: [mockUser],

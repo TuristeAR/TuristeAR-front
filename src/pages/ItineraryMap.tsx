@@ -41,14 +41,14 @@ export const ItineraryMap = () => {
             <div className="flex gap-x-4 mb-4">
               <Link
                 className="flex justify-center items-center p-1 gap-x-1"
-                to={`/itineraryCalendar/${itineraryId}`}
+                to={`/itinerario/calendario/${itineraryId}`}
               >
                 <img src={calendarIcon} alt="" />
                 <p className="text-sm">Calendario</p>
               </Link>
               <Link
                 className="flex items-center gap-x-1 cursor-pointer"
-                to={`/itineraryDetail/${itineraryId}`}
+                to={`/itinerario/detalle/${itineraryId}`}
               >
                 <img src={alignIcon} alt="" />
 

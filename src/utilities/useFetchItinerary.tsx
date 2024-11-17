@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-type User={
+type User = {
   id: number;
-  name: string,
-  profilePicture: string,
-  description: string,
-  birthdate: string,
-  coverPicture: string,
-  location: string
-}
+  name: string;
+  profilePicture: string;
+  description: string;
+  birthdate: string;
+  coverPicture: string;
+  location: string;
+};
 
 type Itinerary = {
   id: number;
@@ -35,7 +35,7 @@ const useFetchItinerary = (itineraryId: string | null) => {
   useEffect(() => {
     const fetchItinerary = async () => {
       try {
-        const response = await fetch(`https://api-turistear.koyeb.app/itinerary/${itineraryId}`);
+        const response = await fetch(`${process.env.VITE_API_URL}/itinerary/${itineraryId}`);
         const data = await response.json();
 
         setItinerary(data.data.itinerary || null);

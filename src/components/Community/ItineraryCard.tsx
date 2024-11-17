@@ -28,13 +28,12 @@ export const ItineraryCard = (props: {
   userId: number;
   onDelete: () => void;
 }) => {
-
   const { itinerary, userId, onDelete } = props;
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean | null>(false);
 
   const deleteItinerary = async (id: number) => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io(process.env.VITE_API_URL);
     socket.emit('deleteItinerary', {
       itineraryId: id,
       userId: userId,
@@ -54,8 +53,9 @@ export const ItineraryCard = (props: {
       <div className="lg:w-[100%] lg:mb-0 mb-6 mx-auto rounded-2xl shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex lg:flex-row flex-col relative">
         <div className="lg:w-[40%]">
           <img
-            src={itinerary.activities[0]?.place?.province?.images[0] ||
-              '/assets/TuristeAR-logo.png'}
+            src={
+              itinerary.activities[0]?.place?.province?.images[0] || '/assets/TuristeAR-logo.png'
+            }
             alt=""
             className="w-[100%] h-[100%] lg:rounded-l-2xl lg:rounded-tr-none rounded-t-2xl object-cover"
           />
@@ -83,8 +83,12 @@ export const ItineraryCard = (props: {
             </button>
           </div>
           <div className="flex flex-col gap-2 text-l">
-            <p className="italic">Ida: {itinerary.fromDate && formatDepartureAndArrivalDate(itinerary.fromDate)}</p>
-            <p className="italic">Vuelta: {itinerary.toDate && formatDepartureAndArrivalDate(itinerary.toDate)}</p>
+            <p className="italic">
+              Ida: {itinerary.fromDate && formatDepartureAndArrivalDate(itinerary.fromDate)}
+            </p>
+            <p className="italic">
+              Vuelta: {itinerary.toDate && formatDepartureAndArrivalDate(itinerary.toDate)}
+            </p>
           </div>
           <details className="">
             <summary className="font-semibold">Participantes:</summary>
@@ -100,7 +104,7 @@ export const ItineraryCard = (props: {
             </div>
           </details>
           <Link
-            to={'/itineraryCalendar/' + itinerary.id}
+            to={'/itinerario/calendario/' + itinerary.id}
             className="rounded-2xl py-2 bg-primary hover:bg-primary-3 text-white text-center w-[150px]"
           >
             <p>Ver más</p>

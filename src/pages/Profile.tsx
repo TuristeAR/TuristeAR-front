@@ -48,7 +48,7 @@ type Activity = {
 type Publication = {
   id: number;
   description: string;
-  category: Category | null;
+  categories: Category[];
   createdAt: string;
   user: User | null;
   likes: User[];
@@ -81,18 +81,14 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-
-      const publications = await get(
-        `https://api-turistear.koyeb.app/publications/${user.id}`,
-        {
-          contentType: 'application/json',
-        },
-      );
+      const publications = await get(`${process.env.VITE_API_URL}/publications/${user.id}`, {
+        contentType: 'application/json',
+      });
 
       setPublications(publications);
 
       const itinerariesResponse = await get(
-        `https://api-turistear.koyeb.app/itinerary/byUser/${user.id}`,
+        `${process.env.VITE_API_URL}/itinerary/byUser/${user.id}`,
         {
           contentType: 'application/json',
         },
@@ -101,7 +97,7 @@ const Profile = () => {
       setItineraries(itinerariesResponse.participants);
     };
 
-    if(user) fetchData().then(() => setLoading(false));
+    if (user) fetchData().then(() => setLoading(false));
   }, [user]);
 
   const [activeItem, setActiveItem] = useState('posts');
@@ -111,7 +107,7 @@ const Profile = () => {
       setLoading(true);
       const fetchLikedPublications = async () => {
         const likedPublications = await get(
-          `https://api-turistear.koyeb.app/publications/likes/${user.id}`,
+          `${process.env.VITE_API_URL}/publications/likes/${user.id}`,
           {
             contentType: 'application/json',
           },
@@ -128,7 +124,7 @@ const Profile = () => {
     if (activeItem === 'saved' && user?.id) {
       const fetchSavedPublications = async () => {
         const savedPublications = await get(
-          `https://api-turistear.koyeb.app/publications/saved/${user.id}`,
+          `${process.env.VITE_API_URL}/publications/saved/${user.id}`,
           {
             contentType: 'application/json',
             credentials: 'include',
@@ -217,7 +213,7 @@ const Profile = () => {
                   </div>
                   <div className="-my-4 md:-my-0">
                     <a
-                      href={`/editProfile`}
+                      href={`/editar-perfil`}
                       className="lg:btn-blue px-4 py-2 text-sm bg-primary hover:bg-primary-3 text-white rounded-2xl"
                     >
                       Editar perfil
@@ -267,7 +263,7 @@ const Profile = () => {
                   publications
                     .filter((publication) => {
                       return (
-                        categorySelected == null || publication.category.id == categorySelected
+                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
                       );
                     })
                     .map((publication, index) => (
@@ -306,7 +302,7 @@ const Profile = () => {
                   likedPublications
                     .filter((publication) => {
                       return (
-                        categorySelected == null || publication.category.id == categorySelected
+                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
                       );
                     })
                     .map((publication, index) => (
@@ -327,7 +323,7 @@ const Profile = () => {
                   savedPublications
                     .filter((publication) => {
                       return (
-                        categorySelected == null || publication.category.id == categorySelected
+                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
                       );
                     })
                     .map((publication, index) => (

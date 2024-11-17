@@ -95,7 +95,7 @@ const Notifications = () => {
   };
 
   const updateNotifications = async () => {
-    await fetch('https://api-turistear.koyeb.app/markNotificationsAsRead', {
+    await fetch(`${process.env.VITE_API_URL}/markNotificationsAsRead`, {
       method: 'PUT',
       credentials: 'include',
     });
@@ -103,7 +103,7 @@ const Notifications = () => {
 
   const rejectParticipationRequest = async (participationRequestId: number, notificationId) => {
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/participation-request/reject', {
+      const response = await fetch(`${process.env.VITE_API_URL}/participation-request/reject`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const Notifications = () => {
 
   const acceptParticipationRequest = async (itineraryId, participantId, participationRequestId) => {
     try {
-      const response = await fetch('https://api-turistear.koyeb.app/itinerary/add-user', {
+      const response = await fetch(`${process.env.VITE_API_URL}/itinerary/add-user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ const Notifications = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('User successfully added to the itinerary', data);
-        window.location.href=`/itineraryCalendar/${data.data.updatedItinerary.id}`
+        window.location.href=`/itinerario/calendario/${data.data.updatedItinerary.id}`
       } else {
         console.error('Error adding user to itinerary');
       }
@@ -154,7 +154,7 @@ const Notifications = () => {
     }
   };
   const fetchNotifications = async () => {
-    const response = await get('https://api-turistear.koyeb.app/notifications-detail/byUser', {
+    const response = await get(`${process.env.VITE_API_URL}/notifications-detail/byUser`, {
       'Content-Type': 'application/json',
       credentials: 'include',
     });
@@ -195,13 +195,13 @@ const Notifications = () => {
                   const isParticipationRequest = !!notification.participationRequest;
 
                   const linkPath = notification.publication
-                    ? `/publication/${notification.publication.id}`
+                    ? `/publicacion/${notification.publication.id}`
                     : notification.itinerary
-                      ? `/itineraryCalendar/${notification.itinerary.id}`
+                      ? `/itinerario/calendario/${notification.itinerary.id}`
                       : '';
 
                   return isParticipationRequest ? (
-                    <Link to={notification.participationRequest.status === 'accepted' ? `/itineraryCalendar/${notification.itinerary.id}` : `/notifications`}
+                    <Link to={notification.participationRequest.status === 'accepted' ? `/itinerario/calendario/${notification.participationRequest.itinerary.id}` : `/notificaciones`}
                       key={index}
                       className={
                         `lg:w-auto lg:mb-0 mb-6 p-4 rounded-2xl ${notification.isRead ? 'bg-white hover:bg-[#d9d9d9]' : 'bg-[#c0daeb] hover:bg-[#009fe3]'} ` +

@@ -20,7 +20,7 @@ export const UseFetchSession = () => {
 
     const fetchSession = async () => {
       try {
-        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
+        const sessionResponse = await fetch(`${process.env.VITE_API_URL}/session`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -29,7 +29,7 @@ export const UseFetchSession = () => {
           if (isMounted) {
             setError('No se pudo obtener la sesión. Redirigiendo...');
             setTimeout(() => {
-              window.location.href = '/login';
+              window.location.href = '/iniciar-sesion';
             }, 2000);
           }
           return;

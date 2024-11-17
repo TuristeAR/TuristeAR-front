@@ -95,13 +95,13 @@ const ExpectedPlace = () => {
     }
 
     const fetchReviews = () => {
-      return get(`https://api-turistear.koyeb.app/reviews/place/${googleId}`, {
+      return get(`${process.env.VITE_API_URL}/reviews/place/${googleId}`, {
         'Content-Type': 'application/json',
       });
     };
 
     const fetchPlace = () => {
-      return get(`https://api-turistear.koyeb.app/place/${googleId}`, {
+      return get(`${process.env.VITE_API_URL}/place/${googleId}`, {
         'Content-Type': 'application/json',
       });
     };
@@ -125,7 +125,7 @@ const ExpectedPlace = () => {
       if (place && place.address) {
         try {
           const response = await fetch(
-            `https://apis.datos.gob.ar/georef/api/ubicacion?lat=${place.latitude}&lon=${place.longitude}`,
+            `${process.env.VITE_GEOREF_API_URL}/ubicacion?lat=${place.latitude}&lon=${place.longitude}`,
           );
 
           const data = await response.json();

@@ -46,7 +46,7 @@ type Activity = {
 type Publication = {
   id: number;
   description: string;
-  category: Category | null;
+  categories: Category[];
   createdAt: string;
   user: User | null;
   likes: User[];
@@ -73,7 +73,7 @@ const Publications = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const publicationsResponse = await fetch(`https://api-turistear.koyeb.app/publications`, {
+        const publicationsResponse = await fetch(`${process.env.VITE_API_URL}/publications`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -87,7 +87,7 @@ const Publications = () => {
         setError('');
         setIsLoading(false);
 
-        const socket = io('https://api-turistear.koyeb.app');
+        const socket = io(process.env.VITE_API_URL);
         socket.on('receiveDelete', (publicationId) => {
           setPublications((prevPublications) =>
             prevPublications.filter((pub) => pub.id !== publicationId),
@@ -134,13 +134,15 @@ const Publications = () => {
               {/* Create posts */}
               <CreatePublications />
               <div className="flex flex-col gap-6 lg:w-[80%] w-[90%] mx-auto">
-                {user && publications
-                  ?.filter((publication) => {
-                    return categorySelected == null || publication.category.id == categorySelected;
-                  }).length > 0 ? (
+                {user &&
+                publications?.filter((publication) => {
+                  return categorySelected == null || publication.categories.some(category => category.id === categorySelected);
+                }).length > 0 ? (
                   publications
                     ?.filter((publication) => {
-                      return categorySelected == null || publication.category.id == categorySelected;
+                      return (
+                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
+                      );
                     })
                     .map((publication, index) => (
                       <PublicationCard
@@ -152,7 +154,7 @@ const Publications = () => {
                         }
                       />
                     ))
-                ): (
+                ) : (
                   <div className={'p-4 bg-[#c0daeb] rounded-2xl'}>
                     <p className={'text-3xl font-bold'}>No hay publicaciones!</p>
                   </div>

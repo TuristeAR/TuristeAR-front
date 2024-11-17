@@ -42,7 +42,7 @@ export const CreateMessage = (props: {
   const [wasSent, setWasSent] = useState<boolean>(false);
 
   useEffect(() => {
-    const socket = io('https://api-turistear.koyeb.app');
+    const socket = io(process.env.VITE_API_URL);
 
     socket.on('receiveMessage', (newMessage) => {
       setForum((prevForum) => {
@@ -83,7 +83,7 @@ export const CreateMessage = (props: {
     if (message && user) {
       setWasSent(true);
       const imageUrl = selectedImage ? await uploadImage(selectedImage) : null;
-      const socket = io('https://api-turistear.koyeb.app');
+      const socket = io(process.env.VITE_API_URL);
       socket.emit('createMessage', {
         content: message,
         images: imageUrl,
@@ -103,7 +103,7 @@ export const CreateMessage = (props: {
   return (
     <div
       className={
-        `${location.pathname.includes('/forum/') ? 'lg:w-[80%] w-[100%]' : 'w-[100%]'} mx-auto fixed bottom-0 overflow-scroll scrollbar-hidden flex flex-col gap-y-6 bg-white z-99`
+        `${location.pathname.includes('/foro/') ? 'lg:w-[80%] w-[100%]' : 'w-[100%]'} mx-auto fixed bottom-0 overflow-scroll scrollbar-hidden flex flex-col gap-y-6 bg-white z-99`
       }
     >
       <form

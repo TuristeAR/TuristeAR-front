@@ -45,7 +45,7 @@ export const EventCard: React.FC<EventCardProps> = ({
               <h5 className="mb-2 text-base sm:text-xl font-bold tracking-tight text-gray-900">
                 {name}
               </h5>
-              <p className="italic text-sm sm:text-md font-light">{locality.name}</p>
+              <p className="italic text-sm sm:text-md font-light">{locality?.name}</p>
             </div>
             <div className="my-2">
               <p className="text-xs sm:text-lg text-gray-700">{description}</p>
@@ -76,11 +76,11 @@ export const EventCard: React.FC<EventCardProps> = ({
           <div className="flex flex-col justify-between h-[320px] relative z-20 p-5">
             <div>
               <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900">{name}</h5>
-              <p className="italic text-md mt-auto font-light">{locality.name}</p>
+              <p className="italic text-md mt-auto font-light">{locality?.name}</p>
             </div>
             <div className="my-2">
               <p className="text-sm text-gray-700">
-                {description.length > 120 ? description.substring(0, 117) + '...' : description}
+                {description?.length > 120 ? description.substring(0, 117) + '...' : description}
               </p>
             </div>
             <div className="my-2">
