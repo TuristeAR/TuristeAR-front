@@ -127,7 +127,6 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
       );
       expenseData.imageUrls = imageUrls;
 
-
       const response = await fetch('https://api-turistear.koyeb.app/expenses', {
         method: 'POST',
         headers: {
