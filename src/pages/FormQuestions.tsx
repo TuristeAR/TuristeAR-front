@@ -103,10 +103,9 @@ const FormQuestions = () => {
   const {
     searchLocality,
     setSearchLocality,
-    filteredLocalities,
     selectedLocalities,
     handleLocalitySelection,
-  } = useLocalities(localities);
+  } = useLocalities(setFormData, formData);
 
   const handleDateSelect = (rangesByKey: any) => {
     const selection = rangesByKey.selection;
@@ -322,23 +321,23 @@ const FormQuestions = () => {
   ];
 
   const handleEventSelect = (id: number, locality: Locality) => {
-    setSelectedEvents((prevSelectedEvents) => {
-      const isSelected = prevSelectedEvents.includes(id);
+  setSelectedEvents((prevSelectedEvents) => {
+    const isSelected = prevSelectedEvents.includes(id);
 
-      const updatedSelectedEvents = isSelected
-        ? prevSelectedEvents.filter((eventId) => eventId !== id)
-        : [...prevSelectedEvents, id];
+    const updatedSelectedEvents = isSelected
+      ? prevSelectedEvents.filter((eventId) => eventId !== id)
+      : [...prevSelectedEvents, id];
 
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        events: updatedSelectedEvents,
-      }));
+    handleLocalitySelection(locality);
 
-      handleLocalitySelection(locality);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      events: updatedSelectedEvents,
+    }));
 
-      return updatedSelectedEvents;
-    });
-  };
+    return updatedSelectedEvents;
+  });
+};
 
   const handleSingleSelection = (name: keyof FormData, value: number) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
