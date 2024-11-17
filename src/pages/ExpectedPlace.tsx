@@ -166,8 +166,8 @@ const ExpectedPlace = () => {
   return (
     <>
       <Header />
-      <button className='hidden md:block' onClick={handleBackClick}>
-        <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px]'} />
+      <button className="hidden md:block md:pt-10 md:pl-10" onClick={handleBackClick}>
+        <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[50px]'} />
       </button>
       <section className="w-full mb-5">
         <div className="sm:w-10/12 m-auto">

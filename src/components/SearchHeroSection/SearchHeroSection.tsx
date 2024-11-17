@@ -96,9 +96,9 @@ const SearchHeroSection = ({
   };
 
   return (
-    <div className="bg-custom-whiteBlue15 w-full h-[120px]">
+    <div className="bg-custom-whiteBlue15 w-full h-[120px] md:h-[140px]">
       <div className="container mx-auto h-full flex flex-col items-center justify-center gap-y-4">
-        <p className="px-8 lg:px-0 max-w-[600px] text-center font-semibold tracking-tight">
+        <p className="px-8 lg:px-0 w-full max-w-[800px] text-md md:text-lg text-center font-semibold tracking-tight">
           {title}
         </p>
         <div>
@@ -106,7 +106,7 @@ const SearchHeroSection = ({
             <input
               value={query}
               onChange={handleInputChange}
-              className="w-[350px] md:w-[400px] rounded outline-none text-sm md:text-md p-1 pr-10"
+              className="w-[350px] md:w-[540px] rounded outline-none text-sm md:text-md pl-2 py-4 pr-10"
               type="text"
               placeholder="Buscar por provincia, localidad o tipo de lugar..."
               autoComplete="off"

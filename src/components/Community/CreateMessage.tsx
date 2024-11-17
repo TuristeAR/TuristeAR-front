@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import { uploadImage } from '../../utilities/uploadImage';
 type Category = {
   id: number;
   description: string;
@@ -76,34 +77,6 @@ export const CreateMessage = (props: {
     }
   };
 
-  const uploadImage = async (image: File) => {
-    const formData = new FormData();
-    formData.append('image', image);
-
-    const url = 'https://api.imgur.com/3/image';
-    const options = {
-      method: 'POST',
-      headers: {
-        Authorization: 'Client-ID 523c9b5cf859dce',
-      },
-      body: formData,
-    };
-
-    try {
-      const response = await fetch(url, options);
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error de respuesta:', errorData);
-        throw new Error(errorData.data.error || 'Error al cargar la imagen');
-      }
-      const result = await response.json();
-      return result.data.link;
-    } catch (error) {
-      console.error('Error en la carga de la imagen:', error);
-      throw error;
-    }
-  };
-
   const createMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -128,7 +101,11 @@ export const CreateMessage = (props: {
   };
 
   return (
-    <div className="w-[80%] mx-auto fixed bottom-0 overflow-scroll scrollbar-hidden lg:px-4 p-2 md:py-4 flex flex-col gap-y-6 bg-white z-99">
+    <div
+      className={
+        `${location.pathname.includes('/forum/') ? 'lg:w-[80%] w-[100%]' : 'w-[100%]'} mx-auto fixed bottom-0 overflow-scroll scrollbar-hidden flex flex-col gap-y-6 bg-white z-99`
+      }
+    >
       <form
         onSubmit={createMessage}
         className={'border-t border-[#999999] py-2 flex justify-around items-center'}
@@ -154,7 +131,7 @@ export const CreateMessage = (props: {
             <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
           </label>
         </div>
-        <div className={'flex w-[80%] items-center'}>
+        <div className={'flex w-[80%] items-center justify-between'}>
           <input
             onInput={(e) => {
               //@ts-ignore

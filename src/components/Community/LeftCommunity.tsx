@@ -1,16 +1,6 @@
-import { is } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-type User = {
-  id: number;
-  name: string;
-  profilePicture: string;
-  description: string;
-  birthdate: string;
-  coverPicture: string;
-  location: string;
-};
 
 type Category = {
   id: number;
@@ -36,10 +26,7 @@ export const LeftCommunity = (props: {
     isOpen,
     setIsOpen,
   } = props;
-  const [user, setUser] = useState<User | null>(null);
   const [categories, setCategories] = useState<Category[] | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
-  const [error, setError] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
   const location = useLocation();
   const showCategories =
@@ -51,23 +38,6 @@ export const LeftCommunity = (props: {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!sessionResponse.ok) {
-          setIsAuthenticated(false);
-          window.location.href = '/login';
-          return;
-        }
-
-        const sessionData = await sessionResponse.json();
-        setUser(sessionData.user);
-        setIsAuthenticated(true);
-        setError('');
-
-        try {
           const categoriesResponse = await fetch(`https://api-turistear.koyeb.app/categories`, {
             method: 'GET',
             credentials: 'include',
@@ -79,13 +49,8 @@ export const LeftCommunity = (props: {
             const categoriesData = await categoriesResponse.json();
             setCategories(categoriesData);
           }
-        } catch (err) {
-          setError(err);
-          console.log('Error al obtener las publicaciones:', err);
-        }
       } catch (error) {
-        setError('Error en la comunicación con el servidor');
-        setIsAuthenticated(false);
+
       }
     };
 
@@ -140,7 +105,7 @@ export const LeftCommunity = (props: {
                         e.target.value,
                       )
                     }
-                    className="border border-[#999999] pl-2"
+                    className="border border-[#999999] rounded p-2 focus:outline-none"
                     placeholder="Buscar"
                     autoComplete="off"
                   />
@@ -181,7 +146,11 @@ export const LeftCommunity = (props: {
                             className={`flex gap-2 items-center hover:bg-[#d9d9d9] rounded-xl w-[100%] py-2 px-4 ${category.id == categorySelected ? 'bg-[#c0daeb]' : ''}`}
                           >
                             <div className="flex items-center">
-                              <p className="">{category.description === 'Ciudad Autónoma de Buenos Aires' ? 'CABA' : category.description}</p>
+                              <p className="">
+                                {category.description === 'Ciudad Autónoma de Buenos Aires'
+                                  ? 'CABA'
+                                  : category.description}
+                              </p>
                             </div>
                           </button>
                         </div>

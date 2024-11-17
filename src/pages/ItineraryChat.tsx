@@ -1,12 +1,11 @@
 import { Header } from '../components/Header/Header';
-import { LeftCommunity } from '../components/Community/LeftCommunity';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import io from 'socket.io-client';
 import Lottie from 'lottie-react';
 import logoAnimado from '../assets/logoAnimado.json';
 import { CreateMessage } from '../components/Community/CreateMessage';
 import { MessagesContainer } from '../components/Community/MessagesContainer';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 type Category = {
   id: number;
@@ -49,24 +48,11 @@ const ItineraryChat = () => {
   const [forum, setForum] = useState<Forum | null>(null);
   const [itinerary, setItinerary] = useState<Itinerary | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = UseFetchSession();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sessionResponse = await fetch('https://api-turistear.koyeb.app/session', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!sessionResponse.ok) {
-          window.location.href = '/login';
-          return;
-        }
-
-        const sessionData = await sessionResponse.json();
-        setUser(sessionData.user);
-
         if (!itineraryId || itineraryId === 'undefined') {
           console.error('forumId is undefined or invalid');
           return;
@@ -111,12 +97,12 @@ const ItineraryChat = () => {
                   'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] min-h-[8%] flex items-center p-4'
                 }
               >
-                <Link to={`/itineraryCalendar/${itineraryId}`}>
-                  <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px]'} />
+                <Link to={`/itineraryCalendar/${itineraryId}`} className="md:mr-10 md:pl-10">
+                  <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[50px]'} />
                 </Link>
                 <h1 className="text-3xl">{itinerary?.name}</h1>
               </div>
-              <div className="overflow-scroll scrollbar-hidden lg:px-4 px-2 py-6 h-[86%]  flex flex-col gap-y-6">
+              <div className="overflow-scroll scrollbar-hidden h-[81%] lg:px-4 px-2 py-6  flex flex-col gap-y-6">
                 <MessagesContainer forum={forum} user={user} />
               </div>
               <div className="flex justify-center">

@@ -8,6 +8,7 @@ import logoAnimado from '../assets/logoAnimado.json';
 import Lottie from 'lottie-react';
 import { get } from '../utilities/http.util';
 import { reorderDate } from '../utilities/reorderDate';
+import { UseFetchSession } from '../utilities/useFetchSession';
 
 type User = {
   id: number;
@@ -56,6 +57,7 @@ type Publication = {
   comments: Comment[];
   activities: Activity[];
 };
+
 type Itinerary = {
   activities: any;
   id: number;
@@ -68,30 +70,20 @@ type Itinerary = {
 };
 
 const Profile = () => {
+  const { user } = UseFetchSession();
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [categorySelected, setCategorySelected] = useState<number | null>(null);
   const [publications, setPublications] = useState<Publication[] | null>(null);
   const [likedPublications, setLikedPublications] = useState<Publication[] | null>(null);
   const [savedPublications, setSavedPublications] = useState<Publication[] | null>(null);
   const [itineraries, setItineraries] = useState<Itinerary[] | null>(null);
-  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const session = await get('https://api-turistear.koyeb.app/session', {
-        contentType: 'application/json',
-      });
-
-      if (session.statusCode !== 200) {
-        window.location.href = '/login';
-        return;
-      }
-
-      setUser(session.user);
 
       const publications = await get(
-        `https://api-turistear.koyeb.app/publications/${session.user.id}`,
+        `https://api-turistear.koyeb.app/publications/${user.id}`,
         {
           contentType: 'application/json',
         },
@@ -100,7 +92,7 @@ const Profile = () => {
       setPublications(publications);
 
       const itinerariesResponse = await get(
-        `https://api-turistear.koyeb.app/itinerary/byUser/${session.user.id}`,
+        `https://api-turistear.koyeb.app/itinerary/byUser/${user.id}`,
         {
           contentType: 'application/json',
         },
@@ -109,8 +101,8 @@ const Profile = () => {
       setItineraries(itinerariesResponse.participants);
     };
 
-    fetchData().then(() => setLoading(false));
-  }, []);
+    if(user) fetchData().then(() => setLoading(false));
+  }, [user]);
 
   const [activeItem, setActiveItem] = useState('posts');
 
@@ -289,25 +281,16 @@ const Profile = () => {
                       />
                     ))
                 ) : (
-                  <p className="text-center text-xl md:mt-4 md:text-2xl">No hay publicaciones</p>
+                  <p className="text-center te  xt-xl md:mt-4 md:text-2xl">No hay publicaciones</p>
                 ))}
               {activeItem === 'itineraries' &&
                 (itineraries && itineraries.length > 0 ? (
                   itineraries.map((itinerary, index) => {
-                    const imgProvince =
-                      itinerary.activities[0]?.place?.province?.images[0] ||
-                      '/assets/TuristeAR-logo.png';
-
                     return (
                       <ItineraryCard
                         key={index}
-                        imgProvince={imgProvince}
-                        province={itinerary.name}
-                        departure={itinerary.fromDate}
-                        arrival={itinerary.toDate}
                         userId={user.id}
-                        participants={itinerary.participants}
-                        id={itinerary.id}
+                        itinerary={itinerary}
                         onDelete={() =>
                           setItineraries((prev) => prev.filter((p) => p.id !== itinerary.id))
                         }

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import Lottie from 'lottie-react';
 import logoAnimado from '../../assets/logoAnimado.json';
+import { uploadImage } from '../../utilities/uploadImage';
 
 export const UploadImageSharedGallery = (props : {activities : any[]}) => {
   const {activities} = props;
@@ -25,35 +26,6 @@ export const UploadImageSharedGallery = (props : {activities : any[]}) => {
         ...prevData,
         [name]: value,
       }));
-    }
-  };
-
-  const uploadImage = async (image: File) => {
-    const formData = new FormData();
-    formData.append('image', image);
-
-    const url = 'https://api.imgur.com/3/image';
-    const options = {
-      method: 'POST',
-      headers: {
-        Authorization: 'Client-ID 523c9b5cf859dce',
-      },
-      body: formData,
-    };
-
-    try {
-      const response = await fetch(url, options);
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error de respuesta:', errorData);
-        throw new Error(errorData.data.error || 'Error al cargar la imagen');
-      }
-      const result = await response.json();
-      console.log('Imagen subida:', result);
-      return result.data.link; // Retorna el enlace de la imagen
-    } catch (error) {
-      console.error('Error en la carga de la imagen:', error);
-      throw error; // Lanza el error para manejarlo en createPublications
     }
   };
 
