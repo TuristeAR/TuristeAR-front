@@ -106,7 +106,7 @@ const SharedExpenses = () => {
       >
         <Plus className="my-auto mx-auto" color="#fff" />
       </div>
-      {showSettle && <SettleDebt itineraryId={itineraryId} />}
+      {showSettle && <SettleDebt itineraryId={Number(itineraryId)} />}
     </>
   );
 };
