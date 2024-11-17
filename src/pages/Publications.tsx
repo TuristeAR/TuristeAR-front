@@ -46,7 +46,7 @@ type Activity = {
 type Publication = {
   id: number;
   description: string;
-  category: Category | null;
+  categories: Category[];
   createdAt: string;
   user: User | null;
   likes: User[];
@@ -136,12 +136,12 @@ const Publications = () => {
               <div className="flex flex-col gap-6 lg:w-[80%] w-[90%] mx-auto">
                 {user &&
                 publications?.filter((publication) => {
-                  return categorySelected == null || publication.category.id == categorySelected;
+                  return categorySelected == null || publication.categories.some(category => category.id === categorySelected);
                 }).length > 0 ? (
                   publications
                     ?.filter((publication) => {
                       return (
-                        categorySelected == null || publication.category.id == categorySelected
+                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
                       );
                     })
                     .map((publication, index) => (
