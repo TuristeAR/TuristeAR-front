@@ -36,9 +36,14 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
       setDistributionType(expense.distributionType);
       setIndividualAmounts(expense.individualAmounts);
       setIndividualPercentages(expense.individualPercentages);
-      setParticipatingUsers(expense.participatingUsers);
+      setParticipatingUsers(
+        usersOldNav.reduce((acc, user) => {
+          acc[user.id] = expense.participatingUsers.some((u) => u.id === user.id);
+          return acc;
+        }, {})
+      );      
       setImageUrls(expense.imageUrls);
-      participatingUsers.map((u) => toggleParticipatingUser(u.id));
+      participatingUsers.map((u) => {console.log(u);toggleParticipatingUser(u.id)});
     }
   }, [expense]);
 
@@ -130,6 +135,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
       itineraryId: itineraryId,
       imageUrls: [],
     };
+    console.log("Participante se envian", participatingUsers)
     try {
       if (selectedImages.length > 0) {
         const imageNewUrls = await Promise.all(
@@ -216,8 +222,8 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
                 type="checkbox"
                 onChange={() => toggleParticipatingUser(user.id)}
                 className="mr-2"
-                checked={expense.participatingUsers.find((u) => u.id == user.id)}
-              />
+                checked={participatingUsers[user.id]}
+                />
               <span className="text-gray-600">{user.name}</span>
             </div>
           ))}

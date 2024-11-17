@@ -164,13 +164,6 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
   return (
     <>
       <div className="bg-white p-6 max-w-lg mx-auto">
-        <button className="flex items-center md:mr-10" onClick={onBack}>
-          <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px] my-auto'} />
-          <div className="text-sm md:text-md font-bold text-primary-3">
-            Volver A La Lista De Gastos
-          </div>
-        </button>
-
         <h3 className="font-bold text-3xl lead-10 text-black mb-9">Agregar Nuevo Gasto</h3>
         <form>
           <div className="mb-4">

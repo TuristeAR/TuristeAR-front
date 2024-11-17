@@ -11,8 +11,9 @@ const ExpenseDetail = ({ expense, onClose }) => {
     participatingUsers,
     individualAmounts,
     individualPercentages,
+    userExpense,
   } = expense;
-
+  console.log(expense);
   useEffect(() => {
     if (distributionType === 'equivalente') {
       setDistributionDescription('Montos Iguales');
@@ -72,34 +73,36 @@ const ExpenseDetail = ({ expense, onClose }) => {
       <div className="ml-4 mt-2">
         <p className="font-semibold">{distributionDescription}</p>
         <ul>
-          {expense.participatingUsers.map((participant) => (
-            <li className="flex items-center gap-1 justify-between" key={participant.name}>
-              <div className="flex items-center gap-1">
-                <div className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
-                  <img src={participant.profilePicture} className="w-full h-full object-cover" />{' '}
+          {expense.userExpenses.map((participant) => {
+            console.log("--",participant);
+            return (
+              <li className="flex items-center gap-1 justify-between" key={participant.user.name}>
+                <div className="flex items-center gap-1">
+                  <div className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
+                    <img
+                      src={participant.user.profilePicture}
+                      className="w-full h-full object-cover"
+                    />{' '}
+                  </div>
+                  <span className="font-semibold">{participant.user.name}</span>{' '}
                 </div>
-                <span className="font-semibold">{participant.name}</span>{' '}
-              </div>
 
-              <div className="flex gap-1">
-                {participant.id === expense.payer.id ? (
-                  <>
-                    <p> aportó </p>
-                    <span className="font-semibold text-[#24b424]">
-                      ${calculateAmountOwed(participant)}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <p> debe </p>
-                    <span className="font-semibold text-[#f00]">
-                      ${calculateAmountOwed(participant)}
-                    </span>
-                  </>
-                )}
-              </div>
-            </li>
-          ))}
+                <div className="flex gap-1">
+                  {participant.isPaid ? (
+                    <>
+                      <p> aportó </p>
+                      <span className="font-semibold text-[#24b424]">${participant.amount}</span>
+                    </>
+                  ) : (
+                    <>
+                      <p> debe </p>
+                      <span className="font-semibold text-[#f00]">${participant.amount}</span>
+                    </>
+                  )}
+                </div>
+              </li>
+            );
+          })}
         </ul>
         {expense.imageUrls && <ImageGallery images={expense.imageUrls}></ImageGallery>}
         {/* <ExpenseSummaryTable expense={expense}></ExpenseSummaryTable> */}
