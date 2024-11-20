@@ -77,7 +77,7 @@ const ExpensesList = ({ itineraryId }) => {
         }, {});
 
         setGroupedExpenses(groupedByDate);
-        const totalExpenses = data.reduce((sum, expense) => sum + expense.totalAmount, 0);
+        const totalExpenses = data.reduce((sum:number, expense) => sum + Number(expense.totalAmount), 0);
         setTotalAmount(totalExpenses as number);
 
         const dates = data.map((expense) => new Date(expense.date));
@@ -117,7 +117,7 @@ const ExpensesList = ({ itineraryId }) => {
         });
         const newTotalAmount = Object.values(updatedExpenses)
           .flat()
-          .reduce((sum, expense) => sum + expense.totalAmount, 0);
+          .reduce((sum: number, expense) => sum + Number(expense.totalAmount), 0);
         setTotalAmount(newTotalAmount as number);
         return updatedExpenses;
       });
