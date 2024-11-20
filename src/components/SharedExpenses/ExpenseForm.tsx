@@ -234,6 +234,12 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
               value={totalAmount}
               onChange={handleTotalAmountChange}
               required
+              onWheel={(e) => e.preventDefault()}
+              style={{
+                MozAppearance: 'textfield',  // Para Firefox
+                WebkitAppearance: 'none',   // Para WebKit (Chrome, Safari)
+                margin: 0,                  // Eliminar margen
+              }}
             />
           </div>
 

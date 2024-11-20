@@ -244,6 +244,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
             value={totalAmount}
             onChange={handleTotalAmountChange}
             required
+            onWheel={(e) => e.preventDefault()}
           />
         </div>
 
