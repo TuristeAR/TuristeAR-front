@@ -14,34 +14,33 @@ const SharedExpenses = () => {
   const [showForm, setShowForm] = useState(false);
   const [showDebts, setShowDebts] = useState(false);
   const [showList, setShowList] = useState(true);
-  const [showSettle, setShowSettle] = useState(false); // Nuevo estado para saldar deudas
-
+  const [showSettle, setShowSettle] = useState(false); 
   const handleShowForm = () => {
     setShowForm(true);
     setShowDebts(false);
     setShowList(false);
-    setShowSettle(false); // Aseguramos que no se muestren otros componentes cuando el formulario esté activo
+    setShowSettle(false); 
   };
 
   const handleShowDebts = () => {
     setShowDebts(true);
     setShowForm(false);
     setShowList(false);
-    setShowSettle(false); // Aseguramos que no se muestren otros componentes cuando las deudas estén activas
+    setShowSettle(false);
   };
 
   const handleShowList = () => {
     setShowList(true);
     setShowForm(false);
     setShowDebts(false);
-    setShowSettle(false); // Aseguramos que no se muestren otros componentes cuando la lista de gastos esté activa
+    setShowSettle(false);
   };
 
   const handleShowSettle = () => {
-    setShowSettle(true);  // Mostrar el componente de saldar deudas
+    setShowSettle(true);  
     setShowForm(false);
     setShowDebts(false);
-    setShowList(false);   // Aseguramos que no se muestren otros componentes cuando se muestra "Settle Debt"
+    setShowList(false);   
   };
 
   return (
@@ -64,7 +63,7 @@ const SharedExpenses = () => {
       <div className="flex mb-4 flex-row gap-1 px-4">
         <button
           onClick={handleShowList}
-          className={`rounded-xl flex px-7 py-3 border border-primary font-semibold text-lg shadow-sm shadow-transparent transition-all duration-500 hover:shadow-primary hover:bg-slate-50 hover:text-black ${
+          className={`rounded-xl flex px-7 py-3 border border-primary font-semibold text-lg shadow-sm shadow-transparent transition-all duration-500 hover:shadow-primary hover:bg-[#d3e6fb] hover:text-black ${
             !showList ? 'bg-primary text-white' : 'shadow-primary bg-slate-50 text-black'
           }`}
         >
@@ -72,16 +71,15 @@ const SharedExpenses = () => {
         </button>
         <button
           onClick={handleShowDebts}
-          className={`rounded-xl flex px-7 py-3 border border-primary font-semibold text-lg shadow-sm shadow-transparent transition-all duration-500 hover:shadow-primary hover:bg-slate-50 hover:text-black ${
+          className={`rounded-xl flex px-7 py-3 border border-primary font-semibold text-lg shadow-sm shadow-transparent transition-all duration-500 hover:shadow-primary hover:bg-[#d3e6fb] hover:text-black ${
             !showDebts ? 'bg-primary text-white' : 'shadow-primary bg-slate-50 text-black'
           }`}
         >
           Tus Deudas
         </button>
-        {/* Botón de "Saldar Deuda" */}
         <button
           onClick={handleShowSettle}
-          className={`rounded-xl flex px-7 py-3 border border-primary font-semibold text-lg shadow-sm shadow-transparent transition-all duration-500 hover:shadow-primary hover:bg-slate-50 hover:text-black ${
+          className={`rounded-xl flex px-7 py-3 border border-primary font-semibold text-lg shadow-sm shadow-transparent transition-all duration-500 hover:shadow-primary hover:bg-[#d3e6fb] hover:text-black ${
             !showSettle ? 'bg-primary text-white' : 'shadow-primary bg-slate-50 text-black'
           }`}
         >
@@ -102,7 +100,7 @@ const SharedExpenses = () => {
           setShowForm(true);
           handleShowForm();
         }}
-        className="w-[3rem] h-[3rem] rounded-full fixed bottom-4 right-4 bg-[#49a2ec] flex flex-col justify-evenly z-[80]"
+        className="w-[3rem] h-[3rem] rounded-full fixed bottom-4 right-4 bg-[#49a2ec] active:bg-[#2a6f9e] hover:bg-[#388cd4] flex flex-col justify-evenly z-[80]"
       >
         <Plus className="my-auto mx-auto" color="#fff" />
       </div>

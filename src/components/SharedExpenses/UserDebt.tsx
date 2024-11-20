@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 export const getUserDebt = async (itineraryId) => {
   try {
     const response = await fetch(
-      `https://api-turistear.koyeb.app/expenses/debt/user/itinerary/${itineraryId}`,
+      `${process.env.VITE_API_URL}/expenses/debt/user/itinerary/${itineraryId}`,
       {
         method: 'GET',
         credentials: 'include',
@@ -23,7 +23,7 @@ export const getUserDebt = async (itineraryId) => {
 
 export const settleUserDebt = async (amount) => {
   try {
-    const response = await fetch(`https://api-turistear.koyeb.app/expenses/settle`, {
+    const response = await fetch(`${process.env.VITE_API_URL}/expenses/settle`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
