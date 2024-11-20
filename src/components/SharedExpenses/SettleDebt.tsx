@@ -118,12 +118,12 @@ const SettleDebt = ({ itineraryId }: { itineraryId: number }) => {
               </div>
               <div className="flex">
                 <button
-                  className={`my-auto btn-blue h-10 ${isProcessing[debt.payerId] ? 'opacity-50' : ''}`}
+                  className={` w-40 my-auto btn-blue h-10 ${isProcessing[debt.payerId] ? 'opacity-50' : debt.amount === 0 ? 'bg-[#178917] hover:bg-[#178917]' : ''}`}
                   onClick={() => handlePayment(debt.payerId, itineraryId)}
-                  disabled={isProcessing[debt.payerId]}
+                  disabled={isProcessing[debt.payerId]||debt.amount === 0}
                   >
-                  {isProcessing[debt.payerId] ? 'Procesando...' : 'Saldar deuda'}
-                </button>
+                  {isProcessing[debt.payerId] ? 'Procesando...' : debt.amount === 0 ? 'Deuda saldada' : 'Saldar deuda'}
+                  </button>
               </div>
             </div>
           </li>
