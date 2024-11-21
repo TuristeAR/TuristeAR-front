@@ -14,6 +14,7 @@ type ParticipationRequest = {
   status: 'pending' | 'accepted' | 'rejected';
   createdAt: Date;
 };
+
 type User = {
   id: number;
   name: string;
@@ -56,6 +57,7 @@ type Notification = {
   publication: Publication;
   itinerary: Itinerary;
   participationRequest: ParticipationRequest;
+  comment: Comment;
   user: User;
 };
 
@@ -74,6 +76,8 @@ const Notifications = () => {
       users = publication.likes.slice(0, 3);
     } else if (description.includes('guardado')) {
       users = publication.saved.slice(0, 3);
+    }else if (description.includes('comentado')) {
+      users = publication.comments.slice(0, 3);
     } else {
       users = publication.reposts.slice(0, 3);
     }
@@ -81,8 +85,8 @@ const Notifications = () => {
     return users.map((user, index) => (
       <img
         key={index}
-        src={user.profilePicture}
-        alt={user.name}
+        src={user.profilePicture ? user.profilePicture : user.user.profilePicture}
+        alt={user.name ? user.name : user.user.name}
         className="w-[25px] h-[25px] rounded-full"
       />
     ));
@@ -201,7 +205,12 @@ const Notifications = () => {
                       : '';
 
                   return isParticipationRequest ? (
-                    <Link to={notification.participationRequest.status === 'accepted' ? `/itinerario/calendario/${notification.participationRequest.itinerary.id}` : `/notificaciones`}
+                    <Link
+                      to={
+                        notification.participationRequest.status === 'accepted'
+                          ? `/itinerario/calendario/${notification.participationRequest.itinerary.id}`
+                          : `/notificaciones`
+                      }
                       key={index}
                       className={
                         `lg:w-auto lg:mb-0 mb-6 p-4 rounded-2xl ${notification.isRead ? 'bg-white hover:bg-[#d9d9d9]' : 'bg-[#c0daeb] hover:bg-[#009fe3]'} ` +
@@ -260,7 +269,17 @@ const Notifications = () => {
                         'shadow-[0_10px_25px_-10px_rgba(0,0,0,4)] flex flex-col relative transition-transform duration-300 hover:-translate-y-1.5 '
                       }
                     >
-                      {notification.publication && (
+                      {notification.comment ? (
+                        <div className="flex flex-col gap-2">
+                          <div className="flex gap-x-2 items-center">
+                            {getNotificationImages(notification)}
+                            <h1 className="font-bold text-[18px]">{notification.description}</h1>
+                          </div>
+                          <p className={`text-l ${notification.isRead ? 'text-[#484b56]' : ''}`}>
+                            {notification.comment.description.slice(0, 100)}
+                          </p>
+                        </div>
+                      ) : (
                         <div className="flex flex-col gap-2">
                           <div className="flex gap-x-2 items-center">
                             {getNotificationImages(notification)}
