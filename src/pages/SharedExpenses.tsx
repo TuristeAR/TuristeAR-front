@@ -15,12 +15,6 @@ const SharedExpenses = () => {
   const [showDebts, setShowDebts] = useState(false);
   const [showList, setShowList] = useState(true);
   const [showSettle, setShowSettle] = useState(false); 
-  const handleShowForm = () => {
-    setShowForm(true);
-    setShowDebts(false);
-    setShowList(false);
-    setShowSettle(false); 
-  };
 
   const handleShowDebts = () => {
     setShowDebts(true);
@@ -98,11 +92,10 @@ const SharedExpenses = () => {
       <div
         onClick={() => {
           setShowForm(true);
-          handleShowForm();
         }}
-        className="w-[3rem] h-[3rem] rounded-full fixed bottom-4 right-4 bg-[#49a2ec] active:bg-[#2a6f9e] hover:bg-[#388cd4] flex flex-col justify-evenly z-[80]"
+        className="rounded-full fixed bottom-4 right-4 bg-[#49a2ec] active:bg-[#2a6f9e] hover:bg-[#388cd4] flex flex-col justify-evenly z-[80]"
       >
-        <Plus className="my-auto mx-auto" color="#fff" />
+        <Plus className="my-auto mx-auto lg:w-[55px] lg:h-[55px] w-[45px] h-[45px] lg:m-6 m-3" color="#fff" />
       </div>
       {showSettle && <SettleDebt itineraryId={Number(itineraryId)} />}
     </>

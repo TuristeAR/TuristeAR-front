@@ -13,7 +13,6 @@ const ExpenseDetail = ({ expense, onClose }) => {
     individualPercentages,
     userExpense,
   } = expense;
-  console.log(expense);
   useEffect(() => {
     if (distributionType === 'equivalente') {
       setDistributionDescription('Montos Iguales');
@@ -48,33 +47,10 @@ const ExpenseDetail = ({ expense, onClose }) => {
   };
   return (
     <div className="border-b mb-4">
-      <div className="flex">
-        <Receipt size={100} className="stroke-primary m-0" />
-        <div>
-          <h3 className="text-xl font-semibold">{expense.description}</h3>
-          <p className="font-semibold">${expense.totalAmount}</p>
-          <p className="font-semibold">
-            {new Date(expense.date).toLocaleDateString()} -{' '}
-            {new Date(expense.date).toLocaleTimeString()} hs
-          </p>
-          <div className="flex items-center gap-1">
-            <div className="flex items-center gap-1">
-              <span>Pagado por </span>
-              <div className="flex items-center">
-                <div className="w-5 h-5 rounded-full flex overflow-hidden items-center justify-center">
-                  <img src={expense.payer.profilePicture} className="w-full h-full object-cover" />
-                </div>
-                <span className="font-semibold ">{expense.payer.name}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="ml-4 mt-2">
-        <p className="font-semibold">{distributionDescription}</p>
+      <div className="ml-4 mt-2 flex flex-col gap-4">
+        <p className="font-semibold">Tipo de distribución: {distributionDescription}</p>
         <ul>
           {expense.userExpenses.map((participant) => {
-            console.log("--",participant);
             return (
               <li className="flex items-center gap-1 justify-between" key={participant.user.name}>
                 <div className="flex items-center gap-1">
@@ -106,9 +82,6 @@ const ExpenseDetail = ({ expense, onClose }) => {
         </ul>
         {expense.imageUrls && <ImageGallery images={expense.imageUrls}></ImageGallery>}
         {/* <ExpenseSummaryTable expense={expense}></ExpenseSummaryTable> */}
-        <button className="btn-blue mt-2 mb-4" onClick={onClose}>
-          Cerrar
-        </button>
       </div>
     </div>
   );

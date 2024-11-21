@@ -80,7 +80,7 @@ const SettleDebt = ({ itineraryId }: { itineraryId: number }) => {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 max-w-md mx-auto my-4">
+    <div className="bg-white shadow-md rounded-lg p-6 max-w-[40%] mx-auto my-4">
       <h1 className="text-2xl font-bold mb-4 text-center text-primary-3">
         Deudas de los participantes hacia vos
       </h1>
@@ -118,7 +118,7 @@ const SettleDebt = ({ itineraryId }: { itineraryId: number }) => {
               </div>
               <div className="flex">
                 <button
-                  className={` w-40 my-auto btn-blue h-10 ${isProcessing[debt.payerId] ? 'opacity-50' : debt.amount === 0 ? 'bg-[#178917] hover:bg-[#178917]' : ''}`}
+                  className={` w-60 my-auto btn-blue h-10 ${isProcessing[debt.payerId] ? 'opacity-50' : debt.amount === 0 ? 'bg-[#178917] hover:bg-[#178917]' : ''}`}
                   onClick={() => handlePayment(debt.payerId, itineraryId)}
                   disabled={isProcessing[debt.payerId]||debt.amount === 0}
                   >

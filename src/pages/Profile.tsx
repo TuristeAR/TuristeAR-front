@@ -3,7 +3,7 @@ import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
 import { PublicationCard } from '../components/Community/PublicationCard';
 import { ItineraryCard } from '../components/Community/ItineraryCard';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import logoAnimado from '../assets/logoAnimado.json';
 import Lottie from 'lottie-react';
 import { get } from '../utilities/http.util';
@@ -263,7 +263,8 @@ const Profile = () => {
                   publications
                     .filter((publication) => {
                       return (
-                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
+                        categorySelected == null ||
+                        publication.categories.some((category) => category.id === categorySelected)
                       );
                     })
                     .map((publication, index) => (
@@ -277,7 +278,9 @@ const Profile = () => {
                       />
                     ))
                 ) : (
-                  <p className="text-center te  xt-xl md:mt-4 md:text-2xl">No hay publicaciones</p>
+                  <div className={'p-4 bg-[#c0daeb] rounded-2xl'}>
+                    <p className={'text-3xl font-bold'}>No hay publicaciones!</p>
+                  </div>
                 ))}
               {activeItem === 'itineraries' &&
                 (itineraries && itineraries.length > 0 ? (
@@ -302,7 +305,8 @@ const Profile = () => {
                   likedPublications
                     .filter((publication) => {
                       return (
-                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
+                        categorySelected == null ||
+                        publication.categories.some((category) => category.id === categorySelected)
                       );
                     })
                     .map((publication, index) => (
@@ -316,14 +320,17 @@ const Profile = () => {
                       />
                     ))
                 ) : (
-                  <p className="text-center text-xl md:mt-4 md:text-2xl">No hay likes</p>
+                  <div className={'p-4 bg-[#c0daeb] rounded-2xl'}>
+                    <p className={'text-3xl font-bold'}>No hay publicaciones likeadas!</p>
+                  </div>
                 ))}
               {activeItem === 'saved' &&
                 (savedPublications && savedPublications.length > 0 ? (
                   savedPublications
                     .filter((publication) => {
                       return (
-                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
+                        categorySelected == null ||
+                        publication.categories.some((category) => category.id === categorySelected)
                       );
                     })
                     .map((publication, index) => (
@@ -337,9 +344,9 @@ const Profile = () => {
                       />
                     ))
                 ) : (
-                  <p className="text-center text-xl md:mt-4 md:text-2xl">
-                    No hay publicaciones guardadas
-                  </p>
+                  <div className={'p-4 bg-[#c0daeb] rounded-2xl'}>
+                    <p className={'text-3xl font-bold'}>No hay publicaciones guardadas!</p>
+                  </div>
                 ))}
             </div>
           </div>
