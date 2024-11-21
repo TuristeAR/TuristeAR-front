@@ -141,14 +141,14 @@ export function PublicationCard(props: {
               <p className={'font-semibold '}>{publication.user.name}</p>
               <div className={'flex gap-2 '}>
                 {publication.categories.map((category, index) => (
-                  <>
+                  <div key={index}>
                     {(publication.categories.length>1 && publication.categories.length-1 == index) &&(
                       <p className={'text-[12px]'}>-</p>
                     )}
                     <p className={'text-[12px]'} key={index}>
                       {category.description}
                     </p>
-                  </>
+                  </div>
                 ))}
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { Header } from '../components/Header/Header';
 import { PublicationCard } from '../components/Community/PublicationCard';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { LeftCommunity } from '../components/Community/LeftCommunity';
 import { CreatePublications } from '../components/Community/CreatePublications';
 import Lottie from 'lottie-react';
@@ -63,6 +63,7 @@ const Publications = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [publications, setPublications] = useState<Publication[] | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
 
   const handleClick = () => {
     if (contentRef.current) {
@@ -130,18 +131,38 @@ const Publications = () => {
             />
 
             <div className="absolute md:static lg:w-[80%] w-[100%] pt-10 pb-10 flex flex-col gap-10 overflow-scroll scrollbar-hidden">
-              {' '}
+              <div className={'w-[90%] mx-auto flex lg:flex-row flex-col lg:gap-4'}>
+                <h2 className="my-4 md:my-1 text-2xl font-bold">Buscar publicación</h2>
+                <form className="flex flex-col gap-4">
+                  <input
+                    type="text"
+                    onInput={(e) =>
+                      setDescription(
+                        //@ts-ignore
+                        e.target.value,
+                      )
+                    }
+                    className="border border-[#999999] rounded p-2 w-full lg:min-w-[1000px] focus:outline-none"
+                    placeholder="Buscar publicación..."
+                    autoComplete="off"
+                  />
+                </form>
+              </div>
               {/* Create posts */}
               <CreatePublications />
-              <div className="flex flex-col gap-6 lg:w-[80%] w-[90%] mx-auto">
+              <div className="flex flex-col gap-6 w-[90%] mx-auto">
                 {user &&
                 publications?.filter((publication) => {
-                  return categorySelected == null || publication.categories.some(category => category.id === categorySelected);
+                  return (categorySelected == null || publication.categories.some(category => category.id === categorySelected)) &&
+                    (description == null ||
+                      publication.description.toLowerCase().includes(description.toLowerCase()))
                 }).length > 0 ? (
                   publications
                     ?.filter((publication) => {
                       return (
-                        categorySelected == null || publication.categories.some(category => category.id === categorySelected)
+                        (categorySelected == null || publication.categories.some(category => category.id === categorySelected)) &&
+                        (description == null ||
+                          publication.description.toLowerCase().includes(description.toLowerCase()))
                       );
                     })
                     .map((publication, index) => (
