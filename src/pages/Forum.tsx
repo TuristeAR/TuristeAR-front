@@ -94,7 +94,7 @@ const Forum = () => {
               className="absolute md:static lg:w-[80%] w-[100%] pb-10 pt-6 flex flex-col gap-10 ${
                 scrollbar-hidden"
             >
-              <div className={'w-[97%] mx-auto flex flex-col gap-4'}>
+              <div className={'lg:w-[97%] w-[90%] mx-auto flex lg:flex-row flex-col lg:gap-4'}>
                 <h2 className="my-4 md:my-1 text-2xl font-bold">Buscar foro</h2>
                 <form className="flex flex-col gap-4">
                   <input
@@ -105,7 +105,7 @@ const Forum = () => {
                         e.target.value,
                       )
                     }
-                    className="border border-[#999999] rounded p-2 w-full max-w-[720px] focus:outline-none"
+                    className="border border-[#999999] rounded p-2 w-full lg:min-w-[1180px] focus:outline-none"
                     placeholder="Buscar foro..."
                     autoComplete="off"
                   />
