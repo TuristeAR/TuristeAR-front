@@ -173,13 +173,14 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-sm shadow-lg max-w-lg mx-auto">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 lg:z-[50] z-[80] border border-gray-50 rounded-lg">
+    <div className="bg-white rounded-2xl md:py-6 py-4 lg:px-10 px-6 flex flex-col justify-evenly relative md:max-w-[70%] max-w-[90%] max-h-[90%]">
       <button className="flex items-center md:mr-10" onClick={onBack}>
         <img src={'/assets/arrow-prev.svg'} alt={'Regresar'} className={'w-[40px] my-auto'} />
         <div className="text-sm font-bold text-primary-3">Volver A La Lista De Gastos</div>
       </button>
       <h3 className="font-bold text-3xl lead-10 text-black mb-9">Editar Gasto</h3>
-      <form>
+      <form className={'grid grid-cols-2 gap-x-10'}>
         <div className="mb-4">
           <label className="block font-semibold text-gray-700 mb-2">Descripción</label>
           <input
@@ -345,6 +346,7 @@ const ExpenseEditForm = ({ onBack, itineraryId, expense }) => {
           {loading ? 'Procesando...' : 'Editar Gasto'}
           </button>
       </form>
+    </div>
     </div>
   );
 };

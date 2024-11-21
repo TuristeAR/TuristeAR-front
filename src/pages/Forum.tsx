@@ -105,7 +105,7 @@ const Forum = () => {
                         e.target.value,
                       )
                     }
-                    className="border border-[#999999] rounded p-2 w-full lg:min-w-[1180px] focus:outline-none"
+                    className="border border-[#999999] rounded p-2 w-full lg:min-w-[800px] focus:outline-none"
                     placeholder="Buscar foro..."
                     autoComplete="off"
                   />

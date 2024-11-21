@@ -198,11 +198,12 @@ const ExpensesList = ({ itineraryId }) => {
                             <div className="flex gap-1">
                               <Receipt size={60} className="stroke-primary" />
 
-                              <div className="flex h-full px-1 flex-col items-start">
+                              <div className="flex h-full px-1 flex-col items-start gap-1">
                                 <h5 className="font-semibold sm:text-xl leading-9 text-black mb-1">
                                   {expense.description}
                                 </h5>
                                 <p className="text-sm">
+                                  {new Date(expense.date).toLocaleDateString()} -{' '}
                                   {new Date(expense.date).toLocaleTimeString()} hs
                                 </p>
 

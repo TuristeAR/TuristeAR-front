@@ -142,7 +142,7 @@ const Publications = () => {
                         e.target.value,
                       )
                     }
-                    className="border border-[#999999] rounded p-2 w-full lg:min-w-[1000px] focus:outline-none"
+                    className="border border-[#999999] rounded p-2 w-full lg:min-w-[700px] focus:outline-none"
                     placeholder="Buscar publicación..."
                     autoComplete="off"
                   />

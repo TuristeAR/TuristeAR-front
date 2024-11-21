@@ -156,6 +156,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
       setIndividualPercentages({});
 
       onBack();
+      window.location.reload()
     } catch (error) {
       setError(error.message);
     } finally {
@@ -165,9 +166,10 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
 
   return (
     <>
-      <div className="bg-white p-6 max-w-lg mx-auto">
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 lg:z-[50] z-[80] border border-gray-50 rounded-lg">
+      <div className="bg-white rounded-2xl md:py-6 py-4 lg:px-10 px-6 flex flex-col justify-evenly relative md:max-w-[70%] max-w-[90%] max-h-[90%]">
         <h3 className="font-bold text-3xl lead-10 text-black mb-9">Agregar Nuevo Gasto</h3>
-        <form>
+        <form className={'grid grid-cols-2 gap-x-10'}>
           <div className="mb-4">
             <label className="block font-semibold text-gray-700 mb-2">Descripción</label>
             <input
@@ -339,6 +341,7 @@ const ExpensesForm = ({ onBack, itineraryId }) => {
           {loading ? 'Procesando...' : 'Guardar Gasto'}
           </button>
         </form>
+      </div>
       </div>
     </>
   );
