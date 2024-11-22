@@ -2,8 +2,8 @@ export const uploadImage = async (image: File): Promise<any> => {
   const formData = new FormData();
   formData.append('image', image);
 
-  const url = window.location.href.includes(process.env.VITE_API_URL) ? process.env.VITE_IMGUR_API_URL + '/3/image' : 'http://localhost:3001/uploadImage' ;
-  const body : any = window.location.href.includes(process.env.VITE_API_URL) ? {
+  const url = !window.location.href.includes('localhost') ? process.env.VITE_IMGUR_API_URL + '/3/image' : 'http://localhost:3001/uploadImage' ;
+  const body : any = window.location.href.includes('localhost') ? {
     method: 'POST',
     headers: {
       Authorization: `Client-ID ${process.env.VITE_IMGUR_CLIENT_ID}`,
