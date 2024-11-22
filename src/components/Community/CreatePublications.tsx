@@ -52,7 +52,7 @@ export const CreatePublications = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const itinerariesResponse = await fetch(`${process.env.VITE_API_URL}/user-itineraries`, {
+        const itinerariesResponse = await fetch(`${process.env.VITE_API_URL}/itinerary/byUser/7`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -60,7 +60,7 @@ export const CreatePublications = () => {
         if (!itinerariesResponse.ok) throw new Error('Error al obtener itinerarios');
 
         const itinerariesData = await itinerariesResponse.json();
-        setItineraries(itinerariesData.data);
+        setItineraries(itinerariesData.participants);
       } catch (error) {
         setError('Error en la comunicación con el servidor');
       }
